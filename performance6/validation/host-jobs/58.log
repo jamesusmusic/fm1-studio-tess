@@ -1,0 +1,19 @@
+== MIDI IN through the scale layouts (WHITE, ALL, MPC), shared SCL / QNT
+ui: WHITE: 16 scales x 12 roots x TRN, every MIDI note, black keys silent      ok
+ui: ALL: every MIDI note the next degree from C4 = ROOT, out of range silent   ok
+ui: OFF and SNAP: MIDI notes pass through                                      ok
+ui: MPC: only Bank H (MIDI 20..35) plays                                       ok
+ui: MPC: H02 on DEG 1 is the ROOT, H01 the degree below, H03 the next          ok
+ui: MPC: DEG 3 moves H02 to the third                                          ok
+ui: MPC: DEG is clamped to the scale's notes                                   ok
+ui: MPC: the octave buttons shift the pads                                     ok
+ui: MPC: a DRUM track keeps its notes, outside Bank H silent                   ok
+ui: WHITE: a DRUM track keeps its GM notes                                     ok
+ui: WHITE: a MIDI note plays its mapped note                                   ok
+ui: WHITE: a black-key note plays nothing                                      ok
+ui: WHITE: its note-off ends the mapped note, nothing hangs                    ok
+ui: ALL: two MIDI notes play two degrees                                       ok
+ui: a layout change while held: the note-offs still end what played            ok
+ui: SCL and QNT turned on one track are every part's                           ok
+ui: ROOT stays the track's                                                     ok
+MIDI scale layouts test passed

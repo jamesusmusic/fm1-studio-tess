@@ -1,0 +1,22 @@
+== project record (FUN16 round trip, the song chain, names, FM6 patches; older formats refused)
+layout: SLICER after DETUNE, then the matrix just before P_E0 ok
+FUN16 fits its record                                        ok
+project_t: as stored (a matrix slot, engine 8, a DRUM step with notes and hits) ok
+FUN16: every ROUT value survives pack/import                 ok
+project_t: chain round trip                                  ok
+project_t: invalid row refused even with a correct checksum  ok
+FUN16: the name at the end of the record, the FM6 patches before the tones, after the data ok
+FUN16 no name: the tail all zero                             ok
+FUN16 without a name: loads, no name                         ok
+FUN16 name round trip (upper case, 0-padded)                 ok
+FUN16 name of 12 characters (no terminator)                  ok
+FUN16 name byte changed: the hash refuses the project        ok
+FUN16 name with a byte outside 32..126: the project loads, no name ok
+FUN16: the four FM6 patches round trip (bytes at PROJ_FM6_OFF) ok
+FUN16: a patch byte changed: the hash refuses it             ok
+FUN16 one byte short: refused                                ok
+a record of an older format (another magic): refused         ok
+a retained slot of garbage is empty                          ok
+FUN16: a patch byte above 127 cannot be packed               ok
+FUN16: a step out of range packs inside it (note, velocity 127; accents on hits): it loads ok
+project format test passed

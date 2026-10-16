@@ -1,0 +1,16 @@
+{
+  "suite_jobs": 114,
+  "suite_exit": 0,
+  "failed_jobs": 0,
+  "bypass_golden_renders": 337,
+  "bypass_golden_changes": 0,
+  "sanitizers": [
+    "address (leak detection disabled for runtime compatibility)",
+    "undefined behaviour",
+    "float-cast-overflow"
+  ],
+  "ui_lint_findings": 0,
+  "concurrent_stress_blocks": 16384,
+  "hardware_verified": false,
+  "intermittent_bells_fault_cause_confirmed": false
+}

@@ -1,0 +1,17 @@
+== DRUM: 808 instruments, velocity, hat choke, release, eight lanes and shared voice budget
+drum_test: tom fill at the 8-voice budget: same lane voice, both synth notes and other drums kept: ok
+drum_test: a synth starts over the kit, a stolen drum retriggers before its fade: budget kept: ok
+drum_test: engine: the 8 lanes struck at once ring together (8 voices, each lane live on its own voice): ok
+drum_test: engine: a lane is mono, notes 41 then 43 (both TOM): one voice, the second hit: ok
+drum_test: engine: a crash 0.5 s after its key-off still rings (ADSR SUS 0 REL 0), its voice free after 1.2 s: ok
+drum_test: engine: VOICE MONO and GLIDE set: kick and snare still sound together: ok
+drum_test: KIT 808: the 16 instruments from their GM notes sound and free their voices: ok
+drum_test: KIT 808: note 36 at velocity 127 +4.4 dB over 64
+drum_test: KIT 808: note 38 at velocity 127 +4.5 dB over 64
+drum_test: KIT 808: note 39 at velocity 127 +5.2 dB over 64
+drum_test: KIT 808: note 56 at velocity 127 +6.1 dB over 64
+drum_test: KIT 808: velocity 127 at least 2 dB over 64: ok
+drum_test: KIT 808: a closed hat 100 ms into the open one ends it within 50 ms: ok
+drum_test: retired custom kit plays 808: ok
+drum_test: KIT 808 at the knobs' corners, the 8 lanes at velocity 127: peak 30067 (< full scale): ok
+drum_test: all checks ok

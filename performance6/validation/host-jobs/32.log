@@ -1,0 +1,2 @@
+== resident audio: expanded voice budget and CPU1 fallback
+Resident voice budget: 18 units (16 at 320 MHz), bounded admission, protected bass, CPU1 fallback to 16: OK

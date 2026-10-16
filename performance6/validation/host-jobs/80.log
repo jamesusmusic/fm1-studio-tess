@@ -1,0 +1,24 @@
+== DX7 librarian: USB voice/bank receive, dump replies and malformed frame recovery
+editor: valid bank stages all names and bytes before any preset is overwritten ok
+editor: bank receive stores all 32 packed patches without the editor           ok
+editor: chosen user preset can be loaded explicitly after importing            ok
+editor: bank dump reply round trips every byte and request channel             ok
+editor: STORE slot F033 selects the upper half for bank receive                ok
+editor: upper bank dump returns its 32 voices on channel 16                    ok
+editor: single voice stages its native name without detaching the current saved sound ok
+editor: occupied destination requires overwrite confirmation                   ok
+editor: single voice receive and reply preserve patch and channel              ok
+editor: explicitly loaded import records its chosen user slot                  ok
+editor: device SEND uses the selected track MIDI channel                       ok
+editor: bad voice checksum cannot change the track                             ok
+editor: bad bank checksum cannot mutate presets                                ok
+editor: bank can be reviewed during playback but cannot write presets          ok
+editor: oversized dump is discarded                                            ok
+editor: status inside SysEx aborts DX7 assembly                                ok
+editor: channel event in another USB packet aborts DX7 assembly                ok
+editor: short frames recover for subsequent dump requests                      ok
+editor: bank round trip retains original packed bytes                          ok
+editor: empty bank exports 32 valid INIT voices                                ok
+editor: disconnected send reports an error instead of success                  ok
+editor: disconnected single-voice SEND also reports failure                    ok
+DX7 SysEx test passed

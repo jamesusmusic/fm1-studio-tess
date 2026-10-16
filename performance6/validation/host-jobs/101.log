@@ -1,0 +1,5 @@
+== native fp32: independent numerical references, exact pitch, quiet signals and fractional envelopes
+fp32 FM6: modulated operator error 5.97e-06; exact Q24 pitch steps
+fp32 CZ-1: cosine error 4.81e-06; fractional envelope time and quiet gain preserved
+fp32 Prophet: double filter error 9.88e-06; sub-PCM filter/envelope state preserved
+native fp32 numerical contracts passed

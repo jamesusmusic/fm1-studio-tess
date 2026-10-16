@@ -1,0 +1,33 @@
+== CZ: oscillator boundaries, native rate/target envelopes and independent lines
+CZ: arbitrary up/down points reach and hold sustain ok
+CZ: release can rise before falling ok
+CZ: END forces zero without an extra release ok
+CZ: early key-off skips to first post-sustain point ok
+CZ: short segments carry time across points ok
+CZ: no-sustain envelope completes with key held ok
+CZ: zero-DCW cosine maximum error 4 Q15 units
+CZ: all eight waveforms become cosine at zero DCW ok
+CZ: oscillator corners stay bounded ok
+CZ: saw reads its first half-cycle faster (Casio PD diagram) ok
+CZ: resonant sync returns to its baseline ok
+CZ: fractional resonant cores join smoothly at sync ok
+CZ: resonant sync returns to its baseline ok
+CZ: fractional resonant cores join smoothly at sync ok
+CZ: resonant sync returns to its baseline ok
+CZ: fractional resonant cores join smoothly at sync ok
+CZ: two DCW envelopes progress independently ok
+CZ: second DCA progresses independently ok
+CZ: pitch envelope progresses independently ok
+CZ: matrix ENV follows the native DCA ok
+CZ: envelope state is isolated per track ok
+CZ: voice lifetime follows both native DCAs ok
+CZ: shared voice stealing still frees a native-envelope voice ok
+CZ: split descriptors keep stored ranges/defaults ok
+CZ: PHASE remains its own engine with six presets ok
+CZ: CZ-1 factory defaults to native playback ok
+CZ: selecting PHASE on another track leaves native CZ tone intact ok
+CZ: factory INIT replaces previous imported tone ok
+CZ: imported eight-point native DCA sustains at fourth point ok
+CZ: chip rate law and separate DCW/DCA domains ok
+CZ: native key-off plays remaining points then frees voice ok
+CZ: native hidden wave/window combinations stay bounded ok

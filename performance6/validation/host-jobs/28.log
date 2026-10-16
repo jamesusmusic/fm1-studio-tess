@@ -1,0 +1,4 @@
+== USB descriptors: MIDI, CDC and audio configurations
+USB descriptors: audio=0, CDC=0, 101 bytes: OK
+USB descriptors: audio=0, CDC=1, 175 bytes: OK
+USB descriptors: audio=1, CDC=0, 396 bytes: OK

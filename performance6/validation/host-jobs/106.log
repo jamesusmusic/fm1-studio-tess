@@ -1,0 +1,63 @@
+== SID: oscillator/LFSR/register semantics, revisions and 32 factory presets
+SID: engine 3 keeps its stored ID and is named SID                                          ok
+SID: 32 uniquely named factory presets                                                      ok
+SID: noise register: all ones read out as 0xFF0 (the low four DAC bits grounded)            ok
+SID: noise feedback: bit 22 XOR bit 17 into bit 0                                           ok
+SID: noise clocks on each rise of accumulator bit 19 (ph bit 27), not on its fall           ok
+SID: noise register period 2^23 - 1 (maximal length)                                        ok
+SID: triangle: accumulator bits 22..12 folded at the MSB, bit 0 low                         ok
+SID: ring modulation: the source's MSB XOR folds the triangle                               ok
+SID: pulse: the 12-bit comparator (accumulator >> 12 >= PW), PW 0 constant high             ok
+SID: combined waveforms: the 8 packed tables unpack to reSID's samples bit for bit          ok
+SID: 6581 TRI+SAW: reSID's 0x030 at 0x07E, silent where the AND of the parts would sound; the 8580's louder ok
+SID: SAW+PULSE: the sample ANDed with the pulse level (silent while the pulse is low)       ok
+SID: RING on TRI+PULSE: the index's MSB flips with the source's inverted MSB                ok
+SID:   SAW+PULSE, PW 50 %: samples in the accumulator's upper half: 6581 0, 8580 231 of 400
+SID: 6581 SAW+PULSE: the MSB pulled low (the period changes), the 8580's free               ok
+SID: 6581 waveform DAC (2R/R 2.20, unterminated): 0x7FF above 0x800, full scale 4095 x 4    ok
+SID: 6581 bit weights: bit 0 ~2.07, bit 11 ~1983 of 4095                                    ok
+SID: 8580 waveform and envelope DACs: monotonic, near-ideal                                 ok
+SID: 6581 envelope DAC: 0x7F above 0x80, full scale Q15                                     ok
+SID: waveform zero: 6581 at 0x380 (a DC offset), 8580 at 0x800                              ok
+SID: attack rate 0: 0 -> 0xFE in 254 x 9 cycles, 0xFF on cycle 2295 (2.33 ms), then decay   ok
+SID: attack rate 15 (period 31251): one step per 31251 cycles                               ok
+SID: decay 0xFF -> 0: every period to 0x5D, then every 2, 4, 8, 16, 30 (756 x 9 cycles)     ok
+SID: the counter freezes at zero (no wrap to 0xFF)                                          ok
+SID: sustain 64 of 127 -> nibble 8: the counter holds at 0x88                               ok
+SID: sustain raised above the counter: it decays on to zero (the chip compares for equality) ok
+SID: release from 0xFF (rate 0) reaches 0 in 756 x 9 cycles and stays                       ok
+SID: ADSR delay bug: counter 100, period 9: the first step only after 32676 cycles          ok
+SID: a new gate in the release: the attack counts up from the level reached                 ok
+SID: C64 hard restart from 0xFF: rate 0 to zero in 756 x 9 cycles (not REL 127), then the attack from zero ok
+SID: the track's ADSR -> SID rates: 1 ms = rate 0, 10 s = attack 15 / decay 13 (9 s)        ok
+SID: pitch -> the nearest 16-bit frequency register value (PAL clock), played exactly       ok
+SID: nothing above 65535 (3848 Hz): B7, C8 and G9 play the same                             ok
+SID: hard sync: voice 2 at 3/4 of its step after a reset 1/4 into the sample                ok
+SID: 6581 cutoff: 220 Hz at FC 0, 18 kHz at 2047, the drop at FC 0x400 (6 -> 4.6 kHz)       ok
+SID: 8580 cutoff: 0 Hz at FC 0 rising to 12.5 kHz                                           ok
+SID: resonance: 6581 1/Q = ~res/8 + 1/4, 8580 1/Q = 2^((4 - res) / 8)                       ok
+SID:   880 Hz triangle, cutoff ~900 Hz: LP rms 3916, NOTCH rms 611
+SID: NOTCH = LP + HP as the chip sums them: at the cutoff it cancels what LP passes         ok
+SID:   mean over 8 periods from 3 ms: 6581 2053, 8580 -4; 6581 after 0.6 s 2
+SID: 6581 note-on: a DC thump the 8580 does not have, gone after the coupling capacitor     ok
+SID:   2093 Hz sawtooth, energy off its harmonics: -39.4 dB band-limited, -16.2 dB naive
+SID: sawtooth edges band-limited: at least 10 dB less aliasing than the naive accumulator   ok
+SID: REL 0: the voice sounds out its release and its output stage, then ends                ok
+SID: C64 6581 / C64 8580, nothing modulated: the 6581 / 8580 sample for sample              ok
+SID: C64: one voice per track (a chord's last note has it); 6581: up to four                ok
+SID:   glide over 0.5 s: 6581 689 frequency writes (every 1..1 blocks), C64 25 (every 27..28)
+SID: 6581: the glide rewrites the frequency every block (0.73 ms)                           ok
+SID: C64: only at PAL frames (19656 cycles = 27.5 blocks): 50 writes a second               ok
+SID:   C64 chord 60 64 67 over 1 s: 50 notes (every 27..28 blocks), 0 attacks after the first
+SID: C64 POLY chord: one voice, the last key first                                          ok
+SID: C64 POLY chord: the next held note up at each PAL frame (27..28 blocks), past the top the lowest ok
+SID: C64 POLY chord: only the frequency changes, one gate and attack for the chord          ok
+SID: C64 POLY chord: a new key sounds first (after its hard restart), then joins the arpeggio ok
+SID: C64 POLY chord: a key up keeps the gate while any is held, the voice moves to the others ok
+SID: C64 POLY chord: the arpeggio goes on in the release                                    ok
+SID: C64 MONO: the last key alone; 6581 POLY: a voice per note, no arpeggio                 ok
+SID:   new gate at env 0xFF, then 300 blocks (low/end): MONO 255/255, POLY same note 255/255, C64 2/255, its hard restart 10 blocks
+SID: 6581 a new gate at env 0xFF (MONO, POLY same note): on to the decay, the counter stays at the top ok
+SID: C64 a new key at 0xFF: hard restart to zero in 6.9 ms on the last note's registers, then its attack ok
+SID: all 32 presets: deterministic, sounding, bounded                                       ok
+SID: all 32 presets: the voice ends after its release                                       ok

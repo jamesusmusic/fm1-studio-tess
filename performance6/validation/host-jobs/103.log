@@ -1,0 +1,44 @@
+== modulation matrix: off = bit-identical, the math, MIDI CC1 / CC11 / aftertouch, cost, demos
+mod: slots that do nothing: bit-identical to the matrix off                     ok
+mod: an active matrix changes the sound, and leaves no modulated value in p[]   ok
+mod: LFO -> CUT +63: +63 steps at the top of the LFO (as ENV DEST)              ok
+mod: LFO -> PITCH +63: +11.8 semitones (as LFO DEST PIT)                        ok
+mod: LFO bipolar: the bottom of the LFO pulls SHP down                          ok
+mod: a negative AMT inverts it                                                  ok
+mod: MODW -> AMP +63: the wheel down closes the amp (gain 1.6 %)                ok
+mod: MODW -> AMP +63: the wheel up opens it fully                               ok
+mod: AT -> AMP -64: full pressure closes it                                     ok
+mod: EXPR before any CC11 is full (the MIDI default): AMP open                  ok
+mod: LFO -> AMP: bipolar as 0..1 (half way at an LFO of 0)                      ok
+mod: RAND per note-on: its own generator (the shared rng untouched)             ok
+mod: KEY -> CUT +63: an octave above C4 = +12 steps (key tracking 1:1)          ok
+mod: VEL -> AMP +63: velocity 127 keeps the amplitude                           ok
+mod: ENV -> SHP +40: half the envelope = +20 steps                              ok
+mod: RAND -> PITCH: the voice's own random offset                               ok
+mod: KEY below C4 negative, VEL 1 -> AMP almost closed                          ok
+mod: CUT sums clamp to what the fixed routings reach (+150), PITCH to 2047      ok
+mod: MODW -> PAN +16: a quarter of the range (+31)                              ok
+mod: PAN restored after the block                                               ok
+mod: two slots on PAN add up (+62)                                              ok
+mod: PAN clamps to +63                                                          ok
+mod: retired REV destination is ignored                                         ok
+mod: retired DIST / CHO ignored; RATE, VIB retain bipolar modulation            ok
+mod: every per-block value restored                                             ok
+mod: LFO -> TRIO PW: clamped to its range (0..127)                              ok
+mod: MODW -> E2 -32: half its range down (TRIO INT2 -24..24: -24)               ok
+mod: the engine parameters restored                                             ok
+mod: DST names: E1..E8 by the engine's labels                                   ok
+mod: VEL -> PAN: the latest note-on's velocity                                  ok
+mod: retired DLY destination is ignored                                         ok
+mod: ENV -> PAN: the latest note's envelope (sounding: > 0)                     ok
+mod: USB: CC1 ch 1 -> part 1, CC11 ch 3 -> part 3, AT ch 4 -> part 4            ok
+mod: USB: CC1 on ch 7 is filtered in CH1-4                                      ok
+mod: CC121 resets MODW / AT / EXPR of the channel's track                       ok
+mod: TRS: CC1, running status, realtime between, CC11, AT (1 data byte, running status) -> parts ok
+mod: TRS: ch 5 is filtered in CH1-4                                             ok
+mod: TRS: SEL sends ch 5 CC1 to the selected track (2)                          ok
+mod: MODW -> PAN +63 through MIDI: the part is on the right (dry mixer)         ok
+mod: cost: no instruction counter on this host (proc_pid_rusage), skipped
+mod: 5 demos in build/mod_demo (lfo_cut, vel_amp, modw_vib, lfo_trio_pw, at_wheel_drv)
+mod: demos written                                                              ok
+mod matrix test passed

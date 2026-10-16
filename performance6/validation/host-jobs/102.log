@@ -1,0 +1,47 @@
+== Prophet native frames, five voices, filters, sync and Poly-Mod
+prophet: low-rate fp32 oscillator discontinuity correction stays bounded: ok
+prophet: high-rate BLEP maximum error 0.003 Q15 units
+prophet: fp32 high-rate oscillator correction stays within 0.02 Q15 units of the normalized curve: ok
+prophet: fp32 shared wheel pitch ratio stays within 1 ppm of 2^(cents/1200): ok
+prophet: exponential Poly-Mod frequency stays within 0.35 cent across its range: ok
+prophet: fp32 saturation stays odd, monotonic and within 6e-6 of tanh: ok
+prophet: fp32 hard-sync fraction stays within 1.5e-7 of exact division: ok
+prophet: fp32 wheel multiplication stays within 256 phase units across pitch/depth limits: ok
+prophet: random single/edit-buffer frames preserve every raw byte (both sizes): ok
+prophet: truncation, status bytes and unrelated commands rejected atomically: ok
+prophet: unused bits in the final partial group rejected: ok
+prophet: invalid program address rejected: ok
+prophet: factory raw 25 renders oscillator A/B at A4=440, without a half-semitone offset: ok
+prophet: all keyed coarse-tuning raw pairs select identical semitone detents: ok
+prophet: keyed coarse-tuning octave anchors span exactly four octaves: ok
+prophet: keyed coarse tuning saturates at the top octave without rewriting native bytes: ok
+prophet: keyboard-off B remains continuous and independent of the played note: ok
+prophet: filter tracking 0: octave cutoff ratio 1.00000 (expected 1.00000)
+prophet: filter tracking 1: octave cutoff ratio 1.41406 (expected 1.41421)
+prophet: filter tracking 2: octave cutoff ratio 1.99958 (expected 2.00000)
+prophet: rendered filter coefficient follows off/half/full keyboard octave ratios: ok
+prophet: first-preset triangle pitch: -7.89 / +7.89 cents
+prophet: triangle wheel pitch goes equally sharp/flat in cents for both oscillators: ok
+prophet: zero initial wheel depth leaves oscillator pitch exact: ok
+prophet: maximum wheel pitch depth remains positive and does not stall an oscillator: ok
+prophet: triangle vibrato depth follows the measured Rev-4 amount curve: ok
+prophet: LFO rate follows the measured Rev-4 curve and documented range: ok
+prophet: stolen Prophet voice fades continuously to zero without advancing its expensive synth: ok
+prophet: eight notes cap at five sounding Prophet voices: ok
+prophet: five Prophet voices use fifteen of sixteen shared units: ok
+prophet: shared allocation keeps three Prophet and all three other tracks: ok
+prophet: common REL=0 does not terminate native release: ok
+prophet: native amp envelope frees the released voice: ok
+prophet: native self-oscillation starts with no oscillator or mixer noise: ok
+prophet: native self-oscillation starts with no oscillator or mixer noise: ok
+prophet: native velocity disabled bypasses common velocity gain: ok
+prophet: both four-pole modes stable across cutoff/resonance sweep: ok
+prophet: Curtis and SSI character models produce distinct output: ok
+prophet: SSI self-oscillation RMS 2883.0
+prophet: resonance can sustain self-oscillation without oscillators: ok
+prophet: Curtis self-oscillation RMS 4181.3
+prophet: resonance can sustain self-oscillation without oscillators: ok
+prophet: five-voice host stress 15.6 ms per rendered second, peak 64704
+prophet: sync/audio-rate Poly-Mod at high pitch remains bounded: ok
+prophet: maximum pitch and cutoff/resonance endpoints remain bounded: ok
+prophet: 0 failure(s); patch 138 B, state 1120 B per track

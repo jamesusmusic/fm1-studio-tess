@@ -1,0 +1,32 @@
+== DRUM SID: one 6581 on one voice, frame programs, DIGI on $D418, filter routing, levels
+SID KIT: 16 frame programs: TRI, PULSE or NOISE a step, steps and loops in range, a gate        ok
+SID KIT: KIT 6 is SID: factory kits SID KIT (DIGI OFF) and SID DIGI (DIGI ON)                   ok
+SID KIT:   peaks alone: KICK 24900 SNARE 23340 TOM L 23780 TOM M 25308 TOM H 22980 RIM 23336 CLAP 23260 HAT C 21916 HAT O 24702 CYMB 25098 BELL 23358 CONGL 25018 CONGM 23902 CONGH 24900 CLAVE 24460 MARAC 22896
+SID KIT: every drum alone sounds, under full scale, deterministic, then its voice ends          ok
+SID KIT: the kit plays on one voice; a fourth drum takes the oldest hit's SID voice             ok
+SID KIT: a closed hat chokes the open hat: faded out in 5.8 ms, the closed hat on a free voice  ok
+SID KIT:   tom fill 50 48 45 41: largest step, first tom 9122, the next three 10374
+SID KIT: a tom fill: the toms after the first step no harder than a tom alone                   ok
+SID KIT:   low tom cut by a high one: the next 5.8 ms span -9370 .. 20268
+SID KIT:   CONGL struck again while ringing: largest step 486 (while ringing 438)
+SID KIT: a ringing voice struck again fades out, then restarts: no click                        ok
+SID KIT:   kick: 9 frequency writes in 250 blocks, every 27..28 blocks
+SID KIT: a drum's program steps at PAL frames (19656 cycles = 27.5 blocks)                      ok
+SID KIT: DIGI ON: KICK on $D418 at 7882 Hz, no SID voice                                        ok
+SID KIT: DIGI ON: the kick sounds and its voice ends                                            ok
+SID KIT: DIGI ON: the snare sounds, under full scale                                            ok
+SID KIT:   open hat + kick minus each alone: DIGI 0.789, SID voices 0.0029 of the hat
+SID KIT: a digi kick modulates the open hat (one volume register); SID voices add               ok
+SID KIT:   snare rms TONE 127 3169, TONE 10 2146
+SID KIT: TONE darkens the snare (filtered), the open hat bypasses the filter                    ok
+SID KIT:   open hat after 150 ms: rms 239, recorded 50 ms long 99
+SID KIT: a recorded open hat of 50 ms releases early                                            ok
+SID KIT: KIT 808 -> SID while ringing: the 808's voices end, SID plays on one                   ok
+SID KIT:   kick + tom + hat, 8 times: wrapped samples DIGI off 0, on 0; peak 58286
+SID KIT: kick, tom and hat together: no sample wraps (voice_amp's 16 bits), under the part's scale ok
+SID KIT:   peaks KICK SNARE HAT C: 808 58288 57802 58288, SID 24900 23340 21916, DIGI 26252 22518
+SID KIT:   the 16 drums at once at the knobs' corners, velocity 127, RES 127: mix peak 20449
+SID KIT: kick and snare within 0.3 .. 2 x the 808's; no clipping at the corners                 ok
+SID KIT:   demo build/sid_kit_demo/sid_kit.wav
+SID KIT:   demo build/sid_kit_demo/sid_kit_digi.wav
+SID KIT: all checks ok

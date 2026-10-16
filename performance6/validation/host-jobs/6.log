@@ -1,0 +1,47 @@
+== flash storage (A/B, torn writes)
+empty flash loads nothing                      ok
+save A                                         ok
+load returns A                                 ok
+save B                                         ok
+load returns B (newer seq)                     ok
+torn save keeps B                              ok
+header not written keeps B                     ok
+save A again                                   ok
+load returns A                                 ok
+both copies corrupt -> nothing                 ok
+other objects untouched                        ok
+settings save/load                             ok
+CRC-32 is zlib's (check value 0xCBF43926)      ok
+newer copy rotten -> the older one loads       ok
+save over the rotten copy                      ok
+... loads the new data                         ok
+both headers broken -> nothing                 ok
+data stays in the Melodee regions              ok
+FM6 bank in the free sectors 0x9F000 / 0xFE000 ok
+legacy project objects retired: no load, no save, no flash access ok
+FM6 bank save / load (A then B)                ok
+FM6 bank: the sector tails stay erased         ok
+every payload/header byte cut keeps old data   ok
+erase failure keeps old data                   ok
+write protection is a save error               ok
+save sequence wraps                            ok
+wrapped sequence loads new data                ok
+save after sequence wrap                       ok
+invalid object load does no flash access       ok
+invalid object save does no flash access       ok
+wrapped object rejected                        ok
+small destination rejects whole object         ok
+oversized save rejected                        ok
+extended project: every page/header cut keeps all banks in the old copy ok
+bank project CRC fallback covers its final sector ok
+all four project extension pairs are disjoint and leave SPL scan tails erased ok
+extension overflow rejected before any flash access ok
+interrupted first upgrade preserves the old 152-note project ok
+range reads cross the base and padded extension boundaries exactly ok
+extension erase failure preserves the committed expanded copy ok
+every live object saves both copies at full size ok
+no two live objects share a flash sector       ok
+no object writes the app area or the OTA staging ok
+Tessera's object stays in the free pair 0x9D000..0x9EFFF ok
+storage test passed
+CZ banks have disjoint A/B sectors outside project and preset data ok

@@ -1,0 +1,2 @@
+== EQ accelerator: register layout, isolated histories and bounded timeout
+EQ hardware interface: float strides, isolated rows, no IRQ, busy guard, bounded timeout and permanent fallback: OK

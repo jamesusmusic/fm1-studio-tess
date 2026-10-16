@@ -1,0 +1,32 @@
+== native FM6/CZ user presets, scrolling, migration and interrupted saves
+persist: every engine addresses the same 384 shared slots                   ok
+persist: F064 stores original 128-byte DX7 VMEM                             ok
+persist: Z128 stores all original 144 CZ-1 bytes                            ok
+persist: shared slots expose their actual engine without duplicate entries  ok
+persist: native FM6 load keeps effects, modulation and pattern              ok
+persist: native CZ load keeps effects, modulation and pattern               ok
+persist: Z128 follows the final CZ factory tone in the real browser         ok
+persist: global preset scrolling loads the preceding factory tone           ok
+persist: global preset scrolling returns to Z128                            ok
+persist: global preset browser identifies native slots as user sounds       ok
+persist: native presets participate in the regular favorites filter         ok
+persist: filtered global scrolling loads F064 directly                      ok
+persist: native favorites persist without changing the settings layout      ok
+persist: both native pools survive reboot byte for byte                     ok
+persist: torn native save reports failure and rolls RAM back                ok
+persist: torn native save keeps the last flash commit                       ok
+persist: native writes refuse playback without flash erase                  ok
+persist: erased native presets stay erased across boot                      ok
+persist: an FM6 user preset's voice survives reboot in its native slot      ok
+persist: native storage stays separate from projects, general presets and OTA ok
+persist: 32-voice import commits two storage objects, not 32 saves          ok
+persist: all imported VMEM patches survive reboot in F033-F064              ok
+persist: bank validation finishes before any flash write                    ok
+persist: bank import refuses transport without changing flash               ok
+persist: failure in first bank object leaves all old patches in RAM         ok
+persist: interrupted first object retains prior bank after reboot           ok
+persist: failure in second object reports exactly 18 committed patches      ok
+persist: partial import RAM matches the durable objects after reboot        ok
+persist: resending completes the interrupted bank                           ok
+persist: resend commits the final voice                                     ok
+Native preset test passed

@@ -1,0 +1,75 @@
+== 384 shared presets: all-engine capacity, conversion, torn writes and high-slot identity
+persist: all 384 slots accept one engine and survive reboot                 ok
+persist: every shared preset copy leaves the loader's sector tail erased    ok
+persist: slot 384 is rejected without accessing flash                       ok
+persist: all 384 slots accept one engine and survive reboot                 ok
+persist: every shared preset copy leaves the loader's sector tail erased    ok
+persist: slot 384 is rejected without accessing flash                       ok
+persist: all 384 slots accept one engine and survive reboot                 ok
+persist: every shared preset copy leaves the loader's sector tail erased    ok
+persist: slot 384 is rejected without accessing flash                       ok
+persist: legacy FM bank fixture commits                                     ok
+persist: legacy FM bank fixture commits                                     ok
+persist: legacy FM bank fixture commits                                     ok
+persist: legacy FM bank fixture commits                                     ok
+persist: legacy CZ bank fixture commits                                     ok
+persist: legacy CZ bank fixture commits                                     ok
+persist: legacy CZ bank fixture commits                                     ok
+persist: legacy CZ bank fixture commits                                     ok
+persist: legacy CZ bank fixture commits                                     ok
+persist: legacy CZ bank fixture commits                                     ok
+persist: legacy CZ bank fixture commits                                     ok
+persist: legacy CZ bank fixture commits                                     ok
+persist: legacy Prophet bank fixture commits                                ok
+persist: legacy Prophet bank fixture commits                                ok
+persist: legacy Prophet bank fixture commits                                ok
+persist: legacy Prophet bank fixture commits                                ok
+persist: legacy Prophet bank fixture commits                                ok
+persist: legacy general bank fixture commits                                ok
+persist: legacy general bank fixture commits                                ok
+persist: legacy general bank fixture commits                                ok
+persist: legacy general bank fixture commits                                ok
+persist: interrupted conversion blocks user writes                          ok
+persist: conversion failure remains visible without reporting completion    ok
+persist: conversion retries successfully                                    ok
+persist: every migration erase follows a flushed keep-power screen          ok
+persist: successful migration completes all progress steps                  ok
+persist: legacy Prophet INIT star is preserved                              ok
+persist: all 128 Prophet tones and stars survive spill conversion           ok
+persist: all 384 preceding slots are retained                               ok
+persist: legacy general FM voice is embedded before source conversion       ok
+persist: general, FM and CZ favorites follow remapped slots                 ok
+persist: subsequent boots perform no conversion writes                      ok
+persist: converted banks skip the maintenance screen on later boots         ok
+persist: fixture fails migration before recovery                            ok
+persist: failed wipe intent cannot erase a source bank                      ok
+persist: interrupted wipe leaves durable reset intent and blocks writes     ok
+persist: failed reboot resumes wiping rather than migration                 ok
+persist: reboot completes the confirmed wipe and removes reset intent       ok
+persist: every wipe erase follows a visible keep-power screen               ok
+persist: both copies of every old/shared bank are empty; loader tails erased ok
+persist: wipe leaves projects, settings and every other flash region untouched ok
+persist: later boots neither migrate nor wipe again                         ok
+persist: all shared slots become writable after a successful wipe           ok
+persist: new sounds survive reboot without reset or migration               ok
+persist: power cuts during copy replacement/marker removal never resurrect presets ok
+persist: Prophet occupies a shared slot                                     ok
+persist: CZ replaces Prophet in the identical slot                          ok
+persist: highest slot retains its track identity                            ok
+persist: torn replacement reports failure                                   ok
+persist: torn replacement keeps previous engine and bytes                   ok
+persist: favorite can be set at slot 384                                    ok
+persist: favorite survives reboot                                           ok
+persist: favorite can be cleared                                            ok
+persist: favorite clear survives reboot                                     ok
+persist: custom drum sound occupies any shared slot                         ok
+persist: drum offsets and attenuation survive compact storage               ok
+persist: recent entries retain the ninth slot bit                           ok
+persist: favorite during playback is deferred without erasing               ok
+persist: deferred favorite commits when playback stops                      ok
+persist: projects preserve U384's identity independently of embedded tone   ok
+persist: unfinished archive conversion blocks writes to its source bank     ok
+persist: finalizing old archive preserves all 26 source programs            ok
+persist: unknown legacy records retain all phrase/opaque bytes              ok
+persist: failed confirmed whole-bank replacement retains opaque source      ok
+unified preset test passed

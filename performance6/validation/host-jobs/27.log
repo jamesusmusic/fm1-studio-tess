@@ -1,0 +1,17 @@
+== USB audio: endpoint lifecycle and packet ownership
+In file included from tests/usb_audio_driver_test.c:78:
+tests/../firmware/src/usb.c:107:16: warning: ‘midi_render_timed’ defined but not used [-Wunused-variable]
+  107 | static uint8_t midi_render_timed;                  /* audio ISR supplies the block's timeline */
+      |                ^~~~~~~~~~~~~~~~~
+tests/../firmware/src/usb.c:106:17: warning: ‘midi_render_time’ defined but not used [-Wunused-variable]
+  106 | static uint32_t midi_render_time;
+      |                 ^~~~~~~~~~~~~~~~
+USB audio endpoints: ownership, alternate settings, suspend/reset, frame wrap: OK
+USB audio EP0: formats, rates, malformed/aborted requests, bus reset: OK
+USB host volume/mute: EP0 ranges, validation/reset, smooth PCM16/24 playback, stereo/stem capture isolation: OK
+USB audio capture: prebuilt packets meet refill deadlines, DMA isolation, clean restart: OK
+USB duplex: either start order, independent stop/restart, feedback and prepared capture in PCM16/24: OK
+USB audio layouts: Out / In left out, interfaces renumbered, absent streams stall: OK
+USB audio on/off: debounced, replug, re-enumeration with the new layout: OK
+USB audio capture: prebuilt packets meet refill deadlines, DMA isolation, clean restart: OK
+USB input mode: stereo default, debounced live re-enumeration, no stale packets: OK

@@ -1,0 +1,2 @@
+== wire fields: byte order, cross-byte bounds and preserved surrounding bits
+Wire fields: widths 0..32, unaligned bytes, fixed little-endian layout, OR writes and canaries: OK

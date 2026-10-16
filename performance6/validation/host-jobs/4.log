@@ -1,0 +1,390 @@
+== parameter and engine tables as JSON (for the editor mock test)
+== web pages: editor protocol + native CZ patches, package builder, update protocol
+shared: one 384-slot capability replaces the engine pools        ok
+shared: pagination reaches slot U384 without wrapping            ok
+shared: highest slot preserves the complete Prophet voice and name ok
+shared: CZ replaces Prophet at the same absolute slot            ok
+shared: imports check occupancy across every engine              ok
+shared: load preserves the full slot identity on any track       ok
+shared: erasing U384 clears the shared slot                      ok
+shared: incoming native name/control bytes remain byte-exact     ok
+shared: drum patches survive bank export and import              ok
+shared: malformed native voices fail before sending a write      ok
+shared: tone picker groups user slots under their actual engine  ok
+scale picker: every supported scale available                    ok
+scale picker: family filtering                                   ok
+scale picker: readable names searchable                          ok
+scale picker: short names and note counts searchable             ok
+scale picker: favorites retain catalogue IDs                     ok
+scale picker: empty favorites and search                         ok
+scale picker: old firmware and unknown scale fallback            ok
+native motion: 8-bit parameter and tagged value survive MIDI framing ok
+native motion: existing motion replies remain compatible         ok
+native import: free slots are filled before anything is overwritten ok
+native import: a full collection overwrites consecutive slots from the selected one ok
+native import: a bank larger than the free space asks to overwrite from P001 ok
+native import: a bank that does not fit after the selected slot is refused before any write ok
+Prophet: exact single/edit SysEx round trips for both models and sizes ok
+Prophet: malformed masks, framing and foreign models rejected    ok
+Prophet: stable engine/collection capability identifiers         ok
+Prophet: user collection starts empty                            ok
+Prophet: first factory patch matches Sequential's original bytes ok
+Prophet: audition and capture target selected track and discard removed effects ok
+Prophet: librarian JSON retains every native byte and metadata   ok
+Prophet: highest native slot uses 138-byte records and lists 128 slots ok
+Prophet: invalid native program rejected before sending any write ok
+Prophet: older firmware rejected before changing the sound       ok
+Prophet backup: 28-object archive keeps P128 and its star byte for byte ok
+Prophet backup: malformed bank, masks and program fail before transport ok
+Prophet backup: older firmware refuses native banks before the first write ok
+CZ: native 144-byte .syx import/export preserves every byte      ok
+CZ: dump and receive frames in a multi-tone bank                 ok
+CZ: compatible 128-byte tones gain native defaults               ok
+CZ: malformed, foreign and truncated files are rejected          ok
+CZ: one edited rate leaves every other native byte intact        ok
+CZ: firmware capability is advertised                            ok
+CZ: audition targets selected track 3 with complete native data  ok
+CZ: native library audition ignores removed effects and restores modulation after raw tone upload ok
+CZ: capture reads the selected track's native tone               ok
+CZ: upload to user preset bank                                   ok
+CZ: user preset bank returns all 144 tone bytes                  ok
+CZ: library JSON round trip retains native bytes                 ok
+CZ: unsupported firmware is rejected before changing sound       ok
+CZ: independent native preset collections advertised             ok
+CZ: independent named banks retain all native bytes and empty slots ok
+CZ: invalid bank refused before any write                        ok
+CZ: interrupted bank upload keeps previously committed bank      ok
+CZ: dedicated bank exports a complete reusable .syx bank         ok
+CZ: earlier next librarian tones migrate to native bank-ready patches ok
+Library SysEx: real Casio factory bank imports offline           ok
+Library SysEx: all 64 individual CZ tones survive SysEx import and JSON export/reimport ok
+Library SysEx: individual Yamaha voices import as FM6 and export/reimport as JSON ok
+Library SysEx: Yamaha banks retain every packed voice            ok
+Library SysEx: real Prophet factory library keeps its native programs ok
+Library SysEx: corrupt, truncated and unknown files are rejected ok
+native: independent 64 FM6 and 128 CZ preset lists               ok
+native: highest slots return exact native bytes and full CZ name ok
+native: returned presets contain no Felucca effects or pattern   ok
+native: loading changes the tone and keeps modulation and steps without effects ok
+native: scrolling within CZ keeps track macros                   ok
+native: Z128 current slot survives 7-bit protocol encoding       ok
+native: saving the playing tone and rename preserve the complete sound ok
+native: normal preset browser includes CZ user favorites         ok
+native: wrong collection and malformed tones are rejected before writing ok
+native: choosing a factory preset clears native origin           ok
+native: erase removes the slot from the scrollable collection    ok
+stock: unsupported backups block flashing by default, explain opt-out ok
+stock: explicit skip bypasses backup protocol and confirms data loss ok
+stock: cancelling the no-backup confirmation never flashes       ok
+stock: motion v2 firmware saves the backup before confirmation and flashing ok
+stock: older motion v1 firmware retains backup and restore support ok
+stock: unsupported backup protocol or missing read capability still blocks flashing ok
+stock: unsupported backup protocol or missing read capability still blocks flashing ok
+stock: a failed backup never silently falls through to flashing  ok
+stock: interrupted updates still require saved backup or explicit skip ok
+stock: explicit skip can resume a loader after data-loss confirmation ok
+stock: saved-backup recovery retains its existing confirmation   ok
+installer: dual-core stable firmware is the default              ok
+installer: stable installs its own package and identity          ok
+installer: development channels report their own versions        ok
+installer: development channels install their own package and identity ok
+installer: returning to stable restores its identity             ok
+installer: development channels report their own versions        ok
+installer: development channels install their own package and identity ok
+installer: returning to stable restores its identity             ok
+installer: each dual-core channel is fetched once                ok
+installer: nightly source and timestamp are visible              ok
+installer: RC version is visible                                 ok
+installer: no channel offers single-core firmware                ok
+installer: unavailable RC/nightly channels are hidden            ok
+installer: Install is disabled while the selected package loads  ok
+installer: a late download cannot replace the selected release   ok
+installer: package and release selection are locked throughout writing ok
+installer: selection unlocks after writing                       ok
+native motion: INFO v2 retains the tagged capabilities, v1 firmware still supported ok
+patterns: tagged INFO preserves preferences, motion, backup and FM6 ok
+patterns: bank selection uses its track and zero-based bank      ok
+patterns: SONG carries independent banks for every track         ok
+patterns: invalid bank-song values rejected before transport     ok
+patterns: nine-object archives accept complete 32-bank projects  ok
+editor: INFO                                                     ok
+editor: DESC for every parameter                                 ok
+editor: removed effect parameter is inert 33                     ok
+editor: removed effect parameter is inert 34                     ok
+editor: removed effect parameter is inert 35                     ok
+editor: removed effect parameter is inert 36                     ok
+editor: removed effect parameter is inert 45                     ok
+editor: removed effect parameter is inert 46                     ok
+editor: removed effect parameter is inert 47                     ok
+editor: removed effect parameter is inert 48                     ok
+editor: matrix parameters 49..60 over DESC (21 DST names)        ok
+editor: a factory preset turns every matrix slot off             ok
+editor: the chord keys 81, 82 over DESC                          ok
+editor: a factory preset keeps CHRD and VOIC (the track's)       ok
+editor: preferences preserve the existing SONG command           ok
+editor: an untagged PR capability cannot masquerade as SONG or preferences ok
+editor: existing SONG firmware remains compatible without preference probes ok
+editor: tagged preference extension advertises its supported controls ok
+editor: queued favorite response is applied while waiting for STOP ok
+editor: a NAMES reply cut short keeps its whole names            ok
+editor: preference capabilities (palette, favorites) and palette names ok
+recording preference click round trip                            ok
+recording preference click rejects invalid values                ok
+recording preference clickLevel round trip                       ok
+recording preference clickLevel rejects invalid values           ok
+recording preference countin round trip                          ok
+recording preference countin rejects invalid values              ok
+recording preference preview round trip                          ok
+recording preference preview rejects invalid values              ok
+recording preference chordAdd round trip                         ok
+recording preference chordAdd rejects invalid values             ok
+recording preferences require a complete state suffix            ok
+editor: display preference 0 (palette) round trip                ok
+editor: out-of-range palette refused                             ok
+editor: the retired font weight answers not supported            ok
+editor: empty user slot cannot be favorited                      ok
+editor: favorites filter follows device state                    ok
+editor: panel-side favorite changes refresh                      ok
+editor: saved user slot appears as favorite                      ok
+editor: overwrite retains star and refreshes name                ok
+editor: erased slot disappears and loses star                    ok
+editor: engines listed FM6 second, DRUM last (indices kept)      ok
+editor: an unknown engine follows the known ones                 ok
+editor: device presets in the device's engine order              ok
+editor: old firmware receives no unsupported preference requests ok
+editor: full microtonal scale catalogue exposed                  ok
+editor: new scale selection is not clamped to the old range      ok
+editor: MPC degree range follows the selected microtonal scale   ok
+editor: changing to a smaller scale clamps MPC degree            ok
+editor: DUMP                                                     ok
+editor: SET clamps to the range                                  ok
+editor: MIDI IN routing (ROUT four-channel ranges / SEL, global id 14) ok
+editor: device workload budget survives project loads            ok
+editor: removed global effect parameter is inert 4               ok
+editor: removed global effect parameter is inert 5               ok
+editor: removed global effect parameter is inert 6               ok
+editor: removed global effect parameter is inert 7               ok
+editor: removed global effect parameter is inert 8               ok
+editor: removed global effect parameter is inert 9               ok
+editor: removed global effect parameter is inert 10              ok
+editor: removed global effect parameter is inert 11              ok
+editor: removed global effect parameter is inert 24              ok
+editor: removed global effect parameter is inert 25              ok
+editor: removed global effect parameter is inert 26              ok
+editor: STEP_SET                                                 ok
+editor: PROJECT save                                             ok
+editor: A4=432 Hz is independent of project loads                ok
+editor: sample upload (CRC checked by the mock)                  ok
+editor: no reply -> timeout after the retries                    ok
+editor: SAMPLE, GRAIN and SLICE removed; other engine IDs kept   ok
+editor: PHASE, VOICE, TRIO, WHEEL, PHYS and NOISE retired with their original IDs reserved ok
+editor: DRUM engine 10 (KIT TUNE TONE DECY SNAP ACC KICK DRV, KIT 808), 808, 909 and SID kits ok
+editor: mock tables == firmware (0 differences)                  ok
+editor: percent values == firmware (123 values)                  ok
+editor: SWG 100 shows 100 % (not 79), 0..127 percents unchanged  ok
+librarian: parameter keys unique (label#n, E0..E7)               ok
+librarian: UP_LIST, 64 slots in 4 frames                         ok
+librarian: capture = DUMP + first 16 steps                       ok
+librarian: UP_PUT -> UP_GET round trip                           ok
+librarian: UP_PUT to a slot past the bank -> rc 1                ok
+librarian: device names (ASCII, 1..12)                           ok
+librarian: UP_STORE keeps the current sound                      ok
+librarian: UP_LOAD applies the sound only (steps and the track's ARP stay) ok
+librarian: UP_ERASE, UP_LOAD of an empty slot -> rc 1            ok
+librarian: audition = G_ENGSEL + SETs of the sound; steps, LEN and ARP stay; no flash write ok
+librarian: a second audition keeps the sequence too              ok
+librarian: pattern ties / rests normalised like the firmware     ok
+librarian: UP_STORE with no name -> automatic name               ok
+library file: versioned, with P_COUNT, labels and engines        ok
+library file: timing QNT has a separate key and preserves legacy scale QNT ok
+library file: retired effect labels never activate new FX controls ok
+library file: write -> read round trip                           ok
+library file: other ids / engine order mapped by label and name  ok
+library file: a patch for an unknown engine is skipped           ok
+library file: bank export keeps slot numbers                     ok
+library file: 69-parameter files (patch, labelled, unlabelled) map the engine's 8 to E0..E7 ok
+library file: 89-parameter files (patch, labelled, unlabelled) map the engine's 8 to E0..E7, the chord keys unset ok
+library file: Felucca 1.0 files (91 parameters) map the engine's 8 to E0..E7, DEG unset ok
+library file: reads the old "Save to file" format                ok
+library file: unknown format -> error                            ok
+FX: librarian capture excludes TONE                              ok
+FX: librarian capture excludes the track's chain                 ok
+FX: device preset store uses dry insert defaults                 ok
+FX: factory, user and librarian sound loads preserve all three track slots ok
+FX: sound loads preserve TONE                                    ok
+FX: TONE formats Full, Dark / Thin and the cut's frequency       ok
+motion: native and common events sharing an engine ID coexist    ok
+motion: typed common deletion preserves the native event         ok
+motion: typed native deletion preserves the common event         ok
+grid: hits as text (lanes, > accent, CYM / CONGA aliases)        ok
+grid: STEP_SET / STEP_GET carry the hits (lane 8 too)            ok
+grid: a STEP_SET without hits (an older editor) keeps them       ok
+grid: TRACK_STEP carries the hits (an older firmware's reply: none) ok
+grid: capture of a DRUM track = its grid (a crash 49 on BELL)    ok
+grid: UP_PUT kind 1 -> UP_GET round trip                         ok
+grid: malformed preset extension rejected without changing saved data ok
+grid: malformed preset extension rejected without changing saved data ok
+grid: malformed preset extension rejected without changing saved data ok
+grid: a library file keeps the grid                              ok
+grid: UP_STORE of a DRUM track stores its grid                   ok
+grid: a note pattern stays a pattern (kind 0)                    ok
+live: WATCH on                                                   ok
+live: CHANGED while DUMP waits -> push handler, reply still matched ok
+live: RELOAD and STEP_CHANGED routed                             ok
+live: RELOAD after an editor PRESET too, nothing after its STEP_SET ok
+live: PING keeps WATCH on                                        ok
+live: WATCH ends by itself without requests                      ok
+live: drag SETs coalesce (2 frames for 40 values, latest kept)   ok
+live: no timeouts                                                ok
+live: older firmware -> WATCH unanswered (fall back to polling), no bank ok
+preferences: a reply for another setting or favorite cannot finish the request ok
+preferences: the matching reply completes the request            ok
+preferences: a reply for another setting or favorite cannot finish the request ok
+preferences: the matching reply completes the request            ok
+preferences: a reply for another setting or favorite cannot finish the request ok
+preferences: the matching reply completes the request            ok
+preferences: a reply for another setting or favorite cannot finish the request ok
+preferences: the matching reply completes the request            ok
+preferences: stale replies are routed away without leaving requests busy ok
+tracks: INFO NTRK, TRACK lists 4 parts (track 4: DRUM KIT)       ok
+tracks: TRACK selects; DUMP / SET act on it, TRACK_DUMP reads any track ok
+tracks: TRACK_STEP set / get on another track                    ok
+tracks: TRACK_MIX level / mute (track 4: its own LEVEL)          ok
+tracks: track 4 selected -> DUMP engine DRUM, UP_STORE / UP_LOAD rc 0 ok
+tracks: WATCH on                                                 ok
+tracks: RELOAD / STEP_CHANGED carry the selected track           ok
+tracks: PROJECT save / load keeps every track and the selection  ok
+tracks: older firmware parses (no tracks)                        ok
+mixer: read = TRACK + pan of every track (TRACK_DUMP)            ok
+mixer: TRACK_MIX level / mute round trip (clamped)               ok
+mixer: WATCH on                                                  ok
+mixer: pan of any track via SET (other track selected for a moment, then back; no push) ok
+mixer: device-side level (CHANGED push) and REC arm read back    ok
+mixer: track 4's level on the device pushes its LEVEL (P_LEVEL)  ok
+mixer: the mock's track 4 holds the BEAT grid (KICK CHH ... SNARE ... OHH) ok
+mixer: notes parse as numbers or note names (no GM drum names)   ok
+v4: WATCH 1 answers 1 as before (no TRACK_CHANGED pushes)        ok
+v4: WATCH 3 -> 3 (TRACK_PARAM / TRACK_CHANGED known)             ok
+v4: TRACK_PARAM get / set on other tracks (clamped as SET, selection kept, no push) ok
+v4: TRACK_PARAM of track 5: no reply                             ok
+v4: TRACK_CHANGED pushes for the other tracks, CHANGED for the selected one ok
+v4: v3 firmware -> WATCH 1, no TRACK_PARAM (pan by select / restore) ok
+SONG: INFO capability appended                                   ok
+SONG: rows and repeats round trip                                ok
+SONG: missing source rejected before PLAY                        ok
+SONG: PLAY starts from row 1                                     ok
+SONG: editing during PLAY refused, rows kept                     ok
+SONG: zero repeats rejected without changing rows                ok
+SONG: short row list rejected                                    ok
+SONG: project save/load recalls the chain                        ok
+SONG: empty chain does not PLAY                                  ok
+SONG: older firmware has no capability                           ok
+editor: old completion cannot release new connection's busy count ok
+editor: operation release is idempotent and never goes negative  ok
+editor: late reply from an unplugged device is rejected          ok
+editor: captured request cannot write through a replacement connection ok
+editor: interrupted initial load cannot paint or unlock a new session ok
+editor: unplug during library adoption aborts the old load       ok
+editor: a current connection still completes its initial load    ok
+editor: library storage delay cannot send a save to a new device ok
+FM6: pack(unpack(x)) == x for the factory patches and the init voice ok
+FM6: any 128 bytes unpack into range                             ok
+FM6: a 32-voice bank SysEx is 4104 bytes, a single voice 163     ok
+FM6: bank SysEx round trip (names, checksum)                     ok
+FM6: two single-voice messages in one file                       ok
+FM6: a wrong checksum is reported (the voice still read)         ok
+FM6: raw 4096 / 155-byte files read too                          ok
+FM6: carriers and the feedback operator of an algorithm          ok
+FM6: INFO tag (24 factory, no patch bank)                        ok
+FM6: factory voice list                                          ok
+FM6: retired bank writes report no bank                          ok
+FM6: library capture includes whole voice                        ok
+FM6: older firmware rejected before writing a voice-bearing preset ok
+FM6: U64 stores and reads its whole voice                        ok
+FM6: library upload and reload retain voice                      ok
+FM6: unused E7 cannot select a factory voice                     ok
+FM6: factory preset loads its own patch directly                 ok
+FM6: retired bank erase reports no bank                          ok
+FM6: a short record or a fifth track: rc 1                       ok
+FM6: firmware without it: no tag, no FM6 tab                     ok
+DIGITAL -> FM6: the editor's conversion == the firmware's (48 sounds, 0 differ) ok
+DIGITAL -> FM6: its presets and the FM6 presets covering them == the firmware's ok
+DIGITAL retired: engine 1 reserved ("-", no presets)             ok
+DIGITAL retired: SET G_ENGSEL 1 -> engine 1 as asked (silent), no conversion ok
+DIGITAL retired: PRESET 1 5 -> engine 1, no presets, no conversion ok
+library file: a DIGITAL patch (92 parameters) imports as FM6 with the converted patch ok
+library file: .. of 89 parameters (labelled, and a single-patch file): the OP ENV edit carried ok
+library file: .. of 69 parameters (no OP ENV then: the defaults) ok
+library file: the converted patch and its DIGITAL values round trip ok
+library: libAdopt on a device without DIGITAL converts its DIGITAL sounds to FM6 ok
+library: .. also when the layout is unchanged (only those written) ok
+device slot of a DIGITAL sound (engine 1, its values kept): UP_LOAD loads engine 1 (retired, silent) ok
+editor: 7 tabs, one panel each (sound fm6 sequencer tracks library projects settings) ok
+editor: last tab in localStorage (try/catch) and in the URL hash ok
+editor: every string in ja and en (183 used)                     ok
+editor: page script compiles                                     ok
+editor: no colours beyond the black / white tokens in the new styles ok
+editor: every icon name is in GLYPH (33 used)                    ok
+editor: fukiai.ttf and FUKIAI-LICENSE.txt next to editor.html    ok
+editor: icons hidden until the font has loaded                   ok
+samples: editor == sampleio.py (4 WAV formats, 7737 B)           ok
+samples: the whole input == normalize (files load as before); the ends are clamped ok
+samples: autoTrim finds the sound (5403..13671 for 5513..13230: 5 ms before, 20 ms after) ok
+samples: autoTrim of silence keeps all                           ok
+samples: a cut: its length, faded to 0 at both cut ends, peak normalised ok
+samples: trim view: zoom at the pointer, 256 samples at least, inside the input, pan, out to all ok
+fm1pkg.js logicalImage                                           ok
+fm1pkg.js productOf == Python (development and release identities) ok
+fm1ota.js: install: running firmware -> loader -> Melodee (11 reads) ok
+fm1ota.js: FM-1_900 returns to stock V15 across USB name/identity changes ok
+fm1ota.js: FM-1_91040 returns to stock V15 across USB name/identity changes ok
+fm1ota.js: FM-1_91041 returns to stock V15 across USB name/identity changes ok
+fm1ota.js: interrupted release firmware update resumes to verified stock V15 ok
+fm1ota.js: unplugged during the write -> stops at once           ok
+fm1ota.js: unplugged in step 1 -> error code 'lost'              ok
+fm1ota.js: no device -> error code 'notfound'                    ok
+web tests passed
+== installer UI: release selection, fetch races, cache and write lock
+installer: dual-core release/channel selection, cache separation, fetch races, language, write lock and scrolling passed
+== web backup: capture, validation before writes, restore order
+backup: numbers and CRC-32                                               ok
+backup: 7-bit pack / unpack round trip                                   ok
+backup: trailing bytes refused                                           ok
+backup: capture lists every object, empty ones as 0                      ok
+backup: capture -> file -> bytes round trip                              ok
+backup: a device that changes during capture fails the capture           ok
+backup: a damaged file is refused                                        ok
+backup: a file without the current music is refused                      ok
+backup: a short manifest is refused                                      ok
+backup: restore validates every byte before the first write              ok
+backup: restore order: projects, banks, samples, settings, live music last ok
+backup: restored objects equal the source                                ok
+backup: the FM6 bank (id 8) is part of the archive                       ok
+backup: an archive of the 11 objects before FM6 still reads              ok
+backup: an archive missing another object is refused                     ok
+backup: a refused chunk aborts that object and stops before the live music ok
+backup: captures all nine bank-era objects, including full saved banks   ok
+backup: full bank archive restores with current music last               ok
+backup: bank archive is refused by older firmware before any write       ok
+backup: legacy archive without samples migrates, skipping retired empty slots ok
+backup: nonempty retired sample slots are refused before any write       ok
+backup: captures all eight dedicated CZ banks                            ok
+backup: native CZ banks restore byte-exact with live music last          ok
+backup: previous next CZ bank format reaches firmware migration          ok
+backup: corrupt CZ bank refused before any writes                        ok
+backup: older archives preserve dedicated CZ banks absent from archive   ok
+backup: all 64 preset records and their owned FM6 voices round trip      ok
+backup: user records restore before their voices, live music last        ok
+backup: expanded 1024-note projects capture and restore completely       ok
+backup: expanded archives are refused by 152-note firmware before any write ok
+backup: preflight checks saved slots too when runtime is an older format ok
+backup: independent native FM6/CZ pools round trip in 23-object archive  ok
+backup: malformed native voice refused before any restore writes         ok
+backup: an archive the firmware refuses (old owned voices) writes nothing ok
+backup: 29-object archive includes the final shared slots                ok
+backup: final compact shared bank restores byte for byte                 ok
+backup: Studio's 31-object archive separates preset 28 from custom 30/31 ok
+backup: live custom state restores after runtime music                   ok
+backup: legacy 28/29 translate without writing the shared preset bank    ok
+backup: legacy Tess archive is rejected on upstream firmware before any writes ok
+backup web tests passed

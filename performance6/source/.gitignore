@@ -1,0 +1,18 @@
+build/
+__pycache__/
+# hand-made backups of edited sources
+firmware/src/*.bak*
+firmware/src/*.pre*
+tools/*.pre*
+fm1-recovery-backups/
+*.fwsc
+
+.nightly-deps/
+.nightly-pages/
+
+# Local integration validation logs
+build-target.log
+tests-*.log
+# Manual figures are rendered from the host UI (tools/manual_shots.py).
+web/manual/*.png
+!/AGENTS.md

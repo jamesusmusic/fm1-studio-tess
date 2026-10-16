@@ -1,0 +1,3 @@
+== target budget: natural loops and FPU decoding
+target budget: alternatives, split/nested loops, divides, calls and conservative fallbacks passed
+target budget: decoded FPU instructions counted once; undecoded instructions rejected

@@ -1,0 +1,2 @@
+== audio jobs: reject stale PCM, damaged bounds and destinations; quarantine non-finite FM6 output
+Audio batch safety: rejected serial descriptors never merge stale PCM or unchecked lengths: OK

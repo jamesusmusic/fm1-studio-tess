@@ -1,0 +1,37 @@
+gen_909_tables: EXP pot ranges -> /workspace/scratch/f35294b77b31/fm1-performance6/build/gen/x0x_drum_tables.h
+size: 1098 main-loop functions built for size (41 not in this build)
+audio RAM: 371 reachable functions; 89 flash/RAM call boundaries
+loader: image 8596 B at 0x1c0a800, bss end 0x1c0f570
+loader: ota.bin 7378 B
+kerning: 1635 pairs at 28 px, shared = 2946 B
+face LB: Rubik[wght].ttf@500 16px h19 base15  105 glyphs x 2  data 4341 B + table 1680 B + kern classes 0 B = 6031 B   digit adv 10.00px
+face TX: Rubik[wght].ttf@500 20px h24 base19  105 glyphs x 2  data 5596 B + table 1680 B + kern classes 0 B = 7286 B   digit adv 13.00px
+face VL: Rubik[wght].ttf@500 28px h34 base27  105 glyphs x 1  data 4459 B + table 840 B + kern classes 0 B = 5309 B   digit adv 18.00px
+face HR: Rubik[wght].ttf@500 48px h57 base45  79 glyphs x 1  data 6626 B + table 632 B + kern classes 158 B = 7494 B   digit adv 31.00px
+face PIX: melodee_pixel.txt 105 glyphs, 1 bit, roles [('LB', 2), ('TX', 2), ('VL', 3), ('HR', 5)] = 2287 B
+fonts total 31353 B  -> /workspace/scratch/f35294b77b31/fm1-performance6/build/gen/ui_fonts.h
+icons 12px: 61 cells, 4523 B
+icons 16px: 34 cells, 4483 B
+icons 24px: 7 cells, 2147 B
+icons total 11153 B -> /workspace/scratch/f35294b77b31/fm1-performance6/build/gen/ui_icons.h   (61 drawings)
+keycaps: 25 labels -> /workspace/scratch/f35294b77b31/fm1-performance6/build/gen/ui_keycaps.h
+tables: /workspace/scratch/f35294b77b31/fm1-performance6/build/gen/melodee_tables.h
+fm6 patches: 8 -> /workspace/scratch/f35294b77b31/fm1-performance6/build/gen/melodee_fm6.h
+cz1 factory: 64 tones, 5389 B packed -> /workspace/scratch/f35294b77b31/fm1-performance6/build/gen/melodee_cz1.h
+Prophet factory: 200 exact native programs -> /workspace/scratch/f35294b77b31/fm1-performance6/build/gen/melodee_prophet_factory.h
+stub: 2268 B of 3808 (59.6%), version 3, sha256 baee55ed142fe1cc
+  ok    .ram_text: 925 insns, no calls
+  ok    audio RAM: 369 linked functions verified in SRAM; optional bounded FX inserts
+  ok    FM6: sample kernel and operator helpers in internal DSP RAM
+  ok    CPU1: RAM polling loop, private 8 KiB stacks, bounded startup/join
+  ok    image 545356 B; RAM .data+.bss 97664 B of 98304; pool 167820 B of 344064
+  ok    audio working arena 51616 B available on demand (minimum 49152)
+  ok    low SRAM tail 1764 B: 0x01c0781c..0x01c07f00 (end exclusive)
+  ok    data SRAM tail 640 B: 0x01c1fd80..0x01c20000 (end exclusive)
+  ok    retained SRAM tail 784 B: 0x01c7fa40..0x01c7fd50 (end exclusive)
+  ok    total audio resources 54804 B in four separate SRAM banks; reclaimed 3188 B
+  ok    register access: hal/ only (src/, loader/ clean)
+app      /workspace/scratch/f35294b77b31/fm1-performance6/build/melodee.bin  545356 B
+loader   /workspace/scratch/f35294b77b31/fm1-performance6/build/loader/ota.bin  7378 B
+package  /workspace/scratch/f35294b77b31/fm1-performance6/build/melodee-1.4.1-studio-tess.6.fwsc  610534 B, identity FM-1_91041
+release  /workspace/scratch/f35294b77b31/fm1-performance6/build/release-1.4.1-studio-tess.6/

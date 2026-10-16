@@ -1,0 +1,10 @@
+== microtonal: catalogue, layouts, note ownership, recordings and rendered pitch
+microtonal: every catalogue degree, negative periods, ROOT/TRN, layouts, bypass and drums ok
+microtonal: close pitches, MIDI releases after changes, chords, ARP periods and project recordings ok
+microtonal: FM6 24EDO 269.292 Hz, error 0.001 cents
+microtonal: FM6 31EDO 267.483 Hz, error 0.378 cents
+microtonal: FM6 JI-MAJ 326.951 Hz, error 0.423 cents
+microtonal: FM6 MT-1/4 273.342 Hz, error 0.207 cents
+microtonal: FM6 RAST 320.243 Hz, error 0.004 cents
+microtonal: FM6 BP-ET 284.692 Hz, error 0.024 cents
+microtonal tests passed

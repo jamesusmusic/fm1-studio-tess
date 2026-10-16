@@ -1,0 +1,7 @@
+== Studio performance: duration, release, tone and recording
+performance: hold across Euclid rests, next-hit release, independent fixed time, four-key overlap limit and mute cleanup passed
+performance: fixed and next-hit captures retain multi-step durations; one pass seals holds, playback/STOP leave no pending MIDI keys
+performance: FM6 native release survives generic ADSR, user fade ends voices, FM AMP attack/release and carrier-safe non-destructive tone mapping passed
+performance: explicit FM6 FADE retains native key state during outer release, so fast R4 cannot defeat it; voice retires at fade end
+performance: FM6 reused-voice first sample continuity and bounded correction settling passed
+performance: HMF1 migration defaults to bypass, full-range HMF2 round-trip and reserved-bit rejection passed

@@ -1,0 +1,35 @@
+== M-UPGRADE entry (own loader)
+tests/ota_test.c: In function ‘ota_wire_send’:
+tests/ota_test.c:82:10: warning: ‘u’ may be used uninitialized [-Wmaybe-uninitialized]
+   82 |     if (u[2] == 0x11) { ident_replies++; return 0; }
+      |         ~^~~
+tests/ota_test.c:78:13: note: ‘u’ declared here
+   78 |     uint8_t u[64], m[600];
+      |             ^
+handshake answered                                   ok
+identity frame is FM-1_900                           ok
+an older Melodee partition (0x89000) still installs (its own loader) ok
+  20 requests
+session commits                                      ok
+headers + loader + confirm, no head reads            ok
+staged body == the package's loader                  ok
+LOADER.BIN head CRC                                  ok
+record at 0xE4F00 == RAM record                      ok
+record CRC / type / magic / ota_addr                 ok
+nothing written outside 0xE0000..0xE4FFF             ok
+app and stub accept the actual staged loader         ok
+app/stub loader checks agree on 20,480 damaged copies ok
+boot retains loader, erases only record              ok
+record cleanup reports one completed sector          ok
+next boot keeps loader without erasing               ok
+record erase failure keeps loader for retry          ok
+record erase retry keeps loader                      ok
+boot cleanup erases the area                         ok
+cleanup shows progress before every erase            ok
+second boot skips writes and maintenance display     ok
+cleanup error stops at its last completed sector     ok
+retry finds dirty data even with erased loader headers ok
+cleanup read error is visible                        ok
+host gone -> no commit, area clean                   ok
+no 'success' -> -13, no commit, area clean           ok
+ota test passed

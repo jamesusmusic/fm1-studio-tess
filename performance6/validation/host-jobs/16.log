@@ -1,0 +1,44 @@
+== nightly and synth-only site preserve release and editor
+................
+----------------------------------------------------------------------
+Ran 16 tests in 0.430s
+
+OK
+site: /tmp/tmpkaw9_fix/site: webapp/installer (55925 B), webapp/editor, firmware/melodee-1.3.2.fwsc (1025 B), FM-1_91032
+site: /tmp/tmpkaw9_fix/site: webapp/installer (56137 B), webapp/editor, firmware/melodee-1.3.2.fwsc (1025 B), FM-1_91032
+site: /tmp/tmp4s260pco/site: webapp/installer (55925 B), webapp/editor, firmware/melodee-1.3.2.fwsc (1025 B), FM-1_91032
+site: /tmp/tmpnur039vq/site: webapp/installer (55925 B), webapp/editor, firmware/melodee-1.3.2.fwsc (1025 B), FM-1_91032
+site: /tmp/tmpnur039vq/site: webapp/installer (56026 B), webapp/editor, firmware/melodee-1.3.2.fwsc (1025 B), FM-1_91032
+site: /tmp/tmpnur039vq/site: webapp/installer (56238 B), webapp/editor, firmware/melodee-1.3.2.fwsc (1025 B), FM-1_91032
+site: /tmp/tmprankjxlw/site: webapp/installer (55925 B), webapp/editor, firmware/melodee-1.3.2.fwsc (1025 B), FM-1_91032
+site: /tmp/tmprankjxlw/site: webapp/installer (56137 B), webapp/editor, firmware/melodee-1.3.2.fwsc (1025 B), FM-1_91032
+site: /tmp/tmpnefy5dcd/site: webapp/installer (55925 B), webapp/editor, firmware/melodee-1.3.2.fwsc (1025 B), FM-1_91032
+site: /tmp/tmpnxfpwh9e/site: webapp/installer (55925 B), webapp/editor, firmware/melodee-1.1.0.fwsc (1025 B), FM-1_91010
+site: /tmp/tmpnxfpwh9e/site: webapp/installer (55925 B), webapp/editor, firmware/melodee-1.1.0.fwsc (1025 B), FM-1_91010
+site: /tmp/tmpnxfpwh9e/fresh: webapp/installer (55925 B), webapp/editor, firmware/melodee-1.1.0.fwsc (1025 B), FM-1_91010
+site: /tmp/tmp7eun99p7/site: webapp/installer (55925 B), webapp/editor, firmware/melodee-1.3.2.fwsc (1025 B), FM-1_91032
+site: /tmp/tmp7eun99p7/site: webapp/installer (56137 B), webapp/editor, firmware/melodee-1.3.2.fwsc (1025 B), FM-1_91032
+site: /tmp/tmp7eun99p7/site: webapp/installer (56137 B), webapp/editor, firmware/melodee-1.3.2.fwsc (1025 B), FM-1_91032
+site: /tmp/tmp1nxzl3p0/site: webapp/installer (55925 B), webapp/editor, firmware/melodee-1.3.2.fwsc (1025 B), FM-1_91032
+Live nightly source and package checksum verified: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+site: /tmp/tmpsl1pyh4r/site: webapp/installer (55925 B), webapp/editor, firmware/melodee-1.3.2.fwsc (1025 B), FM-1_91032
+site: /tmp/tmptqe6_h1h/site: webapp/installer (55925 B), webapp/editor, firmware/melodee-1.3.2.fwsc (1025 B), FM-1_91032
+site: /tmp/tmp_jj_ieou/site: webapp/installer (55925 B), webapp/editor, firmware/melodee-1.1.0.fwsc (1025 B), FM-1_91010
+site: /tmp/tmp_jj_ieou/site: webapp/installer (55925 B), webapp/editor, firmware/melodee-1.1.0.fwsc (1025 B), FM-1_91010
+site: /tmp/tmp4rajjqkw/site: webapp/installer (55925 B), webapp/editor, firmware/melodee-1.3.2.fwsc (1025 B), FM-1_91032
+site: /tmp/tmpodxfd34s/site: webapp/installer (55925 B), webapp/editor, firmware/melodee-1.3.2.fwsc (1025 B), FM-1_91032
+site: /tmp/tmpzpihc5gg/site: webapp/installer (55925 B), webapp/editor, firmware/melodee-1.3.2.fwsc (1025 B), FM-1_91032
+site: /tmp/tmpzpihc5gg/site: webapp/installer (56137 B), webapp/editor, firmware/melodee-1.3.2.fwsc (1025 B), FM-1_91032
+site: /tmp/tmpzpihc5gg/site: webapp/installer (56137 B), webapp/editor, firmware/melodee-1.3.2.fwsc (1025 B), FM-1_91032
+site: /tmp/tmpw0u_hujs/site: webapp/installer (55925 B), webapp/editor, firmware/melodee-1.3.2.fwsc (1025 B), FM-1_91032
+site: /tmp/tmpw0u_hujs/site: webapp/installer (56137 B), webapp/editor, firmware/melodee-1.3.2.fwsc (1025 B), FM-1_91032
+site: /tmp/tmpn479pwkm/site: webapp/installer (55925 B), webapp/editor, firmware/melodee-1.3.2.fwsc (1025 B), FM-1_91032
+site: /tmp/tmpn479pwkm/site: webapp/installer (56137 B), webapp/editor, firmware/melodee-1.3.2.fwsc (1025 B), FM-1_91032
+site: /tmp/tmpn479pwkm/site: webapp/installer (56349 B), webapp/editor, firmware/melodee-1.3.2.fwsc (1025 B), FM-1_91032
+site: /tmp/tmpn479pwkm/site: webapp/installer (56349 B), webapp/editor, firmware/melodee-1.3.2.fwsc (1025 B), FM-1_91032
+site: /tmp/tmpn479pwkm/site: webapp/installer (56349 B), webapp/editor, firmware/melodee-1.3.2.fwsc (1025 B), FM-1_91032
+site: /tmp/tmptq8kfyex/site: webapp/installer (55925 B), webapp/editor, firmware/melodee-1.3.2.fwsc (1025 B), FM-1_91032
+site: /tmp/tmptq8kfyex/site: webapp/installer (56137 B), webapp/editor, firmware/melodee-1.3.2.fwsc (1025 B), FM-1_91032
+site: /tmp/tmptq8kfyex/site: webapp/installer (56137 B), webapp/editor, firmware/melodee-1.3.2.fwsc (1025 B), FM-1_91032
+site: /tmp/tmptq8kfyex/site: webapp/installer (56137 B), webapp/editor, firmware/melodee-1.3.2.fwsc (1025 B), FM-1_91032
+site: /tmp/tmpjc3j3jvv/site: webapp/installer (55925 B), webapp/editor, firmware/melodee-1.3.2.fwsc (1025 B), FM-1_91032

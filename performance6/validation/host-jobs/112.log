@@ -1,0 +1,2 @@
+== FM6: native fp32 AMS against the double reference, every modulation
+FM6 fp32 AMS: 0 failures across 16777216 modulations, maximum relative error 5.03e-06

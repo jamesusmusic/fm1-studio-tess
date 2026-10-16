@@ -1,0 +1,758 @@
+== UI: sounds keep steps, undo, recording, MIDI overflow, pending saves, panel recovery, drum grid, song chain, MONO gray
+ui: maintenance blocks transport, knobs and acknowledgment while writing       ok
+ui: maintenance error stays above menu, dialogs and update countdown           ok
+ui: maintenance error cannot time out or sleep                                 ok
+ui: error consumes ordinary actions until acknowledged                         ok
+ui: OCT+ explicitly acknowledges the maintenance error                         ok
+ui: wipe option asks for confirmation without changing presets                 ok
+ui: back from wipe confirmation retains presets and the error                  ok
+ui: simultaneous OCT keys cannot enter or confirm wiping                       ok
+ui: explicitly confirmed wipe clears the bank and continues                    ok
+ui: update cleanup errors do not offer a preset wipe                           ok
+ui: selecting Prophet starts on its first factory program                      ok
+ui: all 201 Prophet factory entries lead the browser                           ok
+ui: all 200 Sequential programs are dry factory presets with exact native bytes, whatever the user bank holds ok
+ui: Prophet exposes all sixteen native editing and store pages                 ok
+ui: native oscillator knob changes its field and preserves opaque bytes        ok
+ui: native STORE: OCT+ the slot's sheet, no NAME yet                           ok
+ui: empty P128 opens native slot naming without overwrite                      ok
+ui: native NAME holds twenty characters and refuses a twenty-first             ok
+ui: native INIT resets the full patch with sound undo available                ok
+ui: undo after native INIT restores opaque bytes                               ok
+ui: the HR face holds every glyph of the strings drawn in it                   ok
+ui: HOME has no invented notes before the first key                            ok
+ui: panel C4 enters HOME after mapping                                         ok
+ui: a panel tap between frames remains visible after release                   ok
+ui: MPC's mapped C4 is displayed, not source MIDI note 21                      ok
+ui: same pitch on another track remains held in HOME                           ok
+ui: CC120 clears held HOME notes only on its track                             ok
+ui: each track keeps its own last notes (Stage shows the selected one's)       ok
+ui: overlapping MIDI owners retain the HOME pitch until last release           ok
+ui: sustain keeps the displayed pitch held                                     ok
+ui: pedal-up releases emphasis but retains the last note                       ok
+ui: FM6 notes are visible and a major triad is recognized                      ok
+ui: drum hits do not replace HOME's last synth chord                           ok
+ui: an inverted major triad resolves its root for slash bass                   ok
+ui: minor seventh chord name retained from next                                ok
+ui: panic clears every held bit without erasing the readout                    ok
+ui: Stage: SID's knobs are its EDIT values (WAVE PW CUT RES)                   ok
+ui: Stage: PROPHET's KNOB 1 is the program's own CUTOFF                        ok
+ui: Stage: CZ-1's KNOB 3 detunes the native tone (DETUNE: its FINE)            ok
+ui: PATTERNS stopped: KNOB 2 switches track 2 to pattern 2 at once             ok
+ui:   playing: KNOB 3 queues track 3's pattern 2 for its bar                   ok
+ui:   .. back to the one playing: nothing waits                                ok
+ui: SEQ held: the pattern playing bright, one holding notes dim, the one waiting breathing, empty dark ok
+ui:   .. the breath goes dark between its swells                               ok
+ui: REC armed, stopped: REC breathes (waiting), not lit                        ok
+ui:   .. recording: REC lit                                                    ok
+ui: a DRUM hit flags its lane for Stage (SNARE)                                ok
+ui:   .. Stage takes it and lights the lane's name                             ok
+ui: Capture: an empty pattern takes the bars played (2 bars: LEN 32), every note, nothing armed ok
+ui:   .. on their steps (2 6 10 14 18), as recorded notes                      ok
+ui: Capture: repeating the same take does not accumulate duplicate playback events ok
+ui:   EDIT held undoes it (LEN and steps back)                                 ok
+ui: Capture while the track records: refused                                   ok
+ui: jam log: a row per change, repeats counted (1, 2 x2, 1)                    ok
+ui: SONG: REC held takes the jam as the song (empty song: no dialog)           ok
+ui:   over a song with rows: the dialog first                                  ok
+ui: Background Capture: releases find every retained note across four tracks and ring wraps ok
+ui: Background Capture: final release closes repeated same-pitch onsets        ok
+ui: Background Capture: unarmed jams never add playback events                 ok
+ui: HOME menu AUTOSAVE: KNOB 1 left disables and clamps OFF                    ok
+ui: HOME menu AUTOSAVE: OCT+ toggles ON without leaving the menu               ok
+ui: HOME menu AUTOSAVE: KNOB 1 right enables and clamps ON                     ok
+ui: autosave OFF: changed, stopped, untouched project stays unsaved            ok
+ui: autosave OFF: SAVE + REC still saves manually                              ok
+ui: autosave re-enabled: waits a fresh five seconds before saving              ok
+ui: autosave: changed, stopped, untouched: back to its slot (B)                ok
+ui:   .. not before AUTOSAVE_MS of rest                                        ok
+ui:   .. and any touch starts the rest again                                   ok
+ui: ordinary SRAM: eight undo levels; EDIT held twice undoes T2's load, then T1's ok
+ui:   EDIT + OCT+ redoes the older first (T1), T2 stays undone                 ok
+ui:   a new load drops what was left to redo                                   ok
+ui: PROJECT: KNOB 1 past TMPL shows NEW (SLOT itself stays)                    ok
+ui:   OCT+ on NEW with notes not saved: the dialog first                       ok
+ui:   .. then the KEY screen                                                   ok
+ui:   OCT+: the ROLES screen, track 1 KEEP, the others -- (no template: one track) ok
+ui:   OCT+ creates it: HOME, every pattern empty, D on every track, the tempo, track 2 a BASS sound, no slot ok
+ui:   two tracks: those with a role                                            ok
+ui:   track 1 --, track 3 BASS: one track, the BASS sound as track 1           ok
+ui:   a new song with nothing in it: no dialog                                 ok
+ui:   OCT- on KEY cancels                                                      ok
+ui: power-on: the four sounds, every sequencer empty, no undo copy             ok
+ui: PRESETS on HOME loads the sound: steps, LEN, DIV untouched                 ok
+ui: ..ARP, SCL, the SLICER and the mix stay the track's                        ok
+ui: ..and no warning about the sequence                                        ok
+ui: ARP BASS (an arp-named preset) leaves the track arp off                    ok
+ui: browsing on, into another engine: the steps still untouched                ok
+ui: browsing keeps the copy from before the first load                         ok
+ui: EDIT held: the sound back (UNDO T1); steps recorded since stay             ok
+ui: EDIT held does not open the SAVE pages                                     ok
+ui: EDIT + OCT+: the loads again (REDO T1)                                     ok
+ui: a load after the undo: its own copy; the mix (LEVEL) is never swapped      ok
+ui: SAVE tap opens the SAVE pages (on release)                                 ok
+ui: Init sound: the sound only (steps and SLICER kept), a copy of T2           ok
+ui: a user preset keeps its pattern in the record (format unchanged)           ok
+ui: a user preset load: the sound only (steps, DIV kept); the copy is now T1's ok
+ui: undo of a user preset load                                                 ok
+ui: a project load drops the copy and takes none                               ok
+ui: sample engines retired with reserved IDs                                   ok
+ui: saved 808 DRUM keeps every parameter and step with valid display metadata  ok
+ui: undo level 1624 bytes
+ui: no SEQ > PHRASES page                                                      ok
+ui: the parts power on with empty sequencers                                   ok
+ui: a sound load from the browser keeps the steps                              ok
+ui: REC on TRACKS: arms the selected track without starting PLAY               ok
+ui: REC again disarms (the transport runs on)                                  ok
+ui: REC held captures (nothing played: nothing), no arming, no dialog          ok
+ui: REC on SEQ: arms the selected track without starting PLAY                  ok
+ui: REC again disarms (the transport runs on)                                  ok
+ui: REC held captures (nothing played: nothing), no arming, no dialog          ok
+ui: REC on ARP: arms the selected track without starting PLAY                  ok
+ui: REC again disarms (the transport runs on)                                  ok
+ui: REC held captures (nothing played: nothing), no arming, no dialog          ok
+ui: REC on HOME arms without changing the screen or starting PLAY              ok
+ui: SEQ opens STEP                                                             ok
+ui: STEP, armed and playing: a key does not write the cursor step              ok
+ui: STEP, not armed: the key writes the cursor step (and moves on)             ok
+ui: ARP on: the key held is not recorded                                       ok
+ui: ARP on: the note the arp plays is recorded                                 ok
+ui: queued recording uses the header without a toast or timed message          ok
+ui: waiting survives the old message timeout                                   ok
+ui: start or cancel removes the waiting status                                 ok
+ui: leaving waiting matches a complete redraw                                  ok
+ui: queued recording uses the header without a toast or timed message          ok
+ui: waiting survives the old message timeout                                   ok
+ui: start or cancel removes the waiting status                                 ok
+ui: leaving waiting matches a complete redraw                                  ok
+ui: queued recording uses the header without a toast or timed message          ok
+ui: waiting survives the old message timeout                                   ok
+ui: start or cancel removes the waiting status                                 ok
+ui: leaving waiting matches a complete redraw                                  ok
+ui: queued recording uses the header without a toast or timed message          ok
+ui: waiting survives the old message timeout                                   ok
+ui: start or cancel removes the waiting status                                 ok
+ui: leaving waiting matches a complete redraw                                  ok
+ui: queued recording uses the header without a toast or timed message          ok
+ui: waiting survives the old message timeout                                   ok
+ui: start or cancel removes the waiting status                                 ok
+ui: leaving waiting matches a complete redraw                                  ok
+ui: queued recording uses the header without a toast or timed message          ok
+ui: waiting survives the old message timeout                                   ok
+ui: start or cancel removes the waiting status                                 ok
+ui: leaving waiting matches a complete redraw                                  ok
+ui: queued recording uses the header without a toast or timed message          ok
+ui: waiting survives the old message timeout                                   ok
+ui: start or cancel removes the waiting status                                 ok
+ui: leaving waiting matches a complete redraw                                  ok
+ui: queued recording uses the header without a toast or timed message          ok
+ui: waiting survives the old message timeout                                   ok
+ui: start or cancel removes the waiting status                                 ok
+ui: leaving waiting matches a complete redraw                                  ok
+ui: ROUT CH1-4 (default): channel 1 -> part 1, channels 11 and 10 ignored      ok
+ui: a note into another track tells the UI                                     ok
+ui: MIDI IN -> T1 shown                                                        ok
+ui: ROUT changes: note-off releases original owner, new note uses selection    ok
+ui: note-off after selection follows the note-on's track                       ok
+ui: same MIDI channel/pitch on a new selected track releases its old owner     ok
+ui: both note-offs after a MIDI ownership change leave neither track held      ok
+ui: same channel/pitch across a ROUT change cannot leave its previous part held ok
+ui: MIDI ownership transfer releases old ARP keys and respects explicit HOLD   ok
+ui: MIDI ownership transfer releases old ARP keys and respects explicit HOLD   ok
+ui: MIDI overflow releases held notes and latched ARP, keeps transport running ok
+ui: MIDI accepts a fresh note after overflow recovery                          ok
+ui: GLO > SYSTEM K3: ROUT CH1-4 / SEL                                          ok
+ui: GLO > SYSTEM K3: all four ranges exposed                                   ok
+ui: GLO > GLOBAL K2: device shared BUDGET                                      ok
+ui: SAVE opens USER on its slot, no sheet popped up, without writing a slot    ok
+ui: ..OCT+: the slot's sheet, on Save here                                     ok
+ui: ..OCT+ again opens NAME (the automatic name), writes nothing yet           ok
+ui: ..OCT+ again stores the edited sound with that name (SAVE, OCT+, OCT+, OCT+) ok
+ui: SAVE again still cycles to PROJECT                                         ok
+ui: SAVE from HOME returns directly to USER (OCT+: its sheet, on Save here), even after visiting PROJECT ok
+ui: direct SAVE still asks before overwriting an occupied slot                 ok
+ui: project save while playing: refused, STOP TO SAVE                          ok
+ui: user preset save while playing: refused                                    ok
+ui: a pending PLAY cannot save a project                                       ok
+ui: a pending PLAY cannot save a user preset                                   ok
+ui: a pending SONG cannot save a user preset                                   ok
+ui: PROJECT: OCT+ opens the slot's sheet, saves nothing                        ok
+ui: Save here while playing: STOP TO SAVE, no NAME                             ok
+ui: stopped, an empty slot: Save here opens NAME (no name yet: PROJECT A)      ok
+ui: ..OCT+ saves it unnamed, SAVE dropped                                      ok
+ui: a used slot: the OVERWRITE? dialog                                         ok
+ui: OCT- keeps the slot                                                        ok
+ui: OCT+ (YES): NAME, the slot not written yet                                 ok
+ui: OCT+ overwrites it                                                         ok
+ui: Load: the project back                                                     ok
+ui: USER Save here over a used slot: the OVERWRITE? dialog                     ok
+ui: YES: NAME with the sound's name (not the old slot's)                       ok
+ui: OCT+ stores the sound there                                                ok
+ui: USER Erase while playing: STOP TO SAVE                                     ok
+ui: HOME: OCT+ shifts the octave (lit)                                         ok
+ui: OCT- + OCT+ together off Stage: no sheet, no HOME, no octave change        ok
+ui: a press that began elsewhere does nothing there                            ok
+ui: PATTERN: OCT- goes HOME (the octave stays)                                 ok
+ui: no TOOLS page                                                              ok
+ui: PATTERN: OCT+ the pattern's sheet (Clear pattern, Clear motion)            ok
+ui: Clear pattern first asks                                                   ok
+ui: OCT+ clears the pattern                                                    ok
+ui: the sound's sheet: Init sound first asks                                   ok
+ui: OCT+: SOUND INIT                                                           ok
+ui: OCT- on a sound page: HOME                                                 ok
+ui: a dialog: OCT+ blinks, OCT- lit                                            ok
+ui: ..it answers on release, not on the press                                  ok
+ui: ..OCT+ let go: cleared                                                     ok
+ui: back on SEQ (NOTES): OCT- lit (Esc), OCT+ lit (a note, its sheet), not the octave ok
+ui: TRACKS: the PRESETS knob does nothing                                      ok
+ui: MIXER KNOB 4 right: MUTE ON (the selected track stays)                     ok
+ui: KNOB 1 changes LEVEL only (MUTE stays)                                     ok
+ui: KNOB 2 changes PAN                                                         ok
+ui: MIXER KNOB 4 left: MUTE OFF                                                ok
+ui: ALGORITHM selects the track                                                ok
+ui: a new song: one track, T1 selected                                         ok
+ui:   no pattern at all: Stage's card shows no pattern pill, no steps (a synth) ok
+ui:   a note, or armed to record: they come back                               ok
+ui:   ALGORITHM: no other track to select                                      ok
+ui:   a track not in use plays nothing                                         ok
+ui:   MIDI channel 2 (ROUT CH1-4): ignored when track 2 is not in use          ok
+ui: Stage: OCT+ held: its sheet, Add track (T2) and Remove track (-) at its foot ok
+ui:   Remove track with one: refused (ONLY ONE TRACK), no question             ok
+ui: Add track: T2 in use, selected, the browser open on it                     ok
+ui:   its place's power-on sound, the mix's defaults, every pattern empty      ok
+ui:   OCT-: back to Stage, the sound kept                                      ok
+ui:   four at most (TRACKS FULL)                                               ok
+ui: Remove track playing: refused (STOP FIRST)                                 ok
+ui: Remove track: its question (Remove track 2?)                               ok
+ui:   No: nothing removed                                                      ok
+ui:   Yes: three tracks, the one after it selected in its place, still project A's ok
+ui:   T3, T4 moved down a place: their sound, level and steps                  ok
+ui:   their patterns too (old T3's bank 3 is T2's; old T2's gone)              ok
+ui:   the song's row: T1 0, then old T3's 2, old T4's 3; the last place 0      ok
+ui:   motion: old T2's gone, old T3's and T4's on T2 and T3                    ok
+ui:   the last place empty: its power-on sound, no patterns                    ok
+ui:   and silent                                                               ok
+ui: a new song: one track again                                                ok
+ui: a project keeps its count (3)                                              ok
+ui:   the one saved with four: four                                            ok
+ui: removing T1: T2 becomes T1 (the song's clock)                              ok
+ui: removing the last: the one before selected                                 ok
+ui: HOME on Stage: the second page (the chord view)                            ok
+ui:   HOME again: Stage                                                        ok
+ui:   HOME from EDIT: back to the page it was on                               ok
+ui: the notes sounding: T1's A2, T2's C4 E4 A4, each its track                 ok
+ui:   drawn (a frame each way)                                                 ok
+ui:   let go: the last ones, faded                                             ok
+ui:   KNOB 1: the sound's, as on Stage                                         ok
+ui: wheel still follows sounding notes during release                          ok
+ui: wheel still follows sounding notes during release                          ok
+ui: wheel retains full C major after staggered release (every order)           ok
+ui:   a new smaller voicing replaces the retained chord                        ok
+ui:   a new single note replaces the retained voicing                          ok
+ui: wheel still follows sounding notes during release                          ok
+ui: wheel still follows sounding notes during release                          ok
+ui: wheel retains full C major after staggered release (every order)           ok
+ui:   a new smaller voicing replaces the retained chord                        ok
+ui:   a new single note replaces the retained voicing                          ok
+ui: wheel still follows sounding notes during release                          ok
+ui: wheel still follows sounding notes during release                          ok
+ui: wheel retains full C major after staggered release (every order)           ok
+ui:   a new smaller voicing replaces the retained chord                        ok
+ui:   a new single note replaces the retained voicing                          ok
+ui: wheel still follows sounding notes during release                          ok
+ui: wheel still follows sounding notes during release                          ok
+ui: wheel retains full C major after staggered release (every order)           ok
+ui:   a new smaller voicing replaces the retained chord                        ok
+ui:   a new single note replaces the retained voicing                          ok
+ui: wheel still follows sounding notes during release                          ok
+ui: wheel still follows sounding notes during release                          ok
+ui: wheel retains full C major after staggered release (every order)           ok
+ui:   a new smaller voicing replaces the retained chord                        ok
+ui:   a new single note replaces the retained voicing                          ok
+ui: wheel still follows sounding notes during release                          ok
+ui: wheel still follows sounding notes during release                          ok
+ui: wheel retains full C major after staggered release (every order)           ok
+ui:   a new smaller voicing replaces the retained chord                        ok
+ui:   a new single note replaces the retained voicing                          ok
+ui: wheel retains the new voicing when a chord changes with notes still held   ok
+ui: wheel retains the latest track colour when the pitch stays the same        ok
+ui: SELECT on HOME: BPM by default, no page turn                               ok
+ui:   MOD WHEEL: the selected track's CC1, said in the header                  ok
+ui:   LEVEL: the selected track's, down                                        ok
+ui:   TRANSPOSE: +1                                                            ok
+ui:   CHORD: the keys' chord, a name a detent (OFF -> DIA3), said in the header ok
+ui:   .. DOM7 four on                                                          ok
+ui:   PATTERN stopped: pattern 2 at once                                       ok
+ui:   OFF: nothing                                                             ok
+ui:   an unknown stored value: BPM                                             ok
+ui:   kept with the settings                                                   ok
+ui: SEQ held, black key 2: track 2, Stage stays                                ok
+ui:   black key 4 (a track not in use): nothing                                ok
+ui:   black key 1: track 1                                                     ok
+ui:   the track keys lit: track 1 bright, 2 dim, 3 (armed) breathing, 4 dark   ok
+ui:   white key 2 tapped, an empty pattern: pattern 2, REC armed with it       ok
+ui:   .. hit again at once: still armed                                        ok
+ui:   .. now with notes: tapped, REC as it was                                 ok
+ui:   .. hit again at once: REC armed for one pass, still pattern 2            ok
+ui:   two slow taps: REC as it was                                             ok
+ui:   .. hit twice again: REC off (REC's tap)                                  ok
+ui:   white key 3 held 1 s: its dialog, the keys silent, nothing switched      ok
+ui:   .. a black key: nothing (track 1 still)                                  ok
+ui:   .. OCT-: gone, pattern 3 as it was                                       ok
+ui:   .. its key again: pattern 3 deleted (not the one playing)                ok
+ui:   white key 1 held, then key 4: pattern 1 copied to 4                      ok
+ui:   the one playing (2): OCT+ deletes it as PATTERNS does                    ok
+ui:   an empty one: NOTHING TO DELETE                                          ok
+ui:   key 1 held, key 5 pressed before the dialog: no copy                     ok
+ui: GLO + SELECT on a page: BPM by default, no page turn, no GLO tap           ok
+ui:   GLO SELECT SWING: the swing, said in the header                          ok
+ui:   SELECT alone: the page's own (SWING as it was)                           ok
+ui:   stored beside the CZ-1 star                                              ok
+ui:   an unknown stored value: BPM                                             ok
+ui:   kept with the settings                                                   ok
+ui:   Settings > GLO SELECT: OCT+ steps it (BPM -> MOD WHEEL)                  ok
+ui: an armed track's row: its border lit (stopped: breathing), the other none  ok
+ui: a new held pattern after a release opens its own dialog                    ok
+ui: held pattern copy/delete uses the new bank and preserves the previous one  ok
+ui: a new held pattern after a release opens its own dialog                    ok
+ui: held pattern copy/delete uses the new bank and preserves the previous one  ok
+ui: a new held pattern after a release opens its own dialog                    ok
+ui: held pattern copy/delete uses the new bank and preserves the previous one  ok
+ui: a new held pattern after a release opens its own dialog                    ok
+ui: held pattern copy/delete uses the new bank and preserves the previous one  ok
+ui: playing: Delete pattern waits for the loop end, says so                    ok
+ui:   .. mid-loop: the pattern still plays                                     ok
+ui:   .. its last step: deleted (nothing more of the loop to play)             ok
+ui:   a frame missed the last step: the loop's first step silent, the edit still waits ok
+ui:   .. the next frame does it, the track plays again                         ok
+ui: a copy into the pattern playing: at the loop end (was refused)             ok
+ui:   .. STOP: done at once                                                    ok
+ui:   another project loaded meanwhile: the edit dropped                       ok
+ui: SEQ > STEP on a DRUM track is the grid (keys to the UI), GRID in the footer ok
+ui: the lanes: KICK SNARE CLAP HATCL HATOP TOM RIM BELL on GM 36 38 39 42 46 45 37 56 ok
+ui: black key 2: lane 2 (SNARE) selected                                       ok
+ui: white key 5: SNARE on step 5, the cursor there                             ok
+ui: LEDs: white key 5 lit, black key 2 lit, ACC and the page keys dark (LEN 16) ok
+ui: LEDs: the step playing inverted (a hit goes dark, an empty step lights)    ok
+ui: white key 5 again: off, an empty step (REST)                               ok
+ui: ACC held: a tap adds the hit accented, again drops the accent only; the LEDs show accents ok
+ui: KNOB 1 STEP, 2 LANE, 3 HIT on / off, 4 ACC (an accent adds the hit)        ok
+ui: EDIT: the cursor step cleared, on to the next                              ok
+ui: pages: black keys 11 / 10 up / down (the cursor along); past LEN a key does nothing ok
+ui: GM notes on the grid: a low tom / crash on their lanes; an edit makes the lane its hit ok
+ui: grid keys in the ISR: white keys and ACC silent, black key 4 plays HAT CL (42) ok
+ui: REC on the grid: lane keys round to the nearest step, no TIE holds         ok
+ui: REC on HOME: GM keys quantised into the grid (35 a note on the KICK lane)  ok
+ui: BEAT's GM notes into a DRUM track: the grid (hits, the accents on 1 5 9 13) ok
+ui: ..its KICK lane on the white key LEDs (1 7 9 12)                           ok
+ui: a sound load keeps the grid; on SID its hits play as their GM notes        ok
+ui: HOME held (the menu): the keys are no longer the grid's                    ok
+ui: a message keeps the header's transport and BPM (drawn right of x 80)       ok
+ui: UPDATE MODE countdown drawn over the menu                                  ok
+ui: FAV and LIST mark/filter the current sound without loading or touching its steps ok
+ui: one favorite occupies one browser entry, without repeated copies           ok
+ui: a DRUM sound can be a favorite on any track                                ok
+ui: filtered browsing crosses DRUM and synth sounds while retaining the track's pattern and ARP ok
+ui: unmarking the current sound leaves it loaded even when outside the filtered list ok
+ui: browsing from a nonfavorite selects the last favorite                      ok
+ui: empty favorites explains LIST ALL and retains the current sound and steps  ok
+ui: LIST ALL restores the full browser without an implicit load                ok
+ui: user slot 32 has its own favorite reference                                ok
+ui: overwriting or renaming a user slot retains its star                       ok
+ui: successful erasure removes the user slot star and source label             ok
+ui: reusing the erased slot does not restore its old star                      ok
+ui: BROWSE: a category letter for each factory preset of every engine shown    ok
+ui: BROWSE: factory categories (Prophet, FM6, CZ-1, the kits)                  ok
+ui: BROWSE: a slot's category from its name: a factory sound's of its engine, else its words ok
+ui: BROWSE: every sound is in exactly one category (their lists add up to ALL) ok
+ui: BROWSE: a user preset joins the category of its name                       ok
+ui: LIST (KNOB 1): ALL FAV RECENT, the categories, stopping at OTHER           ok
+ui: LIST: a category is kept with the settings in its byte, FAV stays favorites.filter ok
+ui: LIST BASS: KNOB 2 loads the next bass                                      ok
+ui: ACCEL: a step a detent until the 4th quick one, then x3 under 45 ms, x5 under 25, x8 under 12 (capped, doubled over 8); a reversal and a pause start over ok
+ui: ACCEL: three quick clicks, a pause, another: one step each                 ok
+ui: ACCEL: narrow values and lists of names keep a step a detent; MENU KNOB ACCEL OFF: always ok
+ui: BROWSER: OCT- without a load goes to Stage, the sound as it was            ok
+ui: BROWSER: KNOB 2 browses; OCT- goes back to the sound from before it, to Stage ok
+ui: BROWSER: OCT+ keeps the sound, to Stage                                    ok
+ui: BROWSE: a fast turn loads its first detent only, the list moves on (x10 at 16 ms a detent) ok
+ui: BROWSE: HOME's footer and the PRESETS page show the pending sound          ok
+ui: BROWSE: it loads when the knob rests (120 ms)                              ok
+ui: BROWSE: EDIT held (undo) brings back the sound from before browsing        ok
+ui: BROWSE: a key played while browsing loads the pending sound at once        ok
+ui: BROWSE: changing the track loads the pending sound into the track it was meant for ok
+ui: RECENT: the sounds browsed, newest first                                   ok
+ui: RECENT: browsing it loads the next one and keeps the order                 ok
+ui: COLOR OCT+ previews the next palette (DAY, light) without closing the menu ok
+ui: COLOR KNOB 1 steps on through SUNSET .. LO-FI, then wraps to NIGHT         ok
+ui: OCT- leaves display preferences without changing musical state             ok
+ui: ABOUT opens one document with scrollable license text and credits          ok
+ui: ABOUT QR keeps its complete white quiet zone                               ok
+ui: PRESETS scrolls ABOUT with its header fixed                                ok
+ui: PRESETS continues from ABOUT into CREDITS without changing pages           ok
+ui: OCT+ does not switch pages or alter the octave in the document             ok
+ui: the continuous document stops at its final credit                          ok
+ui: scrolling back through CREDITS returns to ABOUT's top                      ok
+ui: OCT- returns to the menu without changing sounds or patterns               ok
+ui: reopening ABOUT starts the continuous document at the top                  ok
+ui: USB power shows a steady bolt inside the battery without animation         ok
+ui: USB suspension restores the battery outline and measured level             ok
+ui: battery operation retains all three ADC level thresholds                   ok
+ui: SONG empty: PLAY does not start                                            ok
+ui: SONG invalid bank refuses before changing any track                        ok
+ui: SONG bank assignments saved and loaded with all patterns                   ok
+ui: SONG prepares while stopped, no starts over a pending start                ok
+ui: SONG starts all tracks at source step 0, recording paused                  ok
+ui: SONG first row repeats without a gap                                       ok
+ui: SONG row change: four tracks together, sounds unchanged                    ok
+ui: SONG playing: step edits, clears, recording and undo are blocked           ok
+ui: SONG end: stops and restores editable patterns, timing and record arms     ok
+ui: SONG source banks stay unchanged                                           ok
+ui: SONG transition preserves fractional block time on all tracks              ok
+ui: SONG manual STOP restores the previous pattern                             ok
+ui: PROJECT load during SONG stops it before loading new timing                ok
+ui: SONG page empty PLAY explains how to start                                 ok
+ui: SONG KNOB 3 (pattern) adds the first row with one repeat                   ok
+ui: SONG KNOB 1 row, 3 pattern, 4 repeats build a chain                        ok
+ui: SONG KNOB 2 picks the track (2), the song unchanged                        ok
+ui: SONG OCT chord does not start playback or leave the page                   ok
+ui: SONG OCT+ on release starts, pending start blocks SAVE                     ok
+ui: SONG pending start cannot write a project                                  ok
+ui: SONG PLAY cancels a pending start                                          ok
+ui: SONG KNOB 4 (repeats) cannot add or clear rows                             ok
+ui: SONG append row stays bounded at 16                                        ok
+ui: Clear song (the song's sheet) requires explicit confirmation               ok
+ui: cancel preserves the full song                                             ok
+ui: confirmed CLEAR SONG keeps musical steps                                   ok
+ui: REC stays on every page, SONG stopped asks for pattern recording           ok
+ui: REC in the MENU does nothing (the menu stays, no arm, no transport start)  ok
+ui: REC in ABOUT does nothing (the document and its scroll stay)               ok
+ui: GLO directly opens the four-channel MIXER                                  ok
+ui: MIXER K3 is inert, never changes sequence length                           ok
+ui: GLO cycles MIXER > GLOBAL > SYSTEM > MIXER                                 ok
+ui: long SEQ goes directly to PATTERNS (the song under it) with no tap on release ok
+ui:   SELECT: SONG next to it                                                  ok
+ui: REC cannot write borrowed patterns while SONG is armed                     ok
+ui: operator envelope pages are hidden on non-DIGITAL instruments              ok
+ui: DIGITAL retired: engine 1 asked for loads FM6; the OP ENV / OP LEVEL pages never show ok
+ui: CHANCE (the note's sheet) is per step and starts at backward-compatible 100 percent ok
+ui: CHANCE controls clamp to 0..100 without changing adjacent steps            ok
+ui: REC plus a sound knob records motion through the UI                        ok
+ui: stopping returns the original sound after a recorded knob gesture          ok
+ui: MOTION playback OFF preserves its stored events                            ok
+ui: MOTION: the lane's sheet, Clear all motion always asks confirmation        ok
+ui: confirmed MOTION clear removes events and EDIT hold restores them          ok
+ui: motion-clear UNDO restores the recorded events                             ok
+ui: MOTION: OCT+ on the lane: its sheet (Play, Clear <lane>, Clear all motion) ok
+ui: ..Play: on again                                                           ok
+ui: ..Clear <lane>: its events gone, undoable                                  ok
+ui: motion-clear UNDO restores the recorded events                             ok
+ui: MOTION: K3 step, K4 inserts the held value without erasing other events    ok
+ui: MOTION: changing a point keeps motion bypassed and leaves adjacent points intact ok
+ui: MOTION: SEQ + K4 deletes only the selected point and consumes navigation   ok
+ui: MOTION: SEQ + K2 clears only this lane, preserving the other bank and track ok
+ui: MOTION: undo restores the gesture's automation without changing other tracks ok
+ui: MOTION: forced drawing clears both gaps left by the preceding screen       ok
+ui: MOTION: native FM6 point editing preserves its engine tag and byte value   ok
+ui: MOTION: packed CZ point edits skip invalid bitfield codes                  ok
+ui: MOTION: SEQ held without a knob still opens PATTERNS on release            ok
+ui: MOTION: full pool refuses insertion without clearing lanes or taking an undo ok
+ui: MOTION: a running or armed song refuses point edits                        ok
+ui: PLAY and REC LEDs stay lit across time and audio block phase               ok
+ui: all palettes: the knob turning is lifted in place, the others and the page stay ok
+ui: SAMPLE and SLICE retired from selectors with reserved stored IDs           ok
+ui: MONO: every pixel of every page, HOME, menu, ABOUT, dialog and countdown is gray ok
+ui: roll: numbers of one shape roll by the sign of the change; names, length, sign changes snap ok
+ui: roll: every page and engine: a name (enum, even ALG 1..8, note, ON/OFF) snaps, numbers roll ok
+ui: roll: a card's value rolls for 9 frames (TUNE 0 -> 1), the value itself at once ok
+ui: roll: the roll's last frame is pixel-identical to the static render        ok
+ui: roll: a mid-roll frame differs from the static render inside the value strip only ok
+ui: roll: header BPM 120 -> 121 and a card 10 -> 11: only the strip changes, unchanged digits stay put ok
+ui: roll: an increase rolls up, a decrease down (-5 -> -6 is down)             ok
+ui: roll: a change mid-roll retargets (from the last value, restarted) and ends static ok
+ui: roll: a change within 40 ms of the last one snaps (a fast turn)            ok
+ui: roll: the header BPM snapping (a fast turn, 99 -> 100) shows the new value at once ok
+ui: roll: a sign / length change (0 -> -1) and a name (CLK) snap               ok
+ui: roll: a page, track, palette or engine change and ui.force snap            ok
+ui: roll: MONO roll frames are gray                                            ok
+ui: duplicate button mappings recover to the default panel                     ok
+ui: duplicate knob mappings recover to the default panel                       ok
+ui: out-of-range panel data recovers without an invalid shift                  ok
+ui: a valid reversed knob mapping is retained                                  ok
+ui: menu USB AUDIO (KNOB 1 twice: OUT only): wanted at once, the settings keep it ok
+ui: USB INPUT menu and persisted four-track mode                               ok
+ui: old/unknown USB INPUT setting defaults to stereo                           ok
+ui: stereo setting saves without changing PER5 layout                          ok
+ui: live restored USB mode waits for re-enumeration                            ok
+ui: ENV LFO SCL ARP GLO EDIT act when let go, not on press (ENV LFO ARP held long: the same) ok
+ui: EDIT on STEP clears the step when let go (not on press)                    ok
+ui: HOME (menu) and SEQ (PATTERNS) holds of 0.7 s                              ok
+ui: FX opens its page on release, with no layer or key capture                 ok
+ui: NAME: USER SAVE into an empty slot opens NAME, prefilled with the automatic name ok
+ui:   DELETE removes the character before the cursor, down to empty            ok
+ui:   a white key types its first letter; tapped again within 0.8 s: the next one, cycling (A B A) ok
+ui:   another key keeps the letter and types its own (A, C)                    ok
+ui:   0.8 s without a tap keeps it: the cursor moves on                        ok
+ui:   a second tap within 0.8 s (0.43 s later) still cycles (C -> D)           ok
+ui:   a three-letter key (IJK) cycles to K; SPACE keeps it and adds a space    ok
+ui:   DELETE, cursor left twice, a letter inserted at the cursor               ok
+ui:   cursor right stops at the end                                            ok
+ui:   D# switches to 123: one tap, one character (2, 0, +), no cycling         ok
+ui:   back to ABC: the last key (0-.) gives 0, then -, then .                  ok
+ui:   KNOB 1 moves the cursor, KNOB 2 changes the character there (+ -> SPACE, wrapping) ok
+ui:   KNOB 2 on: SPACE + 5 = E                                                 ok
+ui:   KNOB 1 to the end, KNOB 2 adds a character there (A)                     ok
+ui:   .. and turns it back past SPACE to the last symbol (+)                   ok
+ui:   12 characters at most: NAME FULL, nothing typed                          ok
+ui:   DELETE held 0.64 s: one, then it repeats after 0.45 s, every 0.09 s (3 in all) ok
+ui:   keys in NAME: no voice, no MIDI, nothing recorded (seq.c: song.grid 2)   ok
+ui:   LEDs: every key lit, the cycling key (LM) blinks                         ok
+ui:   OCT- cancels: nothing written, back on the USER page                     ok
+ui:   OCT+ while playing: STOP TO SAVE, NAME stays                             ok
+ui:   OCT+ stopped: saved as typed, the trailing space dropped (CB 2)          ok
+ui:   overwrite: the dialog, then NAME                                         ok
+ui:   EDIT held, FX held: nothing in NAME (no undo, no map, no page)           ok
+ui:   EDIT on an empty slot: EMPTY SLOT                                        ok
+ui:   EDIT on a used slot: NAME (rename) with its name                         ok
+ui:   OCT+: renamed (CB W), the sound stored there unchanged                   ok
+ui:   a name deleted to nothing: the automatic one                             ok
+ui:   SAVE of a sound that came from U03: prefilled with U03's name            ok
+ui: PROJECT SAVE: NAME, typed, saved: the slot has the name, the project too   ok
+ui:   loading it brings its name back (the next save's prefill)                ok
+ui:   EDIT renames a project (PNPN); its music unchanged                       ok
+ui:   EDIT on an empty project slot: EMPTY SLOT                                ok
+ui:   HOME held in NAME: the menu, NAME closed                                 ok
+ui: EDIT opens EDIT 1, when let go (not on press)                              ok
+ui: no ENGINE page (engines are the EDIT layer's)                              ok
+ui: EDIT cycle (SID): EDIT 1 EDIT 2 VOICE VOICE 2 EDIT 1                       ok
+ui: EDIT cycle (FM6): native pages, VOICE and Studio performance controls      ok
+ui: an OP page of a track no longer DIGITAL falls back to EDIT 1               ok
+ui: EDIT remembers its last page (as every family)                             ok
+ui: CZ-1 EDIT cycle: tone pages and VOICE, without bank/patch pages            ok
+ui: CZ-1 every panel value round-trips through the native bytes, alone         ok
+ui: CZ-1 every edit leaves a valid native tone                                 ok
+ui: CZ-1 an edit rewrites its own envelope only; imported rates elsewhere stay verbatim ok
+ui: CZ-1 CZ DETUNE KNOB 4 turns FINE in the track's tone                       ok
+ui: CZ-1 SUS turned past END shows -, turned back lands before END             ok
+ui: CZ-1 TOOLS COMP: the tone as loaded, then the edit again                   ok
+ui: CZ-1 TOOLS 1 > 2: line 2 is line 1's block, MOD stays line 1's             ok
+ui: CZ-1 TOOLS NAME opens the tone's 16-character name                         ok
+ui: CZ-1 PRESETS: INIT TONE, then Casio's 64 CZ-1 tones                        ok
+ui: CZ-1 each factory preset loads its native tone and shows its BANK / PTCH   ok
+ui: CZ-1 factory tones keep the CZ-1's own LCD names                           ok
+ui: CZ-1 INIT TONE is still the init voice                                     ok
+ui: CZ-1 never-saved BANK A..D hold Casio's A-1 .. H-8, E..H empty             ok
+ui: CZ-1 retired BANK / PTCH values cannot replace the current tone            ok
+ui: CZ-1 a saved BANK A wins over the factory one                              ok
+ui: CZ-1 a restore without BANK A brings Casio's back                          ok
+ui: FM6 home knob 4 changes DTUN and keeps the imported voice                  ok
+ui: FM6 home knob 4 returns DTUN to neutral without replacing the voice        ok
+ui: FM6 FREQ: PRESETS picks the operator (OP2)                                 ok
+ui:   KNOB 1: OP2's CRS in the patch                                           ok
+ui:   OUT ON off: OP2's switch (fm6_on bit 4)                                  ok
+ui:   .. and on again                                                          ok
+ui: FM PORTA ENGINE, TIME: the track's own (another FM6 track keeps Dexed's)   ok
+ui:   saved with the project, back with it                                     ok
+ui:   a project of before: Dexed's                                             ok
+ui: STORE onto F005: native voice in its own preset slot                       ok
+ui:   STORE while playing: STOP TO SAVE, U06 empty                             ok
+ui:   INIT: the init voice                                                     ok
+ui: an FM6 page of a track no longer FM6 falls back to EDIT 1                  ok
+ui: PROJECT KNOB 2 to B, its sheet's Boot: BOOT B, the device's (song.g untouched), saved ok
+ui: KNOB 1 past D: SLOT TMPL                                                   ok
+ui: SAVE on TMPL: the template, at once (no NAME, no dialog)                   ok
+ui:   EDIT there: no NAME (the template has no name)                           ok
+ui: LOAD on TMPL: its sounds, every pattern empty, SLOT on a free slot (B)     ok
+ui: power-on, BOOT B: project B, SLOT B                                        ok
+ui:   BOOT C empty: the template, SLOT on a free slot (C)                      ok
+ui:   a boot that crashed before: the project skipped (BOOT PROJECT SKIPPED)   ok
+ui: BOOT and CLK TUNE MIDI ROUT kept with the settings, restored at power-on   ok
+ui: old user record appears occupied with OLD FORMAT                           ok
+ui: saving an old user record asks before naming                               ok
+ui: old-slot confirmation opens naming without protocol authority              ok
+ui: cancelled name keeps the old record                                        ok
+ui: confirmed old-slot erase clears the record                                 ok
+ui: saving an old template asks before capture                                 ok
+ui: accepted old template capture clears protection                            ok
+ui: LIGHTS MID, QNT OFF C MAJ: C glows, C# dark, the dim plane at 1/4, idle buttons glow ok
+ui:   a key held bright, out of the scale too                                  ok
+ui:   MIDI holding E4 on the track: its key bright                             ok
+ui:   .. and back to its glow when it is let go                                ok
+ui: QNT WHITE: the white keys glow, the black ones (silent) dark               ok
+ui: a DRUM kit: every key glows                                                ok
+ui: LIGHTS OFF: no glow, keys or buttons (as Felucca 1.0)                      ok
+ui: LIGHTS FULL: the dim plane every frame                                     ok
+ui:   LIGHTS kept with the settings                                            ok
+ui: REC + PLAY: the track armed, the transport starting, REC's release no disarm ok
+ui: REC held: Capture, nothing armed                                           ok
+ui: REC tapped: latched, transport remains stopped                             ok
+ui: SAVE + REC: back into B at once, SAVED B; no SAVE page, no arming          ok
+ui:   REC + SAVE while playing: the transport stops first                      ok
+ui:   .. then the save                                                         ok
+ui:   a new project: PROJECT on a free slot (A), SAVE picked                   ok
+ui: hold SAVE saves the current slot once, release leaves the page unchanged   ok
+ui: a fresh SAVE hold saves the next edit                                      ok
+ui: hold SAVE while playing stops transport then saves the project             ok
+ui: hold SAVE for an unsaved project opens its slot chooser without writing    ok
+ui: hold SAVE preserves the sound and its undo history                         ok
+ui: hold EDIT undoes once and never opens a navigation layer or page           ok
+ui: EDIT + OCT+ redoes on Stage without octave changes or a sheet              ok
+ui: OCT- then EDIT also undoes without an EDIT page tap                        ok
+ui: double-tap EDIT keeps normal tap navigation without locking a layer        ok
+ui: EDIT no longer captures playing keys for held navigation                   ok
+ui: SYSTEM KNOB 1: TRS's status, then USB's                                    ok
+ui:   USB RX for 250 ms after a packet                                         ok
+ui: SELECT on GLO: GLOBAL -> SYSTEM -> GLOBAL (wraps), back the other way; the BPM untouched ok
+ui: SELECT on NOTES turns the page (and back); KNOB 1 moves through the steps  ok
+ui: SEQ > TEMPO: BPM and SWG, saved and loaded with the project                ok
+ui: GLO SCL: a tap opens the page, held past HOLD the map (no page), a key: the map at once ok
+ui:   after a tap "HOLD [BTN] QUICK" until the layer has been opened once      ok
+ui:   the seen bits are kept with the settings (a spare favorites byte)        ok
+ui: GLO + black key 2: T2 MUTE latched (SET), silent, no MIDI; LEDs: sounding lit, muted dark ok
+ui:   again: unmuted; C4: UNMUTE ALL                                           ok
+ui: GLO + A3 held: SOLO T3 (the others muted), lasts while the key is held, not P_MUTE ok
+ui: GLO + F4 x3 at 0.5 s: TAP 120 BPM; with CLK EXT: dimmed, it says why       ok
+ui: GLO KNOB 3: T3 LEVEL from any page; OCT-: mutes and levels as it opened, no octave ok
+ui: GLO + PLAY: RESTART playing (from the top, not stopped); stopped: PLAY     ok
+ui: SCL + D#4, then G3: ROOT D#, G (latched); KNOB 2: SCL; LEDs: root lit, the scale blinks ok
+ui:   OCT- in SCL: ROOT and SCL as the layer opened                            ok
+ui: in the menu: no GLO layer, GLO + a key plays it; GLO let go: no page       ok
+ui: in a dialog: SCL held shows no map and taps nothing                        ok
+ui: GLO then EDIT: GLO's layer; EDIT ignored (no layer, no page, its keys notes) ok
+ui: SCL cycles SCALES, SCL, then CHORD: the CHORD page (CHRD VOIC, the chord graph) ok
+ui:   CHRD OFF: the page says what to do, MONO gray                            ok
+ui:   (its own knobs, no list: two settings) KNOB 1: CHRD DIA3, KNOB 2: VOIC OPEN ok
+ui:   a key plays the chord, the graph shows it (C), MONO gray                 ok
+ui:   a sound load keeps CHRD and VOIC (SCL settings)                          ok
+ui:   a kit (DRUM): the page says so, MONO gray                                ok
+ui: SCL layer: KNOB 1 ROOT, 3 CHRD, 4 VOIC (QNT TRN untouched); OCT- puts them back ok
+ui:   its map and cards MONO gray                                              ok
+ui: SONG: rows with the same four patterns share a letter (A A B B C A)        ok
+ui: SONG: a pattern's bars from its LEN and DIV (32 x 1/16: 2, 32 x 1/4: 8)    ok
+ui: POPUPS: OCT+ tapped on a sound page: the sound's sheet (Enter), no octave  ok
+ui: POPUPS: OCT- closes it, the page stays                                     ok
+ui: POPUPS: OCT+ held: the sheet too, no octave                                ok
+ui: POPUPS: KNOB 2 the row, OCT+ does it (Favourite) and closes                ok
+ui: POPUPS: OCT- closes the sheet                                              ok
+ui: POPUPS: a destructive row (Init sound) asks first                          ok
+ui: POPUPS: a list knob (WAVE) turning: its picker                             ok
+ui: POPUPS: the picker goes once the knob rests                                ok
+ui: POPUPS: disabling automatic pickers still edits the parameter inline       ok
+ui: POPUPS: HOME menu toggles the picker preference without changing acceleration ok
+ui: POPUPS: picker preference survives settings export and restore             ok
+ui: POPUPS: another knob turning closes it                                     ok
+ui: POPUPS: OCT- closes the picker (the page stays), no octave                 ok
+ui: POPUPS: DRUM, MIDI and FM6 ALG step inline; five ROUT choices use a picker ok
+ui: MOD picker: SID engine destinations use their parameter names, including PW ok
+ui: MOD picker: names follow engine changes; ordinary source names stay unchanged ok
+ui: LISTS: VOICE 1-3 one list; KNOB 2 to row 6 (VOICE 2's DETUNE), KNOB 1 edits it ok
+ui: LISTS: OCT+ on a list value (VOICE): its whole list                        ok
+ui: LISTS: KNOB 2 the next name, OCT+ takes it                                 ok
+ui: LISTS: SCL's Scale row, OCT+: the SCALES page                              ok
+ui: LISTS: OCT- on a list: Stage                                               ok
+ui: SECTIONS: PRESETS the next section (Filter -> Amp), back: the page last used in it (FLT ENV) ok
+ui: SECTIONS: EDIT on an EDIT page: the map; KNOB 2 a row down, OCT+ opens its page ok
+ui: SECTIONS: EDIT again closes the map                                        ok
+ui: SECTIONS: map KNOB 2 counts categories, including several detents in one frame ok
+ui: SECTIONS: a category selects its remembered page independently of the previous category ok
+ui: SECTIONS: HOME leaves the category map immediately                         ok
+ui: SECTIONS: CZ map visits each category once regardless of its envelope page count ok
+ui: SECTIONS: Prophet map, one detent each: KNOB 1 Filter/tune -> PW/mix, KNOB 2 Sound -> Osc ok
+ui: SECTIONS: map KNOB 2 moves one category a detent from every page in every engine ok
+ui: SECTIONS: map KNOB 1 / SELECT move one page a detent inside the category in every engine ok
+ui: DRUM MAP: opens Sound with Kit selected, Hit beside it, Drum below         ok
+ui: DRUM MAP: one KNOB 1 detent selects Hit while Sound and Drum below stay put ok
+ui: DRUM MAP: one KNOB 2 detent selects Drum sound in Drum, with Lanes below   ok
+ui: DRUM MAP: each one-detent screen matches a complete redraw                 ok
+ui: DRUM MAP: OCT+ opens the selected Drum sound page                          ok
+ui: DRUM MAP: one KNOB 2 detent recalls Drum mix after it has been opened      ok
+ui: DRUM MAP: one reverse detent recalls Hit inside Sound                      ok
+ui: DRUM MAP: KNOB 1 stops at Kit without leaving Sound                        ok
+ui: DRUM MAP: KNOB 1 stops at Hit without leaving Sound                        ok
+ui: POPUPS: SONG, OCT+ held: the song's sheet (no play)                        ok
+ui: POPUPS: Insert section: a row                                              ok
+ui: ENV on CZ-1: Line 1's pitch envelope, ENV lit                              ok
+ui: ..ENV again: its wave (DCW) envelope                                       ok
+ui: ..the track's ADSR and ENV DEST hidden                                     ok
+ui: LFO on CZ-1: its vibrato, LFO lit                                          ok
+ui: ..LFO again: the track LFO (it modulates the CZ-1 too)                     ok
+ui: ENV on the Prophet: its filter envelope                                    ok
+ui: LFO on the Prophet: its LFO                                                ok
+ui: ENV on FM6: the operator's EG                                              ok
+ui: LFO on FM6: its LFO                                                        ok
+ui: ENV on SID: the track's ADSR                                               ok
+ui: OCT- on a sound page: Stage, no octave                                     ok
+ui: OCT- on Stage: an octave down                                              ok
+ui: OCT- on SCALES: back to SCL's list                                         ok
+ui: NOTES: OCT+ on an empty step places the last note played, no sheet         ok
+ui: ..OCT+ on the note: its sheet (Length, Velocity, Chance, Slide, Delete note) ok
+ui: ..KNOB 1 on Length snaps to 1.25 steps                                     ok
+ui: ..Chance: 90 %                                                             ok
+ui: ..Slide: on, the sheet closed                                              ok
+ui: ..Delete note: gone                                                        ok
+ui: NOTES: OCT+ held: the pattern's sheet                                      ok
+ui: drum grid: OCT+ on an empty place sets the lane's hit                      ok
+ui: ..OCT+ on the hit: its sheet (Accent, Chance, Clear hit)                   ok
+ui: ..Accent on                                                                ok
+ui: ..Clear hit: the lane empty there                                          ok
+ui: MOD: KNOB 2 the route (2)                                                  ok
+ui: ..KNOB 1 its source (LFO), its picker under KNOB 1                         ok
+ui: ..KNOB 3 its destination                                                   ok
+ui: ..KNOB 4 its amount                                                        ok
+ui: PATTERNS playing: KNOB 1 queues track 1's next pattern                     ok
+ui: ..OCT-: the queue cleared, PATTERNS stays                                  ok
+ui: ..OCT- again: Stage                                                        ok
+ui: INIT: FM6's: INIT VOICE (after F24), the DX7 init voice, dry               ok
+ui: INIT: the Prophet's: INIT PROPHET (not program 1)                          ok
+ui: INIT: the CZ-1's: INIT TONE                                                ok
+ui: INIT: the sound's sheet: Init sound, asked, FM6's INIT VOICE               ok
+ui: INIT: the browser's ENGINE knob: the Prophet, its INIT                     ok
+ui: ..again: FM6, its INIT VOICE                                               ok
+ui: ..INIT VOICE first in FM6's sounds: KNOB 2 on, F1; back: INIT VOICE        ok
+ui: ..back again: the Prophet's last program                                   ok
+ui: SCALES: KNOB 2 (the scale) and KNOB 3 turning: no picker over the list     ok
+ui: PATTERNS: OCT+ the pattern's sheet (Copy to, Delete pattern)               ok
+ui: ..Copy to: the pattern, the first empty place                              ok
+ui: ..any knob moves the place (no pattern switched)                           ok
+ui: ..OCT+ held: no sheet while copying                                        ok
+ui: ..OCT+ copies it there, Copy to ends                                       ok
+ui: ..over a pattern in use: the question first                                ok
+ui: ..yes: copied                                                              ok
+ui: ..OCT- leaves Copy to, PATTERNS stays                                      ok
+ui: ..Delete pattern asks                                                      ok
+ui: ..yes: the pattern empty                                                   ok
+ui: ..EDIT held undoes it, EDIT + OCT+ redoes it                               ok
+ui: ..an empty pattern: nothing to delete, nothing to copy                     ok
+ui: REC in NAME does nothing (no arm, no transport start); NAME stays          ok
+ui: REC in the menu does nothing (then PLAY: nothing either)                   ok
+ui: REC in the OVERWRITE? dialog does nothing; OCT+ then opens NAME            ok
+ui: UNDO of a sound load on FM6: the track's edited patch back; REDO: the load's ok
+ui: UNDO after load, editor patch, load: the editor's patch back               ok
+ui: ARP LED: none without an ARP; flashes on the beat, the bar's first beat longer ok
+ui:   the beat counter runs (a bar of blocks wraps the beat of the bar)        ok
+ui: USER ERASE: the ERASE U002? dialog; OCT- keeps the preset, OCT+ erases it  ok
+ui:   an empty slot: no dialog, EMPTY SLOT                                     ok
+ui: ALGORITHM ignored with a layer's button held (OCT- puts back all); then T2 ok
+ui: the sheets' Delete section / Clear song / Clear pattern with nothing there: NOTHING TO ..; a song: its dialog ok
+ui: REC in every layer: arms the track without starting PLAY; the layer stays, no page ok
+ui: SET layers: the OCT- LED lit (UNDO), OCT+ dark; after: the octave; FX: the octave ok
+ui: EDIT tap = RENAME on USER: no layer hint over NAME (no retired layer hint) ok
+ui: dead SCL held from a dialog: no map, the key plays a note                  ok
+ui: dead GLO held from a dialog: no map, the key plays a note                  ok
+ui: STEP entry with CHRD: POLY the chord, MONO its root, as live recording writes ok
+ui: MIXER: K1 lights the level's bar, K2 the pan, K4 Mute, K3 nothing          ok
+ui: rename of the loaded slot: the music's name follows, SAVE prefills it      ok
+ui: NAME: PLAY stops a running transport (never starts), REC ignored, then OCT+ saves ok
+ui: piano roll: the C-1 label stays inside the panel (every palette)           ok
+ui: piano roll: ACID's bars drawn at their notes' rows, ties carried, rests empty ok
+ui:   the view holds the page's notes (A2..A3 in 13 rows), MONO gray           ok
+ui:   4-note chords stacked, their ties carry all four                         ok
+ui:   LEN 32, the cursor on page 2: its 16 steps drawn                         ok
+ui:   notes moved two octaves: the view follows over frames (not at once), then rests ok
+ui:   nothing changed: the graph is not drawn again                            ok
+ui:   after the follow the bars match again                                    ok
+ui:   a key held: its row on the keyboard strip is the accent                  ok
+ui: FM6 charts: the 32 algorithms' routes, carriers and feedback operator equal fm6_core.c's ok
+ui: FM6 charts: carriers on the bottom row, modulators a row up, one per cell, at most 4 rows ok
+ui: FM6 charts: MARK I returns OP4 / OP5 in 4 / 6; MODERN and OPL return the feedback operator ok
+ui: all passed

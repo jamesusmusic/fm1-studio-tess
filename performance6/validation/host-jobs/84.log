@@ -1,0 +1,14 @@
+== TESSERA hardening: interrupted edits, mutation bounds, FORM recall and pure archive validation
+tessera hardening: 200000 UI edits with pending playback steps, extreme deltas and invalid tracks/knobs ok
+tessera hardening: transport stop releases every generator note after edit stress ok
+tessera hardening: Turing mutation avoids all-zero/all-one loops for LEN 2..16 and AMOUNT 1..100 ok
+tessera hardening: Euclid evolution stays within pulse/rotation bounds for STEPS 1..32 ok
+tessera hardening: Markov mutation reflects at the pitch-leap limits ok
+tessera hardening: AMOUNT 0 preserves all state and random sequence for every automatic mutation ok
+tessera hardening: Euclid ROLL uses one bounded random draw and always changes seed ok
+tessera hardening: switching generator modes releases MIDI note 0 instead of treating it as an idle arp owner ok
+tessera hardening: FORM Euclid clamps remembered pulses/rotation to a shortened STEPS ok
+tessera hardening: FORM Markov bounds stale section values before probability calculation ok
+tessera hardening: FORM Morph bounds stale section blend positions ok
+tessera hardening: 46080 record-byte mutations validate without touching any live state; invalid loads are atomic ok
+tessera hardening: version-1 section bytes remain readable without changing the save format ok

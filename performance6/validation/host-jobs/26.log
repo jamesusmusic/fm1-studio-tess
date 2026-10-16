@@ -1,0 +1,67 @@
+== USB audio: routing, clock drift and stream recovery
+In function ‘recovery’,
+    inlined from ‘main’ at tests/usb_audio_test.c:286:5:
+tests/usb_audio_test.c:132:5: warning: ‘packet’ may be used uninitialized [-Wmaybe-uninitialized]
+  132 |     ua_receive(packet, UA_PACKET + 4);
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from tests/usb_audio_test.c:7:
+tests/../firmware/src/usb_audio_stream.c: In function ‘main’:
+tests/../firmware/src/usb_audio_stream.c:117:13: note: by argument 1 of type ‘const uint8_t *’ {aka ‘const unsigned char *’} to ‘ua_receive’ declared here
+  117 | static void ua_receive(const uint8_t *p, uint32_t bytes)
+      |             ^~~~~~~~~~
+tests/usb_audio_test.c:126:13: note: ‘packet’ declared here
+  126 |     uint8_t packet[UA_PACKET];
+      |             ^~~~~~
+In function ‘recovery’,
+    inlined from ‘main’ at tests/usb_audio_test.c:286:5:
+tests/usb_audio_test.c:133:5: warning: ‘packet’ may be used uninitialized [-Wmaybe-uninitialized]
+  133 |     ua_receive(packet, 3);
+      |     ^~~~~~~~~~~~~~~~~~~~~
+tests/../firmware/src/usb_audio_stream.c: In function ‘main’:
+tests/../firmware/src/usb_audio_stream.c:117:13: note: by argument 1 of type ‘const uint8_t *’ {aka ‘const unsigned char *’} to ‘ua_receive’ declared here
+  117 | static void ua_receive(const uint8_t *p, uint32_t bytes)
+      |             ^~~~~~~~~~
+tests/usb_audio_test.c:126:13: note: ‘packet’ declared here
+  126 |     uint8_t packet[UA_PACKET];
+      |             ^~~~~~
+USB audio native PCM16: playback ch1 1000 Hz, gain 1.00002, RMS 1.00001: OK
+USB audio native PCM16: playback ch1 10000 Hz, gain 1.00002, RMS 1.00001: OK
+USB audio native PCM16: capture ch1 1000 Hz, gain 1.00001, RMS 1.00000: OK
+USB audio native PCM16: capture ch1 10000 Hz, gain 1.00000, RMS 1.00000: OK
+USB audio native PCM16: capture ch2 1000 Hz, gain 1.00001, RMS 1.00000: OK
+USB audio native PCM16: capture ch2 10000 Hz, gain 1.00000, RMS 1.00000: OK
+USB audio native PCM16: capture ch3 1000 Hz, gain 1.00001, RMS 1.00000: OK
+USB audio native PCM16: capture ch3 10000 Hz, gain 1.00000, RMS 1.00000: OK
+USB audio native PCM16: capture ch4 1000 Hz, gain 1.00001, RMS 1.00000: OK
+USB audio native PCM16: capture ch4 10000 Hz, gain 1.00000, RMS 1.00000: OK
+USB audio: 120 s at 44100 Hz, drift -1000 ppm, playback 1 capture 1: OK
+USB audio: 120 s at 44100 Hz, drift +0 ppm, playback 1 capture 1: OK
+USB audio: 120 s at 44100 Hz, drift +1000 ppm, playback 1 capture 1: OK
+USB audio: 120 s at 44100 Hz, drift -1000 ppm, playback 1 capture 0: OK
+USB audio: 120 s at 44100 Hz, drift +1000 ppm, playback 0 capture 1: OK
+USB audio native PCM24: playback ch1 1000 Hz, gain 1.00002, RMS 1.00001: OK
+USB audio native PCM24: playback ch1 10000 Hz, gain 1.00002, RMS 1.00001: OK
+USB audio native PCM24: capture ch1 1000 Hz, gain 1.00001, RMS 1.00000: OK
+USB audio native PCM24: capture ch1 10000 Hz, gain 1.00000, RMS 1.00000: OK
+USB audio native PCM24: capture ch2 1000 Hz, gain 1.00001, RMS 1.00000: OK
+USB audio native PCM24: capture ch2 10000 Hz, gain 1.00000, RMS 1.00000: OK
+USB audio native PCM24: capture ch3 1000 Hz, gain 1.00001, RMS 1.00000: OK
+USB audio native PCM24: capture ch3 10000 Hz, gain 1.00000, RMS 1.00000: OK
+USB audio native PCM24: capture ch4 1000 Hz, gain 1.00001, RMS 1.00000: OK
+USB audio native PCM24: capture ch4 10000 Hz, gain 1.00000, RMS 1.00000: OK
+USB audio: 120 s at 44100 Hz, drift -1000 ppm, playback 2 capture 2: OK
+USB audio: 120 s at 44100 Hz, drift +0 ppm, playback 2 capture 2: OK
+USB audio: 120 s at 44100 Hz, drift +1000 ppm, playback 2 capture 2: OK
+USB audio: 120 s at 44100 Hz, drift -1000 ppm, playback 2 capture 0: OK
+USB audio: 120 s at 44100 Hz, drift +1000 ppm, playback 0 capture 2: OK
+USB audio: 120 s at 44100 Hz, drift +1000 ppm, playback 2 capture 1: OK
+USB audio: 120 s at 44100 Hz, drift -1000 ppm, playback 1 capture 2: OK
+USB audio: 120 s at 44100 Hz, drift -1000 ppm, playback 1 capture 1: OK
+USB audio: 120 s at 44100 Hz, drift +0 ppm, playback 1 capture 1: OK
+USB audio: 120 s at 44100 Hz, drift +1000 ppm, playback 1 capture 1: OK
+USB audio: 120 s at 44100 Hz, drift +1000 ppm, playback 0 capture 1: OK
+USB audio: 120 s at 44100 Hz, drift -1000 ppm, playback 2 capture 2: OK
+USB audio: 120 s at 44100 Hz, drift +0 ppm, playback 2 capture 2: OK
+USB audio: 120 s at 44100 Hz, drift +1000 ppm, playback 2 capture 2: OK
+USB audio: 120 s at 44100 Hz, drift +1000 ppm, playback 0 capture 2: OK
+USB stereo/master and track routing, drift, packet bounds and recovery: OK

@@ -1,0 +1,28 @@
+== power cuts: every erase/page, resume and unchanged boot sector
+Created four host-only boot fixtures
+  rc 0, 1149 requests, 137 sector erases
+install completes                                        ok
+app area == the new package's flash.bin                  ok
+flash head [0, 0x4000) untouched                         ok
+finish asked (0xF0000000)                                ok
+update record cleared (RAM + flash)                      ok
+no write outside the allowed windows                     ok
+re-run with the same package erases nothing              ok
+foreign key / damaged app head refused, nothing erased   ok
+stub: the staged loader passes its check                 ok
+install -> boot: the record gone, the staged loader kept and whole ok
+.. the stub boots the app                                ok
+.. with OCT- held: that loader, one attempt counted      ok
+.. a second arrival with the key and no boot between: UBOOT ok
+interruption model: a power cut after every erase and every programmed page
+  legacy app -> stub                  2296 cut points: 2278 rescue, 1 boot (the end), 1 old firmware whole, 16 UNPROTECTED (cuts 2..17); 1149 requests  ok
+SAME_STUB carries the new package's stub sector, byte for byte ok
+.. and another body                                      ok
+  same stub, another body -> stub     2279 cut points: 2278 rescue, 1 boot (the end), 0 old firmware whole,  0 UNPROTECTED; 1149 requests  ok
+the dark unit's state holds no stub                      ok
+  the dark unit (33 new, then old)    2296 cut points: 2278 rescue, 1 boot (the end), 0 old firmware whole, 17 UNPROTECTED (cuts 1..17); 1149 requests  ok
+the same cut (33 sectors in) with a stub in place: rescue, the loader ok
+OLD_STUB: a marker, another stub sector, another body    ok
+.. its directory (0x4000..0x411F) is the new package's: only the stub's bytes differ ok
+  an earlier stub -> this stub        2296 cut points: 2279 rescue, 1 boot (the end), 0 old firmware whole, 16 UNPROTECTED (cuts 2..17); 1149 requests  ok
+loader test passed

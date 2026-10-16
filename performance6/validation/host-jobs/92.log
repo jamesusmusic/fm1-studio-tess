@@ -1,0 +1,77 @@
+== DRUM EDITOR: synthesized 909, sound controls, individual pitch/length, undo and storage
+ui: each sample-free 909 voice sounds, stays bounded and frees itself          ok
+ui: each sample-free 909 voice sounds, stays bounded and frees itself          ok
+ui: each sample-free 909 voice sounds, stays bounded and frees itself          ok
+ui: each sample-free 909 voice sounds, stays bounded and frees itself          ok
+ui: each sample-free 909 voice sounds, stays bounded and frees itself          ok
+ui: each sample-free 909 voice sounds, stays bounded and frees itself          ok
+ui: each sample-free 909 voice sounds, stays bounded and frees itself          ok
+ui: each sample-free 909 voice sounds, stays bounded and frees itself          ok
+ui: each sample-free 909 voice sounds, stays bounded and frees itself          ok
+ui: each sample-free 909 voice sounds, stays bounded and frees itself          ok
+ui: each sample-free 909 voice sounds, stays bounded and frees itself          ok
+ui: 909 closed hat chokes open hat without ending the closed hit               ok
+ui: 909 respects the eight-voice shared budget                                 ok
+ui: four independent 909 parts share the eight-voice budget and render together ok
+ui: 808 sound tune transposes the same snare by an octave                      ok
+ui: individual pitch offsets combine with sound tune without changing instrument ok
+ui: 909 snare decay survives the source engine's trigger pinning               ok
+ui: edited hit length limits the sounding voice independently of key release   ok
+ui: ordinary one-shot hits retain their natural decay                          ok
+ui: edited hit length limits the sounding voice independently of key release   ok
+ui: ordinary one-shot hits retain their natural decay                          ok
+ui: low/mid/high tom levels remain independent                                 ok
+ui: grid pitch edit retains the kick, snare and their velocities               ok
+ui: hit length is an independent half step                                     ok
+ui: hit undo restores pitch and natural length                                 ok
+ui: hit redo restores the length override                                      ok
+ui: hit preview retains edited pitch and duration                              ok
+ui: deleting one edited hit retains its neighboring manual snare               ok
+ui: hit deletion undo restores the original event and neighbors                ok
+ui: SELECT can edit a repeated hit without changing the first hit              ok
+ui: project roundtrip keeps sound settings, instrument, pitch and length       ok
+ui: new bank schema fits existing atomic flash copies                          ok
+ui: general drum preset stores its own sound controls                          ok
+ui: template restores the edited drum kit                                      ok
+ui: all 1024 hits retain full timing, instrument, velocity, owner, pitch and length ok
+ui: one bank can still hold all 1024 events                                    ok
+ui: 808 congas, clave and maraca have their own sound controls                 ok
+ui: 808 congas, clave and maraca have their own sound controls                 ok
+ui: 808 congas, clave and maraca have their own sound controls                 ok
+ui: 808 congas, clave and maraca have their own sound controls                 ok
+ui: 808 congas, clave and maraca have their own sound controls                 ok
+ui: KNOB 2 walks every drum once, lane by lane in the black keys' order        ok
+ui: the toms sit together, low to high                                         ok
+ui: a lane key picks its lane's own drum and lights its lane                   ok
+ui: KNOB 2 walks every drum once, lane by lane in the black keys' order        ok
+ui: the toms sit together, low to high                                         ok
+ui: a lane key picks its lane's own drum and lights its lane                   ok
+ui: each tom of a step is told apart                                           ok
+ui: the 909 ride's lane hit is the ride                                        ok
+ui: a white key clears the 909 ride's grid hit                                 ok
+ui: 909 common tone changes the snare's noise tail                             ok
+ui: 909 common accent changes velocity response                                ok
+ui: 909 ROUND kick softens its pitch transient                                 ok
+ui: 909 native float voices remain finite at pitch/decay/character corners     ok
+ui: 909 native float voices remain finite at pitch/decay/character corners     ok
+ui: 909 native float voices remain finite at pitch/decay/character corners     ok
+ui: 909 native float voices remain finite at pitch/decay/character corners     ok
+ui: 909 native float voices remain finite at pitch/decay/character corners     ok
+ui: 909 native float voices remain finite at pitch/decay/character corners     ok
+ui: 909 native float voices remain finite at pitch/decay/character corners     ok
+ui: 909 native float voices remain finite at pitch/decay/character corners     ok
+ui: 909 native float voices remain finite at pitch/decay/character corners     ok
+ui: 909 native float voices remain finite at pitch/decay/character corners     ok
+ui: 909 native float voices remain finite at pitch/decay/character corners     ok
+ui: 909 native float voices remain finite at pitch/decay/character corners     ok
+ui: 909 native float voices remain finite at pitch/decay/character corners     ok
+ui: 909 native float voices remain finite at pitch/decay/character corners     ok
+ui: 909 native float voices remain finite at pitch/decay/character corners     ok
+ui: 909 native float voices remain finite at pitch/decay/character corners     ok
+ui: 909 native float voices remain finite at pitch/decay/character corners     ok
+ui: 909 native float voices remain finite at pitch/decay/character corners     ok
+ui: 909 native float voices remain finite at pitch/decay/character corners     ok
+ui: 909 native float voices remain finite at pitch/decay/character corners     ok
+ui: 909 native float voices remain finite at pitch/decay/character corners     ok
+ui: 909 native float voices remain finite at pitch/decay/character corners     ok
+DRUM EDITOR: all passed

@@ -1,0 +1,29 @@
+== TRS MIDI parser
+In file included from tests/midi_uart_test.c:15:
+tests/../firmware/src/usb.c:107:16: warning: ‘midi_render_timed’ defined but not used [-Wunused-variable]
+  107 | static uint8_t midi_render_timed;                  /* audio ISR supplies the block's timeline */
+      |                ^~~~~~~~~~~~~~~~~
+tests/../firmware/src/usb.c:106:17: warning: ‘midi_render_time’ defined but not used [-Wunused-variable]
+  106 | static uint32_t midi_render_time;
+      |                 ^~~~~~~~~~~~~~~~
+uart: running status, realtime, SysEx, system common ok
+clock: timestamps and USB/TRS source, no active sensing ok
+uart: channels 1, 2, 3, 10, 16 -> USB-MIDI packets   ok
+uart ring: nothing landed, nothing read              ok
+uart ring: a burst's last message (note-off) is read at once ok
+uart ring: byte-by-byte arrival across the wrap      ok
+uart ring: a received FD is skipped, not taken for empty ok
+usb: ota_wire_send packets (CIN 4.. then 5/6/7)      ok
+usb: received frame == the bytes between F0 and F7   ok
+usb: a frame while one is pending is dropped         ok
+usb: a truncated frame is replaced by the next one   ok
+usb: an oversized frame (698 B) is not taken         ok
+usb: soft key -> uboot_req, not a frame              ok
+usb: upgrade key -> ota_req, not a frame             ok
+usb: bytes outside F0..F7 are ignored                ok
+usb: SysEx bytes sent as CIN 0xF join the frame      ok
+usb: a CIN 0xF clock inside SysEx still reaches MIDI in ok
+usb: a CIN 0xF data byte outside SysEx is ignored    ok
+usb: send with a full ring and no host fails at once ok
+usb: send with a full ring times out (200 ms)        ok
+midi parser test passed

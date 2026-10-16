@@ -1,0 +1,38 @@
+== retired synth identities, project/user patch preservation and favorites
+persist: engine and native collection IDs remain unchanged                  ok
+persist: retired engine absent from browser and DSP resources               ok
+persist: old project keeps retired identity, preset and edit values         ok
+persist: retired general user patch remains identified by its original engine ok
+persist: retired user patch retains all native edit values                  ok
+persist: retirement does not clear existing favorite identifiers            ok
+persist: retired engine absent from browser and DSP resources               ok
+persist: old project keeps retired identity, preset and edit values         ok
+persist: retired general user patch remains identified by its original engine ok
+persist: retired user patch retains all native edit values                  ok
+persist: retirement does not clear existing favorite identifiers            ok
+persist: retired engine absent from browser and DSP resources               ok
+persist: old project keeps retired identity, preset and edit values         ok
+persist: retired general user patch remains identified by its original engine ok
+persist: retired user patch retains all native edit values                  ok
+persist: retirement does not clear existing favorite identifiers            ok
+persist: retired engine absent from browser and DSP resources               ok
+persist: old project keeps retired identity, preset and edit values         ok
+persist: retired general user patch remains identified by its original engine ok
+persist: retired user patch retains all native edit values                  ok
+persist: retirement does not clear existing favorite identifiers            ok
+persist: retired engine absent from browser and DSP resources               ok
+persist: old project keeps retired identity, preset and edit values         ok
+persist: retired general user patch remains identified by its original engine ok
+persist: retired user patch retains all native edit values                  ok
+persist: retirement does not clear existing favorite identifiers            ok
+persist: retired engine absent from browser and DSP resources               ok
+persist: old project keeps retired identity, preset and edit values         ok
+persist: retired general user patch remains identified by its original engine ok
+persist: retired user patch retains all native edit values                  ok
+persist: retirement does not clear existing favorite identifiers            ok
+persist: browser lists only available engines                               ok
+persist: browser lists only available engines                               ok
+persist: browser lists only available engines                               ok
+persist: browser lists only available engines                               ok
+persist: browser lists only available engines                               ok
+Engine retirement test passed

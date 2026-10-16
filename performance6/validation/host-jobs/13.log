@@ -1,0 +1,2 @@
+== cache RAM startup, memory faults and safe fallback
+cache RAM: retry, external-memory refusal, timeout, wrapping clock, full-bank test, stuck/aliased banks and rollback passed

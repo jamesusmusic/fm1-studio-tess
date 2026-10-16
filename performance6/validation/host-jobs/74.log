@@ -1,0 +1,60 @@
+== persistence: deferred settings, retry and failed-save rollback
+persist: editor display change while playing is applied and reports deferred saving ok
+persist: STOP commits the deferred palette setting                          ok
+persist: repeating an unchanged editor preference succeeds without erasing  ok
+persist: editor reports failed saving while preserving the previous flash setting ok
+persist: failed editor preference retries through the existing persistence path ok
+persist: the retired font weight is refused without a write                 ok
+persist: playing: settings queued, no erase, runtime kept                   ok
+persist: pending PLAY: settings still queued, no erase                      ok
+persist: pending SONG: settings still queued, no erase                      ok
+persist: STOP: latest settings saved and request cleared                    ok
+persist: unchanged settings do not erase                                    ok
+persist: failed settings retry waits through clock wrap                     ok
+persist: settings retry succeeds after 1000 ms                              ok
+persist: failed project save keeps RAM and old flash                        ok
+persist: successful project save publishes new RAM                          ok
+persist: pending PLAY: project save leaves slot and flash                   ok
+persist: failed first project save leaves slot empty                        ok
+persist: a project's name goes to flash and comes back                      ok
+persist: failed project rename: SAVE ERROR, the slot and flash as they were ok
+persist: pending PLAY: no rename, no erase                                  ok
+persist: project rename: flash has the new name, the music as it was        ok
+persist: damaged inactive-bank chord is refused with runtime unchanged      ok
+persist: SONG sources use the same step bounds                              ok
+persist: failed first preset save restores empty bank                       ok
+persist: preset initial save                                                ok
+persist: failed preset save rolls back bank and generation                  ok
+persist: failed preset erasure retains both the sound and its favorite      ok
+persist: failed preset save keeps old flash                                 ok
+persist: failed preset erase keeps record and loaded label                  ok
+persist: successful preset erase clears loaded label                        ok
+persist: pending PLAY: preset save blocked                                  ok
+persist: pending SONG: preset save blocked                                  ok
+persist: preset invalid slot blocked before access                          ok
+persist: PLAY consumed before the save snapshot still blocks a project write ok
+persist: PLAY consumed before the preset snapshot still blocks a bank write ok
+persist: PLAY consumed before the settings snapshot defers the write        ok
+persist: dedicated CZ bank writes its own A/B object                        ok
+persist: dedicated CZ bank writes its own A/B object                        ok
+persist: dedicated CZ bank writes its own A/B object                        ok
+persist: dedicated CZ bank writes its own A/B object                        ok
+persist: dedicated CZ bank writes its own A/B object                        ok
+persist: dedicated CZ bank writes its own A/B object                        ok
+persist: dedicated CZ bank writes its own A/B object                        ok
+persist: dedicated CZ bank writes its own A/B object                        ok
+persist: CZ banks survive cache reset and boot                              ok
+persist: CZ banks survive cache reset and boot                              ok
+persist: CZ banks survive cache reset and boot                              ok
+persist: CZ banks survive cache reset and boot                              ok
+persist: CZ banks survive cache reset and boot                              ok
+persist: CZ banks survive cache reset and boot                              ok
+persist: CZ banks survive cache reset and boot                              ok
+persist: CZ banks survive cache reset and boot                              ok
+persist: interrupted CZ bank write reports failure                          ok
+persist: torn CZ bank write keeps previous committed tone                   ok
+persist: CZ bank writes leave neighbouring project objects untouched        ok
+persist: partial SysEx write retains only unsaved tones for retry           ok
+persist: committed import prefix survives cache reset and torn next slot    ok
+persist: retry starts after committed prefix and unlocks the receive buffer ok
+persistence test passed

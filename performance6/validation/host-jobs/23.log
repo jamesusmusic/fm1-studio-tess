@@ -1,0 +1,28 @@
+== keys and buttons: fast press, long release, bouncy contacts (one note each), glitches, encoders, fast spins
+debounce: press 2 frames, release 8 frames, frame 1100 us
+clean press: contact -> press avg 1746 us, max 2297 us; release -> note off max 8897 us
+clean presses: one press and one release each, every key and button      ok
+clean press: counted within 2.3 ms of the contact (2 frames)             ok
+clean release: the note ends within 10 ms                                ok
+press stat (first closed frame -> press): avg 1100 us over 1
+the press stat counts the note keys' presses (one frame after the first) ok
+bouncy press (<= 3 ms of bounce): first touch -> press avg 2511 us, max 5186 us; settled -> press max 2298 us; last bounce -> note off max 8899 us
+2000 bouncy presses: exactly one note-on / press and one release each    ok
+no note ends while its key is held                                       ok
+no hanging note 12 ms after the last bounce of a release                 ok
+bouncy press: counted within 2.3 ms of the contact settling, or sooner   ok
+bouncy release: the note ends within 10 ms of the last bounce            ok
+a 150 us glitch plays no note                                            ok
+10 notes 40 ms apart (20 ms held, bouncy): 10 note-ons, 10 releases      ok
+encoder 0: one cycle -> 1 step(s)
+an encoder detent cycle is one step                                      ok
+encoder 0: 10 detents at 4 frame(s) a state, cw -> 10
+encoder 0: 10 detents at 2 frame(s) a state, cw -> 10
+encoder 0: 10 detents at 1 frame(s) a state, cw -> 10
+encoder 0: 10 detents at 4 frame(s) a state, ccw -> -10
+encoder 0: 10 detents at 2 frame(s) a state, ccw -> -10
+encoder 0: 10 detents at 1 frame(s) a state, ccw -> -10
+a fast spin: every detent counts at 4, 2 and 1 frames a state, both ways ok
+a flick that skips states: every detent counts                           ok
+a one-frame glitch at rest: no step                                      ok
+input debounce: all ok

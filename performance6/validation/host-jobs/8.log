@@ -1,0 +1,34 @@
+== Prophet native slots, atomic saves, projects, undo and performance
+persist: fresh Prophet user storage is empty without erasing flash          ok
+persist: Sequential's first factory program remains separate                ok
+persist: an existing intentionally empty saved bank keeps its empty collection ok
+persist: an explicitly saved copy remains in its user slot                  ok
+persist: all 128 native slots fit without changing historical object IDs    ok
+persist: P128 survives reboot with all opaque bytes and wire metadata       ok
+persist: slot 385 is rejected before any erase                              ok
+persist: interrupted native save reports failure and rolls RAM back         ok
+persist: interrupted native save keeps the last flash commit after reboot   ok
+persist: native saves during playback cannot erase storage                  ok
+persist: P128 and Prophet INIT favorites use separate persistent masks      ok
+persist: Prophet favorites survive cache reset without moving old identifiers ok
+persist: all Prophet factory stars persist without overwriting retired ANALOG's stars ok
+persist: native load selects engine 19 and keeps track effects, matrix and sequence ok
+persist: loading another Prophet slot clears prior macro offsets within the same engine ok
+persist: project embeds the complete native record without a user-slot dependency ok
+persist: project restore returns native bytes after changing the current patch ok
+persist: project restore resumes Prophet browsing at native P128            ok
+persist: new projects retain a native origin even after the live patch was edited ok
+persist: project restore resumes at the last of all 200 factory programs    ok
+persist: older projects locate their embedded Prophet factory patch         ok
+persist: sound undo restores opaque Prophet bytes                           ok
+persist: sound redo restores the second complete Prophet program            ok
+persist: erasing P128 clears its star and track origin                      ok
+persist: native unison allocates five voices within the shared budget       ok
+persist: native poly glide begins between the preceding and target pitches  ok
+persist: matrix ENV source follows the native amplifier envelope            ok
+persist: native maximum bend is twelve semitones                            ok
+persist: native minimum bend is one semitone                                ok
+persist: template with all native patches fits its protected settings sector ok
+persist: template load returns all native bytes and empty patterns          ok
+persist: editing bend range updates a held bend without another MIDI message ok
+Prophet integration: 0 failure(s)

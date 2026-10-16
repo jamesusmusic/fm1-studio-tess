@@ -1,0 +1,94 @@
+== motion, whole-step chance, an older parameter count, song restore and ARP repeat
+ui: native edit records tagged motion and keeps its patch base                 ok
+ui: native project snapshot saves the original patch while motion sounds       ok
+ui: native stop immediately restores the original patch                        ok
+ui: native motion replays from the real sequencer                              ok
+ui: native bypass restores the patch without losing events                     ok
+ui: native manual edit outside REC becomes the new patch base                  ok
+ui: native motion has a named lane and the raw value                           ok
+ui: native lane clear removes its events                                       ok
+ui: native persisted project restores base then replays its motion             ok
+ui: native saved events replay after loading                                   ok
+ui: loaded native motion restores the saved patch                              ok
+ui: native edit records tagged motion and keeps its patch base                 ok
+ui: native project snapshot saves the original patch while motion sounds       ok
+ui: native stop immediately restores the original patch                        ok
+ui: native motion replays from the real sequencer                              ok
+ui: native bypass restores the patch without losing events                     ok
+ui: native manual edit outside REC becomes the new patch base                  ok
+ui: native motion has a named lane and the raw value                           ok
+ui: native lane clear removes its events                                       ok
+ui: native persisted project restores base then replays its motion             ok
+ui: native saved events replay after loading                                   ok
+ui: loaded native motion restores the saved patch                              ok
+ui: native edit records tagged motion and keeps its patch base                 ok
+ui: native project snapshot saves the original patch while motion sounds       ok
+ui: native stop immediately restores the original patch                        ok
+ui: native motion replays from the real sequencer                              ok
+ui: native bypass restores the patch without losing events                     ok
+ui: native manual edit outside REC becomes the new patch base                  ok
+ui: native motion has a named lane and the raw value                           ok
+ui: native lane clear removes its events                                       ok
+ui: native persisted project restores base then replays its motion             ok
+ui: native saved events replay after loading                                   ok
+ui: loaded native motion restores the saved patch                              ok
+ui: armed stopped Stage edit explains how to record motion                     ok
+ui: Prophet Stage cutoff records through the real UI                           ok
+ui: CZ Stage DCW records through the real UI                                   ok
+ui: FM6 operator page records its native patch through UI                      ok
+ui: empty motion page is hidden                                                ok
+ui: recorded motion makes its page visible                                     ok
+ui: clearing keeps the current page until leaving it                           ok
+ui: empty motion disappears after leaving                                      ok
+ui: another engine's native events cannot expose an empty motion page          ok
+ui: invalid native tags, fields and values are refused                         ok
+ui: full pool refuses a whole multi-byte native edit without partial events    ok
+ui: common engine and native motion sharing wire ID P_E1 coexist               ok
+ui: colliding wire IDs produce separate UI lanes                               ok
+ui: both colliding motion destinations play independently                      ok
+ui: typed common deletion keeps native motion                                  ok
+ui: typed native deletion keeps common motion                                  ok
+ui: legacy untyped deletion clears both kinds                                  ok
+ui: motion records the selected armed track at its current step                ok
+ui: same step/parameter overwrites rather than consuming capacity              ok
+ui: sounding values never replace the original patch base                      ok
+ui: project snapshot saves base + independent events while sounding            ok
+ui: stop before another step restores the original parameter                   ok
+ui: recorded motion plays back at step zero                                    ok
+ui: bypass restores base without deleting automation                           ok
+ui: manual edits outside recording become the new base                         ok
+ui: only the selected track captures knob motion                               ok
+ui: transport and engine-switch parameters cannot be captured                  ok
+ui: clearing then recording mid-play keeps the correct new base                ok
+ui: full event pool refuses append without overwriting earlier events          ok
+ui: full pool still permits a targeted overwrite                               ok
+ui: deleting one event releases one slot                                       ok
+ui: invalid restore leaves the pool intact                                     ok
+ui: track clear keeps every other track's events                               ok
+ui: zero-initialized probability remains legacy 100 percent                    ok
+ui: zero percent suppresses the whole chord and drum hits                      ok
+ui: 100 percent plays all chord notes and drum hits                            ok
+ui: chance is evaluated each repeat with one decision per step                 ok
+ui: FUN16 fits the retained and flash extent                                   ok
+ui: FBKK keeps the tracks' FM6 function settings                               ok
+ui: FUN16 round trip preserves signed values/FM params/probability/motion      ok
+ui: FUN16 torn or corrupted payload is refused                                 ok
+ui: compact parameter range is validated even with a correct hash              ok
+ui: invalid probability is refused even with a correct hash                    ok
+ui: actual project save/load restores motion, chance and operator settings     ok
+ui: FUN16 of P_COUNT 104: E0..E7 in place, FX defaults, the rest kept          ok
+ui:   its motion: its E0 -> P_E0, REV and FM OP1 ATK kept                      ok
+ui:   written again with today's count: the same project                       ok
+ui: such a project's motion loads at today's parameter ids                     ok
+ui:   its E1 -> P_E1                                                           ok
+ui: sound load clears incompatible motion and keeps pattern                    ok
+ui: sound undo restores the original motion pool and base                      ok
+ui: sound redo restores the loaded motion state                                ok
+ui: song preparation imports saved motion alongside steps                      ok
+ui: song plays saved automation with current instruments                       ok
+ui: song stop restores current base and editable pattern                       ok
+ui: REPEAT retriggers the last played note without octave traversal            ok
+ui: REPEAT remains on the same note on the next pulse                          ok
+ui: REPEAT releases after the last held key is released                        ok
+ui: REPEAT supports ARP HOLD                                                   ok
+motion/chance/compact storage tests passed

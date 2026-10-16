@@ -1,0 +1,38 @@
+== FM6: one-track dry/Echo/Reverb, real STOP, eight-second tails and serial/dual parity
+FM6 tail: mode 0 FX 0 density 1 serial reference, peak 1762 tail energy 0: OK
+FM6 tail: mode 0 FX 0 density 1 dual, peak 1762 tail energy 0: OK
+FM6 tail: mode 0 FX 0 density 8 serial reference, peak 1018 tail energy 0: OK
+FM6 tail: mode 0 FX 0 density 8 dual, peak 1018 tail energy 0: OK
+FM6 tail: mode 0 FX 6 density 1 serial reference, peak 1403 tail energy 485731: OK
+FM6 tail: mode 0 FX 6 density 1 dual, peak 1403 tail energy 485731: OK
+FM6 tail: mode 0 FX 6 density 8 serial reference, peak 637 tail energy 174663: OK
+FM6 tail: mode 0 FX 6 density 8 dual, peak 637 tail energy 174663: OK
+FM6 tail: mode 0 FX 8 density 1 serial reference, peak 1403 tail energy 26982: OK
+FM6 tail: mode 0 FX 8 density 1 dual, peak 1403 tail energy 26982: OK
+FM6 tail: mode 0 FX 8 density 8 serial reference, peak 492 tail energy 6601: OK
+FM6 tail: mode 0 FX 8 density 8 dual, peak 492 tail energy 6601: OK
+FM6 tail: mode 1 FX 0 density 1 serial reference, peak 1697 tail energy 0: OK
+FM6 tail: mode 1 FX 0 density 1 dual, peak 1697 tail energy 0: OK
+FM6 tail: mode 1 FX 0 density 8 serial reference, peak 1027 tail energy 0: OK
+FM6 tail: mode 1 FX 0 density 8 dual, peak 1027 tail energy 0: OK
+FM6 tail: mode 1 FX 6 density 1 serial reference, peak 1278 tail energy 440930: OK
+FM6 tail: mode 1 FX 6 density 1 dual, peak 1278 tail energy 440930: OK
+FM6 tail: mode 1 FX 6 density 8 serial reference, peak 645 tail energy 171514: OK
+FM6 tail: mode 1 FX 6 density 8 dual, peak 645 tail energy 171514: OK
+FM6 tail: mode 1 FX 8 density 1 serial reference, peak 1278 tail energy 24667: OK
+FM6 tail: mode 1 FX 8 density 1 dual, peak 1278 tail energy 24667: OK
+FM6 tail: mode 1 FX 8 density 8 serial reference, peak 487 tail energy 6653: OK
+FM6 tail: mode 1 FX 8 density 8 dual, peak 487 tail energy 6653: OK
+FM6 tail: mode 2 FX 0 density 1 serial reference, peak 1709 tail energy 0: OK
+FM6 tail: mode 2 FX 0 density 1 dual, peak 1709 tail energy 0: OK
+FM6 tail: mode 2 FX 0 density 8 serial reference, peak 1174 tail energy 0: OK
+FM6 tail: mode 2 FX 0 density 8 dual, peak 1174 tail energy 0: OK
+FM6 tail: mode 2 FX 6 density 1 serial reference, peak 1282 tail energy 470540: OK
+FM6 tail: mode 2 FX 6 density 1 dual, peak 1282 tail energy 470540: OK
+FM6 tail: mode 2 FX 6 density 8 serial reference, peak 669 tail energy 186304: OK
+FM6 tail: mode 2 FX 6 density 8 dual, peak 669 tail energy 186304: OK
+FM6 tail: mode 2 FX 8 density 1 serial reference, peak 1282 tail energy 24862: OK
+FM6 tail: mode 2 FX 8 density 1 dual, peak 1282 tail energy 24862: OK
+FM6 tail: mode 2 FX 8 density 8 serial reference, peak 487 tail energy 7665: OK
+FM6 tail: mode 2 FX 8 density 8 dual, peak 487 tail energy 7665: OK
+FM6: 18 one-track scenarios, 8 seconds each, STOP releases, dry/insert/shared tails, serial/dual identical: OK

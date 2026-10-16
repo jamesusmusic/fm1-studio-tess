@@ -1,0 +1,81 @@
+== Sequencer: tied length/move/delete, eight-level undo/redo, MIDI step entry and playing-step recording
+ui: length resolves ties across the loop                                       ok
+ui: SELECT on a tie grows its onset, stops before the next note                ok
+ui: length clamps to one and clears only its old ties                          ok
+ui: SCL+SELECT moves the whole chord across the loop, stops before another note, no SCL page ok
+ui: several SCL-held moves are one undo                                        ok
+ui: move redo preserves all note data                                          ok
+ui: EDIT on a chord tail removes one pitch and preserves its neighbours and ties ok
+ui: whole-note deletion is one undo with its tail cursor                       ok
+ui: LENGTH snaps the selected note to 1.25 steps                               ok
+ui: LENGTH snaps to 1.50 without moving the onset                              ok
+ui: resize cannot attach an orphan tie chain                                   ok
+ui: orphan tie deletion leaves the adjacent note                               ok
+ui: full-loop note is bounded and moves without losing its tail                ok
+ui: delete from a full-loop tail clears all steps                              ok
+ui: held panel entry, SELECT length, release advances by its full length       ok
+ui: held entry and resize are one undo, cursor restored                        ok
+ui: EDIT+OCT+ restores the whole held entry                                    ok
+ui: EDIT+OCT- undoes without changing octave                                   ok
+ui: a new edit drops redo                                                      ok
+ui: history keeps the most recent eight edits                                  ok
+ui: history never undoes past its retained limit                               ok
+ui: all eight retained edits redo                                              ok
+ui: moving the cursor keeps redo                                               ok
+ui: editor changes invalidate history                                          ok
+ui: pattern-length changes invalidate history                                  ok
+ui: CHANCE edits (the note's sheet) share manual step undo                     ok
+ui: MIDI enters STEP, SELECT sets length, source release advances              ok
+ui: two MIDI taps in one frame enter two steps                                 ok
+ui: same-frame MIDI taps remain separate undo entries                          ok
+ui: previous same-frame MIDI entry undoes independently                        ok
+ui: overlapping channels with the same pitch keep entry held                   ok
+ui: last source release advances once                                          ok
+ui: sustain holds audio while physical MIDI release ends step entry            ok
+ui: pedal-up never advances an extra step                                      ok
+ui: WHITE black MIDI keys are silent and enter nothing                         ok
+ui: WHITE MIDI entry uses its mapped pitch                                     ok
+ui: a silent black panel key cannot keep a white-key entry held                ok
+ui: MIDI chord enters up to four notes with one source owner                   ok
+ui: chord source release ends one entry                                        ok
+ui: eight four-tone MIDI taps fit the queue and remain separate entries        ok
+ui: old-track release does not release the new track's entry                   ok
+ui: new-track release advances normally                                        ok
+ui: panic releases STEP ownership                                              ok
+ui: queue overflow recovers and accepts the next complete entry                ok
+ui: MIDI in the menu never enters a stale STEP on return                       ok
+ui: late live MIDI rounds to the upcoming step and STEP follows playback       ok
+ui: undo cannot restore stale steps or interrupt an active take                ok
+ui: Start and note in one block record step zero with retrigger guard          ok
+ui: final SELECT detent on panel-key release sets the entry length before advancing ok
+ui: final SELECT detent on MIDI release sets length before advancing           ok
+ui: SELECT turns the page, not the notes; KNOB 1 reaches empty steps (BPM untouched) ok
+ui: PRESETS has no STEP editing role                                           ok
+ui: ENV+SELECT includes a release-frame detent and consumes the ENV page tap   ok
+ui: SCL+SELECT includes a release-frame detent and consumes the SCL page tap   ok
+ui: one SCL-held movement gesture is one undo                                  ok
+ui: EDIT deletes a selected note and all ties, advances from its onset         ok
+ui: EDIT then OCT- undoes without deletion, navigation or octave shift         ok
+ui: OCT+ then EDIT redoes, either order works                                  ok
+ui: FX leaves the edited note intact and opens its page                        ok
+ui: plain STEP OCT+: neither the cursor (the knobs move it) nor the octave (Stage only) ok
+ui: plain STEP OCT-: Esc, back to Stage, no octave                             ok
+ui: unused ENV tap still opens ENV                                             ok
+ui: unused SCL tap still opens SCL                                             ok
+ui: song playback blocks a length modifier and still consumes its page tap     ok
+ui: ENV held 0.5 s + SELECT: the note 2 -> 4 steps, STEP stays                 ok
+ui: SCL held 0.7 s + SELECT: the note moves 4 -> 6, no SCL layer or page       ok
+ui: ENV + KNOB 1: as SELECT (4 -> 3 steps)                                     ok
+ui: SCL + KNOB 1: as SELECT (6 -> 4)                                           ok
+ui: a key held + KNOB 1: its length (3 steps), the cursor past it              ok
+ui: armed and playing: ENV + SELECT still lengthens the note (2 -> 4)          ok
+ui:   the cursor stays on the note while SCL is held (the play head moved on)  ok
+ui:   .. and moves it (4 -> 6); let go, it follows the play head again         ok
+ui:   OCT+ while recording live: not the octave (Stage only), not the cursor   ok
+ui:   retired FX while recording live: no layer, the note stays                ok
+ui: compact history preserves every step byte for all control combinations     ok
+ui: all eight levels have fixed storage even for dense patterns                ok
+ui: decoded project borrows canvas with a separate archive buffer              ok
+ui: dense project packs while decoded and serialized scratch coexist           ok
+ui: screen drawing cannot damage a pending archive; decoding reacquires scratch ok
+sequencer editing: all passed

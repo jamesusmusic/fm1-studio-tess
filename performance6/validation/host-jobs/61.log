@@ -1,0 +1,2 @@
+== text: pens, kerning and pixels equal the reference renderer
+text: 2448 strings x fonts x palettes against the mock renderer: 0 end pens and 0 pixels differ ok

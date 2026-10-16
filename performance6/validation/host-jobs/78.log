@@ -1,0 +1,82 @@
+== full backup: CRC before writes, stale runtime, USB reset / timeout, malformed objects, older projects
+backup: all 1024 timed notes across 32 banks survive flash, backup GET and saved-slot restore ok
+backup: expanded runtime archive restores every original timed note              ok
+backup: truncated Tessera object rejected before header read                     ok
+backup: LIST / GET: the generators (30: the saved slots', 31: the live ones)     ok
+backup: PUT 30 and 31 restore the live generators                                ok
+backup: ... and the saved slot's: loading it brings its generators back          ok
+backup: a damaged slot block is refused before any erase, the live state kept    ok
+backup: saved-slot archive validation preserves playheads and captured LOCK phrases ok
+backup: invalid saved-slot archive preserves the entire runtime without flash writes ok
+backup: a damaged live state is refused, nothing changed                         ok
+backup: a wrong size is refused at the start                                     ok
+backup: an empty 31 (no live generators in the archive): all OFF                 ok
+backup: project save/load retains harmony, range, USB routing and SONG chord/key/bars ok
+backup: failed project commit retains the previously committed feature state     ok
+backup: successful project retry commits music and feature state together        ok
+backup: TSR1 is durably migrated before its old pair is reused                   ok
+backup: TSR1 migration retains original generators and defaults new features OFF ok
+backup: completed migration is idempotent and does not rewrite flash             ok
+backup: legacy live-generator backup remains importable                          ok
+backup: LIST captures runtime and all 31 archive objects with CRC                ok
+backup: an empty project slot lists as length 0                                  ok
+backup: GET of the runtime copy                                                  ok
+backup: a project save after LIST reused the staging RAM: GET of the runtime is stale (5) ok
+backup: a new LIST makes it readable again                                       ok
+backup: a USB reset after LIST: GET is stale (5)                                 ok
+backup: previous TPLF settings archive restores through PUT and remains dry      ok
+backup: damaged previous template is refused before any flash erase              ok
+backup: settings with SPEAKER BASS+ restore                                      ok
+backup: settings with an untagged palette id are refused, nothing written        ok
+backup: settings with a click and a count-in restore                             ok
+backup: settings with an untagged zoom word are refused                          ok
+backup: settings with an unknown SPEAKER value are refused, nothing written      ok
+backup: settings with HOLD 0.6 s restore                                         ok
+backup: settings of an older backup restore with HOLD 0.4 s                      ok
+backup: settings with an unknown HOLD value are refused, nothing written         ok
+backup: a wrong CRC is refused before any write                                  ok
+backup: settings + template restore: BOOT B, the template back                   ok
+backup:   settings without one: no template                                      ok
+backup:   a broken template is refused, nothing written                          ok
+backup: an unknown object id is refused                                          ok
+backup: a project of the wrong length is refused                                 ok
+backup: settings of the wrong length are refused                                 ok
+backup: a chunk without a begin is refused (5)                                   ok
+backup: a chunk at the wrong offset is refused                                   ok
+backup: a chunk for another object is refused (5)                                ok
+backup: a chunk past the length is refused                                       ok
+backup: commit before all bytes arrived is refused                               ok
+backup: a USB reset during PUT ends it (5)                                       ok
+backup: 16 s without a chunk ends the PUT (5)                                    ok
+backup: a project save during PUT (the staging RAM) ends it (5)                  ok
+backup: PUT while starting PLAY is refused (3)                                   ok
+backup: a bare FUN16 record restores into slot 3 (flash and RAM) as a bank       ok
+backup: a FUN6 project archive is refused (1)                                    ok
+backup: retired bank id 8 refuses a payload                                      ok
+backup: retired bank id 8 is listed empty                                        ok
+backup: obsolete oversized owned-voice archive is refused                        ok
+backup: U384's shared bank lists with its compact CRC                            ok
+backup: highest shared voice restores through object 28                          ok
+backup: damaged shared bank magic is refused                                     ok
+backup: a flash error on commit (4) keeps the slot's RAM copy                    ok
+backup: an empty project object clears the slot                                  ok
+backup: a project whose own hash fails is refused                                ok
+backup: the runtime object restores the tracks                                   ok
+backup: full backup retains unsupported settings and preset bank bytes           ok
+backup: a bank with a future record version restores byte for byte               ok
+backup: a bank with the wrong slot count is refused                              ok
+backup: CZ-1: a never-saved BANK A (its factory default) lists as length 0       ok
+backup: CZ-1: a saved BANK A restores and lists with its 2332 B                  ok
+backup: CZ-1: length 0 clears native presets while keeping factory tones separate ok
+backup: all 22 shared bank objects archive and restore native voices exactly     ok
+backup: preceding Prophet archives convert all patches and stars into shared slots ok
+backup: out-of-range Prophet slot masks are rejected before an erase             ok
+backup: invalid Prophet wire metadata is rejected before an erase                ok
+backup: failed legacy backup commit keeps the previous shared bank               ok
+backup: failed restore retains committed native bytes                            ok
+backup: full bank archive contains all runtime banks with its verified CRC       ok
+backup: saved-bank GET and interleaved screen draws preserve the frozen runtime snapshot ok
+backup: full archive restores a saved slot through the A/B path                  ok
+backup: cold flash load restores all 32 chords, ties, timing, chance and motion banks ok
+backup: full archive restores the runtime with its original active banks         ok
+backup test passed

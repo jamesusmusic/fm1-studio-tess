@@ -1,0 +1,207 @@
+== Prophet: all native tone knobs through the panel and sound engine
+ui: tone navigation matches prefixes without reading beyond short titles       ok
+ui: Prophet knob probe renders are deterministic                               ok
+ui: Prophet field 0 FREQ A: panel edit changes rendered sound (-2.0 dB)        ok
+ui: Prophet field 1 FREQ B: panel edit changes rendered sound (2.3 dB)         ok
+ui: Prophet field 2 FINE B: panel edit changes rendered sound (0.8 dB)         ok
+ui: Prophet field 3 SAW A: panel edit changes rendered sound (-9.5 dB)         ok
+ui: Prophet field 4 PULSE A: panel edit changes rendered sound (-3.8 dB)       ok
+ui: Prophet field 5 SAW B: panel edit changes rendered sound (0.5 dB)          ok
+ui: Prophet field 6 TRI B: panel edit changes rendered sound (0.2 dB)          ok
+ui: Prophet field 7 PULSE B: panel edit changes rendered sound (1.4 dB)        ok
+ui: Prophet field 8 WIDTH A: panel edit changes rendered sound (2.0 dB)        ok
+ui: Prophet field 9 WIDTH B: panel edit changes rendered sound (1.3 dB)        ok
+ui: Prophet field 10 SYNC: panel edit changes rendered sound (-0.5 dB)         ok
+ui: Prophet field 11 LOW B: panel edit changes rendered sound (3.0 dB)         ok
+ui: Prophet field 12 KEY B: panel edit changes rendered sound (2.5 dB)         ok
+ui: Prophet field 13 GLIDE: panel edit changes rendered sound (0.5 dB)         ok
+ui: Prophet field 14 OSC A: panel edit changes rendered sound (2.5 dB)         ok
+ui: Prophet field 15 OSC B: panel edit changes rendered sound (0.4 dB)         ok
+ui: Prophet field 16 NOISE: panel edit changes rendered sound (-17.5 dB)       ok
+ui: Prophet field 17 CUTOFF: panel edit changes rendered sound (18.1 dB)       ok
+ui: Prophet field 18 RES: panel edit changes rendered sound (0.3 dB)           ok
+ui: Prophet field 19 KEY: panel edit changes rendered sound (2.6 dB)           ok
+ui: Prophet field 20 MODEL: panel edit changes rendered sound (1.9 dB)         ok
+ui: Prophet field 21 RATE: panel edit changes rendered sound (3.7 dB)          ok
+ui: Prophet field 22 INITIAL: panel edit changes rendered sound (2.3 dB)       ok
+ui: Prophet field 23 SAW: panel edit changes rendered sound (3.0 dB)           ok
+ui: Prophet field 24 TRI: panel edit changes rendered sound (-0.3 dB)          ok
+ui: Prophet field 25 SQUARE: panel edit changes rendered sound (3.5 dB)        ok
+ui: Prophet field 26 N MIX: panel edit changes rendered sound (0.7 dB)         ok
+ui: Prophet field 27 FREQ A: panel edit changes rendered sound (-2.8 dB)       ok
+ui: Prophet field 28 FREQ B: panel edit changes rendered sound (-2.1 dB)       ok
+ui: Prophet field 29 PW A: panel edit changes rendered sound (-12.9 dB)        ok
+ui: Prophet field 30 PW B: panel edit changes rendered sound (-13.5 dB)        ok
+ui: Prophet field 31 FILTER: panel edit changes rendered sound (-9.0 dB)       ok
+ui: Prophet field 32 ENV AMT: panel edit changes rendered sound (8.9 dB)       ok
+ui: Prophet field 33 OSC B: panel edit changes rendered sound (0.8 dB)         ok
+ui: Prophet field 34 FREQ A: panel edit changes rendered sound (0.6 dB)        ok
+ui: Prophet field 35 PW A: panel edit changes rendered sound (-7.9 dB)         ok
+ui: Prophet field 36 FILTER: panel edit changes rendered sound (-0.5 dB)       ok
+ui: Prophet field 37 VINTAGE: panel edit changes rendered sound (-1.9 dB)      ok
+ui: Prophet field 38 AT FLT: panel edit changes rendered sound (0.5 dB)        ok
+ui: Prophet field 39 AT LFO: panel edit changes rendered sound (2.6 dB)        ok
+ui: Prophet field 40 ENV AMT: panel edit changes rendered sound (10.7 dB)      ok
+ui: Prophet field 41 VEL FLT: panel edit changes rendered sound (-2.4 dB)      ok
+ui: Prophet field 42 VEL AMP: panel edit changes rendered sound (-5.8 dB)      ok
+ui: Prophet field 43 ATK: panel edit changes rendered sound (0.8 dB)           ok
+ui: Prophet field 44 ATK: panel edit changes rendered sound (-0.4 dB)          ok
+ui: Prophet field 45 DEC: panel edit changes rendered sound (7.3 dB)           ok
+ui: Prophet field 46 DEC: panel edit changes rendered sound (-6.4 dB)          ok
+ui: Prophet field 47 SUS: panel edit changes rendered sound (11.2 dB)          ok
+ui: Prophet field 48 SUS: panel edit changes rendered sound (14.8 dB)          ok
+ui: Prophet field 49 REL: panel edit changes rendered sound (-0.1 dB)          ok
+ui: Prophet field 50 REL: panel edit changes rendered sound (1.3 dB)           ok
+ui: Prophet field 51 RELEASE: panel edit changes rendered sound (-12.8 dB)     ok
+ui: Prophet field 52 UNISON: panel edit changes rendered sound (12.4 dB)       ok
+ui: Prophet field 53 VOICES: panel edit changes rendered sound (7.1 dB)        ok
+ui: Prophet field 54 DETUNE: panel edit changes rendered sound (-1.9 dB)       ok
+ui: Prophet field 86 BEND: panel edit changes rendered sound (2.6 dB)          ok
+ui: Prophet field 87 PRIORITY: panel edit changes rendered sound (0.9 dB)      ok
+ui: all 57 native Prophet tone controls exercised                              ok
+ui: Prophet preset 0: dim field 1 FREQ B leaves audio identical                ok
+ui: Prophet preset 0: dim field 2 FINE B leaves audio identical                ok
+ui: Prophet preset 0: dim field 8 WIDTH A leaves audio identical               ok
+ui: Prophet preset 0: dim field 9 WIDTH B leaves audio identical               ok
+ui: Prophet preset 0: dim field 11 LOW B leaves audio identical                ok
+ui: Prophet preset 0: dim field 12 KEY B leaves audio identical                ok
+ui: Prophet preset 0: dim field 21 RATE leaves audio identical                 ok
+ui: Prophet preset 0: dim field 22 INITIAL leaves audio identical              ok
+ui: Prophet preset 0: dim field 23 SAW leaves audio identical                  ok
+ui: Prophet preset 0: dim field 24 TRI leaves audio identical                  ok
+ui: Prophet preset 0: dim field 25 SQUARE leaves audio identical               ok
+ui: Prophet preset 0: dim field 26 N MIX leaves audio identical                ok
+ui: Prophet preset 0: dim field 29 PW A leaves audio identical                 ok
+ui: Prophet preset 0: dim field 30 PW B leaves audio identical                 ok
+ui: Prophet preset 0: dim field 32 ENV AMT leaves audio identical              ok
+ui: Prophet preset 0: dim field 33 OSC B leaves audio identical                ok
+ui: Prophet preset 0: dim field 34 FREQ A leaves audio identical               ok
+ui: Prophet preset 0: dim field 35 PW A leaves audio identical                 ok
+ui: Prophet preset 0: dim field 36 FILTER leaves audio identical               ok
+ui: Prophet preset 0: dim field 41 VEL FLT leaves audio identical              ok
+ui: Prophet preset 0: dim field 43 ATK leaves audio identical                  ok
+ui: Prophet preset 0: dim field 45 DEC leaves audio identical                  ok
+ui: Prophet preset 0: dim field 47 SUS leaves audio identical                  ok
+ui: Prophet preset 0: dim field 49 REL leaves audio identical                  ok
+ui: Prophet preset 0: dim field 53 VOICES leaves audio identical               ok
+ui: Prophet preset 0: dim field 54 DETUNE leaves audio identical               ok
+ui: Prophet preset 0: dim field 87 PRIORITY leaves audio identical             ok
+ui: Prophet preset 1: dim field 8 WIDTH A leaves audio identical               ok
+ui: Prophet preset 1: dim field 9 WIDTH B leaves audio identical               ok
+ui: Prophet preset 1: dim field 29 PW A leaves audio identical                 ok
+ui: Prophet preset 1: dim field 30 PW B leaves audio identical                 ok
+ui: Prophet preset 1: dim field 32 ENV AMT leaves audio identical              ok
+ui: Prophet preset 1: dim field 33 OSC B leaves audio identical                ok
+ui: Prophet preset 1: dim field 34 FREQ A leaves audio identical               ok
+ui: Prophet preset 1: dim field 35 PW A leaves audio identical                 ok
+ui: Prophet preset 1: dim field 36 FILTER leaves audio identical               ok
+ui: Prophet preset 1: dim field 53 VOICES leaves audio identical               ok
+ui: Prophet preset 1: dim field 54 DETUNE leaves audio identical               ok
+ui: Prophet preset 1: dim field 87 PRIORITY leaves audio identical             ok
+ui: Prophet preset 2: dim field 9 WIDTH B leaves audio identical               ok
+ui: Prophet preset 2: dim field 30 PW B leaves audio identical                 ok
+ui: Prophet preset 2: dim field 53 VOICES leaves audio identical               ok
+ui: Prophet preset 2: dim field 54 DETUNE leaves audio identical               ok
+ui: Prophet preset 2: dim field 87 PRIORITY leaves audio identical             ok
+ui: Prophet preset 7: dim field 9 WIDTH B leaves audio identical               ok
+ui: Prophet preset 7: dim field 30 PW B leaves audio identical                 ok
+ui: Prophet preset 14: dim field 9 WIDTH B leaves audio identical              ok
+ui: Prophet preset 14: dim field 30 PW B leaves audio identical                ok
+ui: Prophet preset 31: dim field 8 WIDTH A leaves audio identical              ok
+ui: Prophet preset 31: dim field 29 PW A leaves audio identical                ok
+ui: Prophet preset 31: dim field 32 ENV AMT leaves audio identical             ok
+ui: Prophet preset 31: dim field 33 OSC B leaves audio identical               ok
+ui: Prophet preset 31: dim field 34 FREQ A leaves audio identical              ok
+ui: Prophet preset 31: dim field 35 PW A leaves audio identical                ok
+ui: Prophet preset 31: dim field 36 FILTER leaves audio identical              ok
+ui: Prophet preset 31: dim field 53 VOICES leaves audio identical              ok
+ui: Prophet preset 31: dim field 54 DETUNE leaves audio identical              ok
+ui: Prophet preset 31: dim field 87 PRIORITY leaves audio identical            ok
+ui: Prophet preset 64: dim field 41 VEL FLT leaves audio identical             ok
+ui: Prophet preset 64: dim field 43 ATK leaves audio identical                 ok
+ui: Prophet preset 64: dim field 45 DEC leaves audio identical                 ok
+ui: Prophet preset 64: dim field 47 SUS leaves audio identical                 ok
+ui: Prophet preset 64: dim field 49 REL leaves audio identical                 ok
+ui: Prophet preset 64: dim field 53 VOICES leaves audio identical              ok
+ui: Prophet preset 64: dim field 54 DETUNE leaves audio identical              ok
+ui: Prophet preset 64: dim field 87 PRIORITY leaves audio identical            ok
+ui: Prophet preset 117: dim field 9 WIDTH B leaves audio identical             ok
+ui: Prophet preset 117: dim field 21 RATE leaves audio identical               ok
+ui: Prophet preset 117: dim field 23 SAW leaves audio identical                ok
+ui: Prophet preset 117: dim field 24 TRI leaves audio identical                ok
+ui: Prophet preset 117: dim field 25 SQUARE leaves audio identical             ok
+ui: Prophet preset 117: dim field 26 N MIX leaves audio identical              ok
+ui: Prophet preset 117: dim field 30 PW B leaves audio identical               ok
+ui: Prophet preset 117: dim field 53 VOICES leaves audio identical             ok
+ui: Prophet preset 117: dim field 54 DETUNE leaves audio identical             ok
+ui: Prophet preset 117: dim field 87 PRIORITY leaves audio identical           ok
+ui: Prophet preset 200: dim field 21 RATE leaves audio identical               ok
+ui: Prophet preset 200: dim field 23 SAW leaves audio identical                ok
+ui: Prophet preset 200: dim field 24 TRI leaves audio identical                ok
+ui: Prophet preset 200: dim field 25 SQUARE leaves audio identical             ok
+ui: Prophet preset 200: dim field 26 N MIX leaves audio identical              ok
+ui: Prophet preset 200: dim field 53 VOICES leaves audio identical             ok
+ui: Prophet preset 200: dim field 54 DETUNE leaves audio identical             ok
+ui: Prophet preset 200: dim field 87 PRIORITY leaves audio identical           ok
+ui: inactive signal paths verified against INIT and eight factory sounds       ok
+ui: muted B still exposes pulse width when Poly-Mod uses it                    ok
+ui: noise-only wheel mix dims the unused LFO rate and waveform                 ok
+ui: RELEASE off dims both native release times                                 ok
+ui: all 256 keyed tuning values display and step by one semitone               ok
+ui: viewing keyed tuning preserves imported odd and upper raw bytes            ok
+ui: keyboard-off B keeps its continuous raw range up to 127                    ok
+ui: native protocol still accepts exact raw tuning bytes                       ok
+ui: native zero voice count displays its actual five-voice default             ok
+ui: turning down the default voice count selects four voices                   ok
+ui: Prophet field 0 FREQ A updates a held note (1.5 dB)                        ok
+ui: Prophet field 1 FREQ B updates a held note (2.8 dB)                        ok
+ui: Prophet field 2 FINE B updates a held note (-1.0 dB)                       ok
+ui: Prophet field 3 SAW A updates a held note (-11.3 dB)                       ok
+ui: Prophet field 4 PULSE A updates a held note (-6.2 dB)                      ok
+ui: Prophet field 5 SAW B updates a held note (0.8 dB)                         ok
+ui: Prophet field 6 TRI B updates a held note (1.8 dB)                         ok
+ui: Prophet field 7 PULSE B updates a held note (1.2 dB)                       ok
+ui: Prophet field 8 WIDTH A updates a held note (9.0 dB)                       ok
+ui: Prophet field 9 WIDTH B updates a held note (11.4 dB)                      ok
+ui: Prophet field 10 SYNC updates a held note (-2.3 dB)                        ok
+ui: Prophet field 11 LOW B updates a held note (1.6 dB)                        ok
+ui: Prophet field 12 KEY B updates a held note (2.2 dB)                        ok
+ui: Prophet field 14 OSC A updates a held note (-1.8 dB)                       ok
+ui: Prophet field 15 OSC B updates a held note (-0.9 dB)                       ok
+ui: Prophet field 16 NOISE updates a held note (-18.2 dB)                      ok
+ui: Prophet field 17 CUTOFF updates a held note (-1.4 dB)                      ok
+ui: Prophet field 18 RES updates a held note (3.0 dB)                          ok
+ui: Prophet field 19 KEY updates a held note (0.8 dB)                          ok
+ui: Prophet field 20 MODEL updates a held note (-4.4 dB)                       ok
+ui: Prophet field 21 RATE updates a held note (1.4 dB)                         ok
+ui: Prophet field 22 INITIAL updates a held note (2.6 dB)                      ok
+ui: Prophet field 23 SAW updates a held note (1.3 dB)                          ok
+ui: Prophet field 24 TRI updates a held note (0.2 dB)                          ok
+ui: Prophet field 25 SQUARE updates a held note (1.1 dB)                       ok
+ui: Prophet field 26 N MIX updates a held note (0.2 dB)                        ok
+ui: Prophet field 27 FREQ A updates a held note (-1.9 dB)                      ok
+ui: Prophet field 28 FREQ B updates a held note (-1.3 dB)                      ok
+ui: Prophet field 29 PW A updates a held note (-16.0 dB)                       ok
+ui: Prophet field 30 PW B updates a held note (-16.9 dB)                       ok
+ui: Prophet field 31 FILTER updates a held note (-8.7 dB)                      ok
+ui: Prophet field 32 ENV AMT updates a held note (-1.1 dB)                     ok
+ui: Prophet field 33 OSC B updates a held note (3.0 dB)                        ok
+ui: Prophet field 34 FREQ A updates a held note (-0.0 dB)                      ok
+ui: Prophet field 35 PW A updates a held note (-9.8 dB)                        ok
+ui: Prophet field 36 FILTER updates a held note (-11.0 dB)                     ok
+ui: Prophet field 38 AT FLT updates a held note (-0.9 dB)                      ok
+ui: Prophet field 39 AT LFO updates a held note (1.4 dB)                       ok
+ui: Prophet field 40 ENV AMT updates a held note (-1.7 dB)                     ok
+ui: Prophet field 41 VEL FLT updates a held note (-1.0 dB)                     ok
+ui: Prophet field 42 VEL AMP updates a held note (5.3 dB)                      ok
+ui: Prophet field 45 DEC updates a held note (-0.6 dB)                         ok
+ui: Prophet field 46 DEC updates a held note (-11.3 dB)                        ok
+ui: Prophet field 47 SUS updates a held note (-1.3 dB)                         ok
+ui: Prophet field 48 SUS updates a held note (-1.6 dB)                         ok
+ui: Prophet field 86 BEND updates a held note (2.2 dB)                         ok
+ui: all 46 controls applicable during a held note reach its renderer           ok
+ui: LOW and LAST priority both select the intended held note                   ok
+ui: both RET priority modes retrigger; their other modes stay legato           ok
+ui: every selectable unison count allocates the requested voices               ok
+ui: all twelve bend ranges reach their exact positive/negative endpoints       ok
+Prophet knobs: 57 controls, 0 failure(s)

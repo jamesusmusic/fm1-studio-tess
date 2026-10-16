@@ -1,0 +1,3 @@
+== boot audio: codec waits for settled silent DMA and shuts down before I2S
+boot audio: codec starts only after silent I2S settles ok
+boot audio: stop/restart holds codec quiet during DMA setup ok

@@ -1,0 +1,32 @@
+== matrix S&H / SLEW / DEPTH, SPREAD: off = bit-identical, stereo sides and routing
+mod/spread: SRC / DST identities stay fixed; retired effect destinations are blank  ok
+mod/spread: DST names: DEPTH is not an engine parameter (E1..E8 only)               ok
+mod/spread: S&H: one value per LFO cycle (none changes inside one), the LFO's S&H value ok
+mod/spread:   22 cycles in 4 s; S&H steps up to 56803, SLEW moves at most 236 a block (0.4 % of S&H's)
+mod/spread: S&H: values on both sides (bipolar)                                     ok
+mod/spread: SLEW: continuous (a block's move small against S&H's steps), inside S&H's range, from the cycle before's value ok
+mod/spread: S&H: the matrix's RATE (MODW -> RATE) makes it step faster              ok
+mod/spread: MODW -> DEPTH +63: the wheel down closes the LFO (gain 1.6 %)           ok
+mod/spread: MODW -> DEPTH +63: the wheel up leaves it whole                         ok
+mod/spread: MODW -> DEPTH -64: the wheel up closes it                               ok
+mod/spread: DEPTH scales the matrix's LFO source too (LFO -> CUT with the wheel down: ~1.6 %) ok
+mod/spread: two DEPTH slots multiply (wheel up x AT half)                           ok
+mod/spread: LFO -> DEPTH: takes the LFO unscaled (at its top: whole)                ok
+mod/spread: no DEPTH slot: the LFO untouched (track_render leaves it alone)         ok
+mod/spread: a SRC / DST past the lists does nothing                                 ok
+mod/spread: S&H / SLEW / DEPTH slots at AMT 0: bit for bit no matrix                ok
+mod/spread: DEPTH closed: LFO DEST PIT plays nothing (bit for bit LFO DEST PIT 0)   ok
+mod/spread: DEPTH open: the vibrato is there (not the plain note), as without the matrix but for the gain ok
+mod/spread: SPRD: a track parameter 0..127, default 0 (as before), before the engine's (P_E0 96, P_COUNT 104) ok
+mod/spread: MONO: SPRD 127 plays bit for bit as SPRD 0 (one voice: on PAN)          ok
+mod/spread: LEGATO: SPRD 127 plays bit for bit as SPRD 0                            ok
+mod/spread: POLY SPRD 0: the voices' sides change nothing (the plain mix, bit for bit) ok
+mod/spread: SPRD 0, PAN 0: L = R (as before)                                        ok
+mod/spread: SPRD 127: the first note hard left (R peak 0 of L's 9007), at its level (L 1.000 of SPRD 0's) ok
+mod/spread: SPRD 127: the second note hard right (L holds the first only: 1.008)    ok
+mod/spread: the voices of a chord on both sides; a voice retriggered while it sounds keeps its side ok
+mod/spread: a chord: L and R differ with SPRD (side/mid 0.334 at 64, 0.983 at 127; 0 at 0) ok
+mod/spread: the mono sum: its level 0.755 of SPRD 0's at 64 (pan law: 1 - 32/128 = 0.75), 0.510 at 127 (0.5) ok
+mod/spread: around PAN: PAN +40 with SPRD 64 leans right as PAN alone does          ok
+mod/spread: UNISON: the detuned voices alternate L / R (side/mid 0.413 at SPRD 100, 0 at 0) ok
+mod / spread test passed

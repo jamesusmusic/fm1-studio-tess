@@ -1,0 +1,262 @@
+screen	texts	text_px	icons	icon_px	keycaps	keycap_px	ellipsised	tight	words	tight_list
+home	18	10029	2	512	0	0	0	0	124 | +2 | PROPHET | 1 | Funk Bass II | P1 | 2 | PAD | PAD | P1 | 3 | INIT SID | T3 | P1 | 4 | 808 KIT | DRUMS | P1	
+home_idle	17	9789	1	256	0	0	0	0	124 | PROPHET | 1 | Funk Bass II | P1 | 2 | PAD | PAD | P1 | 3 | INIT SID | T3 | P1 | 4 | 808 KIT | DRUMS | P1	
+home_note	18	10205	1	256	0	0	0	0	124 | PROPHET | 1 | Funk Bass II | P1 | 2 | PAD | PAD | P1 | 3 | INIT SID | T3 | P1 | 4 | 808 KIT | DRUMS | P1 | C#4	
+home_chord	20	11613	1	256	0	0	0	0	124 | PROPHET | 1 | Funk Bass II | P1 | 2 | PAD | PAD | P1 | 3 | INIT SID | T3 | P1 | 4 | 808 KIT | DRUMS | P1 | A | m7 | A3 C4 E4 G4	
+home_inversion	21	11709	1	256	0	0	0	0	124 | PROPHET | 1 | Funk Bass II | P1 | 2 | PAD | PAD | P1 | 3 | INIT SID | T3 | P1 | 4 | 808 KIT | DRUMS | P1 | C# | / | F | F4 G#4 C#5	
+home_wide	18	12272	1	256	0	0	0	0	124 | PROPHET | 1 | Funk Bass II | P1 | 2 | PAD | PAD | P1 | 3 | INIT SID | T3 | P1 | 4 | 808 KIT | DRUMS | P1 | C-1 C#-1 C#0 C#1 C#4 ..	
+home_released	20	11613	1	256	0	0	0	0	124 | PROPHET | 1 | Funk Bass II | P1 | 2 | PAD | PAD | P1 | 3 | INIT SID | T3 | P1 | 4 | 808 KIT | DRUMS | P1 | A | m7 | A3 C4 E4 G4	
+home_fm6	21	10956	1	256	0	0	0	0	124 | FM6 | 1 | TINE EP | CHORDS | P1 | 2 | PAD | PAD | P1 | 3 | INIT SID | T3 | P1 | 4 | 808 KIT | DRUMS | P1 | A | m7 | A3 C4 E4 G4	
+message	16	12166	1	256	0	0	0	0	124 | PROPHET | 2 | PAD | PAD | P1 | 3 | INIT SID | T3 | P1 | 4 | 808 KIT | DRUMS | P1 | LOADED 07 A VERY | LONG PATTERN N	
+message_key	16	10295	1	256	0	0	0	0	124 | PROPHET | 2 | PAD | PAD | P1 | 3 | INIT SID | T3 | P1 | 4 | 808 KIT | DRUMS | P1 | EDIT | HOLD TO UNDO	
+presets	9	14042	1	256	0	0	0	0	1 | All | 5/327 | After Ringer | Forever Keys | Funk Bass II | PROPHET | Formant Seraphi | Stabby Brass	
+presets_nofav	3	2966	0	0	0	0	0	0	1 | Faves | No favourites	
+presets_cat	7	10005	1	256	0	0	0	0	1 | Strings | 1/17 | Cars Strings | PROPHET | 80s Horror Stri | High Strings	
+presets_pending	9	11471	1	256	0	0	0	0	1 | All | 236/327 | STRINGS 4 | ORCHESTRA | ACO.GUITAR | CZ-1 | JAZZ GUITAR | ELEC.GUITAR	
+presets_recent	3	4816	0	0	0	0	0	0	1 | Recent | Nothing loaded yet	
+user	13	10572	1	256	0	0	0	0	124 | USER | 1 | Funk Bass II | U002 | -- | U003 | -- | U004 | MY LONG BASS | PROPHET | U005 | PAD	
+project	13	7504	1	256	0	0	0	0	124 | SAVED (RAM) | 1 | Funk Bass II | A | -- | B | Saved | Saved | C | -- | D | --	
+project_boot	11	12255	1	256	0	0	0	0	124 | PROJECT | 1 | Funk Bass II | T | Template | Saved | + | New song | TEMPLATE SAVED | (RAM)	
+tempo	12	7025	1	256	0	0	0	0	124 | 11/15 | TEMPO | BPM | 124 | SWG | 12 | % | QNT | OFF | 1 | Funk Bass II	
+song_empty	4	5248	0	0	0	0	0	0	SONG | jam · 2 rows | No sections yet | +	
+song	10	7381	0	0	0	0	0	0	SONG | SAVED (RAM) | 3 sections · 9 bars | A x2 | A x2 | B x4 | C | + | P2 | P1	
+step	13	5358	2	512	0	0	0	0	124 | 1/15 | NOTES | STEP | 7 | /16 | PITCH | G4 | LEN | -- | VEL | -- | C5	
+pattern	15	8798	1	256	0	0	0	0	124 | 2/15 | PATTERN | MODE | Step | DIV | 1/16 | SWG | 0 | % | GATE | 50 | % | 1 | Funk Bass II	
+motion	6	5927	1	256	0	0	0	0	124 | 16/16 | MOTION | 1 | Funk Bass II | No motion	
+drum	19	7320	1	256	0	0	0	0	124 | 1/16 | STEP | STEP | 5 | /32 | Snare | HIT | ON | ACC | ON | BD | SD | CP | CH | OH | TM | RS | CB	
+mixer	22	11340	2	512	0	0	0	1	124 | MIXER | 1 | dB | -6 | Funk Bass II | L20 | 2 | dB | -14 | PAD | R24 | 3 | dB | -24 | INIT SID | Mute | 4 | dB | -1 | 808 KIT | Mute	'L20' 1px
+mixer_pan	21	10580	2	512	0	0	0	1	124 | MIXER | 1 | dB | 8 | Funk Bass II | L64 | 2 | Off | PAD | R63 | 3 | dB | -56 | INIT SID | C | 4 | dB | -4 | 808 KIT | Mute	'R63' 1px
+env	14	7803	1	256	0	0	0	0	124 | FILTER/TUNE | CUT | 0 | RES | 0 | TUNA | 0 | st | TUNB | 0 | st | 1 | Funk Bass II	
+env_dest	14	7803	1	256	0	0	0	0	124 | FILTER/TUNE | CUT | 0 | RES | 0 | TUNA | 0 | st | TUNB | 0 | st | 1 | Funk Bass II	
+lfo	13	6941	1	256	0	0	0	0	124 | LFO | RATE | 1.18 | WAVE | Sin | PHS | 0 | FADE | 1.0 | ms | 1 | Funk Bass II	
+mod	18	8000	1	256	0	0	0	0	124 | MOD | 1 | LFO | Cutoff | +62 % | 2 | Mod wheel | Tuna | -100 % | 3 | -- | -- | 0 % | 4 | -- | -- | 0 %	
+scl	13	9644	1	256	0	0	0	0	124 | SCL | 1 | Funk Bass II | C | Root | Min | > | Scale | OFF | Quantize | 0 st | Transpose	
+chord	10	8636	1	256	0	0	0	0	124 | CHORD | CHRD | DIA7 | VOIC | Close | 1 | Funk Bass II | Bm7b5 | LAST	
+chord_wide	10	8929	1	256	0	0	0	0	124 | CHORD | CHRD | DIA7 | VOIC | +OCT | 1 | Funk Bass II | G#dim7 | LAST	
+chord_off	11	10917	1	256	0	0	0	0	124 | CHORD | CHRD | OFF | VOIC | Close | 1 | Funk Bass II | CHORD KEYS OFF | K1 | DIA3: IN-KEY CHORDS	
+chord_kit	9	8659	1	256	0	0	0	0	124 | CHORD | CHRD | DIA3 | VOIC | Close | 1 | 808 KIT | NO CHORDS ON KITS	
+arp	14	8598	1	256	0	0	0	0	124 | ARP | MODE | OFF | RATE | 1/16 | OCT | 1 | GATE | 50 | % | 1 | Funk Bass II | C3 E3 G3 · 1 oct	
+voice	14	13568	1	256	0	0	0	0	124 | VOICE | 1 | Funk Bass II | Poly | Voice | 1.0 ms | Glide | Rate | Glide mode | Low | Priority | Reuse | Allocation	
+global	13	7414	1	256	0	0	0	0	124 | GLOBAL | A4 | 440 | BUDG | 16 | pts | CLK | Int | TUNE | 0 | 1 | Funk Bass II	
+system	13	7479	1	256	0	0	0	0	124 | SYSTEM | MIDI | USB | DRUM | 10 | ROUT | 1-4 | CPU | 0 | % | 1 | Funk Bass II	
+edit_sid	13	7318	1	256	0	0	0	0	124 | CHIP | MODEL | 6581 | WAVE | Saw | STACK | One | PW | 50 | % | 1 | INIT SID	
+edit_fm6	20	6675	1	256	0	0	0	0	124 | OPS | ALG | Pat | FB | 0 | MLVL | 0 | % | MRAT | 0 | 1 | TINE EP | 1 | 2 | 3 | 4 | 5 | 6 | ALG 05	
+edit_wheel	4	742	1	256	0	0	0	0	124 | - | 1 | -	
+edit_phys	4	742	1	256	0	0	0	0	124 | - | 1 | -	
+fm6_alg_01	20	6317	1	256	0	0	0	0	124 | OPS | ALG | 1 | FB | 0 | MLVL | 0 | % | MRAT | 0 | 1 | TINE EP | 1 | 2 | 3 | 4 | 5 | 6 | ALG 01	
+fm6_alg_05	20	6317	1	256	0	0	0	0	124 | OPS | ALG | 5 | FB | 3 | MLVL | 0 | % | MRAT | 0 | 1 | TINE EP | 1 | 2 | 3 | 4 | 5 | 6 | ALG 05	
+fm6_alg_22	19	6861	1	256	0	0	0	0	124 | PATCH | MEG | 0 | % | VMOD | 0 | DTUN | 31 | % | 1 | TINE EP | 1 | 2 | 3 | 4 | 5 | 6 | ALG 22	
+fm6_alg_32	20	6547	1	256	0	0	0	0	124 | OPS | ALG | 32 | FB | 0 | MLVL | 0 | % | MRAT | 0 | 1 | TINE EP | 1 | 2 | 3 | 4 | 5 | 6 | ALG 32	
+fm6_freq	19	7660	1	256	0	0	0	0	124 | FREQ | CRS | 1 | FINE | 1.00 | DTN | 0 | MODE | Ratio | 1 | TINE EP | 1 | 2 | 3 | 4 | 5 | 6 | ALG 05	
+fm6_eg	19	8339	1	256	0	0	0	0	124 | 3/6 | OP3 EG | OP1 | OP2 | OP3 | OP4 | OP5 | OP6 | R1 | 95 | R2 | 20 | R3 | 20 | R4 | 50 | 1 | TINE EP	
+fm6_peg	12	5719	1	256	0	0	0	0	124 | PITCH EG | R1 | 80 | R2 | 60 | R3 | 99 | R4 | 60 | 1 | TINE EP	
+fm6_store	13	8254	1	256	0	0	0	0	124 | STORE | 1 | TINE EP | U381 | -- | U382 | -- | U383 | -- | U384 | Empty | Empty	
+cz1_env	12	4938	1	256	0	0	0	0	124 | R1-4 | R1 | 99 | R2 | 99 | R3 | 0 | R4 | 0 | 1 | INIT TONE	
+confirm_seq	8	8638	4	912	0	0	0	0	1 | Funk Bass II | P1 | Clear t3 sequence? | No | Yes | 124 | PROPHET	
+confirm_project	10	12325	4	912	0	0	0	0	1 | Funk Bass II | P1 | Overwrite project A? | Its song and patterns | change | No | Yes | 124 | PROPHET	
+confirm_user	9	9025	4	912	0	0	0	0	1 | Funk Bass II | P1 | Overwrite u007? | A VERY LONG  | No | Yes | 124 | PROPHET	
+confirm_motion	8	7667	4	912	0	0	0	0	1 | Funk Bass II | P1 | Clear t4 motion? | No | Yes | 124 | PROPHET	
+confirm_erase	9	8369	4	912	0	0	0	0	1 | Funk Bass II | P1 | Erase u007? | A VERY LONG  | No | Yes | 124 | PROPHET	
+menu	13	13665	1	256	0	0	0	0	Settings | Night | Color | Rubik | Font | 0.4 s | Hold | Mid | Lights | In + out | USB audio | Stereo | USB input	
+about	7	14694	1	144	0	0	0	0	About | Melodee | TEST | Oct 16 2026 | Multi-engine | synthesizer | © 2026 Kerem Kilic,	
+about_rec	7	14694	2	400	0	0	0	0	About | Melodee | TEST | Oct 16 2026 | Multi-engine | synthesizer | © 2026 Kerem Kilic,	
+about_credits	9	20036	1	144	0	0	0	0	About | keremimo.github.io/ | melodee | CREDITS | MELODEE(TESS) / | THIS FORK | Tessera engines and | project save: Theo | Dainis	
+about_end	9	22352	1	144	0	0	0	0	About | Fonts and icons: their | licences travel with | the source and the | release files. | NO WARRANTY | Full notices in source: | github.com/keremimo/ | melodee	
+uboot	7	9865	1	256	0	0	0	0	Update mode in | 3 | OCT- | OCT+ | Let go to cancel | 124 | PROPHET	
+calibration	4	9344	1	256	0	0	0	0	Calibration | Teach every control | TURN RIGHT | ALGORITHM	
+batt_0	17	9789	2	512	0	0	0	0	124 | PROPHET | 1 | Funk Bass II | P1 | 2 | PAD | PAD | P1 | 3 | INIT SID | T3 | P1 | 4 | 808 KIT | DRUMS | P1	
+batt_1	17	9789	2	512	0	0	0	0	124 | PROPHET | 1 | Funk Bass II | P1 | 2 | PAD | PAD | P1 | 3 | INIT SID | T3 | P1 | 4 | 808 KIT | DRUMS | P1	
+batt_2	17	9789	1	256	0	0	0	0	124 | PROPHET | 1 | Funk Bass II | P1 | 2 | PAD | PAD | P1 | 3 | INIT SID | T3 | P1 | 4 | 808 KIT | DRUMS | P1	
+batt_3	17	9789	1	256	0	0	0	0	124 | PROPHET | 1 | Funk Bass II | P1 | 2 | PAD | PAD | P1 | 3 | INIT SID | T3 | P1 | 4 | 808 KIT | DRUMS | P1	
+batt_usb	17	9789	1	256	0	0	0	0	124 | PROPHET | 1 | Funk Bass II | P1 | 2 | PAD | PAD | P1 | 3 | INIT SID | T3 | P1 | 4 | 808 KIT | DRUMS | P1	
+motion_rec	6	5927	2	512	0	0	0	0	124 | 16/16 | MOTION | 1 | Funk Bass II | No motion	
+motion_off	6	5927	1	256	0	0	0	0	124 | 16/16 | MOTION | 1 | Funk Bass II | No motion	
+song_home	18	10400	1	256	0	0	0	0	124 | ROW 1 | PROPHET | 1 | Funk Bass II | P1 | 2 | PAD | PAD | P1 | 3 | INIT SID | T3 | P1 | 4 | 808 KIT | DRUMS | P1	
+menu_hold	13	13665	0	0	0	0	0	0	Settings | Night | Color | Rubik | Font | 0.5 s | Hold | Mid | Lights | In + out | USB audio | Stereo | USB input	
+menu_usb	13	13057	0	0	0	0	0	0	Settings | Night | Color | Rubik | Font | 0.4 s | Hold | Mid | Lights | Out | USB audio | Stereo | USB input	
+menu_usb_stereo	13	13665	0	0	0	0	0	0	Settings | Night | Color | Rubik | Font | 0.4 s | Hold | Mid | Lights | In + out | USB audio | Stereo | USB input	
+menu_usb_tracks	13	13889	0	0	0	0	0	0	Settings | Night | Color | Rubik | Font | 0.4 s | Hold | Mid | Lights | In + out | USB audio | 4 tracks | USB input	
+layer_glo_peek	21	7100	5	1280	0	0	0	2	124 | GLO | SET | LEVEL | -4.0 | LEVEL | -4.0 | LEVEL | -4.0 | LEVEL | -4.0 | 1 | 2 | 3 | 4 | All | Tap | 1 | 2 | 3 | 4	'Tap' 0px, 'Tap' 0px
+layer_glo_active	21	7308	5	1280	0	0	0	2	124 | GLO | SET | LEVEL | -11.0 | LEVEL | -4.0 | LEVEL | -4.0 | LEVEL | -4.0 | 1 | 2 | 3 | 4 | All | Tap | 1 | 2 | 3 | 4	'Tap' 0px, 'Tap' 0px
+layer_glo_ext	21	7100	5	1280	0	0	0	2	124 | GLO | SET | LEVEL | -4.0 | LEVEL | -4.0 | LEVEL | -4.0 | LEVEL | -4.0 | 1 | 2 | 3 | 4 | All | Tap | 1 | 2 | 3 | 4	'Tap' 0px, 'Tap' 0px
+layer_scl_peek	19	13121	1	256	0	0	0	0	124 | SCL | SET | ROOT | C | SCL | Chr | CHRD | OFF | VOIC | Close | Chromatic | Major | Natural minor | Dorian | KEYS | ROOT | OCT- | SCL	
+layer_scl_active	19	13555	1	256	0	0	0	0	124 | SCL | SET | ROOT | D# | SCL | Min | CHRD | OFF | VOIC | Close | Major | Natural minor | Dorian | Mixolydian | KEYS | ROOT | OCT- | SCL	
+layer_hint	12	6762	1	256	0	0	0	0	124 | GLOBAL | 440 | 16 | pts | Int | 0 | 1 | Funk Bass II | HOLD | GLO | QUICK	
+name_user	14	8146	3	656	0	0	0	0	124 | USER | Save U007 | 12 / 20 | Funk Bass II | / | # | + | A | B | C | ABC | 123 | Save	
+name_typing	16	7904	3	656	0	0	0	0	124 | USER | Save U007 | 7 / 20 | SUB BA | S | P | Q | R | S | T | U | V | ABC | 123 | Save	
+name_123	17	10410	3	656	0	0	0	0	124 | PROJECT | Save project B | 9 / 12 | LIVE  | 2 | 026 | Z | 0 | 1 | 2 | 3 | 4 | 5 | ABC | 123 | Save	
+name_empty	14	10721	3	656	0	0	0	0	124 | PROJECT | Save project C | 0 / 12 | PROJECT C | / | # | + | A | B | C | ABC | 123 | Save	
+name_full	14	9835	3	656	0	0	0	0	124 | USER | Name U005 | 12 / 20 | MWMWMWMWMWMW | / | # | + | A | B | C | ABC | 123 | Rename	
+name_playing	14	9506	3	656	0	0	0	0	124 | STOP TO SAVE | Save U007 | 12 / 20 | Funk Bass II | / | # | + | A | B | C | ABC | 123 | Save	
+project_named	13	9568	1	256	0	0	0	0	124 | PROJECT | 1 | Funk Bass II | A | LOFI JAM | B | MWMWMWMWMWMW | Saved | C | Saved | D | --	
+song_named	10	5660	0	0	0	0	0	0	SONG | 0:27 | 3 sections · 14 bars | A x2 | A x2 | A x4 | A | + | P1 | P1	
+user_foot	13	9127	1	256	0	0	0	0	124 | USER | 1 | Funk Bass II | U002 | -- | U003 | -- | U004 | MY BASS | PROPHET | U005 | --	
+roll_empty	13	5358	1	256	0	0	0	0	124 | 1/15 | NOTES | STEP | 1 | /16 | PITCH | G4 | LEN | -- | VEL | -- | C5	
+roll_acid	13	5905	1	256	0	0	0	0	124 | 1/15 | NOTES | STEP | 7 | /16 | PITCH | A2 | LEN | 1 | VEL | 127 | C3	
+roll_chords	14	6140	1	256	0	0	0	0	124 | 1/15 | NOTES | STEP | 5 | /16 | PITCH | F3 | LEN | 2 | all | VEL | 100 | C3	
+roll_ties	14	6153	1	256	0	0	0	0	124 | 1/15 | NOTES | STEP | 10 | /16 | PITCH | E4 | LEN | 2 | VEL | 100 | C4 | C4	
+roll_len32_p2	14	5837	1	256	0	0	0	0	124 | 1/15 | NOTES | STEP | 21 | /32 | PITCH | G4 | LEN | -- | VEL | -- | C5 | C4	
+roll_high	13	6118	1	256	0	0	0	0	124 | 1/15 | NOTES | STEP | 3 | /16 | PITCH | F#9 | LEN | 1 | VEL | 100 | C9	
+roll_low	13	5963	1	256	0	0	0	0	124 | 1/15 | NOTES | STEP | 3 | /16 | PITCH | D0 | LEN | 1 | VEL | 100 | C0	
+roll_wide	15	6129	1	256	0	0	0	0	124 | 1/15 | NOTES | STEP | 5 | /16 | PITCH | E2 | LEN | 1 | all | VEL | 100 | C2 | C2	
+roll_playing	13	5905	1	256	0	0	0	0	124 | 1/15 | NOTES | STEP | 7 | /16 | PITCH | A2 | LEN | 1 | VEL | 127 | C3	
+mock_home	17	9789	1	256	0	0	0	0	124 | PROPHET | 1 | Funk Bass II | P1 | 2 | PAD | PAD | P1 | 3 | INIT SID | T3 | P1 | 4 | 808 KIT | DRUMS | P1	
+mock_presets	9	14042	1	256	0	0	0	0	1 | All | 5/327 | After Ringer | Forever Keys | Funk Bass II | PROPHET | Formant Seraphi | Stabby Brass	
+mock_seq	13	5905	2	512	0	0	0	0	124 | 1/15 | NOTES | STEP | 7 | /16 | PITCH | A2 | LEN | 1 | VEL | 127 | C3	
+mock_drum	19	7320	1	256	0	0	0	0	124 | 1/16 | STEP | STEP | 5 | /32 | Snare | HIT | ON | ACC | ON | BD | SD | CP | CH | OH | TM | RS | CB	
+mock_mixer	22	11062	2	512	0	0	0	1	124 | MIXER | 1 | dB | -6 | Funk Bass II | L20 | 2 | dB | -14 | PAD | R24 | 3 | dB | -24 | INIT SID | Mute | 4 | dB | -1 | 808 KIT | L4	'L20' 1px
+mock_dialog	11	13322	4	912	0	0	0	0	124 | PROJECT | 1 | Funk Bass II | A | LOFI JAM | Overwrite project A? | Its song and patterns | change | No | Yes	
+mock_menu	13	13665	0	0	0	0	0	0	Settings | Night | Color | Rubik | Font | 0.4 s | Hold | Mid | Lights | In + out | USB audio | Stereo | USB input	
+native_fm_user	13	8327	2	512	0	0	0	0	124 | USER | 1 | TINE EP | U381 | -- | U382 | -- | U383 | -- | U384 | LAST VOICE | FM6	
+native_cz_user	13	9152	2	512	0	0	0	0	124 | USER | 1 | INIT TONE | U381 | -- | U382 | -- | U383 | -- | U384 | LAST CZ TONE | CZ-1	
+notes_slide	15	6130	2	512	0	0	0	0	124 | 1/15 | NOTES | STEP | 5 | /16 | PITCH | C4 | LEN | 3 | all | SLIDE | ON | C4 | C4	
+notes_mixed	14	6551	2	512	0	0	0	0	124 | 1/15 | NOTES | STEP | 1 | /16 | PITCH | C4 | LEN | 0.50 | VEL | 90 | C5 | C4	
+notes_chord	16	6184	2	512	0	0	0	0	124 | 1/15 | NOTES | STEP | 5 | /16 | PITCH | E4 | LEN | 3 | all | VEL | 96 | all | C4 | C4	
+notes_empty	13	5358	2	512	0	0	0	0	124 | 1/15 | NOTES | STEP | 1 | /16 | PITCH | G4 | LEN | -- | VEL | -- | C5	
+notes_raw	14	6551	2	512	0	0	0	0	124 | 1/15 | NOTES | STEP | 1 | /16 | PITCH | C4 | LEN | 0.50 | VEL | 90 | C5 | C4	
+notes_zoom	13	6254	2	512	0	0	0	0	124 | 1/15 | NOTES | STEP | 1 | /16 | PITCH | C4 | LEN | 0.50 | VEL | 92 | C4	
+notes_loop	13	6474	2	512	0	0	0	0	124 | 1/15 | NOTES | STEP | 16 | /16 | PITCH | C5 | LEN | 0.50 | VEL | 94 | C5	
+notes_drum	17	8356	2	512	0	0	0	0	124 | 1/16 | NOTES | STEP | 1 | /16 | PITCH | 0 | st | LEN | 0.50 | VEL | 90 | C2 | OCT+ | NOTE MENU | EDIT	
+notes_dense	13	6454	2	512	0	0	0	0	124 | 1/15 | NOTES | STEP | 1 | /16 | PITCH | C4 | LEN | <.01 | VEL | 125 | C4	
+notes_rec	13	6278	3	768	0	0	0	0	124 | 1/15 | NOTES | STEP | 1 | /16 | PITCH | C4 | LEN | 0.50 | VEL | 90 | C4	
+notes_erase	12	6075	2	512	0	0	0	0	124 | ERASING | STEP | 1 | /16 | PITCH | C4 | LEN | 0.50 | VEL | 90 | C4	
+notes_drum_rec	19	6601	3	768	0	0	0	0	124 | 1/16 | STEP | STEP | 1 | /16 | Kick | HIT | -- | ACC | -- | BD | SD | CP | CH | OH | TM | RS | CB	
+notes_drum_erase	18	6606	2	512	0	0	0	0	124 | ERASING | STEP | 1 | /16 | Kick | HIT | -- | ACC | -- | BD | SD | CP | CH | OH | TM | RS | CB	
+scl_micro	13	10094	2	512	0	0	0	0	124 | SCL | 1 | Funk Bass II | C | Root | 53edo | > | Scale | All | Quantize | 0 st | Transpose	
+scl_micro_layer	19	11616	1	256	0	0	0	0	124 | SCL | SET | ROOT | C | SCL | Sikah | CHRD | OFF | VOIC | Close | Hijaz | Saba | Husayni | Sikah | KEYS | ROOT | OCT- | SCL	
+scl_micro_chord	13	9348	2	512	0	0	0	0	124 | CHORD | CHRD | DIA7 | VOIC | Close | 1 | Funk Bass II | SCALE DEGREES | D1 | D3 | D5 | D7	
+scale_picker_edo	7	10895	1	256	0	0	0	0	1 | EDO | 24/24 | 36-tone equal | 41-tone equal | 53-tone equal | 53 notes · octave	
+scale_picker_historical	8	13877	1	256	0	0	0	0	1 | Historical | 2/8 | Pythagorean | Quarter-comma meantone | 12 notes · octave | Third-comma meantone | Sixth-comma meantone	
+scale_picker_favorites	7	11902	1	256	0	0	0	0	1 | Faves | 1/3 | 53-tone equal | 53 notes · octave | Quarter-comma meantone | Bohlen-Pierce just	
+scale_picker_empty	3	2966	0	0	0	0	0	0	1 | Faves | No favourites	
+scale_settings_favorite	13	10538	2	512	0	0	0	0	124 | SCL | 1 | Funk Bass II | F# | Root | Mt-1/4 | > | Scale | All | Quantize | 0 st | Transpose	
+menu_click	13	13775	0	0	0	0	0	0	Settings | Rubik | Font | 0.4 s | Hold | Mid | Lights | In + out | USB audio | Stereo | USB input | ON | Audio click	
+menu_click_level	13	14587	0	0	0	0	0	0	Settings | 0.4 s | Hold | Mid | Lights | In + out | USB audio | Stereo | USB input | ON | Audio click | High | Click level	
+menu_countin	13	15483	0	0	0	0	0	0	Settings | Mid | Lights | In + out | USB audio | Stereo | USB input | ON | Audio click | High | Click level | 2 bars | Count-in	
+menu_preview	13	16452	0	0	0	0	0	0	Settings | In + out | USB audio | Stereo | USB input | ON | Audio click | High | Click level | 2 bars | Count-in | ON | Note preview	
+menu_add	13	16506	0	0	0	0	0	0	Settings | Stereo | USB input | ON | Audio click | High | Click level | 2 bars | Count-in | ON | Note preview | Add | Chord entry	
+menu_autosave_on	13	15419	0	0	0	0	0	0	Settings | ON | Audio click | High | Click level | 2 bars | Count-in | ON | Note preview | Add | Chord entry | ON | Autosave	
+menu_autosave_off	13	15523	0	0	0	0	0	0	Settings | ON | Audio click | High | Click level | 2 bars | Count-in | ON | Note preview | Add | Chord entry | OFF | Autosave	
+drum_sound_808	13	8660	2	512	0	0	0	0	124 | DRUM SOUND | DRUM | Congm | TUNE | -12 | st | DECAY | 95 | TONE | 80 | 4 | 808 KIT	
+drum_sound_909	13	8689	2	512	0	0	0	0	124 | DRUM SOUND | DRUM | Snare | TUNE | -12 | st | DECAY | 95 | SNAP | 80 | 4 | 909 KIT	
+drum_mix_909	9	6287	2	512	0	0	0	0	124 | 2/2 | DRUM MIX | DRUM | Snare | LEVEL | 87 | 4 | 909 KIT	
+drum_hit_909	19	8254	2	512	0	0	0	0	124 | DRUM HIT | STEP | 5 | DRUM | Snare | PITCH | 7 | st | LEN | 0.25 | BD | SD | CP | CH | OH | TM | RS | RD	
+drum_hit_free	19	8212	2	512	0	0	0	0	124 | DRUM HIT | STEP | 5 | DRUM | Snare | PITCH | 7 | st | LEN | Free | BD | SD | CP | CH | OH | TM | RS | RD	
+drum_hit_long	19	8271	2	512	0	0	0	0	124 | DRUM HIT | STEP | 5 | DRUM | Snare | PITCH | 7 | st | LEN | 128.00 | BD | SD | CP | CH | OH | TM | RS | RD	
+drum_hit_toms	19	7989	2	512	0	0	0	0	124 | DRUM HIT | STEP | 8 | DRUM | Tom M | PITCH | 0 | st | LEN | Free | BD | SD | CP | CH | OH | MT | RS | RD	
+stage_drum	25	11694	2	512	0	0	0	1	124 | 808 KIT | 1 | Funk Bass II | P1 | 2 | PAD | PAD | P1 | 3 | INIT SID | T3 | P1 | 4 | 808 KIT | DRUMS | P1 | BD | SD | CP | CH | OH | TM | RS | CB	'808 KIT' 0px
+stage_cz	12	5725	2	512	0	0	0	0	124 | CZ-1 | WAVE | Saw | DCW | 99 | DTUNE | 6 | VIB | 0 | C | C3 G3 E4	
+stage_p5	17	7260	2	512	0	0	0	0	124 | PROPHET | CUT | 32 | % | RES | 1 | % | ENV | 61 | % | REL | 66 | % | D | m7 | D4 F4 A4 C5	
+stage_queued	18	10049	3	768	0	0	0	0	124 | PROPHET | 1 | Funk Bass II | P1 | 2 | PAD | PAD | P1 | P3 | 3 | INIT SID | T3 | P1 | 4 | 808 KIT | DRUMS | P1	
+stage_browse	18	10197	2	512	0	0	0	0	124 | PROPHET | 1 | Velocipeed | T1 | P1 | 2 | PAD | PAD | P1 | 3 | INIT SID | T3 | P1 | 4 | 808 KIT | DRUMS | P1	
+stage_stopped	20	11921	2	512	0	0	0	0	124 | PROPHET | 1 | Funk Bass II | P1 | 2 | PAD | PAD | P1 | 3 | INIT SID | T3 | P1 | 4 | 808 KIT | DRUMS | P1 | C | m7 | C4 D#4 G4 A#4	
+stage_filter	15	6241	2	512	0	0	0	0	124 | SID | WAVE | Saw | PW | 50 | % | CUT | 100 | % | RES | 12 | A | m | A3 C4 E4	
+patterns	19	4886	2	512	0	0	0	0	124 | PATTERNS | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | SONG | A | B | A | C | 1 | 2 | 3 | 4	
+patterns_stopped	17	4481	2	512	0	0	0	0	124 | PATTERNS | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | JAM | A | B | 1 | 2 | 3 | 4	
+patterns_sheet	16	9392	2	512	0	0	0	0	124 | PATTERNS | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 1 | 2 | Pattern 1 | T1 | Copy to… | Delete pattern	
+patterns_copy	18	5058	2	512	0	0	0	0	124 | copy 1 to 4 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | JAM | A | B | 1 | + | 2 | 3 | 4	
+patterns_replace	18	11452	5	1168	0	0	0	0	124 | copy 1 to 2 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | JAM | A | B | 1 | Replace pattern 2? | Track 1 · with pattern 1 | No | Yes	
+patterns_delete	18	10534	5	1168	0	0	0	0	1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | JAM | A | B | 1 | Delete pattern 1? | Track 1 · notes and motion | No | Yes | 124 | PATTERNS	
+project_new	14	11189	2	512	0	0	0	0	124 | 3/3 | PROJECT | 1 | Funk Bass II | C | Saved | D | -- | T | Template | + | New song | Starts empty	
+new_key	11	15284	4	800	0	0	0	0	124 | NEW SONG | ROOT | A | SCALE | Minor | TEMPO | 96 | A minor | 96 bpm · 4/4 | Roles	
+new_roles	17	14292	4	912	0	0	0	1	124 | NEW SONG | 1 | DRUMS | DRUM | 808 Kit | 2 | BASS | PROPHET | Funk Bass II | 3 | CHORDS | PROPHET | Forever Keys | 4 | No track | Create	'Forever Keys' 1px
+stage_1track	10	8154	2	512	0	0	0	0	124 | PROPHET | 1 | It's a | Prophet  | T1 | P1 | A | m | A3 C4 E4	
+stage_1track_arp	13	10772	3	768	0	0	0	0	124 | PROPHET | 1 | It's a | Prophet  | T1 | P1 | P3 | ARP UP-DOWN  HOLD  | DIA3 | A | m | A3 C4 E4	
+stage_1track_knobs	17	6734	2	512	0	0	0	0	124 | PROPHET | CUT | 32 | % | RES | 1 | % | ENV | 61 | % | REL | 66 | % | A | m | A3 C4 E4	
+stage_1track_synth	9	7914	2	512	0	0	0	0	124 | PROPHET | 1 | It's a | Prophet  | T1 | A | m | A3 C4 E4	
+stage_1track_synth_arp	10	8778	2	512	0	0	0	0	124 | PROPHET | 1 | It's a | Prophet  | T1 | ARP UP  HOLD | A | m | A3 C4 E4	
+stage_2tracks	11	7853	2	512	0	0	0	0	124 | FM6 | 1 | Funk Bass II | BASS | P1 | 2 | PAD | PAD | P1 | D4	
+stage_3tracks	14	7715	3	768	0	0	0	0	124 | PROPHET | 1 | Funk Bass II | P1 | 2 | PAD | PAD | P1 | P3 | 3 | INIT SID | T3 | P1	
+sheet_stage	12	16163	2	512	0	0	0	0	124 | PROPHET | Funk Bass II | PROPHET | Off | Favourite | Undo last load | Sound designer | T3 | Add track | T1 | Remove track	
+confirm_track	9	9476	5	1168	0	0	0	0	Funk Bass II | P1 | Remove track 2? | Its sound, patterns and | motion | No | Yes | 124 | FM6	
+view	17	6363	2	512	0	0	0	0	124 | FM6 | C | G | D | A | E | B | F# | C# | G# | D# | A# | F | A | m7 | A2 C4 E4 ..	
+view_letgo	17	6363	2	512	0	0	0	0	124 | FM6 | C | G | D | A | E | B | F# | C# | G# | D# | A# | F | A | m7 | A2 C4 E4 ..	
+view_note	15	5462	2	512	0	0	0	0	124 | FM6 | C | G | D | A | E | B | F# | C# | G# | D# | A# | F | D4	
+view_empty	15	5420	2	512	0	0	0	0	124 | PROPHET | C | G | D | A | E | B | F# | C# | G# | D# | A# | F | A minor	
+view_knobs	25	9311	2	512	0	0	0	0	124 | FM6 | MLVL | 0 | % | MRAT | 0 | MEG | 0 | % | DTUN | 24 | % | D | A | E | B | F# | C# | G# | D# | A# | A | m7 | A2 C4 E4 ..	
+view_slash	18	7444	2	512	0	0	0	0	124 | FM6 | C | G | D | A | E | B | F# | C# | G# | D# | A# | F | C | / | E | E2 C4 E4 G4	
+menu_home_select	13	16634	0	0	0	0	0	0	Settings | ON | Note preview | Add | Chord entry | OFF | Autosave | ON | Picker popups | ON | Knob accel | Mod wheel | Home select	
+home_select_mod	17	10653	1	256	0	0	0	0	124 | MOD WHEEL 64 | 1 | Funk Bass II | P1 | 2 | PAD | PAD | P1 | 3 | INIT SID | T3 | P1 | 4 | 808 KIT | DRUMS | P1	
+home_select_chord	6	7811	1	256	0	0	0	0	124 | T1 CHORD MAJ7 | 1 | Funk Bass II | BASS | MAJ7	
+home_select_level	15	7733	2	512	0	0	0	0	124 | PROPHET | G | D | A | E | B | F# | C# | G# | D# | A# | F | C chromatic | T1 LEVEL -5.5 dB	
+pattern_key_dialog	9	10884	4	912	0	0	0	0	1 | Funk Bass II | P1 | Pattern 3 | Again: delete · other: copy | Cancel | Delete | 124 | PROPHET	
+stage_1track_rec	6	6433	3	768	0	0	0	0	124 | PROPHET | 1 | Funk Bass II | BASS | P1	
+mixer_1track	7	4399	2	512	0	0	0	0	124 | MIXER | 1 | dB | -6 | Funk Bass II | L20	
+mixer_2tracks	12	6272	2	512	0	0	0	0	124 | MIXER | 1 | dB | -6 | Funk Bass II | L20 | 2 | dB | -14 | PAD | R24	
+mixer_3tracks	17	8913	3	768	0	0	0	0	124 | MIXER | 1 | dB | -6 | Funk Bass II | L20 | 2 | dB | -14 | PAD | R24 | 3 | dB | -24 | INIT SID | Mute	
+patterns_2tracks	15	4134	2	512	0	0	0	0	124 | PATTERNS | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | JAM | A | B | 1 | 2	
+song_2tracks	10	6858	0	0	0	0	0	0	SONG | 0:15 | jam · 2 rows | 2 sections · 8 bars | B x4 | A x2 | B x4 | + | P2 | P1	
+layer_glo_2tracks	13	4378	3	768	0	0	0	2	124 | GLO | SET | LEVEL | -4.0 | LEVEL | -4.0 | 1 | 2 | All | Tap | 1 | 2	'Tap' 0px, 'Tap' 0px
+new_roles_1track	13	10569	4	912	0	0	0	0	124 | NEW SONG | 1 | KEEP | PROPHET | Funk Bass II | 2 | No track | 3 | No track | 4 | No track | Create	
+stage_long	17	9789	2	512	0	0	0	0	124 | PROPHET | 1 | Funk Bass II | P1 | 2 | PAD | PAD | P1 | 3 | INIT SID | T3 | P1 | 4 | 808 KIT | DRUMS | P1	
+stage_3tracks_long	13	7455	2	512	0	0	0	0	124 | PROPHET | 1 | Funk Bass II | P1 | 2 | PAD | PAD | P1 | 3 | INIT SID | T3 | P1	
+stage_2tracks_long	10	7950	2	512	0	0	0	0	124 | PROPHET | 1 | Funk Bass II | BASS | P1 | 2 | PAD | PAD | P1	
+stage_1track_long	6	6433	2	512	0	0	0	0	124 | PROPHET | 1 | Funk Bass II | BASS | P1	
+ref_stage_held	19	12825	1	256	0	0	0	0	124 | PROPHET | 1 | 909 KIT | DRUMS | P1 | 2 | Pickle Pincher | P2 | P3 | 3 | ELEC.PIANO | P1 | 4 | BRASS SECT | P4 | A | m7 | A3 C4 E4 G4	
+ref_stage_released	19	12825	1	256	0	0	0	0	124 | PROPHET | 1 | 909 KIT | DRUMS | P1 | 2 | Pickle Pincher | P2 | P3 | 3 | ELEC.PIANO | P1 | 4 | BRASS SECT | P4 | A | m7 | A3 C4 E4 G4	
+ref_stage_cutoff	17	7544	1	256	0	0	0	0	124 | PROPHET | CUT | 62 | % | RES | 30 | % | ENV | 83 | % | REL | 31 | % | A | m7 | A3 C4 E4 G4	
+ref_stage_drum	24	12844	1	256	0	0	0	0	124 | 909 KIT | 1 | 909 KIT | DRUMS | P1 | 2 | Pickle Pincher | P2 | P3 | 3 | ELEC.PIANO | P1 | 4 | BRASS SECT | P4 | BD | SD | CP | CH | OH | TM | RS | RD	
+ref_browser	10	13034	1	256	0	0	0	0	2 | Bass | 12/25 | x4 | Bassment | Tight Bass (556 | BASS IN FIFTHS | PROPHET | FM BASS | SOLID BASS	
+ref_patterns	22	5749	1	256	0	0	0	0	124 | ROW 3 | PATTERNS | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | SONG | A | A | B | B | C | A | 1 | 2 | 3 | 4	
+ref_song	20	8930	0	0	0	0	0	0	SONG | 0:09 | jam · 2 rows | 4 sections · 5 bars | B x2 | A | B x2 | C | D | P1 | P2 | P3 | P1 | P2 | P4 | P1 | P2 | P1 | P3 | P2	
+ref_env	16	6791	1	256	0	0	0	0	124 | ENV | ATK | 1.0 | ms | DEC | 96 | ms | SUS | 66 | % | REL | 14 | ms | 2 | SAW BASS	
+ref_lfo	14	7249	2	400	0	0	0	0	124 | LFO | RATE | 1.18 | WAVE | Sin | PHS | 0 | FADE | 1.0 | ms | 2 | SAW BASS | Filter	
+ref_edit_osc	13	7682	1	256	0	0	0	0	124 | CHIP | MODEL | 8580 | WAVE | Saw | STACK | Oct | PW | 50 | % | 2 | SAW BASS	
+ref_mixer	22	12023	2	512	0	0	0	1	124 | MIXER | 1 | dB | -11 | 909 KIT | C | 2 | dB | -21 | Pickle Pincher | L20 | 3 | dB | -34 | ELEC.PIANO | Mute | 4 | dB | 0 | BRASS SECT | R13	'L20' 1px
+ref_notes	13	5396	1	256	0	0	0	0	124 | 1/15 | NOTES | STEP | 8 | /16 | PITCH | G4 | LEN | -- | VEL | -- | C4	
+ref_settings	13	13665	0	0	0	0	0	0	Settings | Night | Color | Rubik | Font | 0.4 s | Hold | Mid | Lights | In + out | USB audio | Stereo | USB input	
+ref_dialog	11	13702	4	912	0	0	0	0	124 | PROJECT | 2 | Pickle Pincher | A | LOFI JAM | Overwrite project A? | Its song and patterns | change | No | Yes	
+ref_sheet_sound	10	14479	1	48	0	0	0	0	124 | FILTER/TUNE | Pickle Pincher | PROPHET | Init sound | Save as user… | Off | Favourite | Undo last load | Sound designer	
+ref_sheet_song	11	17077	0	0	0	0	0	0	SONG | 0:09 | jam · 2 rows | Song | 4 sections | Insert section | Duplicate section | Delete section | 2 rows | Take jam | Clear song	
+ref_picker_wave	18	10426	1	256	0	0	0	0	124 | CHIP | MODEL | 8580 | WAVE | Saw | STACK | Oct | PW | 50 | % | 2 | SAW BASS | Tri | Saw | Pulse | Noise | Tri+saw	
+ref_picker_mode	19	9601	1	256	0	0	0	0	124 | FILTER | CUT | 8 | % | RES | 9 | MODE | Lp | DRIVE | 8 | % | 2 | SAW BASS | Lp | Bp | Hp | Notch | Lp+bp	
+ref_sections_p5	12	7567	1	256	0	0	0	0	124 | FILTER | CUT | 79 | RES | 38 | KEY | OFF | MODEL | Curti | 2 | Pickle Pincher	
+ref_map_p5	9	7185	1	256	0	0	0	0	124 | PROPHET | Sound | Osc | Mixer | Filter | Filter | Flt env | Amp	
+ref_map_fm6	12	6942	1	256	0	0	0	0	124 | FM6 | OP1 | OP2 | OP3 | Freq | Out | EG rate | EG lvl | Scale | Curve | OP4	
+ref_scl_list	13	10222	1	256	0	0	0	0	124 | SCL | 2 | Pickle Pincher | D# | Root | Min | > | Scale | OFF | Quantize | 0 st | Transpose	
+ref_sheet_project	10	10515	1	256	0	0	0	0	124 | PROJECT | A · NIGHT DRIVE | saved | Load | Save here | Rename | On | Boot | Erase	
+ref_sheet_note	14	13917	1	256	0	0	0	0	124 | 1/15 | NOTES | Note G#3 | step 5 | 3 steps | Length | 100 | Velocity | 100 % | Chance | Off | Slide | Move note	
+ref_sheet_hit	18	11947	1	256	0	0	0	0	124 | 1/16 | STEP | STEP | 5 | /32 | Snare | HIT | ON | ACC | ON | BD | SD · step 5 | On | Accent | 75 % | Chance | Clear hit	
+ref_motion	10	7809	1	256	0	0	0	0	124 | 16/16 | MOTION | 2 | SAW BASS | 47 | Step 1 | CUTOFF | RESONANCE | DRIVE	
+ref_sheet_motion	12	11580	1	256	0	0	0	0	124 | 16/16 | MOTION | 47 | Step 1 | CUTOFF | Cutoff | 16 events | On | Play | Clear cutoff | Clear all motion	
+ref_mod	18	10089	1	256	0	0	0	0	124 | MOD | 1 | LFO | Cutoff | +62 % | 2 | Mod wheel | PW | -100 % | 3 | Velocity | Level | +29 % | 4 | -- | -- | 0 %	
+ref_picker_mod	17	11915	1	256	0	0	0	0	124 | MOD | 1 | LFO | Cutoff | +62 % | Mod wheel | PW | -100 % | Level | +29 % | 0 % | Key | Random | Mod wheel | Aftertouch | Expression	
+ref_arp	14	8457	1	256	0	0	0	0	124 | ARP | MODE | Up | RATE | 1/16 | OCT | 2 | GATE | 50 | % | 2 | SAW BASS | C3 E3 G3 · 2 oct	
+ref_pattern	15	8586	1	256	0	0	0	0	124 | 2/15 | PATTERN | MODE | Step | DIV | 1/16 | SWG | 0 | % | GATE | 50 | % | 2 | SAW BASS	
+ref_fmeg	19	8351	1	256	0	0	0	0	124 | 3/6 | OP3 EG | OP1 | OP2 | OP3 | OP4 | OP5 | OP6 | R1 | 95 | R2 | 20 | R3 | 20 | R4 | 50 | 2 | TINE EP	
+ref_grid	19	7320	1	256	0	0	0	0	124 | 1/16 | STEP | STEP | 5 | /32 | Snare | HIT | ON | ACC | ON | BD | SD | CP | CH | OH | TM | RS | CB	
+ref_scales	7	10907	1	256	0	0	0	0	2 | EDO | 24/24 | 36-tone equal | 41-tone equal | 53-tone equal | 53 notes · octave	
+fx_phaser	13	8821	2	512	0	0	0	0	124 | PHASER | MIX | 66 | % | RATE | 1.18 | DEPTH | 57 | % | 1 | Funk Bass II | Moving notches	
+fx_width	14	11675	2	512	0	0	0	0	124 | WIDTH | MIX | 66 | % | RATE | 1.18 | DEPTH | 57 | % | 1 | Funk Bass II | All-pass L / dry R | Mono changes the tone	
+fx_formant	14	9172	2	512	0	0	0	0	124 | 2/3 | FORMANT | MIX | 66 | % | RATE | 1.18 | FOCUS | 57 | % | 1 | Funk Bass II | Random vowels	
+fx_tape	13	9519	2	512	0	0	0	0	124 | TAPE | MIX | 66 | % | RATE | 1.18 | JITTER | 57 | % | 1 | Funk Bass II | Phase / crossover jitter	
+fx_spit	13	8569	2	512	0	0	0	0	124 | SPIT | MIX | 66 | % | RATE | 1.18 | BITE | 57 | % | 1 | Funk Bass II | Jumping resonance	
+fx_echo	16	8882	2	512	0	0	0	0	124 | ECHO | MIX | 66 | % | TIME | 47 | % | REP | 57 | % | TONE | Full | 1 | Funk Bass II | Short lo-fi echoes	
+fx_room	16	9492	2	512	0	0	0	0	124 | ROOM | MIX | 66 | % | SIZE | 47 | % | DECAY | 57 | % | TONE | Full | 1 | Funk Bass II | Small lo-fi space	
+fx_reverb	16	9909	2	512	0	0	0	0	124 | REVERB | MIX | 66 | % | SIZE | 47 | % | DEPTH | 57 | % | TONE | Full | 1 | Funk Bass II | Diffused stereo reverb	
+fx_chorus	13	9589	2	512	0	0	0	0	124 | CHORUS | MIX | 66 | % | RATE | 1.18 | DEPTH | 57 | % | 1 | Funk Bass II | Stereo pitch shimmer	
+fx_full	17	10312	2	512	0	0	0	0	124 | ECHO | MIX | 66 | % | TIME | 47 | % | REP | 57 | % | TONE | Full | 1 | Funk Bass II | Short lo-fi echoes | MEMORY FULL	
+fx_slot2	16	8882	2	512	0	0	0	0	124 | ECHO | MIX | 66 | % | TIME | 47 | % | REP | 57 | % | TONE | Full | 1 | Funk Bass II | Short lo-fi echoes	
+fx_slot3	17	10329	2	512	0	0	0	0	124 | 4/5 | REVERB | MIX | 66 | % | SIZE | 47 | % | DEPTH | 57 | % | TONE | Full | 1 | Funk Bass II | Diffused stereo reverb	
+fx_rack	22	9722	2	512	0	0	0	3	124 | FX | FX | Room | SLOT | 2 | MIX | 40 | % | 66 % | 1 | Echo | 40 % | 2 | Room | 0 % | 3 | -- | 64 % | Shared | Reverb | Echo	'40 %' 0px, '2' 1px, 'Room' 1px
+fx_rack_split	22	9274	2	512	0	0	0	3	124 | FX | FX | Room | SLOT | 2 | MIX | 40 | % | 66 % | 1 | Echo | 40 % | 2 | Room | 0 % | 3 | -- | Shared | Reverb | , | Echo	'40 %' 0px, '2' 1px, 'Room' 1px
+fx_rack_pick	20	10569	2	512	0	0	0	1	124 | FX | FX | Tape | SLOT | 3 | MIX | 0 | % | 66 % | 40 % | 0 % | 64 % | Reverb | Echo | Width | Formant | Tape | Spit | Echo	'0 %' 0px
+fx_rack_list	8	5796	2	512	0	0	0	1	124 | FX | FX | Off | Phaser | Width | Formant | Tape	'0 %' 0px
+fx_bus1	16	10056	2	512	0	0	0	0	124 | 3/5 | REVERB | MIX | 100 | % | SIZE | 71 | % | DEPTH | 79 | % | TONE | Full | All tracks | Diffused stereo reverb	
+fx_bus2	12	9218	2	512	0	0	0	0	124 | TAPE | MIX | 100 | % | RATE | 5.71 | JITTER | 79 | % | All tracks | Phase / crossover jitter	
+fx_bus3	15	8609	2	512	0	0	0	0	124 | ECHO | MIX | 100 | % | TIME | 71 | % | REP | 79 | % | TONE | Full | All tracks | Short lo-fi echoes	
+fx_shared	23	11946	2	512	0	0	0	3	124 | 4/6 | SHARED | FX | Echo | SLOT | B | ROUTE | Chain | MIX | 40 | % | 100 % | A | Reverb | 40 % | B | Echo | 100 % | C | -- | 79 % | Return	'40 %' 0px, 'B' 1px, 'Echo' 1px
+fx_shared_split	23	11740	2	512	0	0	0	3	124 | 4/6 | SHARED | FX | Echo | SLOT | B | ROUTE | Split | SEND | 31 | % | 64 % | A | Reverb | 31 % | B | Echo | 0 % | C | -- | 79 % | Return	'31 %' 0px, 'B' 1px, 'Echo' 1px
+fx_shared_sheet	22	15765	2	512	0	0	0	3	124 | 4/6 | SHARED | FX | Echo | SLOT | B | ROUTE | Chain | MIX | 40 | % | 100 % | A | Reverb | B | Echo | Shared FX | All tracks | Chain | Routing | Clear shared FX	'40 %' 0px, 'B' 1px, 'Echo' 1px
+fx_tone_dark	18	10167	2	512	0	0	0	0	124 | 2/6 | ECHO | MIX | 66 | % | TIME | 47 | % | REP | 57 | % | TONE | Dark | 1 | Funk Bass II | Short lo-fi echoes | 853 Hz	
+fx_tone_thin	17	10832	2	512	0	0	0	0	124 | 5/6 | REVERB | MIX | 100 | % | SIZE | 71 | % | DEPTH | 79 | % | TONE | Thin | All tracks | Diffused stereo reverb | 605 Hz	
+boot_migration	5	13674	0	0	0	0	0	0	Startup maintenance | MIGRATING PRESETS | 7 / 21 | Keep power connected | Do not switch off.	
+boot_update	5	12929	0	0	0	0	0	0	Startup maintenance | FINISHING UPDATE | 2 / 5 | Keep power connected | Do not switch off.	
+boot_error	8	12091	0	0	0	0	0	0	Startup maintenance | MIGRATING PRESETS | Could not finish | Restart to retry | OCT- | WIPE | OCT+ | KEEP	
+boot_complete	5	11578	0	0	0	0	0	0	Startup maintenance | MIGRATING PRESETS | 21 / 21 | Complete | Starting up...	
+boot_wipe_confirm	9	18061	0	0	0	0	0	0	Startup maintenance | MIGRATING PRESETS | Wipe all user presets? | Every engine's. No undo. | Projects and settings stay. | OCT- | BACK | OCT+ | WIPE	
+boot_wiping	5	13066	0	0	0	0	0	0	Startup maintenance | WIPING PRESETS | 7 / 45 | Keep power connected | Do not switch off.	
+boot_update_error	6	11394	0	0	0	0	0	0	Startup maintenance | FINISHING UPDATE | Could not finish | Restart to retry | OCT+ | CONTINUE	
+map_drum_kit	8	5444	2	512	0	0	0	0	120 | DRUM | Sound | Kit | Hit | Drum | Lanes | Voice	
+map_drum_hit	8	5444	2	512	0	0	0	0	120 | DRUM | Sound | Kit | Hit | Drum | Lanes | Voice	
+map_drum_category	8	7097	2	512	0	0	0	0	120 | DRUM | Sound | Drum | Drum sound | Drum mix | Lanes | Voice	

@@ -1,0 +1,44 @@
+== MIDI timing: quantized TRS/USB recording, audio timeline, tempo changes and timer wrap
+ui: USB quantized 16ths, note after clock, immediate drain, 40..240 BPM        ok
+ui: USB quantized 16ths, note after clock, batched drain, 40..240 BPM          ok
+ui: USB quantized 16ths, note before clock, immediate drain, 40..240 BPM       ok
+ui: USB quantized 16ths, note before clock, batched drain, 40..240 BPM         ok
+ui: TRS quantized 16ths, note after clock, immediate drain, 40..240 BPM        ok
+ui: TRS quantized 16ths, note after clock, batched drain, 40..240 BPM          ok
+ui: TRS quantized 16ths, note before clock, immediate drain, 40..240 BPM       ok
+ui: TRS quantized 16ths, note before clock, batched drain, 40..240 BPM         ok
+ui: a future MIDI event waits for its audio block                              ok
+ui: the event sounds on the first block reaching its timestamp                 ok
+ui: external phase advances evenly across all four audio blocks                ok
+ui: 24 MHz timer wrap preserves the exact six-clock step boundary              ok
+ui: switching to INT preserves fractional sequence and ARP position            ok
+ui: 128 beats stay on exact steps through tempo changes and polling jitter     ok
+ui: all ten divisions, including triplets and 16-beat steps, keep exact phase  ok
+ui: a chord straddling a boundary shares one onset and retains its full held length ok
+ui: maximum swing preserves every alternating boundary over eight beats        ok
+ui: synced MIDI quantization follows the swung onset                           ok
+ui: late loop-start input records only step zero, never both loop ends         ok
+ui: quantizing the onset preserves the 2000-unit note duration                 ok
+ui: recorded velocity 111 stays 111 rather than becoming an accent             ok
+ui: replay keeps the recorded note held despite a different track GATE         ok
+ui: replay releases the note at its captured duration                          ok
+ui: replay has no extra onset on the final step                                ok
+ui: replay starts the note once when the loop returns to zero                  ok
+ui: late loop-start input records only step zero, never both loop ends         ok
+ui: quantizing the onset preserves the 2000-unit note duration                 ok
+ui: recorded velocity 111 stays 111 rather than becoming an accent             ok
+ui: replay keeps the recorded note held despite a different track GATE         ok
+ui: replay releases the note at its captured duration                          ok
+ui: replay has no extra onset on the final step                                ok
+ui: replay starts the note once when the loop returns to zero                  ok
+ui: late loop-start input records only step zero, never both loop ends         ok
+ui: quantizing the onset preserves the 2000-unit note duration                 ok
+ui: recorded velocity 111 stays 111 rather than becoming an accent             ok
+ui: replay keeps the recorded note held despite a different track GATE         ok
+ui: replay releases the note at its captured duration                          ok
+ui: replay has no extra onset on the final step                                ok
+ui: replay starts the note once when the loop returns to zero                  ok
+ui: recorded gates survive project save/load in active and inactive banks      ok
+ui: a shorter repeated take removes its old tied tail and keeps softer velocity ok
+ui: a sequencer release cannot cut a note still held by the player             ok
+MIDI timing tests passed

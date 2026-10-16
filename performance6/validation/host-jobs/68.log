@@ -1,0 +1,37 @@
+== Note/library gestures: quarter snapping, range moves/copies, undo and bulk preset erase
+ui: manual LENGTH becomes an exact 0.75-step event and leaves neighbours intact ok
+ui: undo restores the manual representation and clears converted events        ok
+ui: redo restores fractional length and playback ownership                     ok
+ui: fractional LENGTH lands on 1.25, never accumulates rounding                ok
+ui: off-grid captured durations snap to the next hard quarter                  ok
+ui: OCT+ held beyond the sheet timeout then scrolling selects a range without a popup ok
+ui: bulk quarter-step move converts selected notes and retains relative timing ok
+ui: one undo restores both notes, their ties and untouched neighbour           ok
+ui: copy wraps to zero, preserving the source and duration                     ok
+ui: copy undo restores the original manual note without a duplicate            ok
+ui: fractional movement into an unselected manual note rolls back atomically   ok
+ui: starting playback releases temporary editor history before synthesis       ok
+ui: recorded bulk movement snaps the first onset and preserves relative offsets ok
+ui: mixed bulk move can enter a recorded note's own rounded tie tail           ok
+ui: rebuilding recorded overviews clears their old ties and preserves manual neighbours ok
+ui: mixed move undo restores the original recorded tail and manual source      ok
+ui: repeated mixed bulk moves keep the exact event selection across rounded cells ok
+ui: single recorded note can also move into its own old tie                    ok
+ui: bulk movement into an unselected manual tie still rolls back               ok
+ui: Move note uses KNOB 1 directly with no held modifier                       ok
+ui: OCT- ends move mode and KNOB 1 resumes note browsing                       ok
+ui: Copy note duplicates once then KNOB 1 moves that duplicate                 ok
+ui: switching tracks cancels a single-note move                                ok
+ui: holding OCT+ with a range opens selected-note tools                        ok
+ui: selected quantize snaps each onset to the chosen quarter grid only         ok
+ui: quantize undo restores mixed precise events and manual tie data            ok
+ui: pattern Quantize defaults to nearest whole steps and wraps the final onset ok
+ui: whole-pattern quantize is one undoable operation                           ok
+ui: half-step quantize rounds independently and retains note lengths           ok
+ui: already quantized notes leave events and undo history untouched            ok
+ui: quantize refuses playback before touching any event                        ok
+ui: a full recording pool rejects conversion/copy before changing any source   ok
+ui: preset range selection reaches only the dragged slots                      ok
+ui: bulk erase presents one confirmation before writing                        ok
+ui: bulk erase deletes selected presets and preserves the next slot            ok
+Note/library gestures: passed

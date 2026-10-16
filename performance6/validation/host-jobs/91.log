@@ -1,0 +1,6 @@
+== double-tap layers, SCREEN OFF, LFO 2 SYNC / TRIG / POL
+layers/screen: double-tap layers and silent layer keys passed
+layers/screen: GLO SELECT exclusive when armed, held, locked and released; standalone SELECT restored
+EDIT map: detents arriving after a knob read survive until the next input pass, both axes and directions
+layers/screen: screen timeout, continuing transport, silent wake key/knob and NEVER passed
+layers/screen: all synced LFO divisions, NOTE/FREE, UNI and transport reset passed

@@ -1,0 +1,20 @@
+== first boot: reset unsupported preset banks, preserve good entries and retry cuts
+persist: boot resets unsupported general, FM6 and CZ banks                  ok
+persist: mixed readable bank keeps its good preset and clears only the bad entry ok
+persist: all reset writes are visible and application/project bytes survive ok
+persist: committed default banks require no writes or progress next boot    ok
+persist: cut reset preserves old committed mixed bank and visible failure   ok
+persist: reboot retries reset and preserves the compatible preset           ok
+persist: successful reset retry is not repeated                             ok
+persist: cut reset preserves old committed mixed bank and visible failure   ok
+persist: reboot retries reset and preserves the compatible preset           ok
+persist: successful reset retry is not repeated                             ok
+persist: cut reset preserves old committed mixed bank and visible failure   ok
+persist: reboot retries reset and preserves the compatible preset           ok
+persist: successful reset retry is not repeated                             ok
+persist: cut reset preserves old committed mixed bank and visible failure   ok
+persist: reboot retries reset and preserves the compatible preset           ok
+persist: successful reset retry is not repeated                             ok
+persist: partially readable legacy bank keeps compatible presets during reset ok
+persist: repair embeds multiple good legacy FM6 sidecars before cache reuse ok
+preset boot reset test passed

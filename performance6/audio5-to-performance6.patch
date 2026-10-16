@@ -1,0 +1,1377 @@
+diff --git a/STUDIO_PERFORMANCE_6.md b/STUDIO_PERFORMANCE_6.md
+new file mode 100644
+index 0000000..2c95388
+--- /dev/null
++++ b/STUDIO_PERFORMANCE_6.md
+@@ -0,0 +1,172 @@
++# Studio Tess Performance 6 — hardware test candidate
++
++Version: **v1.4.1-studio-tess.6**, based on Audio Hardening 5.
++Dual core is the primary build. MPE, patch/timbre morphing and the deferred UI
++redesign are not included. Existing fonts, HOME, mixer, filter, circle of fifths,
++FX rack and sequencer page order are retained; only the new feature pages are added.
++
++## Generator note timing
++
++Select a generator track, press SEQ and navigate to **NOTE LENGTH**.
++
++| Knob | Display | Behaviour |
++|---|---|---|
++| 1 | MODE | STEP = existing GATE/DIV behaviour; FIXED = independent musical length; HIT = hold until the next actual generated hit |
++| 2 | LEN | 1/32, 1/16, 1/8, 1/4, 1/2, 1 BAR; used by FIXED |
++| 3 | FADE | NATIVE at zero; otherwise an outer release fade, displayed in milliseconds |
++| 4 | KEYS | OVER = up to four independently held generated pitches; REPL = end the previous held key when the next hit occurs |
++
++Existing projects load with STEP and NATIVE, preserving their previous behaviour.
++The new FIXED mode defaults to OVER: changing LEN then changes held time without
++slowing DIV. HIT always replaces the previous key at the next hit and ignores LEN
++and KEYS; rests and dropped hits do not release it. Released audio tails can overlap
++subject to the existing engine voice limits and shared voice budget.
++
++Repeated pitches retrigger: the old same-pitch key ends before the new key starts.
++In OVER, a fifth held pitch releases the oldest held owner. Normal synth voice
++modes still apply: a MONO/LEGATO patch does not become polyphonic because OVER is on.
++HUMAN still changes velocity; its gate-shortening applies only in STEP mode.
++Fixed duration is calculated at note onset using the current tempo, independently
++of DIV. Its running sample timer is not stretched retrospectively by later tempo
++changes. Timing is resolved at the existing 32-sample control blocks.
++
++For slow attacks, start with **FIXED, 1/2, OVER**, or choose **HIT** for sparse
++Euclidean patterns. Try FADE around **27–102 ms** (raw values 5–10), then adjust
++by ear. Increasing held duration allows the patch's native attack to develop.
++
++## Release and transition protection
++
++Held duration ends at note-off; audible release/fade happens afterward.
++FADE is per track and applies to individual internal voices, including keyboard
++and captured STEP playback. It does not fade the entire track or clear FX buffers.
++
++With FM6 FADE enabled, the native operator voice remains keyed while its outer
++gain fades. This prevents a fast R4 from defeating the chosen fade. At fade end,
++the voice is retired and native release bookkeeping is completed. A native patch
++that already decays while held can still become silent before that outer fade ends.
++With NATIVE, original operator release behaviour remains in control. Other engines
++retain their own envelopes; FADE can shorten their release and does not extend an
++engine voice that has already ended.
++
++FM6 voice reuse with FADE or FM AMP active also applies a bounded sample correction:
++the first sample meets the preceding voice's last sample and the correction settles
++within 128 samples. This is transition protection, not proof that the intermittent
++hardware Bells distortion has been cured. The generic ADSR no longer gets first
++opportunity to retire a normal FM6 voice before its native release is checked;
++emergency stage-4 fades remain active.
++
++## FM AMP
++
++On an FM6 track, press **ENV** and select **FM AMP**. Knobs are **ATK, DEC, SUS, REL**.
++Times display milliseconds; sustain displays percent. Larger time values are slower.
++Editing any ADSR knob enables the overall per-voice envelope automatically.
++
++**FM AMP MODE** provides **AMP ON/OFF** and access to the same track FADE setting.
++AMP OFF bypasses the new amplitude envelope without discarding its settings.
++All original operator rate/level, pitch-envelope and deeper editing pages remain.
++
++The envelope multiplies each FM voice after synthesis and before track effects.
++It does not rewrite the six native operator envelopes. With FADE at NATIVE, it
++cannot extend a sound beyond its native operators' lifetime. AMP OFF plus neutral
++tone macros and NATIVE fade reproduces the previous sound baselines.
++
++## FM TONE
++
++The ENV family also includes **FM TONE**:
++
++| Knob | Display | Behaviour |
++|---|---|---|
++| 1 | BRI | Adjust modulator level: negative softens, positive brightens |
++| 2 | CNTR | Adjust modulator envelope rates together: positive is slower, negative faster |
++| 3 | ENV | Bipolar amount of a per-note decaying brightness contour |
++| 4 | DEC | Time of that brightness contour in milliseconds |
++
++BRI, CNTR and ENV are neutral at displayed **0**. DEC is inactive when ENV is zero.
++Carrier operators are identified from the current algorithm; contour leaves their
++native amplitude envelopes unchanged. Algorithms with no modulators have limited
++or no response to the tone macros. These are FM macros, not a resonant low-pass filter.
++The original patch bytes remain unchanged; all edits derive temporary effective values.
++
++## MIDI and one-pass REC
++
++USB MIDI note-offs use the actual generator held duration. External instruments
++use their own release envelopes: MIDI note-off does not transmit the internal fade.
++The output still needs a USB MIDI host, such as the Mac/DAW.
++
++REC still requires an empty destination, waits for the next loop when already
++playing, records one pattern-length pass, and automatically disarms while the
++generator continues. It captures final pitch, velocity, onset and actual held
++duration, including notes spanning rests. Captured notes still held at punch-out
++are sealed at the capture boundary; the live generator's keys continue. This makes
++the take finite and keeps whole-take undo/redo safe.
++
++Switch MODE to STEP to replay/edit the capture. FADE and FM performance settings
++remain on the sound/track for replay. STOP, mute processing, mode and bank changes,
++project/track changes and panic release generator ownership. External-clock loss
++uses the existing transport-stop path. An external instrument's own release may
++still ring after its MIDI key has ended.
++
++## Saves, upgrades and rollback
++
++Save the project to retain note timing mode, length, overlap, FADE, FM AMP and TONE.
++Shared **FM6 user sound** saves also retain FADE and AMP/TONE; they preserve the
++track's generator timing choices when loaded. Factory sounds reset the sound
++controls to bypass/neutral. Sound-load undo/redo includes the sound controls.
++Other engine sound presets do not store the new FADE; their project saves do.
++The external patch editor has no new macro controls in this candidate; the included
++backup/editor files preserve the complete project/backup payloads.
++
++HMF2 fits into the same 116-byte feature block and existing A/B project allocation.
++Old HMF1 saves are read with the new features bypassed. No notes, pattern banks,
++recording capacity, preset slots or flash sectors were taken for these settings.
++The firmware also retains the tested .2/.3 forward migration.
++
++**Preserve a full pre-install backup.** Audio5/.4 cannot read projects saved with
++HMF2. Older firmware may ignore or drop new FM sound macros. Rollback requires the
++Audio5 firmware **and the pre-install backup**, not merely flashing the old firmware.
++Installing this build does not convert every saved project automatically; SAVE
++commits a project's new feature format. Legacy sidecar migration still completes
++before shared preset startup, as in Audio5.
++
++## Suggested hardware test
++
++1. Back up on the currently installed build. Install the main dual-core candidate
++   with stable USB power and leave first-start migration uninterrupted.
++2. Check About for v1.4.1-studio-tess.6. Load an existing project and first compare
++   playback with STEP/NATIVE, AMP OFF and neutral tone macros.
++3. On a slow-attack patch, compare FIXED 1/8 versus 1/2 while leaving DIV unchanged;
++   compare REPL and OVER. Then try Euclid HIT with sparse pulses and rests.
++4. Try FM6 Bells with FADE NATIVE, then 27–102 ms. Test repeated pitches, STOP tails,
++   dry output, Echo and Reverb separately. Check whether the reported pops recur.
++5. Shape FM AMP and TONE, save/reload a project and FM6 sound, then test one-pass
++   REC and whole-take undo/redo. Replay in STEP and check USB MIDI release timing.
++6. Compare USB and battery operation separately. Note the displayed CPU and voice
++   count. Software tests and static DSP budgets do not measure the device's CPU load.
++
++If artifacts return, capture counters before a power cycle:
++
++```bash
++python3 -u source/tools/usb_audio_stats.py --complete --seconds 30 --interval 1 > fm1-audio-report.jsonl
++```
++
++Play for approximately 15 seconds, then STOP and let the tail finish. Retain the
++JSONL, patch name, FX settings and new performance settings. Single-core firmware
++is included only for comparison, not as the primary update.
++
++## Build reproduction
++
++With the JieLi toolchain and AC79 SDK configured as described in BUILDING.md:
++
++```bash
++MELODEE_RAM_AUDIO=1 ./build.sh --release 1.4.1-studio-tess.6
++MELODEE_RAM_AUDIO=1 PARALLEL=4 bash tests/run_tests.sh
++```
++
++Diagnostic only:
++
++```bash
++MELODEE_RAM_AUDIO=1 MELODEE_DUAL_CORE=0 STUDIO_SINGLE_DIAGNOSTIC=1 ./build.sh --release 1.4.1-studio-tess.6-single
++```
++
++See the bundle's validation logs for the exact software checks. Physical FM-1
++playback, device CPU load and the intermittent Bells fault remain hardware tests.
+diff --git a/firmware/src/core.h b/firmware/src/core.h
+index fb5c3e0..b0dc90f 100644
+--- a/firmware/src/core.h
++++ b/firmware/src/core.h
+@@ -494,3 +494,5 @@ static inline void reset_intended(void)         /* a reset on purpose (UBOOT, an
+ 
+ /* GLO solo belongs to the mixer, independently of quick-layer effects. */
+ static volatile uint8_t track_solo;
++
++#include "performance.h"
+diff --git a/firmware/src/eng_fm6.c b/firmware/src/eng_fm6.c
+index f8ede40..6231493 100644
+--- a/firmware/src/eng_fm6.c
++++ b/firmware/src/eng_fm6.c
+@@ -50,7 +50,7 @@ static volatile uint8_t fm6_lgen[NTRK];          /* +1 when the write was a new
+ static uint8_t fm6_on[NTRK];                     /* the operator switches (bit k: the sixth first), all on at a load */
+ static struct {                                  /* the patch through the macros: the audio ISR's copy */
+     uint8_t p[FP_SIZE + 1u];
+-    uint8_t gen, ok;
++    uint8_t gen, ok, contour;
+     int16_t e[7];                                /* P_E0..P_E6 it was made with */
+     int32_t dt[6];                               /* DTUN: per operator, Q24 log2 */
+ } fm6_eff[NTRK];
+@@ -256,13 +256,14 @@ static int fm6_eff_build(const track_t *t)
+     int32_t meg, step;
+     if (tr >= NTRK)
+         return 0;
+-    if (fm6_eff[tr].ok && fm6_eff[tr].gen == fm6_pgen[tr]) {
++    if (fm6_eff[tr].ok && fm6_eff[tr].gen == fm6_pgen[tr] && fm6_eff[tr].contour == performance[tr].contour) {
+         for (k = 0; k < 7u && fm6_eff[tr].e[k] == e[k]; k++)
+             ;
+         if (k == 7u)
+             return 0;
+     }
+     fm6_eff[tr].gen = fm6_pgen[tr];
++    fm6_eff[tr].contour = performance[tr].contour;
+     memcpy(fm6_eff[tr].p, fm6_patch[tr], FP_SIZE);
+     for (k = 0; k < 7u; k++)
+         fm6_eff[tr].e[k] = e[k];
+@@ -272,7 +273,7 @@ static int fm6_eff_build(const track_t *t)
+         p[FP_ALG] = (uint8_t)alg;
+         p[FP_FB] = (uint8_t)clamp(p[FP_FB] + e[1], 0, 7);
+         car = fm6_carriers(alg);
+-        meg = clamp(e[4], -64, 63) * 40 / 64;               /* MEG: rate steps (+ slower) */
++        meg = clamp(e[4] + (int32_t)performance[tr].contour - 64, -64, 63) * 40 / 64;               /* MEG: rate steps (+ slower) */
+         step = clamp(e[6], 0, 127) * (12 * 13981) / 127;    /* DTUN: up to 12 cents a step (1 cent = 13981) */
+         for (k = 0; k < 6u; k++) {
+             uint8_t *op = p + (5u - k) * FP_OP;              /* OP1 first: carriers in their order */
+@@ -633,6 +634,8 @@ static void fm6_note_on(track_t *t, voice_t *v)
+         s->porta[k] = s->base[k];
+     }
+     fm6_peg_set(&s->pe, ed);
++    s->correction_pending=(uint8_t)(voice_was && (performance[t-trk].fade || performance[t-trk].amp));
++    s->correction=s->correction_step=0;
+     s->down = 1;
+     if (ed[FP_OKS] && !steal)                            /* KEY SYNC (not on a stolen voice: no click) */
+         for (k = 0; k < 6u; k++)
+@@ -699,9 +702,24 @@ static __attribute__((noinline,section(".audio_text"))) void fm6_control_ram(tra
+     int32_t lv[6], lfo = P->lfo.val, dly = P->lfo.depth, pm, sens, pbase, amd, a1, a2, fbv;
+     /* MLVL and FLT: the modulators' level, 0.75 dB / 32 steps (microsteps, as the output levels), Q24 */
+     int32_t mod = (clamp(t->p[P_E2], -64, 63) * 24 + clamp(m->cutoff >> 8, -150, 150) * 16) * (1 << 16);
++    /* Tone macros change only derived modulation, never the saved patch.
++     * Envelope amount is bipolar and neutral at 64. */
++    performance_voice_t *pv=&performance_voice[tr][v-t->v];
++    const performance_t *pf=&performance[tr];
++    if(pf->brightness!=64u || pf->amount!=64u){
++        int32_t depth=(int32_t)pf->amount-64;
++        mod += ((int32_t)pf->brightness-64)*24*(1<<16);
++        mod += (int32_t)(((int64_t)depth*24*pv->tone*(1<<16))/32767);
++        uint32_t ms=performance_ms(pf->tone_decay);
++        pv->tone=performance_move(pv->tone,0,ms);
++        pv->tone=performance_move(pv->tone,0,ms); /* native block = 2 CTL */
++    }
+     uint32_t pmd = ((uint32_t)ed[FP_LPMD] * 165u) >> 6;
+     alg = (uint32_t)ed[FP_ALG] & 31u;
+-    if (!v->gate && s->down) {                           /* key up: every envelope to its fourth segment */
++    /* An explicit FADE keeps the native voice keyed while the outer gain
++     * releases, so a fast operator R4 cannot defeat the requested fade.
++     * Native releases remain unchanged in NATIVE mode. */
++    if (!v->gate && s->down && (!pf->fade || !v->active)) {                           /* key up: every envelope to its fourth segment */
+         s->down = 0;
+         for (k = 0; k < 6u; k++)
+             fm6_eg_go(&s->eg[k], &ed[k * FP_OP], s->ol[k], s->rs[k], 3);
+@@ -853,19 +871,29 @@ static inline __attribute__((always_inline)) float fm6_output_clip(float x)
+     return x > 16.0f ? 16.0f : 0.0f;
+ }
+ 
+-static __attribute__((noinline,section(".dsp_text"))) void fm6_output(const float *sum, int32_t *out, uint32_t n, const vmod_t *m, int32_t gain, int add)
++static __attribute__((noinline,section(".dsp_text"))) void fm6_output(fm6_voice_t *s, const float *sum, int32_t *out, uint32_t n, const vmod_t *m, int32_t gain, int add)
+ {
+     float scale = (float)gain * (1.0f / 131072.0f);
+     for (uint32_t i = 0; i < n; i++) {
+         int32_t y = (int32_t)(fm6_output_clip(sum[i]) * (float)amp_at(m, i) * scale);
++        if(s->correction_pending){
++            s->correction_pending=0;s->correction=s->output_last-y;
++            s->correction_step=(s->correction<0?-s->correction:s->correction)/128+1;
++        }
++        if(s->correction){
++            y+=s->correction;
++            int32_t d=s->correction_step;
++            s->correction=s->correction>0?(s->correction>d?s->correction-d:0):(s->correction < -d?s->correction+d:0);
++        }
++        s->output_last=y;
+         if (add) out[i] += y; else out[i] = y;
+     }
+ }
+ 
+-static inline void fm6_output_run(const float *sum, int32_t *out, uint32_t n, const vmod_t *m, int32_t gain, int add)
++static inline void fm6_output_run(fm6_voice_t *s, const float *sum, int32_t *out, uint32_t n, const vmod_t *m, int32_t gain, int add)
+ {
+-    void (*volatile run)(const float *, int32_t *, uint32_t, const vmod_t *, int32_t, int) = fm6_output;
+-    run(sum, out, n, m, gain, add);
++    void (*volatile run)(fm6_voice_t *, const float *, int32_t *, uint32_t, const vmod_t *, int32_t, int) = fm6_output;
++    run(s, sum, out, n, m, gain, add);
+ }
+ 
+ #if MELODEE_DUAL_CORE
+@@ -888,7 +916,7 @@ static void fm6_worker_kernel(void *unused)
+     (void)unused;
+     void (*volatile run)(fm6_voice_t *, uint32_t, float [2][CTL], float *) = fm6_run_into;
+     run(fm6_job.voice, fm6_job.n, fm6_job.bus, fm6_job.sum);
+-    fm6_output_run(fm6_job.sum, fm6_job.pcm, fm6_job.n, &fm6_job.modulation, fm6_job.gain, 0);
++    fm6_output_run(fm6_job.voice,fm6_job.sum, fm6_job.pcm, fm6_job.n, &fm6_job.modulation, fm6_job.gain, 0);
+ }
+ static void fm6_join(void)
+ {
+@@ -916,7 +944,7 @@ static void fm6_batch_kernel(const void *data,int32_t *pcm)
+     void (*volatile run)(fm6_voice_t *,uint32_t)=fm6_run;
+     run(j->voice,j->n);memcpy(sum,fm6_sum,j->n*sizeof *sum);
+ #endif
+-    fm6_output_run(sum,pcm,j->n,&j->modulation,j->gain,0);
++    fm6_output_run(j->voice,sum,pcm,j->n,&j->modulation,j->gain,0);
+ }
+ 
+ static void fm6_render(track_t *t, voice_t *v, int32_t *out, uint32_t n, const vmod_t *m)
+@@ -955,9 +983,9 @@ static void fm6_render(track_t *t, voice_t *v, int32_t *out, uint32_t n, const v
+ #if MELODEE_DUAL_CORE
+     if (fm6_pending) fm6_pairs++;
+     fm6_join();
+-    fm6_output_run(fm6_sum, out, n, m, k, 1);
++    fm6_output_run(s,fm6_sum, out, n, m, k, 1);
+ #else
+-    fm6_output_run(fm6_sum, out, n, m, k, 1);
++    fm6_output_run(s,fm6_sum, out, n, m, k, 1);
+ #endif
+ }
+ 
+diff --git a/firmware/src/fm6_core.c b/firmware/src/fm6_core.c
+index 3cc4694..bc1551b 100644
+--- a/firmware/src/fm6_core.c
++++ b/firmware/src/fm6_core.c
+@@ -345,6 +345,8 @@ typedef struct fm6_voice {                               /* a voice; operators i
+     uint8_t down, sub, note, vel, eng, loop, fbs, quiet, played;
+     uint8_t frozen;                                      /* stopped as by Dexed's panic: not kept running */
+     uint8_t still;                                       /* over and at rest: 1 only time goes on, 2 nothing matters */
++    int32_t output_last, correction, correction_step;
++    uint8_t correction_pending;
+     int32_t spb;                                         /* the bend and tune it was at rest with */
+ } fm6_voice_t;
+ #define FM6_SILENT 1638400                               /* an envelope level no engine renders (MARK I: -96 dB) */
+diff --git a/firmware/src/melodee.c b/firmware/src/melodee.c
+index a507482..f7774c8 100644
+--- a/firmware/src/melodee.c
++++ b/firmware/src/melodee.c
+@@ -41,7 +41,7 @@
+ #define MELODEE_FORK "(studio tess)"       /* this fork: melodee(tess); the version below is upstream Melodee's */
+ #endif
+ #ifndef MELODEE_VERSION
+-#define MELODEE_VERSION "v1.4.1-studio-tess.5" /* audio hardening hardware test candidate */
++#define MELODEE_VERSION "v1.4.1-studio-tess.6" /* audio hardening hardware test candidate */
+ #endif
+ #if MELODEE_OTA && !MELODEE_FLASH
+ #error "MELODEE_OTA needs MELODEE_FLASH"
+diff --git a/firmware/src/params.c b/firmware/src/params.c
+index 4f2fc26..6047e4e 100644
+--- a/firmware/src/params.c
++++ b/firmware/src/params.c
+@@ -482,7 +482,7 @@ enum { GR_NONE, GR_ADSR, GR_LFO, GR_STEPS, GR_ARP, GR_SCALE, GR_ROLL, GR_BROWSE,
+        GR_MOD, GR_PATS, GR_SONG, GR_MOTION, GR_CHORD, GR_SLICES,
+        GR_FMEG, GR_FMPEG, GR_FMSTORE, GR_CZTOOLS, GR_SCALE_PICKER, GR_DRUMHIT, GR_PATGRID,
+        GR_FXRACK, GR_EVOLVE, GR_FORM, GR_TWEAK,
+-       GR_HARM, GR_RANGE, GR_OUTPUT, GR_SONG_CHORD, GR_SONG_KEY }; /* NOTES shares GR_ROLL for steps and recorded events */
++       GR_HARM, GR_RANGE, GR_OUTPUT, GR_SONG_CHORD, GR_SONG_KEY, GR_DURATION, GR_FM_AMP, GR_FM_TONE, GR_FM_PERF }; /* NOTES shares GR_ROLL for steps and recorded events */
+ 
+ typedef struct {
+     const char *title;
+@@ -601,6 +601,10 @@ static const page_t PAGES[] = {
+     {"EVOLVE", FAM_SEQ, SC_TRACK, GR_EVOLVE, {0xFF, 0xFF, 0xFF, 0xFF}},   /* Tessera: LOCK EVERY AMOUNT ROLL (tessera_evolve_knob) */
+     {"FORM", FAM_SEQ, SC_TRACK, GR_FORM, {0xFF, 0xFF, 0xFF, 0xFF}},   /* Tessera: FORM CONTRAST CLEAR (tessera_form_knob) */
+     {"TWEAK", FAM_SEQ, SC_TRACK, GR_TWEAK, {0xFF, 0xFF, 0xFF, 0xFF}},   /* Tessera: SHIFT DROP HUMAN FOLLOW (tessera_tweak_knob) */
++    {"NOTE LENGTH", FAM_SEQ, SC_TRACK, GR_DURATION, {255,255,255,255}},
++    {"FM AMP", FAM_EDIT, SC_TRACK, GR_FM_AMP, {255,255,255,255}},
++    {"FM TONE", FAM_EDIT, SC_TRACK, GR_FM_TONE, {255,255,255,255}},
++    {"FM AMP MODE", FAM_EDIT, SC_TRACK, GR_FM_PERF, {255,255,255,255}},
+     {"HARMONY", FAM_SEQ, SC_TRACK, GR_HARM, {255,255,255,255}},
+     {"NOTE RANGE", FAM_SEQ, SC_TRACK, GR_RANGE, {255,255,P_ROOT,P_SCALE}},
+     {"OUTPUT", FAM_SEQ, SC_TRACK, GR_OUTPUT, {255,255,255,255}},
+diff --git a/firmware/src/pattern.c b/firmware/src/pattern.c
+index 1b63366..2ee9874 100644
+--- a/firmware/src/pattern.c
++++ b/firmware/src/pattern.c
+@@ -28,6 +28,7 @@ static void pattern_commit(track_t *t)
+ static void pattern_apply(track_t *t, uint32_t bank)
+ {
+     const pattern_t *p = pattern_at(t - trk, bank);
++    features_duration_stop(t);
+     seq_release(t);
+     recording_stop(t);
+     motion_restore(t);
+diff --git a/firmware/src/performance.c b/firmware/src/performance.c
+new file mode 100644
+index 0000000..ef3d336
+--- /dev/null
++++ b/firmware/src/performance.c
+@@ -0,0 +1,42 @@
++/* SPDX-License-Identifier: GPL-3.0-only
++ * Copyright (C) 2026 Kerem Kilic (Ellic Studio) */
++static void performance_start(track_t *t, voice_t *v)
++{
++    performance_voice_t *s=&performance_voice[t-trk][v-t->v];
++    *s=(performance_voice_t){0,32767,32767,0,0,1};
++}
++static int32_t performance_move(int32_t from,int32_t to,uint32_t ms)
++{
++    if(!ms)return to;
++    int32_t step=(int32_t)((32767u*CTL*1000u/FS)/ms);
++    if(step<1)step=1;
++    return from<to ? (to-from<step?to:from+step) : (from-to<step?to:from-step);
++}
++/* Control-rate gain; existing engine ramps interpolate it sample by sample. */
++static int32_t performance_gain(track_t *t,voice_t *v,int fm)
++{
++    const performance_t *p=&performance[t-trk];
++    performance_voice_t *s=&performance_voice[t-trk][v-t->v];
++    if(!p->fade && !(fm && p->amp))return 32767;
++    if(!v->gate && s->down){
++        s->down=0;s->stage=3;
++        uint32_t ms=performance_ms(p->fade);
++        s->fade_step=ms ? (32767u*CTL*1000u/FS)/ms+1u : 0u;
++    }
++    if(fm && p->amp){
++        if(s->stage==0){
++            s->amp=performance_move(s->amp,32767,performance_ms(p->attack));
++            if(s->amp==32767)s->stage=1;
++        }else if(s->stage==1 || s->stage==2){
++            s->amp=performance_move(s->amp,p->sustain*258,performance_ms(p->decay));
++            if(s->amp==p->sustain*258)s->stage=2;
++        }else s->amp=performance_move(s->amp,0,performance_ms(p->release));
++    }else s->amp=32767;
++    if(!v->gate && s->fade_step){
++        s->fade=s->fade>(int32_t)s->fade_step?s->fade-(int32_t)s->fade_step:0;
++    }
++    int32_t gain=(s->amp*s->fade)/32767;
++    if(!v->gate && !gain){v->active=0;v->stage=0;v->env=0;}
++    return gain;
++}
++
+diff --git a/firmware/src/performance.h b/firmware/src/performance.h
+new file mode 100644
+index 0000000..45cb1d9
+--- /dev/null
++++ b/firmware/src/performance.h
+@@ -0,0 +1,50 @@
++/* SPDX-License-Identifier: GPL-3.0-only
++ * Copyright (C) 2026 Kerem Kilic (Ellic Studio) */
++/* Studio performance controls. Defaults are an exact bypass. */
++#pragma once
++enum { DUR_STEP, DUR_FIXED, DUR_HIT };
++typedef struct {
++    uint8_t mode, length, fade, overlap, amp, attack, decay, sustain, release;
++    uint8_t brightness, contour, amount, tone_decay;
++} performance_t;
++#define PERFORMANCE_DEFAULT {0,2,0,1,0,0,40,127,40,64,64,64,40}
++static performance_t performance[NTRK]={PERFORMANCE_DEFAULT,PERFORMANCE_DEFAULT,PERFORMANCE_DEFAULT,PERFORMANCE_DEFAULT};
++static performance_t performance_default(void)
++{
++    return (performance_t)PERFORMANCE_DEFAULT;
++}
++/* One byte is a time curve, not a DX7 rate: larger = longer. */
++static uint32_t performance_ms(uint32_t value)
++{ return value ? 2u + value * value : 0u; }
++typedef struct {
++    int32_t amp, fade, tone;
++    uint32_t fade_step;
++    uint8_t stage, down;
++} performance_voice_t;
++static performance_voice_t performance_voice[NTRK][NVOICE] __attribute__((section(".pool")));
++static void performance_start(track_t *t,voice_t *v);
++static int32_t performance_move(int32_t from,int32_t to,uint32_t ms);
++static int32_t performance_gain(track_t *t,voice_t *v,int fm);
++static void performance_sound_reset(uint32_t tr)
++{
++    performance_t d=performance_default();
++    performance[tr].fade=d.fade;
++    memcpy(&performance[tr].amp,&d.amp,9u);
++}
++static void performance_sound_pack(uint8_t *b,uint32_t tr)
++{
++    b[0]='S';b[1]='P';b[2]=1;b[3]=performance[tr].fade;
++    memcpy(b+4,&performance[tr].amp,9u);
++}
++static int performance_sound_valid(const uint8_t *b)
++{
++    if(b[0]!='S'||b[1]!='P'||b[2]!=1)return 1; /* old native payload */
++    if(b[3]>127||b[4]>1)return 0;
++    for(uint32_t k=5;k<13;k++)if(b[k]>127)return 0;
++    return 1;
++}
++static void performance_sound_apply(const uint8_t *b,uint32_t tr)
++{
++    performance_sound_reset(tr);
++    if(b[0]=='S'&&b[1]=='P'&&b[2]==1){performance[tr].fade=b[3];memcpy(&performance[tr].amp,b+4,9u);}
++}
+diff --git a/firmware/src/seq.c b/firmware/src/seq.c
+index 0b77679..cbd0f11 100644
+--- a/firmware/src/seq.c
++++ b/firmware/src/seq.c
+@@ -1101,6 +1101,7 @@ static void seq_grid_tick(track_t *t, uint32_t n)
+  * loop zero once. MIDI batches may cross several boundaries in one call. */
+ static void seq_tick(track_t *t, uint32_t n)
+ {
++    features_duration_tick(t,n);
+     seq_erase_pass(t, t->seq_idx, 0);
+     if (tessera.mode[trk_index(t)]) { seq_grid_tick(t, n); return; } /* captured notes stay silent until STEP */
+     if (!((recording_tracks | song.rec) & (1u << trk_index(t)))) { seq_grid_tick(t, n); return; }
+@@ -1226,6 +1227,7 @@ static void events_block(uint32_t n)
+     for (i = 0; i < NTRK; i++) {
+         track_t *t = &trk[i];
+         if ((pr >> i) & 1u) {
++            features_duration_stop(t);
+             midi_forget_track(i);
+             recording_stop(t);
+             t->rh_n = t->rskip_n = 0;
+diff --git a/firmware/src/shared_presets.c b/firmware/src/shared_presets.c
+index 686fed3..19a97d5 100644
+--- a/firmware/src/shared_presets.c
++++ b/firmware/src/shared_presets.c
+@@ -61,6 +61,7 @@ static int native_update(uint32_t e,uint32_t k,const uint8_t *raw)
+     if(!native_used(e,k))return 1;
+     up_rec_t old=*up_rec(k),r;int16_t values[P_COUNT];up_values(&old,values);
+     shared_native_record(&r,e,raw);r.np=sizeof UP_NATIVE_PARAMS;
++    if(e==ENGI_FM6)memcpy(r.packed+128,old.packed+128,16u);
+     for(uint32_t i=0;i<r.np;i++)r.cz_extra[i]=(uint8_t)(values[UP_NATIVE_PARAMS[i]]+64);
+     memcpy(r.name,old.name,12u);return up_valid(&r)?up_put(k,&r):1;
+ }
+diff --git a/firmware/src/tess_features.c b/firmware/src/tess_features.c
+index d0c2ae0..b8b19f6 100644
+--- a/firmware/src/tess_features.c
++++ b/firmware/src/tess_features.c
+@@ -19,7 +19,9 @@ static void features_init(void)
+ {
+     /* Pending output note-offs survive project loads until USB can accept them. */
+     for (uint32_t tr = 0; tr < NTRK; tr++) {
++        features_duration_stop(&trk[tr]);
+         features_midi_stop(tr);
++        performance[tr]=performance_default();
+         harm_track[tr] = (harm_track_t){HARM_OFF, 36, 84, 0, 0, 0, 0, (uint8_t)tr};
+         feature_run.have[tr] = feature_run.capture[tr] = 0;
+     }
+@@ -192,6 +194,7 @@ static void features_capture_end(track_t *t)
+ {
+     uint32_t tr = trk_index(t);
+     if (feature_run.capture[tr]) {
++        features_capture_close(t);
+         feature_run.capture[tr] = 0;
+         features_notice = 4;
+     }
+@@ -229,7 +232,7 @@ static void features_capture_note(track_t *t, uint32_t note, uint32_t vel, uint3
+ }
+ 
+ /* The old 180-byte generator block remains a byte-identical prefix. */
+-static void features_defaults(uint8_t *out)
++static void features_legacy_defaults(uint8_t *out)
+ {
+     out[0] = 'H'; out[1] = 'M'; out[2] = 'F'; out[3] = 1;
+     out += 4;
+@@ -242,14 +245,14 @@ static void features_defaults(uint8_t *out)
+         memcpy(out, &h, 5); out += 5;
+     }
+ }
+-static uint32_t features_pack(uint8_t *out)
++static uint32_t features_legacy_pack(uint8_t *out)
+ {
+-    features_defaults(out);
++    features_legacy_defaults(out);
+     memcpy(out + 4, harm_track, sizeof harm_track);
+     memcpy(out + 4 + sizeof harm_track, harm_song, sizeof harm_song);
+     return TESS_FEATURE_BYTES;
+ }
+-static int features_valid(const uint8_t *in)
++static int features_legacy_valid(const uint8_t *in)
+ {
+     if (in[0] != 'H' || in[1] != 'M' || in[2] != 'F' || in[3] != 1) return 0;
+     in += 4;
+@@ -259,11 +262,58 @@ static int features_valid(const uint8_t *in)
+         if (in[0] > 12 || in[1] > CH_POW || in[2] > 12 || in[3] > 16 || in[4] > 16) return 0;
+     return 1;
+ }
+-static void features_apply(const uint8_t *in)
++static void features_legacy_apply(const uint8_t *in)
+ {
+     memcpy(harm_track, in + 4, sizeof harm_track);
+     memcpy(harm_song, in + 4 + sizeof harm_track, sizeof harm_song);
+ }
++/* HMF2 bit-packs the existing fields plus performance controls into the same
++ * 116 bytes. HMF1 imports default to bypass; no sectors or event limits change. */
++static const uint8_t PERF_BITS[]={2,3,7,1,1,7,7,7,7,7,7,7,7};
++static const uint8_t HARM_BITS[]={2,7,7,7,7,7,1,4};
++static const uint8_t ROW_BITS[]={4,4,4,5,5};
++_Static_assert(4u+(4u*42u+16u*22u+4u*77u+7u)/8u<=TESS_FEATURE_BYTES,"HMF2 fits");
++static uint32_t features_encode(uint8_t *out,const harm_track_t *ht,const harm_row_t *hr,const performance_t *pf)
++{
++    memset(out,0,TESS_FEATURE_BYTES);out[0]='H';out[1]='M';out[2]='F';out[3]=2;
++    uint32_t pos=32;
++    for(uint32_t t=0;t<NTRK;t++)for(uint32_t k=0;k<8;k++)wire_bits_put(out,&pos,((const uint8_t *)&ht[t])[k],HARM_BITS[k]);
++    for(uint32_t r=0;r<CHAIN_ROWS;r++)for(uint32_t k=0;k<5;k++)wire_bits_put(out,&pos,((const uint8_t *)&hr[r])[k],ROW_BITS[k]);
++    for(uint32_t t=0;t<NTRK;t++)for(uint32_t k=0;k<sizeof(performance_t);k++)wire_bits_put(out,&pos,((const uint8_t *)&pf[t])[k],PERF_BITS[k]);
++    return TESS_FEATURE_BYTES;
++}
++static int features_decode(const uint8_t *in,harm_track_t *ht,harm_row_t *hr,performance_t *pf)
++{
++    for(uint32_t t=0;t<NTRK;t++)pf[t]=performance_default();
++    if(in[3]==1u){
++        if(!features_legacy_valid(in))return 0;
++        memcpy(ht,in+4,sizeof harm_track);memcpy(hr,in+4+sizeof harm_track,sizeof harm_song);return 1;
++    }
++    if(in[0]!='H'||in[1]!='M'||in[2]!='F'||in[3]!=2u)return 0;
++    uint32_t pos=32;
++    for(uint32_t t=0;t<NTRK;t++)for(uint32_t k=0;k<8;k++)((uint8_t *)&ht[t])[k]=(uint8_t)wire_bits_get(in,&pos,HARM_BITS[k]);
++    for(uint32_t r=0;r<CHAIN_ROWS;r++)for(uint32_t k=0;k<5;k++)((uint8_t *)&hr[r])[k]=(uint8_t)wire_bits_get(in,&pos,ROW_BITS[k]);
++    for(uint32_t t=0;t<NTRK;t++)for(uint32_t k=0;k<sizeof(performance_t);k++)((uint8_t *)&pf[t])[k]=(uint8_t)wire_bits_get(in,&pos,PERF_BITS[k]);
++    for(uint32_t t=0;t<NTRK;t++){
++        const harm_track_t *h=&ht[t];if(h->mode>HARM_SONG||h->low>h->high||h->outside>100||h->bias>100||h->resolve>100||pf[t].mode>DUR_HIT||pf[t].length>5)return 0;
++    }
++    for(uint32_t r=0;r<CHAIN_ROWS;r++)if(hr[r].root>12||hr[r].chord>CH_POW||hr[r].key>12||hr[r].scale>16||hr[r].bars>16)return 0;
++    while(pos<TESS_FEATURE_BYTES*8u)if(wire_bits_get(in,&pos,1))return 0;
++    return 1;
++}
++static uint32_t features_pack(uint8_t *out)
++{ return features_encode(out,harm_track,harm_song,performance); }
++static void features_defaults(uint8_t *out)
++{
++    harm_track_t ht[NTRK];harm_row_t hr[CHAIN_ROWS];performance_t pf[NTRK];
++    for(uint32_t t=0;t<NTRK;t++){ht[t]=(harm_track_t){HARM_OFF,36,84,0,0,0,0,t};pf[t]=performance_default();}
++    for(uint32_t r=0;r<CHAIN_ROWS;r++)hr[r]=(harm_row_t){12,0,12,16,0};
++    features_encode(out,ht,hr,pf);
++}
++static int features_valid(const uint8_t *in)
++{ harm_track_t ht[NTRK];harm_row_t hr[CHAIN_ROWS];performance_t pf[NTRK];return features_decode(in,ht,hr,pf); }
++static void features_apply(const uint8_t *in)
++{ (void)features_decode(in,harm_track,harm_song,performance); }
+ static uint32_t tess_full_pack(uint8_t *out)
+ {
+     tessera_pack(out);
+@@ -293,23 +343,24 @@ static void features_default_generator(uint8_t *p,uint32_t tr)
+ }
+ static void features_packed_remove(uint8_t *state,uint32_t track)
+ {
++    harm_track_t ht[NTRK];harm_row_t hr[CHAIN_ROWS];performance_t pf[NTRK];
++    if(!features_decode(state+TESSERA_PK_BYTES,ht,hr,pf))return;
+     const uint32_t stride=TESSERA_PK_BYTES/NTRK;
+     for(uint32_t j=track;j+1u<NTRK;j++){
+-        memcpy(state+j*stride,state+(j+1u)*stride,stride);
+-        memcpy(state+TESSERA_PK_BYTES+4u+j*8u,state+TESSERA_PK_BYTES+4u+(j+1u)*8u,8u);
++        memcpy(state+j*stride,state+(j+1u)*stride,stride);ht[j]=ht[j+1u];pf[j]=pf[j+1u];
+     }
+     features_default_generator(state+(NTRK-1u)*stride,NTRK-1u);
+-    harm_track_t h={HARM_OFF,36,84,0,0,0,0,NTRK-1u};
+-    memcpy(state+TESSERA_PK_BYTES+4u+(NTRK-1u)*8u,&h,sizeof h);
++    ht[NTRK-1u]=(harm_track_t){HARM_OFF,36,84,0,0,0,0,NTRK-1u};pf[NTRK-1u]=performance_default();
++    features_encode(state+TESSERA_PK_BYTES,ht,hr,pf);
+     for(uint32_t j=0;j<NTRK;j++){
+         uint8_t *follow=state+j*stride+28u;
+-        if(*follow==track+1u)*follow=0;
+-        else if(*follow>track+1u)(*follow)--;
++        if(*follow==track+1u)*follow=0;else if(*follow>track+1u)(*follow)--;
+     }
+ }
+ static void features_reset_track(uint32_t k)
+ {
+     tessera_kill(&trk[k]);features_midi_stop(k);
++    performance[k]=performance_default();
+     memset(&tessera.turing[k],0,sizeof tessera.turing[k]);memset(&tessera.euclid[k],0,sizeof tessera.euclid[k]);
+     memset(&tessera.markov[k],0,sizeof tessera.markov[k]);memset(&tessera.morph[k],0,sizeof tessera.morph[k]);
+     memset(&tessera.evolve[k],0,sizeof tessera.evolve[k]);memset(tessera.sec[k],0,sizeof tessera.sec[k]);
+@@ -317,3 +368,82 @@ static void features_reset_track(uint32_t k)
+     harm_track[k]=(harm_track_t){HARM_OFF,36,84,0,0,0,0,(uint8_t)k};
+     feature_run.have[k]=feature_run.capture[k]=0;tessera.last_note[k]=0;
+ }
++
++/* Four generator key owners per track, independently timed. Released audio
++ * tails belong to the synth's voice allocator, not this held-key table. */
++static struct {uint32_t left,held,fraction;uint16_t rec;uint8_t note,on;} duration_run[NTRK][4] __attribute__((section(".pool")));
++static uint8_t duration_active;
++static void features_duration_release(track_t *t,uint32_t slot)
++{
++    uint32_t tr=trk_index(t);
++    if(!duration_run[tr][slot].on)return;
++    uint32_t i=duration_run[tr][slot].rec;
++    if(i<RECORD_MAX && (recording_flags[i]&1u)){
++        recording_run[i].held=duration_run[tr][slot].held?duration_run[tr][slot].held:1;
++        recording_finish(i);recording_flags[i]=4;
++    }
++    uint32_t note=duration_run[tr][slot].note;
++    duration_run[tr][slot].on=0;
++    uint32_t any=0;for(uint32_t k=0;k<4;k++)any|=duration_run[tr][k].on;
++    if(!any)duration_active&=(uint8_t)~(1u<<tr);
++    features_midi_off(t,note);
++    if(!(live_held[tr][note>>5]&(1u<<(note&31))) && !recording_owns(t,note))trk_note_off(t,note);
++}
++static void features_duration_stop(track_t *t)
++{
++    uint32_t tr=trk_index(t);if(tr>=NTRK)return;
++    for(uint32_t k=0;k<4;k++)features_duration_release(t,k);
++}
++static void features_capture_close(track_t *t)
++{
++    uint32_t tr=trk_index(t);
++    for(uint32_t k=0;k<4;k++){
++        uint32_t i=duration_run[tr][k].rec;
++        if(duration_run[tr][k].on && i<RECORD_MAX && (recording_flags[i]&1u)){
++            recording_run[i].held=duration_run[tr][k].held?duration_run[tr][k].held:1;
++            recording_finish(i);recording_flags[i]=4;
++        }
++        duration_run[tr][k].rec=RECORD_MAX;
++    }
++}
++static void features_duration_tick(track_t *t,uint32_t n)
++{
++    uint32_t tr=trk_index(t);
++    if(!(duration_active & (1u<<tr)))return;
++    uint32_t period=seq_div_samples((uint32_t)t->p[P_SDIV]);
++    if(!tessera.mode[tr] || t->p[P_MUTE] || !song.playing){features_duration_stop(t);return;}
++    for(uint32_t k=0;k<4;k++)if(duration_run[tr][k].on){
++        uint32_t held=n, left=duration_run[tr][k].left;
++        if(left!=0xFFFFFFFFu && held>left)held=left;
++        uint64_t u=(uint64_t)held*RECORD_UNIT+duration_run[tr][k].fraction;
++        duration_run[tr][k].fraction=(uint32_t)(u%period);
++        duration_run[tr][k].held+=(uint32_t)(u/period);
++        if(duration_run[tr][k].held>8388607u)duration_run[tr][k].held=8388607u;
++        if(left!=0xFFFFFFFFu){
++            if(left<=n)features_duration_release(t,k);else duration_run[tr][k].left-=n;
++        }
++    }
++}
++static void features_duration_on(track_t *t,uint32_t note,uint32_t velocity)
++{
++    uint32_t tr=trk_index(t),slot=4;
++    const performance_t *p=&performance[tr];
++    /* HIT and REPLACE are monophonic key ownership, with natural audio tails.
++     * OVERLAP permits four held pitches; same-pitch retrigger ends its old key. */
++    for(uint32_t k=0;k<4;k++)if(duration_run[tr][k].on && (p->mode==DUR_HIT || !p->overlap || duration_run[tr][k].note==note))features_duration_release(t,k);
++    for(uint32_t k=0;k<4;k++)if(!duration_run[tr][k].on){slot=k;break;}
++    if(slot==4){slot=0;for(uint32_t k=1;k<4;k++)if(duration_run[tr][k].held>duration_run[tr][slot].held)slot=k;features_duration_release(t,slot);}
++    static const uint8_t divs[]={3,2,1,0,6,7};
++    duration_run[tr][slot].left=p->mode==DUR_HIT?0xFFFFFFFFu:seq_div_samples(divs[p->length%6]);
++    duration_run[tr][slot].held=duration_run[tr][slot].fraction=0;
++    duration_run[tr][slot].rec=RECORD_MAX;duration_run[tr][slot].note=(uint8_t)note;duration_run[tr][slot].on=1;duration_active|=(uint8_t)(1u<<tr);
++    trk_note_on(t,note,velocity);features_midi_on(t,note,velocity);
++    if(feature_run.capture[tr] && (song.rec & ~song.rec_wait & (1u<<tr))){
++        uint32_t step=t->seq_idx%NSTEP;
++        if(!recording_note(t,note,velocity,step)){rec_set(t,0);features_notice=2;return;}
++        uint32_t i=recording_head[recording_owner(t)];duration_run[tr][slot].rec=(uint16_t)i;
++        recording[i].on=0;recording_flags[i]=5; /* held and heard, no quantization */
++        step_t *s=&t->step[step];memset(s,0,sizeof *s);
++        s->time=ST_NOTE;s->n=1;s->note[0]=(uint8_t)note;s->vel=(uint8_t)velocity;s->flags=SF_RECORDED;s->acc=255;t->seq_active=1;
++    }
++}
+diff --git a/firmware/src/tess_features.h b/firmware/src/tess_features.h
+index bc69c32..694e0bc 100644
+--- a/firmware/src/tess_features.h
++++ b/firmware/src/tess_features.h
+@@ -29,3 +29,8 @@ static void features_apply(const uint8_t *in);
+ static uint32_t tess_full_pack(uint8_t *out);
+ static int tess_full_valid(const uint8_t *in, uint32_t size);
+ static int tess_full_unpack(const uint8_t *in, uint32_t size);
++
++static void features_duration_stop(track_t *t);
++static void features_duration_tick(track_t *t,uint32_t n);
++static void features_duration_on(track_t *t,uint32_t note,uint32_t velocity);
++static void features_capture_close(track_t *t);
+diff --git a/firmware/src/tessera.c b/firmware/src/tessera.c
+index c1c5108..9ce71ae 100644
+--- a/firmware/src/tessera.c
++++ b/firmware/src/tessera.c
+@@ -111,6 +111,7 @@ void tessera_kill(track_t *t)
+ {
+     uint32_t tr = trk_index(t);
+     if (tr >= TESSERA_TRACKS) return;
++    features_duration_stop(t);
+     if (tessera.active_gate[tr]) {
+         features_midi_off(t, tessera.last_note[tr]);
+         trk_note_off(t, tessera.last_note[tr]);
+@@ -565,7 +566,7 @@ void tessera_clock_step(track_t *t)
+ {
+     uint32_t tr = trk_index(t);
+     if (tr >= TESSERA_TRACKS) return;
+-    features_midi_off(t, tessera.last_note[tr]);
++    if(!performance[tr].mode)features_midi_off(t, tessera.last_note[tr]);
+ 
+     tessera_evolve_tick(t, tr);
+ 
+@@ -574,11 +575,12 @@ void tessera_clock_step(track_t *t)
+             trk_note_off(t, tessera.last_note[tr]);
+             tessera.active_gate[tr] = 0;
+         }
++        features_duration_stop(t);
+         seq_release(t);
+         return;
+     }
+ 
+-    if (tessera.active_gate[tr]) {
++    if (!performance[tr].mode && tessera.active_gate[tr]) {
+         trk_note_off(t, tessera.last_note[tr]);
+         tessera.active_gate[tr] = 0;
+         seq_release(t);
+@@ -710,6 +712,11 @@ void tessera_clock_step(track_t *t)
+         if (final_note > 127) final_note = 127;
+         final_note = features_pitch(t, final_note);
+ 
++        if(performance[tr].mode){
++            features_duration_on(t,(uint32_t)final_note,vel);
++            tessera.last_note[tr]=(uint8_t)final_note;
++            return;
++        }
+         trk_note_on(t, (uint32_t)final_note, vel);
+         features_midi_on(t, (uint32_t)final_note, vel);
+         tessera.last_note[tr] = (uint8_t)final_note;
+diff --git a/firmware/src/ui.c b/firmware/src/ui.c
+index 5acae5f..33c1388 100644
+--- a/firmware/src/ui.c
++++ b/firmware/src/ui.c
+@@ -229,7 +229,7 @@ static int list_gone(uint32_t i);                        /* ui_list.c: a page in
+ static const char *const *native_titles(uint32_t fam)
+ {
+     static const char *const P5_ENV[] = {"P5 FLT ENV", "P5 AMP ENV", "P5 ENV MOD", 0};
+-    static const char *const FM_ENV[] = {"EG RATE", "EG LVL", "PITCH EG", "PITCH LV", 0};
++    static const char *const FM_ENV[] = {"FM AMP", "FM TONE", "EG RATE", "EG LVL", "PITCH EG", "PITCH LV", 0};
+     static const char *const CZ_ENV[] = {"C1 PIT R1-4", "C1 WAV R1-4", "C1 AMP R1-4", "C2 PIT R1-4", "C2 WAV R1-4",
+                                          "C2 AMP R1-4", 0};
+     static const char *const P5_LFO[] = {"P5 LFO", "P5 WHEEL", 0};
+@@ -253,6 +253,7 @@ static int native_page(uint32_t i, uint32_t fam)       /* page i: one of fam's n
+ 
+ static int page_visible(uint32_t i)
+ {
++    if(PAGES[i].graph>=GR_FM_AMP && PAGES[i].graph<=GR_FM_PERF)return TSEL->eng_req==ENGI_FM6;
+     if (PAGES[i].fam == FAM_FX && PAGES[i].graph != GR_FXRACK)   /* a slot's page (its MIX first): while it holds an
+                                                                  * effect (the rack shows it either way) */
+         return (PAGES[i].scope == SC_GLOBAL ? song.g : TSEL->p)[PAGES[i].id[0] - 1u] != FX_OFF;
+@@ -612,7 +613,7 @@ static int seq_is_empty(const track_t *t)
+  * so the undo goes back past the whole browse. Eight levels fit in ordinary SRAM,
+  * leaving the data cache available for flash reads. Not snapshotted: power-on, projects (a project load drops them all) */
+ enum { UNDO_SOUND = 1, UNDO_PAT = 2 };
+-static int features_page(uint32_t graph) { return graph >= GR_HARM && graph <= GR_SONG_KEY; }
++static int features_page(uint32_t graph) { return graph >= GR_HARM && graph <= GR_FM_PERF; }
+ static const char *const HARM_NAMES[] = {"OFF", "KEY", "SONG"};
+ static const char *const HARM_CHORD_NAMES[] = {"TRACK", "DIA3", "DIA7", "MAJ", "MIN", "DOM7", "MAJ7", "MIN7", "SUS4", "POWER"};
+ static void features_note_name(char *b, uint32_t note)
+@@ -627,6 +628,7 @@ typedef struct {
+     uint8_t what;                /* UNDO_SOUND | UNDO_PAT: what the loads since the copy changed (undo_step) */
+     uint8_t eng, preset, user_native, patn;
+     uint16_t user;
++    performance_t perf;
+     uint8_t fm6[FP_SIZE + 1u];   /* the track's complete patch */
+     cz_patch_t cz;
+     p5_patch_t p5;
+@@ -667,6 +669,7 @@ static uint32_t track_sig(const track_t *t)      /* the sound (an FM6 track's pa
+ {
+     uint8_t id[5] = {t->eng_req, t->preset, (uint8_t)t->user, (uint8_t)(t->user>>8), t->user_native};
+     uint32_t h = fnv(fnv(steps_sig(t), t->p, sizeof t->p), id, 3), k = trk_index(t);
++    h = fnv(h, &performance[k],sizeof(performance_t));
+     h = fnv(h, fm6_patch[k], sizeof fm6_patch[k]); /* (a patch the editor sent between two loads) */
+     h = fnv(h, cz_patch[k].raw, CZ_BYTES);
+     h = fnv(h,p5_patch_of(&trk[k]),sizeof(p5_patch_t));
+@@ -752,6 +755,7 @@ static void load_begin(track_t *t, uint32_t what)
+     u->user_native=t->user_native;
+     memcpy(u->p, t->p, sizeof u->p);
+     step_snapshot_save(u->step, t->step);
++    u->perf=performance[i];
+     memcpy(u->fm6, fm6_patch[i], FP_SIZE);
+     u->cz = cz_patch[i];
+     u->p5 = *p5_patch_of(&trk[i]);
+@@ -866,6 +870,10 @@ static void undo_step(int redo)
+     if (u->what & UNDO_SOUND) {                 /* FM6: the track's patch as it was (edited, a project's, a
+                                                    * converted DIGITAL sound), preserved with the sound */
+         uint32_t tr = trk_index(t);
++        performance_t pp=performance[tr];
++        /* Sound undo restores sound controls, keeping the generator timing. */
++        performance[tr].fade=u->perf.fade;memcpy(&performance[tr].amp,&u->perf.amp,9u);
++        u->perf=pp;
+         uint8_t v[FP_SIZE + 1u];
+         memcpy(v, fm6_patch[tr], FP_SIZE);
+         fm6_set_patch(tr, u->fm6);
+@@ -944,6 +952,7 @@ static void apply_preset_to(track_t *t, uint32_t pi)
+     }
+     pi %= e->npresets;
+     t->preset = (uint8_t)pi;
++    performance_sound_reset(trk_index(t));
+     memset(&drum_patch[t-trk],0,sizeof(drum_patch_t));
+     for (i = 0; i < P_E0; i++)                        /* the rest of the sound to its defaults: a preset */
+         if (!param_kept(i))                           /* sounds the same after any edit */
+diff --git a/firmware/src/ui_draw.c b/firmware/src/ui_draw.c
+index 05447d7..a1370cf 100644
+--- a/firmware/src/ui_draw.c
++++ b/firmware/src/ui_draw.c
+@@ -677,7 +677,38 @@ static void draw_columns(void)
+         uint32_t graph = cur_page()->graph;
+         const harm_track_t *h = &harm_track[song.sel];
+         char b[4][16];
+-        if (graph == GR_HARM) {
++        if(graph>=GR_DURATION){
++            const performance_t *p=&performance[song.sel];
++            static const char *const modes[]={"STEP","FIXED","HIT"};
++            static const char *const lengths[]={"1/32","1/16","1/8","1/4","1/2","1 BAR"};
++            if(graph==GR_DURATION){
++                if(p->fade)fmt_int(b[2],performance_ms(p->fade));else str_cpy(b[2],"NATIVE",16);
++                draw_column(0,"MODE",modes[p->mode],"",VAL(0u),p->mode*500,ICON_AUTO);
++                draw_column(1,"LENGTH",lengths[p->length],"",VAL(1u),p->length*200,ICON_AUTO);
++                draw_column(2,"FADE",b[2],p->fade?"MS":"",VAL(2u),p->fade*1000/127,ICON_AUTO);
++                draw_column(3,"KEYS",p->overlap?"OVER":"REPL","",VAL(3u),p->overlap*1000,ICON_AUTO);
++            }else if(graph==GR_FM_AMP){
++                static const char *const names[]={"ATK","DEC","SUS","REL"};
++                const uint8_t *v=&p->attack;
++                for(uint32_t k=0;k<4;k++){
++                    fmt_int(b[k],k==2?v[k]*100/127:performance_ms(v[k]));
++                    draw_column(k,names[k],b[k],k==2?"%":"MS",VAL(k),v[k]*1000/127,ICON_AUTO);
++                }
++            }else if(graph==GR_FM_TONE){
++                static const char *const names[]={"BRI","CNTR","ENV","DEC"};
++                const uint8_t *v=&p->brightness;
++                for(uint32_t k=0;k<4;k++){
++                    fmt_int(b[k],k==3?(int32_t)performance_ms(v[k]):(int32_t)v[k]-64);
++                    draw_column(k,names[k],b[k],k==3?"MS":"",VAL(k),v[k]*1000/127,ICON_AUTO);
++                }
++            }else{
++                if(p->fade)fmt_int(b[1],performance_ms(p->fade));else str_cpy(b[1],"NATIVE",16);
++                draw_column(0,"AMP",p->amp?"ON":"OFF","",VAL(0u),p->amp*1000,ICON_AUTO);
++                draw_column(1,"FADE",b[1],p->fade?"MS":"",VAL(1u),p->fade*1000/127,ICON_AUTO);
++                draw_column(2,"ENV","VOICE","",VAL(2u),-1,ICON_AUTO);
++                draw_column(3,"PATCH","KEPT","",VAL(3u),-1,ICON_AUTO);
++            }
++        } else if (graph == GR_HARM) {
+             fmt_int(b[1], h->outside); fmt_int(b[2], h->bias); fmt_int(b[3], h->resolve);
+             draw_column(0,"HARM",HARM_NAMES[h->mode],"",VAL(0u),h->mode*500,ICON_AUTO);
+             draw_column(1,"OUTSIDE",b[1],"%",VAL(1u),h->outside*10,ICON_AUTO);
+diff --git a/firmware/src/ui_graph.c b/firmware/src/ui_graph.c
+index a304b9e..96e7522 100644
+--- a/firmware/src/ui_graph.c
++++ b/firmware/src/ui_graph.c
+@@ -942,6 +942,7 @@ static uint32_t graph_sig(int play)
+         h = (h ^ (uint32_t)t->p[i]) * 16777619u;
+     h ^= (uint32_t)TSEL->preset * 7u + (uint32_t)song.g[G_SLOT] * 13u + TSEL->user * 257u + up_gen * 7919u;
+     if (features_page(pg->graph)) {
++        h = fnv(h, &performance[song.sel], sizeof(performance_t));
+         h = fnv(h, &harm_track[song.sel], sizeof(harm_track_t));
+         h = fnv(h, harm_song, sizeof harm_song);
+         h ^= harm_edit_row * 131u + chain.row * 7919u + song.rec * 65537u + song.rec_latch * 919u + tessera.mode[song.sel] * 4009u;
+@@ -1177,6 +1178,12 @@ static void graph_scope(uint16_t c, int32_t top, int32_t h)
+ /* Each arrangement row selects one bank per track. graph_y, graph_h: the panel's place (ui_pages.c: under its rings) */
+ static void graph_features(const track_t *t, uint32_t graph)
+ {
++    if(graph>=GR_DURATION){
++        cv_text_c(120,14,TY_TX,graph==GR_DURATION?"Generator note timing":graph==GR_FM_TONE?"FM tone macros":"FM amplitude envelope",T_TEXT,T_SURF);
++        cv_text_c(120,43,TY_LB,graph==GR_DURATION?"DIV sets rhythm only":graph==GR_FM_TONE?"Zero = original tone":"Editing ADSR enables it",T_MID,T_SURF);
++        cv_text_c(120,63,TY_LB,graph==GR_DURATION?"NEXT HIT holds over rests":"Native envelopes remain",T_MID,T_SURF);
++        cv_text_c(120,94,TY_LB,graph==GR_DURATION?"REC keeps held duration":"Save with sound / project",T_THEME,T_SURF);return;
++    }
+     const harm_track_t *h = &harm_track[song.sel];
+     char label[40], number[16];
+     if (graph == GR_OUTPUT) {
+@@ -1242,7 +1249,7 @@ static void draw_graph(void)
+         graph_scope(c, 0, H_GRAPH);
+     } else {
+         switch (pg->graph) {
+-        case GR_HARM: case GR_RANGE: case GR_OUTPUT: case GR_SONG_CHORD: case GR_SONG_KEY:
++        case GR_HARM: case GR_RANGE: case GR_OUTPUT: case GR_SONG_CHORD: case GR_SONG_KEY: case GR_DURATION: case GR_FM_AMP: case GR_FM_TONE: case GR_FM_PERF:
+             cv_oy=0;graph_features(t,pg->graph);
+             break;
+         case GR_LFO:
+diff --git a/firmware/src/ui_tess_features.c b/firmware/src/ui_tess_features.c
+index 701a7da..1115839 100644
+--- a/firmware/src/ui_tess_features.c
++++ b/firmware/src/ui_tess_features.c
+@@ -2,6 +2,25 @@
+ static void features_ui_knob(uint32_t graph, uint32_t slot, int32_t delta)
+ {
+     if (slot >= 4u || !delta) return;
++    if(graph>=GR_DURATION){
++        performance_t *p=&performance[song.sel];
++        int32_t s=tess_knob_delta(delta);
++        fm1_irq_off();
++        if(graph==GR_DURATION){
++            if(slot==0){tessera_kill(TSEL);p->mode=(uint8_t)clamp((int32_t)p->mode+(s>0?1:-1),0,DUR_HIT);}
++            if(slot==1)p->length=(uint8_t)clamp((int32_t)p->length+(s>0?1:-1),0,5);
++            if(slot==2)p->fade=(uint8_t)clamp((int32_t)p->fade+s,0,127);
++            if(slot==3){tessera_kill(TSEL);p->overlap=(uint8_t)clamp((int32_t)p->overlap+(s>0?1:-1),0,1);}
++        }else if(graph==GR_FM_AMP){
++            uint8_t *v=&p->attack;v[slot]=(uint8_t)clamp((int32_t)v[slot]+s,0,127);p->amp=1;
++        }else if(graph==GR_FM_TONE){
++            uint8_t *v=&p->brightness;v[slot]=(uint8_t)clamp((int32_t)v[slot]+s,0,127);
++        }else{
++            if(slot==0)p->amp=(uint8_t)clamp((int32_t)p->amp+(s>0?1:-1),0,1);
++            if(slot==1)p->fade=(uint8_t)clamp((int32_t)p->fade+s,0,127);
++        }
++        fm1_irq_on();ui.force=1;return;
++    }
+     if ((graph == GR_OUTPUT && slot >= 2u) || (graph == GR_SONG_KEY && slot == 3u)) return;
+     int32_t s = tess_knob_delta(delta);
+     harm_track_t *h = &harm_track[song.sel];
+diff --git a/firmware/src/upreset.c b/firmware/src/upreset.c
+index 87f27ca..349005e 100644
+--- a/firmware/src/upreset.c
++++ b/firmware/src/upreset.c
+@@ -160,7 +160,7 @@ static int up_valid(const up_rec_t *r)
+         if(!r->name[0] || (r->np && r->np!=sizeof UP_NATIVE_PARAMS))return 0;
+         for(uint32_t i=0;i<r->np;i++)if(r->cz_extra[i]>191u)return 0;
+         if(r->engine==ENGI_CZ)return cz_patch_valid(r->packed);
+-        if(r->engine==ENGI_FM6){for(uint32_t i=0;i<128u;i++)if(r->packed[i]>127u)return 0;return 1;}
++        if(r->engine==ENGI_FM6){for(uint32_t i=0;i<128u;i++)if(r->packed[i]>127u)return 0;return performance_sound_valid(r->packed+128);}
+ #ifndef UP_HOST
+         p5_patch_t p;memcpy(&p,r->packed,sizeof p);return p5_patch_valid(&p);
+ #else
+@@ -533,7 +533,7 @@ static int up_store_to(uint32_t k,uint32_t tr,const char *name)
+     up_set_name(&r,k,name);
+     if(r.engine==ENGI_FM6 || r.engine==ENGI_PROPHET || (r.engine==ENGI_CZ && t->p[P_E7]==CZ_NATIVE)){
+         r.ver=r.engine==ENGI_FM6?UP_VER_FM:r.engine==ENGI_PROPHET?UP_VER_P5:UP_VER_NATIVE_CZ;
+-        if(r.engine==ENGI_FM6)fm6_pack(fm6_patch[tr],r.packed);
++        if(r.engine==ENGI_FM6){fm6_pack(fm6_patch[tr],r.packed);performance_sound_pack(r.packed+128,tr);}
+         else if(r.engine==ENGI_PROPHET)memcpy(r.packed,p5_patch_of(t),sizeof(p5_patch_t));
+         else memcpy(r.packed,cz_patch[tr].raw,CZ_BYTES);
+         r.np=sizeof UP_NATIVE_PARAMS;
+@@ -584,6 +584,8 @@ static int up_load_to(uint32_t k,uint32_t tr)
+     panic_req |= (uint8_t)(1u << tr);
+     {
+         fm1_irq_off();                                  /* the audio ISR must not see half a sound */
++        performance_sound_reset(tr);
++        if(r->engine==ENGI_FM6 && r->ver==UP_VER_FM)performance_sound_apply(r->packed+128,tr);
+         t->eng_req = up_native_cz(r)?ENGI_CZ:r->engine;
+         for (i = 0; i < P_COUNT; i++)
+             if (!param_kept(i))
+diff --git a/firmware/src/voice.c b/firmware/src/voice.c
+index 3ac9f6e..c0a0668 100644
+--- a/firmware/src/voice.c
++++ b/firmware/src/voice.c
+@@ -16,6 +16,7 @@
+  * over one block (stage 4: the envelope goes to 0, the block's amplitude ramp
+  * declicks it); one of the part's own is restarted in place, as before. Extra UNISON
+  * voices only start when there is room. */
++#include "performance.c"
+ static uint32_t vage;                                   /* voice ages: one clock for every part */
+ static int32_t lfo_wave(track_t *t, uint32_t ph)
+ {
+@@ -386,6 +387,7 @@ static void voice_start(track_t *t, voice_t *v, uint32_t note, uint32_t vel, int
+         v->side = t->sp_alt; t->sp_alt ^= 1u;
+     }                                                   /* sounding: the attack starts from the current level */
+     if (!eng_state_prepare(t)) { v->active = v->gate = 0; return; }
++    performance_start(t, v);
+     e->note_on(t, v);
+     AP_END(AP_ATTACK,attack_start);
+     if (sounding && !e->sampled) {                     /* retrigger / steal: keep phases and filter */
+@@ -788,7 +790,9 @@ static __attribute__((noinline)) uint32_t track_render_audio(track_t *t, int32_t
+             continue;
+         {
+             AP_START(env_start);
+-            env = env_tick(t, v);
++            /* FM6 owns its release lifetime. The generic ADSR must not retire it
++             * first; stage 4 remains the bounded emergency fade for every engine. */
++            env = e==&ENG_FM6 && v->stage!=4u ? 32767 : env_tick(t, v);
+             if (e->ownenv && v->active) {               /* the engine's envelopes (FM6): they end the voice */
+                 if (e->done(t, v)) {                    /* its last block, faded out (the engine's state goes on */
+                     v->active = v->gate = 0;            /* one more block, as Dexed's) */
+@@ -810,6 +814,8 @@ static __attribute__((noinline)) uint32_t track_render_audio(track_t *t, int32_t
+                 m.amp1 = mulq15(m.amp1, 32767 - mulq15(p[P_LPOL] ? lfo : (lfo + 32768) >> 1, p[P_LD_AMP] * 258));
+             if (fade)                                   /* linear to 0 over the fade */
+                 m.amp1 = m.amp1 * (int32_t)(t->xf - 1u) / (int32_t)XF_BLOCKS;
++            if(performance[ti].fade || (e==&ENG_FM6 && performance[ti].amp))
++                m.amp1 = mulq15(m.amp1, performance_gain(t,v,e==&ENG_FM6));
+             m.amp0 = v->env_out;
+             v->env_out = m.amp1;
+             AP_END(AP_ENVELOPE,env_start);
+diff --git a/tests/audio_batch_safety_test.c b/tests/audio_batch_safety_test.c
+index 7d49fc5..e2d8033 100644
+--- a/tests/audio_batch_safety_test.c
++++ b/tests/audio_batch_safety_test.c
+@@ -38,7 +38,8 @@ int main(void)
+     assert(!audio_batch_count && calls==1u);
+     float sum[CTL];int32_t pcm[CTL];vmod_t m={0};m.amp0=m.amp1=32767;
+     for(uint32_t i=0;i<CTL;i++)sum[i]=i%3u==0u?NAN:i%3u==1u?INFINITY:-INFINITY;
+-    fm6_output(sum,pcm,CTL,&m,VOICE_FS,0);
++    fm6_voice_t voice={0};
++    fm6_output(&voice,sum,pcm,CTL,&m,VOICE_FS,0);
+     for(uint32_t i=0;i<CTL;i++)assert(i%3u==0u?pcm[i]==0:i%3u==1u?pcm[i]>0:pcm[i]<0);
+     for(int32_t x=-2000;x<=2000;x++){
+         float v=(float)x/100.0f,expected=v < -16.0f?-16.0f:v > 16.0f?16.0f:v;
+diff --git a/tests/performance_ui_test.c b/tests/performance_ui_test.c
+new file mode 100644
+index 0000000..ab32f5d
+--- /dev/null
++++ b/tests/performance_ui_test.c
+@@ -0,0 +1,30 @@
++/* SPDX-License-Identifier: GPL-3.0-only */
++#define UI_TEST_NO_MAIN
++#include "ui_test.c"
++#include <assert.h>
++int main(void)
++{
++    ui_power_on();engine_load_of(TSEL,ENGI_FM6,0);
++    ui.home=0;ui.page=page_titled("NOTE LENGTH");
++    edit_param(0,1);edit_param(1,1);edit_param(2,20);edit_param(3,1);
++    assert(performance[0].mode==DUR_FIXED && performance[0].length==3 && performance[0].fade==20 && performance[0].overlap);
++    ui.page=page_titled("FM AMP");assert(page_visible(ui.page));
++    edit_param(0,30);edit_param(1,10);edit_param(2,-50);edit_param(3,20);
++    ui.page=page_titled("FM AMP MODE");edit_param(0,1);assert(performance[0].amp);
++    ui.page=page_titled("FM TONE");edit_param(0,-20);edit_param(1,10);edit_param(2,12);
++    performance_t want=performance[0];
++    int saved=up_store_to(0,0,"PERF SOUND");assert(saved==0 || saved==3);assert(up_used(0));
++    uint8_t native[128],extension[16];memcpy(native,up_rec(0)->packed,128);memcpy(extension,up_rec(0)->packed+128,16);
++    native[110]=(native[110]+1u)%32u;
++    int updated=native_update(ENGI_FM6,0,native);assert(updated==0 || updated==3);
++    assert(!memcmp(extension,up_rec(0)->packed+128,16));
++    int renamed=up_rename(0,"PERF RENAMED");assert(renamed==0 || renamed==3);
++    assert(!memcmp(extension,up_rec(0)->packed+128,16));
++    apply_preset(0);assert(!performance[0].amp && performance[0].brightness==64);
++    undo_clear();
++    assert(!up_load(0));assert(!memcmp(&performance[0],&want,sizeof want));
++    undo_step(0);assert(!performance[0].amp);undo_step(1);assert(performance[0].amp);
++    assert(native_page(page_titled("FM AMP"),FAM_ENV) && native_page(page_titled("FM TONE"),FAM_ENV));
++    puts("performance UI: note controls, FM AMP/TONE, ENV navigation, preset bypass defaults, FM sound save/reload and sound undo/redo passed");
++    return 0;
++}
+diff --git a/tests/run_tests.sh b/tests/run_tests.sh
+index c509be2..4aff3eb 100755
+--- a/tests/run_tests.sh
++++ b/tests/run_tests.sh
+@@ -353,6 +353,9 @@ if core && [ $TABLES = 1 ]; then
+         -O2 $FW -- "$OUT/tessera_test" tests/tessera_baseline.txt build/tessera_log
+     t "TESSERA hardening: interrupted edits, mutation bounds, FORM recall and pure archive validation" tessera_hardening_test \
+         -O2 $FW
++    t "Studio performance dual-core audio and MIDI stress" studio_performance_dual:tessera_dual_stress_test -O2 -DSTUDIO_PERFORMANCE_STRESS=1 $FW -pthread
++    t "Studio performance: duration, release, tone and recording" studio_performance_test -O2 $FW
++    t "Studio performance UI and sound saves" performance_ui_test -O1 $FW
+     t "Studio features: weighted harmony, SONG bars, MIDI lifecycle and one-pass REC" tess_features_test -O2 $FW
+     t "Studio storage: all banks, compact timing, rename and track lifecycle" studio_storage_test -O1 $FW -- python3 tests/studio_upgrade_check.py "$OUT/studio_storage_test"
+     t "Studio feature UI: controls, REC undo/redo and overwrite protection" tess_features_ui_test -O1 -DMELODEE_USB_AUDIO=1 $FW
+diff --git a/tests/studio_performance_test.c b/tests/studio_performance_test.c
+new file mode 100644
+index 0000000..da14fee
+--- /dev/null
++++ b/tests/studio_performance_test.c
+@@ -0,0 +1,122 @@
++/* SPDX-License-Identifier: GPL-3.0-only */
++#define TESS_FEATURE_TEST_NO_MAIN
++#include "tess_features_test.c"
++static void timing(void)
++{
++    reset();song.playing=1;tessera.mode[0]=TESS_ENG_EUCLID;
++    performance[0].mode=DUR_HIT;
++    features_duration_on(&trk[0],60,100);
++    tessera.euclid[0].pulses=0;
++    for(uint32_t k=0;k<20;k++){tessera_clock_step(&trk[0]);features_duration_tick(&trk[0],1000);}
++    assert(duration_run[0][0].on && trk[0].v[0].gate);
++    features_duration_on(&trk[0],62,90);
++    assert(!trk[0].v[0].gate);
++    for(uint32_t k=0;k<4;k++)assert(!duration_run[0][k].on || duration_run[0][k].note==62);
++    performance[0].mode=DUR_FIXED;performance[0].overlap=1;performance[0].length=3;
++    features_duration_stop(&trk[0]);
++    features_duration_on(&trk[0],60,100);
++    features_duration_on(&trk[0],64,100);
++    uint32_t quarter=seq_div_samples(0);
++    assert(duration_run[0][0].left==quarter && duration_run[0][1].left==quarter);
++    features_duration_tick(&trk[0],quarter-1);assert(duration_active&1);
++    features_duration_tick(&trk[0],1);assert(!(duration_active&1));
++    for(uint32_t k=0;k<8;k++)features_duration_on(&trk[0],60+k,100);
++    uint32_t held=0;for(uint32_t k=0;k<4;k++)held+=duration_run[0][k].on;assert(held==4);
++    trk[0].p[P_MUTE]=1;features_duration_tick(&trk[0],1);assert(!(duration_active&1));
++    puts("performance: hold across Euclid rests, next-hit release, independent fixed time, four-key overlap limit and mute cleanup passed");
++}
++static void capture_lengths(void)
++{
++    for(uint32_t mode=DUR_FIXED;mode<=DUR_HIT;mode++){
++        reset();track_t *t=&trk[0];
++        t->p[P_SLEN]=16;t->p[P_SDIV]=2;
++        tessera.mode[0]=TESS_ENG_EUCLID;tessera.euclid[0].pulses=4;
++        performance[0].mode=mode;performance[0].length=3;
++        assert(!features_capture_prepare(t));rec_set(t,1);
++        seq_start();advance(1);
++        uint32_t period=seq_div_samples(2);advance(period*16+CTL);
++        assert(!(song.rec&1) && song.playing && captured(0)==4);
++        for(uint32_t i=0;i<RECORD_MAX;i++)if(recording[i].vel){
++            uint32_t d=recording[i].duration << (recording[i].owner>>5);
++            /* Last note is sealed at capture end; earlier notes span four
++             * steps instead of being shortened at every rest. */
++            if((recording[i].step&63)<12)assert(d>RECORD_UNIT*3 && d<=RECORD_UNIT*4+RECORD_UNIT*CTL/period+2);
++            assert(!(recording_flags[i]&1));
++        }
++        seq_stop();assert(!duration_active);
++        tessera.mode[0]=0;seq_start();advance(period*16);seq_stop();
++        assert(!feature_run.pending);
++    }
++    puts("performance: fixed and next-hit captures retain multi-step durations; one pass seals holds, playback/STOP leave no pending MIDI keys");
++}
++static void fm_audio(void)
++{
++    reset();track_t *t=&trk[0];host_preset(t,ENGI_FM6,11);
++    /* A deliberately slow native release must survive generic P_REL=0. */
++    for(uint32_t k=0;k<6;k++)fm6_patch[0][k*FP_OP+FP_R1+3]=20;
++    fm6_pgen[0]++;t->p[P_REL]=0;
++    trk_note_on(t,60,100);int32_t pcm[CTL];
++    for(uint32_t b=0;b<400;b++)track_render(t,pcm,CTL);
++    trk_note_off(t,60);
++    for(uint32_t b=0;b<20;b++)track_render(t,pcm,CTL);
++    uint32_t active=0;for(uint32_t k=0;k<NVOICE;k++)active+=t->v[k].active;assert(active);
++    performance[0].fade=5;
++    for(uint32_t b=0;b<500;b++)track_render(t,pcm,CTL);
++    /* A newly keyed note snapshots its own release edge. */
++    trk_note_on(t,64,100);for(uint32_t b=0;b<100;b++)track_render(t,pcm,CTL);
++    trk_note_off(t,64);for(uint32_t b=0;b<100;b++)track_render(t,pcm,CTL);
++    for(uint32_t k=0;k<NVOICE;k++)if(t->v[k].note==64)assert(!t->v[k].active);
++    uint8_t patch[FP_SIZE+1];memcpy(patch,fm6_patch[0],sizeof patch);
++    performance[0].contour=100;performance[0].brightness=32;performance[0].amount=90;
++    fm6_eff_build(t);assert(!memcmp(patch,fm6_patch[0],sizeof patch));
++    uint32_t car=fm6_carriers(fm6_eff[0].p[FP_ALG]);
++    for(uint32_t k=0;k<6;k++)if(car>>k&1)assert(!memcmp(patch+k*FP_OP,fm6_eff[0].p+k*FP_OP,FP_OP));
++    voice_t v={.active=1,.gate=1};
++    /* Exercise ADSR using the actual allocated voice address. */
++    t->v[0]=v;performance[0]=performance_default();performance[0].amp=1;
++    performance[0].attack=5;performance[0].release=5;performance_start(t,&t->v[0]);
++    int32_t before=0;
++    for(uint32_t b=0;b<30;b++){int32_t a=performance_gain(t,&t->v[0],1);assert(a>=before);before=a;}
++    t->v[0].gate=0;for(uint32_t b=0;b<100;b++)performance_gain(t,&t->v[0],1);assert(!t->v[0].active);
++    puts("performance: FM6 native release survives generic ADSR, user fade ends voices, FM AMP attack/release and carrier-safe non-destructive tone mapping passed");
++}
++static void fade_overrides_fast_native_release(void)
++{
++    reset();track_t *t=&trk[0];host_preset(t,ENGI_FM6,24);
++    uint8_t patch[FP_SIZE+1];fm6_unpack(FM6_INIT,patch);
++    uint8_t *op=patch+5u*FP_OP;
++    for(uint32_t k=0;k<4;k++)op[FP_R1+k]=99;
++    op[FP_L1]=op[FP_L1+1]=op[FP_L1+2]=99;op[FP_L1+3]=0;
++    fm6_put_patch(0,patch,1);performance[0].fade=20;
++    trk_note_on(t,60,100);int32_t pcm[CTL];uint32_t voice=0;
++    for(uint32_t k=0;k<NVOICE;k++)if(t->v[k].gate)voice=k;
++    for(uint32_t b=0;b<100;b++)track_render(t,pcm,CTL);
++    trk_note_off(t,60);uint64_t energy=0;
++    for(uint32_t b=0;b<50;b++){track_render(t,pcm,CTL);for(uint32_t i=0;i<CTL;i++)energy+=(uint32_t)abs(pcm[i]);}
++    assert(energy && t->v[voice].active && fm6_state(t,&t->v[voice])->down);
++    for(uint32_t b=0;b<800;b++)track_render(t,pcm,CTL);
++    assert(!t->v[voice].active);
++    puts("performance: explicit FM6 FADE retains native key state during outer release, so fast R4 cannot defeat it; voice retires at fade end");
++}
++static void declick(void)
++{
++    fm6_voice_t s={0};vmod_t m={.amp0=32767,.amp1=32767};
++    float sum[CTL];int32_t out[CTL];for(uint32_t i=0;i<CTL;i++)sum[i]=-0.1f;
++    s.output_last=1000;s.correction_pending=1;
++    fm6_output(&s,sum,out,CTL,&m,VOICE_FS,0);assert(out[0]==1000);
++    for(uint32_t k=0;k<8;k++)fm6_output(&s,sum,out,CTL,&m,VOICE_FS,0);
++    assert(!s.correction);
++    puts("performance: FM6 reused-voice first sample continuity and bounded correction settling passed");
++}
++static void save_versions(void)
++{
++    reset();uint8_t legacy[TESS_FEATURE_BYTES],full[TESS_FULL_BYTES],copy[TESS_FULL_BYTES];
++    harm_track[0].bias=72;features_legacy_pack(legacy);
++    performance[0].amp=1;performance[0].mode=DUR_HIT;performance[0].fade=25;
++    features_apply(legacy);assert(!performance[0].amp && performance[0].mode==DUR_STEP && harm_track[0].bias==72);
++    for(uint32_t k=0;k<NTRK;k++)performance[k]=(performance_t){2,5,127,1,1,127,127,127,127,127,127,127,127};
++    tess_full_pack(full);tessera_reset();assert(tess_full_unpack(full,sizeof full));tess_full_pack(copy);assert(!memcmp(full,copy,sizeof full));
++    full[sizeof full-1]=128;assert(!tess_full_valid(full,sizeof full));
++    puts("performance: HMF1 migration defaults to bypass, full-range HMF2 round-trip and reserved-bit rejection passed");
++}
++int main(void){timing();capture_lengths();fm_audio();fade_overrides_fast_native_release();declick();save_versions();return 0;}
+diff --git a/tests/studio_storage_test.c b/tests/studio_storage_test.c
+index 1138b4c..fbf049a 100644
+--- a/tests/studio_storage_test.c
++++ b/tests/studio_storage_test.c
+@@ -9,7 +9,9 @@ static void verify_migrated(void)
+     uint8_t want[TESS_FULL_BYTES],got[TESS_FULL_BYTES];
+     for(uint32_t slot=0;slot<4u;slot++){
+         tessera_reset();project_load(slot);tess_full_pack(got);memcpy(want,expected,sizeof want);want[TESSERA_PK_BYTES+7u]=(uint8_t)(20u+slot);
+-        assert(proj_cur==slot && !memcmp(want,got,sizeof got));
++        uint8_t loaded[TESS_FULL_BYTES];memcpy(loaded,got,sizeof loaded);
++        assert(tess_full_unpack(want,sizeof want));tess_full_pack(want);
++        assert(proj_cur==slot && !memcmp(want,loaded,sizeof loaded));
+         assert(song.g[G_BPM]==97 && trk[0].step[0].note[0]==62u);
+     }
+ }
+@@ -45,6 +47,7 @@ static void compact_and_tracks(void)
+         memcpy(trk[k].p+P_SLEN,pattern_at(k,0)->timing,4u*sizeof(int16_t));memcpy(trk[k].step,pattern_at(k,0)->step,sizeof trk[k].step);
+     }
+     for(uint32_t r=0;r<CHAIN_ROWS;r++)for(uint32_t k=0;k<NTRK;k++)chain_patterns[r][k]=(uint8_t)((r+k)%NPAT);
++    for(uint32_t k=0;k<NTRK;k++){performance[k].attack=20+k;performance[k].amp=1;performance[k].mode=DUR_FIXED;}
+     song.sel=0;uint8_t state[TESS_FULL_BYTES];tess_full_pack(state);
+     assert(!project_save_as(0,"COMPACT"));project_load(0);
+     uint8_t got[TESS_FULL_BYTES];tess_full_pack(got);assert(!memcmp(state,got,sizeof got));
+@@ -55,6 +58,7 @@ static void compact_and_tracks(void)
+     for(uint32_t r=0;r<CHAIN_ROWS;r++)for(uint32_t k=0;k<NTRK;k++)assert(chain_patterns[r][k]==(r+k)%NPAT);
+     assert(!project_rename(0,"RENAMED"));project_load(0);tess_full_pack(got);assert(!memcmp(state,got,sizeof got));
+     assert(!track_remove(1));assert(trk_n()==3&&tessera.mode[1]==TESS_ENG_MARKOV&&tessera.mode[2]==TESS_ENG_MORPH&&harm_track[1].channel==11&&harm_track[2].channel==12);
++    assert(performance[1].attack==22 && performance[2].attack==23 && !performance[3].amp);
+     assert(!tessera.mode[3]&&!harm_track[3].midi);
+     track_add();assert(trk_n()==4&&!tessera.mode[3]&&!harm_track[3].midi);
+     puts("studio: all 32 banks retain distinct notes/timings and SONG assignments; rename retains features; track removal shifts generator/routing ownership and add resets only its new track");
+diff --git a/tests/tess_features_test.c b/tests/tess_features_test.c
+index 7a266ab..97767d0 100644
+--- a/tests/tess_features_test.c
++++ b/tests/tess_features_test.c
+@@ -226,8 +226,12 @@ static void persistence(void)
+     assert(tess_full_unpack(old, sizeof old) && harm_track[0].mode == HARM_OFF && !harm_track[0].midi);
+     puts("features: full settings/SONG round trip, malformed load atomicity and legacy-180-byte import passed");
+ }
++
++#ifndef TESS_FEATURE_TEST_NO_MAIN
+ int main(void)
+ {
+     harmony(); midi(); capture(); capture_edges(); song_time(); persistence();
+     return 0;
+ }
++
++#endif
+diff --git a/tests/tessera_dual_stress_test.c b/tests/tessera_dual_stress_test.c
+index 7c92fae..2444ddf 100644
+--- a/tests/tessera_dual_stress_test.c
++++ b/tests/tessera_dual_stress_test.c
+@@ -49,6 +49,9 @@ static void run(int parallel, int32_t *pcm, uint8_t *saved)
+         tessera_evolve_knob(1, 1);
+         tessera_evolve_knob(2, 20);
+         harm_track[tr] = (harm_track_t){HARM_KEY,36,84,12,60,80,1,(uint8_t)tr};
++#ifdef STUDIO_PERFORMANCE_STRESS
++        performance[tr]=(performance_t){tr&1u?DUR_HIT:DUR_FIXED,3,12,1,1,10,20,100,15,48,72,82,18};
++#endif
+         rec_set(&trk[tr], 1);
+     }
+     song.sel = 1;
+@@ -67,6 +70,13 @@ static void run(int parallel, int32_t *pcm, uint8_t *saved)
+             /* Keep all four modes active while editing their parameters. */
+             edit[(seed >> 20) & 3u](1u + ((seed >> 22) % 3u), seed & 0x100u ? 1 : -1);
+         }
++#ifdef STUDIO_PERFORMANCE_STRESS
++        if(block==STRESS_BLOCKS-2048u)seq_stop();
++        if(!(block%97u)){
++            performance[1].brightness=(uint8_t)(40+(block%49));
++            performance[3].contour=(uint8_t)(48+(block%33));
++        }
++#endif
+         mix_block(out, CTL);
+         drain_midi(parallel, block);
+         assert(!p5_pending && !fm6_pending && !fx_bus_pending);
+@@ -84,7 +94,7 @@ static void run(int parallel, int32_t *pcm, uint8_t *saved)
+     seq_stop();
+     drain_midi(parallel, STRESS_BLOCKS);
+     for (uint32_t tr = 0; tr < TESSERA_TRACKS; tr++) {
+-        assert(!tessera.active_gate[tr] && !trk[tr].seq_n);
++        assert(!tessera.active_gate[tr] && !trk[tr].seq_n && !(duration_active & (1u<<tr)));
+         for (uint32_t v = 0; v < NVOICE; v++) assert(!trk[tr].v[v].gate);
+     }
+     serial_render = 0;
+diff --git a/tests/ui_render.c b/tests/ui_render.c
+index 490b88b..ebc0237 100644
+--- a/tests/ui_render.c
++++ b/tests/ui_render.c
+@@ -2040,6 +2040,15 @@ int main(int argc, char **argv)
+             for (k = 0; k < UI_RENDER_SHOW; k++)    /* (the suite: NIGHT DAY CONTRAST; -DUI_RENDER_SHOW=8 all) */
+                 if (!strcmp(UI_PALETTES[p].name, SHOW[k])) write_ppm(out, SHOW[k], S_NAME[s]);
+         }
++    {   /* Studio controls: export reviewable frames as well as the generic sweep. */
++        static const char *const title[]={"NOTE LENGTH","FM AMP","FM TONE","FM AMP MODE"};
++        static const char *const file[]={"studio_note_length","studio_fm_amp","studio_fm_tone","studio_fm_amp_mode"};
++        for(uint32_t k=0;k<4;k++){
++            state();pal(0);eng(ENGI_FM6);go_title(title[k]);
++            performance[song.sel]=(performance_t){DUR_HIT,3,12,1,1,20,30,100,25,48,72,82,18};
++            cur_name=title[k];draw(-1);lint();write_ppm(out,"NIGHT",file[k]);
++        }
++    }
+     render_pixel = 1;                               /* every screen again in Melodee Pixel (NIGHT) */
+     for (s = 0; s < S_COUNT; s++) {
+         char name[64];
+diff --git a/tests/ui_test.c b/tests/ui_test.c
+index a362d2f..a88bcc4 100644
+--- a/tests/ui_test.c
++++ b/tests/ui_test.c
+@@ -3308,7 +3308,7 @@ static int test_edit_cycle(void)
+ {
+     static const char *const CYC_A[] = {"EDIT 1", "EDIT 2", "VOICE", "EDIT 1"};   /* (VOICE: VOICE 1-3's list) */
+     static const char *const CYC_F[] = {"EDIT 1", "EDIT 2", "STORE", "ALGO", "FREQ", "OUT", "EG RATE", "EG LVL", "SCALE",
+-                                        "CURVE", "PITCH EG", "PITCH LV", "FM LFO", "FM BEND", "VOICE", "EDIT 1"};
++                                        "CURVE", "PITCH EG", "PITCH LV", "FM LFO", "FM BEND", "VOICE", "FM AMP", "FM TONE", "FM AMP MODE", "EDIT 1"};
+     static const char *const CYC_D[] = {"EDIT 1", "EDIT 2", "OP1 ENV", "OP2 ENV", "OP3 ENV", "OP4 ENV",
+                                         "OP LEVEL", "VOICE", "EDIT 1"};
+     int bad = 0, ok;
+@@ -3335,7 +3335,7 @@ static int test_edit_cycle(void)
+     bad += check("PHASE DCW1 knob edits its saved parameter", TSEL->p[P_FM1_ATK] > 0);
+ #endif
+     set_engine_of(TSEL, ENGI_FM6);
+-    bad += check("EDIT cycle (FM6): EDIT 1 EDIT 2, FM6's 16 pages, VOICE VOICE 2",
++    bad += check("EDIT cycle (FM6): native pages, VOICE and Studio performance controls",
+                  TSEL->eng_req == ENGI_FM6 && engine_cycle(CYC_F, NELEM(CYC_F)));
+     (void)CYC_D;
+     go_title("OP2 ENV"); ui.fam_last[FAM_EDIT] = ui.page;

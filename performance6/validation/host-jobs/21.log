@@ -1,0 +1,2 @@
+== canvas drawing overlaps DMA without changing pending pixels
+LCD overlap: drawing overlaps DMA, partial/large/fill transfers preserve their source bytes

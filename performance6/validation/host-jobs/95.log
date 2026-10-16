@@ -1,0 +1,5 @@
+== paired FM6/Prophet voices: serial/concurrent sample equality and eight-voice allocation
+Shared FX bus: 8 three-effect chains, four live synth tracks, serial/concurrent bit equality and joins: OK
+Shared FX bus: worker fault discards result, keeps allocation owned, resets history and continues serially: OK
+Audio batch: corrupt bounds retire worker, drop partial PCM and never replay advanced state: OK
+dual-core: 1536 FM6 + 348 Prophet serial/concurrent cases identical; 0 FM6 / 0 Prophet pairs; eight-voice allocation, retire mid-song, busy/offline/wrap ok

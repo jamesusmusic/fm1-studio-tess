@@ -1,0 +1,77 @@
+== Recording undo: whole takes, motion, early stops, redo, isolation and memory
+ui: latched recording keeps one undo snapshot across multiple loops            ok
+ui: manual REC disarm finalizes the complete multi-loop undo slot              ok
+ui: undo restores notes and motion from before all latched loops               ok
+ui: completed take owns one undo slot while playback continues                 ok
+ui: EDIT undoes a whole take: overwritten note, chord/ties, exact timing and motion ok
+ui: whole-take undo preserves another track's automation                       ok
+ui: EDIT + OCT+ restores the complete finalized and quantized take             ok
+ui: one slot cannot undo or redo past either end                               ok
+ui: completed take owns one undo slot while playback continues                 ok
+ui: EDIT undoes a whole take: overwritten note, chord/ties, exact timing and motion ok
+ui: whole-take undo preserves another track's automation                       ok
+ui: EDIT + OCT+ restores the complete finalized and quantized take             ok
+ui: one slot cannot undo or redo past either end                               ok
+ui: completed take owns one undo slot while playback continues                 ok
+ui: EDIT undoes a whole take: overwritten note, chord/ties, exact timing and motion ok
+ui: whole-take undo preserves another track's automation                       ok
+ui: EDIT + OCT+ restores the complete finalized and quantized take             ok
+ui: one slot cannot undo or redo past either end                               ok
+ui: completed take owns one undo slot while playback continues                 ok
+ui: EDIT undoes a whole take: overwritten note, chord/ties, exact timing and motion ok
+ui: whole-take undo preserves another track's automation                       ok
+ui: EDIT + OCT+ restores the complete finalized and quantized take             ok
+ui: one slot cannot undo or redo past either end                               ok
+ui: completed take owns one undo slot while playback continues                 ok
+ui: EDIT undoes a whole take: overwritten note, chord/ties, exact timing and motion ok
+ui: whole-take undo preserves another track's automation                       ok
+ui: EDIT + OCT+ restores the complete finalized and quantized take             ok
+ui: one slot cannot undo or redo past either end                               ok
+ui: completed take owns one undo slot while playback continues                 ok
+ui: EDIT undoes a whole take: overwritten note, chord/ties, exact timing and motion ok
+ui: whole-take undo preserves another track's automation                       ok
+ui: EDIT + OCT+ restores the complete finalized and quantized take             ok
+ui: one slot cannot undo or redo past either end                               ok
+ui: undo during capture is refused without interrupting the take               ok
+ui: early stop/disarm seals held duration before undo                          ok
+ui: early take undo restores the overwritten event                             ok
+ui: early take redo restores the sealed duration                               ok
+ui: undo during capture is refused without interrupting the take               ok
+ui: early stop/disarm seals held duration before undo                          ok
+ui: early take undo restores the overwritten event                             ok
+ui: early take redo restores the sealed duration                               ok
+ui: arm/cancel leaves the previous take undo available                         ok
+ui: a pass without input keeps the previous take undo                          ok
+ui: a new take replaces the single slot                                        ok
+ui: there is no second recording undo level                                    ok
+ui: a bank switch prevents undo from writing to the wrong pattern              ok
+ui: switching back does not resurrect an old take undo                         ok
+ui: project restore discards recording history                                 ok
+ui: motion-only take is undoable without changing notes                        ok
+ui: motion undo restores overwritten points and removes all new lanes          ok
+ui: motion-only redo restores every recorded lane                              ok
+ui: motion redo reproduces the finished automation                             ok
+ui: motion-only take is undoable without changing notes                        ok
+ui: motion undo restores overwritten points and removes all new lanes          ok
+ui: native motion undo restores the synth's base patch                         ok
+ui: motion-only redo restores every recorded lane                              ok
+ui: motion redo reproduces the finished automation                             ok
+ui: undo relocates saved events without overwriting another bank's reused slot ok
+ui: redo also preserves unrelated events after relocation                      ok
+ui: recording snapshot has one bounded allocation                              ok
+ui: exhausted undo memory leaves recording operational and reports the limitation ok
+ui: memory returning mid-take cannot produce a partial-take undo               ok
+ui: audio memory can reclaim the snapshot rather than losing engine allocation ok
+ui: a reclaimed active snapshot cannot restart halfway through the take        ok
+ui: motion take undo frees the new lane                                        ok
+ui: redo refuses full motion capacity without changing notes or automation     ok
+ui: redo remains available after motion capacity returns                       ok
+ui: motion recording takes priority over an older bulk note undo               ok
+ui: a newer manual motion edit undoes before the recording                     ok
+ui: recording undo remains available after undoing the newer edit              ok
+ui: undo removes all new events before a shared-pool capacity check            ok
+ui: full note pool refuses redo without overwriting unrelated events           ok
+ui: redo retries successfully when a note slot is freed                        ok
+ui: one slot can restore a full 1024-event pattern byte-for-byte               ok
+ui: full-pattern redo restores the replacement without losing any event        ok
+Recording undo tests passed

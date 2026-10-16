@@ -1,0 +1,31 @@
+== first boot: foreign settings, safe defaults, ownership and interrupted cleanup
+persist: foreign PER5 extension resets settings and enables stereo USB      ok
+persist: cleanup flushes warning and writes only one settings sector        ok
+persist: cleaned foreign settings need no write on subsequent boot          ok
+persist: erased stock storage and random sectors reset retained RAM once    ok
+persist: CRC-valid garbage with only a PER5 magic is rejected               ok
+persist: legacy Melodee settings and template survive one ownership write   ok
+persist: owned Melodee settings retain deliberate USB OFF and need no rewrite ok
+persist: owned malformed critical settings normalize to defaults once       ok
+persist: normalized settings are stable on the next boot                    ok
+persist: unknown future Melodee ownership remains protected for recovery    ok
+persist: cut cleanup boots with safe RAM defaults and retains prior copy    ok
+persist: retry commits defaults despite unchanged RAM and preserves music   ok
+persist: successful cleanup retry is not repeated                           ok
+persist: cut cleanup boots with safe RAM defaults and retains prior copy    ok
+persist: retry commits defaults despite unchanged RAM and preserves music   ok
+persist: successful cleanup retry is not repeated                           ok
+persist: cut cleanup boots with safe RAM defaults and retains prior copy    ok
+persist: retry commits defaults despite unchanged RAM and preserves music   ok
+persist: successful cleanup retry is not repeated                           ok
+persist: cut cleanup boots with safe RAM defaults and retains prior copy    ok
+persist: retry commits defaults despite unchanged RAM and preserves music   ok
+persist: successful cleanup retry is not repeated                           ok
+persist: incompatible project with valid CRC is quarantined before BOOT load ok
+persist: incompatible project with valid CRC is quarantined before BOOT load ok
+persist: incompatible project with valid CRC is quarantined before BOOT load ok
+persist: incompatible project with valid CRC is quarantined before BOOT load ok
+persist: valid current Melodee projects remain available after settings reset ok
+persist: alien template engine cannot boot; valid settings and raw template survive ok
+persist: alien template engine cannot boot; valid settings and raw template survive ok
+settings origin test passed

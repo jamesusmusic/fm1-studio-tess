@@ -1,0 +1,119 @@
+== resource lifetimes, cache eviction, tails and capacity
+persist: each disjoint bank can be filled exactly without spanning its boundary ok
+persist: each disjoint bank can be filled exactly without spanning its boundary ok
+persist: each disjoint bank can be filled exactly without spanning its boundary ok
+persist: each disjoint bank can be filled exactly without spanning its boundary ok
+persist: all SRAM tails contribute usable capacity                          ok
+persist: combined capacity cannot be returned as one contiguous allocation  ok
+persist: failed growth leaves original allocation and contents intact       ok
+persist: overflowing requests fail without releasing a live allocation      ok
+persist: exhaustion does not overwrite another bank                         ok
+persist: exhaustion does not overwrite another bank                         ok
+persist: exhaustion does not overwrite another bank                         ok
+persist: released tail is reusable and rounded allocation is zeroed         ok
+persist: same-size reuse preserves contents                                 ok
+persist: 8192 allocation/release transitions stay aligned, inside one bank and disjoint ok
+persist: each disjoint bank can be filled exactly without spanning its boundary ok
+persist: each disjoint bank can be filled exactly without spanning its boundary ok
+persist: each disjoint bank can be filled exactly without spanning its boundary ok
+persist: each disjoint bank can be filled exactly without spanning its boundary ok
+persist: each disjoint bank can be filled exactly without spanning its boundary ok
+persist: all SRAM tails contribute usable capacity                          ok
+persist: combined capacity cannot be returned as one contiguous allocation  ok
+persist: failed growth leaves original allocation and contents intact       ok
+persist: overflowing requests fail without releasing a live allocation      ok
+persist: exhaustion does not overwrite another bank                         ok
+persist: exhaustion does not overwrite another bank                         ok
+persist: exhaustion does not overwrite another bank                         ok
+persist: exhaustion does not overwrite another bank                         ok
+persist: released tail is reusable and rounded allocation is zeroed         ok
+persist: same-size reuse preserves contents                                 ok
+persist: 8192 allocation/release transitions stay aligned, inside one bank and disjoint ok
+persist: validated data-cache bank adds 28 KiB, the UI's 14 KiB apart       ok
+persist: native FM cache writes across bank evictions                       ok
+persist: native FM cache writes across bank evictions                       ok
+persist: native FM cache writes across bank evictions                       ok
+persist: native FM cache writes across bank evictions                       ok
+persist: native CZ cache writes across bank evictions                       ok
+persist: native CZ cache writes across bank evictions                       ok
+persist: native CZ cache writes across bank evictions                       ok
+persist: native CZ cache writes across bank evictions                       ok
+persist: native CZ cache writes across bank evictions                       ok
+persist: native CZ cache writes across bank evictions                       ok
+persist: native CZ cache writes across bank evictions                       ok
+persist: native CZ cache writes across bank evictions                       ok
+persist: general cache writes across bank evictions                         ok
+persist: general cache writes across bank evictions                         ok
+persist: general cache writes across bank evictions                         ok
+persist: general cache writes across bank evictions                         ok
+persist: browsing every preset name/slot does no flash reads                ok
+persist: FM cache reload preserves each independent patch                   ok
+persist: FM cache reload preserves each independent patch                   ok
+persist: FM cache reload preserves each independent patch                   ok
+persist: FM cache reload preserves each independent patch                   ok
+persist: CZ cache reload preserves each independent patch                   ok
+persist: CZ cache reload preserves each independent patch                   ok
+persist: CZ cache reload preserves each independent patch                   ok
+persist: CZ cache reload preserves each independent patch                   ok
+persist: CZ cache reload preserves each independent patch                   ok
+persist: CZ cache reload preserves each independent patch                   ok
+persist: CZ cache reload preserves each independent patch                   ok
+persist: CZ cache reload preserves each independent patch                   ok
+persist: general cache reload preserves parameters                          ok
+persist: general cache reload preserves parameters                          ok
+persist: general cache reload preserves parameters                          ok
+persist: general cache reload preserves parameters                          ok
+persist: one bank cache: user, FM6, CZ-1 (both views) and Prophet banks interleaved read back intact ok
+persist: one bank cache: a user bank evicted after an edit keeps its index (the new name, no reload) ok
+persist: one bank cache: the largest bank's size, not the sum (8208 + 3600 B before) ok
+persist: missing flash refuses mutations without evicting committed indexes ok
+persist: failed missing-flash writes preserve stored patches                ok
+persist: default engine setup and derived caches stay within 16 KiB         ok
+persist: four maximum engine states fit without effect buffers              ok
+persist: capacity exhaustion returns failure and preserves live memory      ok
+persist: zero-byte requests release rather than return an arena pointer     ok
+resources: default engine bytes 13812, worst audio bytes 30448, host arena 204800
+persist: native FM cache writes across bank evictions                       ok
+persist: native FM cache writes across bank evictions                       ok
+persist: native FM cache writes across bank evictions                       ok
+persist: native FM cache writes across bank evictions                       ok
+persist: native CZ cache writes across bank evictions                       ok
+persist: native CZ cache writes across bank evictions                       ok
+persist: native CZ cache writes across bank evictions                       ok
+persist: native CZ cache writes across bank evictions                       ok
+persist: native CZ cache writes across bank evictions                       ok
+persist: native CZ cache writes across bank evictions                       ok
+persist: native CZ cache writes across bank evictions                       ok
+persist: native CZ cache writes across bank evictions                       ok
+persist: general cache writes across bank evictions                         ok
+persist: general cache writes across bank evictions                         ok
+persist: general cache writes across bank evictions                         ok
+persist: general cache writes across bank evictions                         ok
+persist: browsing every preset name/slot does no flash reads                ok
+persist: FM cache reload preserves each independent patch                   ok
+persist: FM cache reload preserves each independent patch                   ok
+persist: FM cache reload preserves each independent patch                   ok
+persist: FM cache reload preserves each independent patch                   ok
+persist: CZ cache reload preserves each independent patch                   ok
+persist: CZ cache reload preserves each independent patch                   ok
+persist: CZ cache reload preserves each independent patch                   ok
+persist: CZ cache reload preserves each independent patch                   ok
+persist: CZ cache reload preserves each independent patch                   ok
+persist: CZ cache reload preserves each independent patch                   ok
+persist: CZ cache reload preserves each independent patch                   ok
+persist: CZ cache reload preserves each independent patch                   ok
+persist: general cache reload preserves parameters                          ok
+persist: general cache reload preserves parameters                          ok
+persist: general cache reload preserves parameters                          ok
+persist: general cache reload preserves parameters                          ok
+persist: one bank cache: user, FM6, CZ-1 (both views) and Prophet banks interleaved read back intact ok
+persist: one bank cache: a user bank evicted after an edit keeps its index (the new name, no reload) ok
+persist: one bank cache: the largest bank's size, not the sum (8208 + 3600 B before) ok
+persist: missing flash refuses mutations without evicting committed indexes ok
+persist: failed missing-flash writes preserve stored patches                ok
+persist: default engine setup and derived caches stay within 16 KiB         ok
+persist: four maximum engine states fit without effect buffers              ok
+persist: capacity exhaustion returns failure and preserves live memory      ok
+persist: zero-byte requests release rather than return an arena pointer     ok
+resources: default engine bytes 13812, worst audio bytes 30448, host arena 190464
+Resource test passed

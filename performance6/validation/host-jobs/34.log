@@ -1,0 +1,4 @@
+== USB audio: four isolated track stems through the real mixer
+USB mode packets: all four lanes survive a muted master, stereo disables stems, PCM16/24 transitions: OK
+USB stereo: exact post-insert/send/pan/master/limiter copy, no stem collection: OK
+USB track capture: tracks 1..4 isolated, ignored legacy effects, level, pan/master isolation, stale blocks: OK

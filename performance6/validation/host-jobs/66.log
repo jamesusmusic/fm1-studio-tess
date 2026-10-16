@@ -1,0 +1,52 @@
+== Sound designer: native recipes, dependencies, compare, discard and save
+ui: START steps CURRENT, INIT, then the goals; another engine starts from INIT ok
+ui: START CURRENT preserves the exact sound                                    ok
+ui: SAVE compares against exact original, including opaque bytes               ok
+ui: original cannot be changed while comparing                                 ok
+ui: second SAVE returns to exact edited draft                                  ok
+ui: discard restores exact original without touching pattern or arp            ok
+ui: engine change happens on BEGIN and retains pattern                         ok
+ui: cross-engine compare/discard restores the original native patch            ok
+ui: a control that sounds changes nothing else                                 ok
+ui: turning a dim WIDTH A switches PULSE A on and says so                      ok
+ui: turning Poly-Mod ENV AMT pairs it with a destination                       ok
+ui: Poly-Mod PW A first needs pulse A                                          ok
+ui: one turn switches both of its paths on                                     ok
+ui: turning VOICES switches native unison on                                   ok
+ui: turning LFO RATE connects wave, initial depth and destination              ok
+ui: turning filter REL switches release and the filter envelope on             ok
+ui: a silent operator's level turned down stays silent                         ok
+ui: turned up, the displayed OP3 (not reversed OP4) is switched on             ok
+ui: turning CZ vibrato RATE gives it depth                                     ok
+ui: turning a line-2 DETUNE selects 1+2'                                       ok
+ui: FEATURES is the first stage on every melodic engine                        ok
+ui: drum kits have no FEATURES stage                                           ok
+ui: every feature switches off and on through its knob                         ok
+ui: renders repeat exactly (the difference below is the feature's)             ok
+ui: every feature changes the audio of the real DSP when switched on           ok
+ui: Prophet FEATURES make WIDTH A, Poly-Mod and unison controls live           ok
+ui: Poly-Mod OFF opens its destinations and keeps its amounts                  ok
+ui: discard after FEATURES restores the original sound                         ok
+ui: FM OP3's knob switches OP3 (the patch keeps OP6 first)                     ok
+ui: FM with every carrier off is reported silent                               ok
+ui: one carrier on clears the warning                                          ok
+ui: designing never starts playback or a note by itself                        ok
+ui: a key plays the designed sound while designing                             ok
+ui: ALL pages: every eligible page, each FM operator switched on, nothing switched off ok
+ui: every engine and goal recipe produces audio through the real DSP           ok
+ui: all CZ goal recipes retain valid native envelope records                   ok
+ui: wizard keys stay playable and do not become layer/grid shortcuts           ok
+ui: Save as user.. keeps the design and opens USER, as SAVE does               ok
+ui: its slot is named with the existing NAME screen                            ok
+ui: the designed tone is saved to the native bank with its name                ok
+ui: Keep the sound leaves with the draft, nothing restored                     ok
+ui: OCT- before the first stage asks with the designer's sheet                 ok
+ui: OCT- closes the sheet and the design goes on                               ok
+ui: SELECT turns the pages                                                     ok
+ui: PRESETS jumps to the next stage's first page                               ok
+ui: external project load ends design without restoring over the new project   ok
+ui: designer is reachable from device menu                                     ok
+ui: the menu's SOUND DESIGNER over an open design goes back to it              ok
+ui: existing automation cannot overwrite a wizard edit                         ok
+ui: leaving resumes unchanged recorded automation                              ok
+sound designer: 0 failure(s)

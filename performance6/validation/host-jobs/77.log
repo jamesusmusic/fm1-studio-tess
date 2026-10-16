@@ -1,0 +1,22 @@
+== storage safety: protect unreadable records until confirmed replacement
+persist: unreadable project is occupied and named OLD FORMAT                ok
+persist: new song avoids occupied old project slots                         ok
+persist: unreadable project load keeps its flash bytes                      ok
+persist: live access protects a wrong-shape bank until boot                 ok
+persist: protocol cannot overwrite an old bank implicitly                   ok
+persist: device save asks about the whole old bank                          ok
+persist: cancel retains old bank and no write authority                     ok
+persist: accept opens naming without authorizing protocol writes            ok
+persist: confirmed device save replaces old bank once                       ok
+persist: unknown record inside current bank stays occupied                  ok
+persist: saving another slot retains unknown record bytes                   ok
+persist: live access protects unreadable FM or CZ banks                     ok
+persist: native direct saves cannot erase old banks                         ok
+persist: incoming patch waits for old-bank confirmation                     ok
+persist: confirmed import replaces old native bank                          ok
+persist: boot resets foreign settings to owned sane defaults                ok
+persist: clean settings save normally without replacement confirmation      ok
+persist: current settings with old template stay protected                  ok
+persist: template save asks before replacing old template                   ok
+persist: accepted template save writes current template                     ok
+storage safety test passed

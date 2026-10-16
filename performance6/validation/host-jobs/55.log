@@ -1,0 +1,374 @@
+== MIDI recording: raw events, quantization at take end, independent releases, banks and capacity
+ui: explicit REC queues latched recording at the next loop                     ok
+ui: explicit REC stays active across loop zero without sealing a held note     ok
+ui: later loops still record notes and motion after explicit REC               ok
+ui: a second explicit REC finishes and quantizes the take while playback continues ok
+ui: a note-started explicit REC stays armed through one-step loops             ok
+ui: STOP finalizes a latched take and keeps explicit arming for the next start ok
+ui: PLAY restarts latched recording across subsequent loops                    ok
+ui: explicit REC queues latched recording at the next loop                     ok
+ui: explicit REC stays active across loop zero without sealing a held note     ok
+ui: later loops still record notes and motion after explicit REC               ok
+ui: a second explicit REC finishes and quantizes the take while playback continues ok
+ui: a note-started explicit REC stays armed through one-step loops             ok
+ui: STOP finalizes a latched take and keeps explicit arming for the next start ok
+ui: PLAY restarts latched recording across subsequent loops                    ok
+ui: explicit REC queues latched recording at the next loop                     ok
+ui: explicit REC stays active across loop zero without sealing a held note     ok
+ui: later loops still record notes and motion after explicit REC               ok
+ui: a second explicit REC finishes and quantizes the take while playback continues ok
+ui: a note-started explicit REC stays armed through one-step loops             ok
+ui: STOP finalizes a latched take and keeps explicit arming for the next start ok
+ui: PLAY restarts latched recording across subsequent loops                    ok
+ui: explicit REC queues latched recording at the next loop                     ok
+ui: explicit REC stays active across loop zero without sealing a held note     ok
+ui: later loops still record notes and motion after explicit REC               ok
+ui: a second explicit REC finishes and quantizes the take while playback continues ok
+ui: a note-started explicit REC stays armed through one-step loops             ok
+ui: STOP finalizes a latched take and keeps explicit arming for the next start ok
+ui: PLAY restarts latched recording across subsequent loops                    ok
+ui: explicit REC queues latched recording at the next loop                     ok
+ui: explicit REC stays active across loop zero without sealing a held note     ok
+ui: later loops still record notes and motion after explicit REC               ok
+ui: a second explicit REC finishes and quantizes the take while playback continues ok
+ui: a note-started explicit REC stays armed through one-step loops             ok
+ui: STOP finalizes a latched take and keeps explicit arming for the next start ok
+ui: PLAY restarts latched recording across subsequent loops                    ok
+ui: explicit REC queues latched recording at the next loop                     ok
+ui: explicit REC stays active across loop zero without sealing a held note     ok
+ui: later loops still record notes and motion after explicit REC               ok
+ui: a second explicit REC finishes and quantizes the take while playback continues ok
+ui: a note-started explicit REC stays armed through one-step loops             ok
+ui: STOP finalizes a latched take and keeps explicit arming for the next start ok
+ui: PLAY restarts latched recording across subsequent loops                    ok
+ui: a shortcut track disarms independently while an explicit REC track keeps recording ok
+ui: QNT leaves captured onsets unmodified until the recording's last sample    ok
+ui: all ten swung grids commit at take end on INT/USB/TRS, preserving every note property ok
+ui: changing or disabling QNT never re-quantizes a completed take              ok
+ui: committed quantized timing and independent durations survive project save/load ok
+ui: QNT leaves captured onsets unmodified until the recording's last sample    ok
+ui: all ten swung grids commit at take end on INT/USB/TRS, preserving every note property ok
+ui: changing or disabling QNT never re-quantizes a completed take              ok
+ui: committed quantized timing and independent durations survive project save/load ok
+ui: QNT leaves captured onsets unmodified until the recording's last sample    ok
+ui: all ten swung grids commit at take end on INT/USB/TRS, preserving every note property ok
+ui: changing or disabling QNT never re-quantizes a completed take              ok
+ui: committed quantized timing and independent durations survive project save/load ok
+ui: QNT leaves captured onsets unmodified until the recording's last sample    ok
+ui: all ten swung grids commit at take end on INT/USB/TRS, preserving every note property ok
+ui: changing or disabling QNT never re-quantizes a completed take              ok
+ui: committed quantized timing and independent durations survive project save/load ok
+ui: QNT leaves captured onsets unmodified until the recording's last sample    ok
+ui: all ten swung grids commit at take end on INT/USB/TRS, preserving every note property ok
+ui: changing or disabling QNT never re-quantizes a completed take              ok
+ui: committed quantized timing and independent durations survive project save/load ok
+ui: QNT leaves captured onsets unmodified until the recording's last sample    ok
+ui: all ten swung grids commit at take end on INT/USB/TRS, preserving every note property ok
+ui: changing or disabling QNT never re-quantizes a completed take              ok
+ui: committed quantized timing and independent durations survive project save/load ok
+ui: QNT leaves captured onsets unmodified until the recording's last sample    ok
+ui: all ten swung grids commit at take end on INT/USB/TRS, preserving every note property ok
+ui: changing or disabling QNT never re-quantizes a completed take              ok
+ui: committed quantized timing and independent durations survive project save/load ok
+ui: QNT leaves captured onsets unmodified until the recording's last sample    ok
+ui: all ten swung grids commit at take end on INT/USB/TRS, preserving every note property ok
+ui: changing or disabling QNT never re-quantizes a completed take              ok
+ui: committed quantized timing and independent durations survive project save/load ok
+ui: QNT leaves captured onsets unmodified until the recording's last sample    ok
+ui: all ten swung grids commit at take end on INT/USB/TRS, preserving every note property ok
+ui: changing or disabling QNT never re-quantizes a completed take              ok
+ui: committed quantized timing and independent durations survive project save/load ok
+ui: QNT leaves captured onsets unmodified until the recording's last sample    ok
+ui: all ten swung grids commit at take end on INT/USB/TRS, preserving every note property ok
+ui: changing or disabling QNT never re-quantizes a completed take              ok
+ui: committed quantized timing and independent durations survive project save/load ok
+ui: QNT leaves captured onsets unmodified until the recording's last sample    ok
+ui: all ten swung grids commit at take end on INT/USB/TRS, preserving every note property ok
+ui: changing or disabling QNT never re-quantizes a completed take              ok
+ui: committed quantized timing and independent durations survive project save/load ok
+ui: QNT leaves captured onsets unmodified until the recording's last sample    ok
+ui: all ten swung grids commit at take end on INT/USB/TRS, preserving every note property ok
+ui: changing or disabling QNT never re-quantizes a completed take              ok
+ui: committed quantized timing and independent durations survive project save/load ok
+ui: QNT leaves captured onsets unmodified until the recording's last sample    ok
+ui: all ten swung grids commit at take end on INT/USB/TRS, preserving every note property ok
+ui: changing or disabling QNT never re-quantizes a completed take              ok
+ui: committed quantized timing and independent durations survive project save/load ok
+ui: QNT leaves captured onsets unmodified until the recording's last sample    ok
+ui: all ten swung grids commit at take end on INT/USB/TRS, preserving every note property ok
+ui: changing or disabling QNT never re-quantizes a completed take              ok
+ui: committed quantized timing and independent durations survive project save/load ok
+ui: QNT leaves captured onsets unmodified until the recording's last sample    ok
+ui: all ten swung grids commit at take end on INT/USB/TRS, preserving every note property ok
+ui: changing or disabling QNT never re-quantizes a completed take              ok
+ui: committed quantized timing and independent durations survive project save/load ok
+ui: QNT leaves captured onsets unmodified until the recording's last sample    ok
+ui: all ten swung grids commit at take end on INT/USB/TRS, preserving every note property ok
+ui: changing or disabling QNT never re-quantizes a completed take              ok
+ui: committed quantized timing and independent durations survive project save/load ok
+ui: QNT leaves captured onsets unmodified until the recording's last sample    ok
+ui: all ten swung grids commit at take end on INT/USB/TRS, preserving every note property ok
+ui: changing or disabling QNT never re-quantizes a completed take              ok
+ui: committed quantized timing and independent durations survive project save/load ok
+ui: QNT leaves captured onsets unmodified until the recording's last sample    ok
+ui: all ten swung grids commit at take end on INT/USB/TRS, preserving every note property ok
+ui: changing or disabling QNT never re-quantizes a completed take              ok
+ui: committed quantized timing and independent durations survive project save/load ok
+ui: QNT leaves captured onsets unmodified until the recording's last sample    ok
+ui: all ten swung grids commit at take end on INT/USB/TRS, preserving every note property ok
+ui: changing or disabling QNT never re-quantizes a completed take              ok
+ui: committed quantized timing and independent durations survive project save/load ok
+ui: QNT leaves captured onsets unmodified until the recording's last sample    ok
+ui: all ten swung grids commit at take end on INT/USB/TRS, preserving every note property ok
+ui: changing or disabling QNT never re-quantizes a completed take              ok
+ui: committed quantized timing and independent durations survive project save/load ok
+ui: QNT leaves captured onsets unmodified until the recording's last sample    ok
+ui: all ten swung grids commit at take end on INT/USB/TRS, preserving every note property ok
+ui: changing or disabling QNT never re-quantizes a completed take              ok
+ui: committed quantized timing and independent durations survive project save/load ok
+ui: QNT leaves captured onsets unmodified until the recording's last sample    ok
+ui: all ten swung grids commit at take end on INT/USB/TRS, preserving every note property ok
+ui: changing or disabling QNT never re-quantizes a completed take              ok
+ui: committed quantized timing and independent durations survive project save/load ok
+ui: QNT leaves captured onsets unmodified until the recording's last sample    ok
+ui: all ten swung grids commit at take end on INT/USB/TRS, preserving every note property ok
+ui: changing or disabling QNT never re-quantizes a completed take              ok
+ui: committed quantized timing and independent durations survive project save/load ok
+ui: QNT leaves captured onsets unmodified until the recording's last sample    ok
+ui: all ten swung grids commit at take end on INT/USB/TRS, preserving every note property ok
+ui: changing or disabling QNT never re-quantizes a completed take              ok
+ui: committed quantized timing and independent durations survive project save/load ok
+ui: QNT leaves captured onsets unmodified until the recording's last sample    ok
+ui: all ten swung grids commit at take end on INT/USB/TRS, preserving every note property ok
+ui: changing or disabling QNT never re-quantizes a completed take              ok
+ui: committed quantized timing and independent durations survive project save/load ok
+ui: QNT leaves captured onsets unmodified until the recording's last sample    ok
+ui: all ten swung grids commit at take end on INT/USB/TRS, preserving every note property ok
+ui: changing or disabling QNT never re-quantizes a completed take              ok
+ui: committed quantized timing and independent durations survive project save/load ok
+ui: QNT leaves captured onsets unmodified until the recording's last sample    ok
+ui: all ten swung grids commit at take end on INT/USB/TRS, preserving every note property ok
+ui: changing or disabling QNT never re-quantizes a completed take              ok
+ui: committed quantized timing and independent durations survive project save/load ok
+ui: QNT leaves captured onsets unmodified until the recording's last sample    ok
+ui: all ten swung grids commit at take end on INT/USB/TRS, preserving every note property ok
+ui: changing or disabling QNT never re-quantizes a completed take              ok
+ui: committed quantized timing and independent durations survive project save/load ok
+ui: QNT leaves captured onsets unmodified until the recording's last sample    ok
+ui: all ten swung grids commit at take end on INT/USB/TRS, preserving every note property ok
+ui: changing or disabling QNT never re-quantizes a completed take              ok
+ui: committed quantized timing and independent durations survive project save/load ok
+ui: QNT leaves captured onsets unmodified until the recording's last sample    ok
+ui: all ten swung grids commit at take end on INT/USB/TRS, preserving every note property ok
+ui: changing or disabling QNT never re-quantizes a completed take              ok
+ui: committed quantized timing and independent durations survive project save/load ok
+ui: an early STOP quantizes only the newly captured take, preserving older events ok
+ui: manual disarm commits the grid selected when recording finishes            ok
+ui: QNT OFF at the end leaves the entire captured performance intact           ok
+ui: a quantization collision preserves the take and unrelated manual notes atomically ok
+ui: a blocked automatic quantization reports its occupied destination          ok
+ui: a full 1024-note take commits without allocating or losing repeated hits and durations ok
+ui: late 64-step quantization retains format precision at every division and maximum combined swing ok
+ui: late 64-step quantization retains format precision at every division and maximum combined swing ok
+ui: late 64-step quantization retains format precision at every division and maximum combined swing ok
+ui: late 64-step quantization retains format precision at every division and maximum combined swing ok
+ui: late 64-step quantization retains format precision at every division and maximum combined swing ok
+ui: late 64-step quantization retains format precision at every division and maximum combined swing ok
+ui: late 64-step quantization retains format precision at every division and maximum combined swing ok
+ui: late 64-step quantization retains format precision at every division and maximum combined swing ok
+ui: late 64-step quantization retains format precision at every division and maximum combined swing ok
+ui: late 64-step quantization retains format precision at every division and maximum combined swing ok
+ui: late 64-step quantization retains format precision at every division and maximum combined swing ok
+ui: late 64-step quantization retains format precision at every division and maximum combined swing ok
+ui: late 64-step quantization retains format precision at every division and maximum combined swing ok
+ui: late 64-step quantization retains format precision at every division and maximum combined swing ok
+ui: late 64-step quantization retains format precision at every division and maximum combined swing ok
+ui: late 64-step quantization retains format precision at every division and maximum combined swing ok
+ui: late 64-step quantization retains format precision at every division and maximum combined swing ok
+ui: late 64-step quantization retains format precision at every division and maximum combined swing ok
+ui: late 64-step quantization retains format precision at every division and maximum combined swing ok
+ui: late 64-step quantization retains format precision at every division and maximum combined swing ok
+ui: a fractional quantized onset in a one-step loop keeps its overview inside the pattern ok
+ui: an automatically finished OFF take is never swept into a later enabled quantization pass ok
+ui: switching OFF before disarm discards prepared targets and replays the actual captured edge ok
+ui: the first armed key/USB/TRS note starts at zero, skips count-in and sounds only once ok
+ui: the triggering note retains its actual release after a note-started take   ok
+ui: a note-started take still disarms at the pattern end and keeps playback running ok
+ui: the first armed key/USB/TRS note starts at zero, skips count-in and sounds only once ok
+ui: the triggering note retains its actual release after a note-started take   ok
+ui: a note-started take still disarms at the pattern end and keeps playback running ok
+ui: the first armed key/USB/TRS note starts at zero, skips count-in and sounds only once ok
+ui: the triggering note retains its actual release after a note-started take   ok
+ui: a note-started take still disarms at the pattern end and keeps playback running ok
+ui: an unarmed stopped note only auditions                                     ok
+ui: a note routed to an unarmed track cannot start another track's recording   ok
+ui: a typing key cannot start an armed take                                    ok
+ui: notes during an explicitly started count-in keep its normal pickup behavior ok
+ui: a note cannot start an armed song arrangement as a recording               ok
+ui: an armed ARP starts on the first note and records its generated onset at zero ok
+ui: the first armed drum hit starts the take and is recorded at zero           ok
+ui: a first-note chord starts once and captures every tone at zero without duplicate voices ok
+ui: a first-note chord starts once and captures every tone at zero without duplicate voices ok
+ui: a first-note chord starts once and captures every tone at zero without duplicate voices ok
+ui: note start with an owned MIDI clock restarts at zero without count-in or changing clock source ok
+ui: a note-started external-clock take completes at the master's pattern boundary ok
+ui: note start with an owned MIDI clock restarts at zero without count-in or changing clock source ok
+ui: a note-started external-clock take completes at the master's pattern boundary ok
+ui: shortcut arming during playback waits: keys and motion cannot write before loop zero ok
+ui: waiting REC breathes while playback stays lit                              ok
+ui: a second REC cancels waiting without losing a held live note               ok
+ui: the final sample before the selected pattern ends is still waiting         ok
+ui: INT/USB/TRS punch-in at swung loop zero retains a held note's original velocity ok
+ui: punch-in clears the persistent waiting header                              ok
+ui: REC becomes steady when the pattern pass starts                            ok
+ui: recording remains active through the last sample of its pass               ok
+ui: the end boundary seals held notes and disarms while playback and live monitoring continue ok
+ui: a late note snapped to zero is eligible immediately on the first playback loop ok
+ui: later loops and knob/input gestures cannot extend or overwrite the completed take ok
+ui: shortcut arming during playback waits: keys and motion cannot write before loop zero ok
+ui: waiting REC breathes while playback stays lit                              ok
+ui: a second REC cancels waiting without losing a held live note               ok
+ui: the final sample before the selected pattern ends is still waiting         ok
+ui: INT/USB/TRS punch-in at swung loop zero retains a held note's original velocity ok
+ui: punch-in clears the persistent waiting header                              ok
+ui: REC becomes steady when the pattern pass starts                            ok
+ui: recording remains active through the last sample of its pass               ok
+ui: the end boundary seals held notes and disarms while playback and live monitoring continue ok
+ui: a late note snapped to zero is eligible immediately on the first playback loop ok
+ui: later loops and knob/input gestures cannot extend or overwrite the completed take ok
+ui: shortcut arming during playback waits: keys and motion cannot write before loop zero ok
+ui: waiting REC breathes while playback stays lit                              ok
+ui: a second REC cancels waiting without losing a held live note               ok
+ui: the final sample before the selected pattern ends is still waiting         ok
+ui: INT/USB/TRS punch-in at swung loop zero retains a held note's original velocity ok
+ui: punch-in clears the persistent waiting header                              ok
+ui: REC becomes steady when the pattern pass starts                            ok
+ui: recording remains active through the last sample of its pass               ok
+ui: the end boundary seals held notes and disarms while playback and live monitoring continue ok
+ui: a late note snapped to zero is eligible immediately on the first playback loop ok
+ui: later loops and knob/input gestures cannot extend or overwrite the completed take ok
+ui: shortcut arming during playback waits: keys and motion cannot write before loop zero ok
+ui: waiting REC breathes while playback stays lit                              ok
+ui: a second REC cancels waiting without losing a held live note               ok
+ui: the final sample before the selected pattern ends is still waiting         ok
+ui: INT/USB/TRS punch-in at swung loop zero retains a held note's original velocity ok
+ui: punch-in clears the persistent waiting header                              ok
+ui: REC becomes steady when the pattern pass starts                            ok
+ui: recording remains active through the last sample of its pass               ok
+ui: the end boundary seals held notes and disarms while playback and live monitoring continue ok
+ui: a late note snapped to zero is eligible immediately on the first playback loop ok
+ui: later loops and knob/input gestures cannot extend or overwrite the completed take ok
+ui: shortcut arming during playback waits: keys and motion cannot write before loop zero ok
+ui: waiting REC breathes while playback stays lit                              ok
+ui: a second REC cancels waiting without losing a held live note               ok
+ui: the final sample before the selected pattern ends is still waiting         ok
+ui: INT/USB/TRS punch-in at swung loop zero retains a held note's original velocity ok
+ui: punch-in clears the persistent waiting header                              ok
+ui: REC becomes steady when the pattern pass starts                            ok
+ui: recording remains active through the last sample of its pass               ok
+ui: the end boundary seals held notes and disarms while playback and live monitoring continue ok
+ui: a late note snapped to zero is eligible immediately on the first playback loop ok
+ui: later loops and knob/input gestures cannot extend or overwrite the completed take ok
+ui: shortcut arming during playback waits: keys and motion cannot write before loop zero ok
+ui: waiting REC breathes while playback stays lit                              ok
+ui: a second REC cancels waiting without losing a held live note               ok
+ui: the final sample before the selected pattern ends is still waiting         ok
+ui: INT/USB/TRS punch-in at swung loop zero retains a held note's original velocity ok
+ui: punch-in clears the persistent waiting header                              ok
+ui: REC becomes steady when the pattern pass starts                            ok
+ui: recording remains active through the last sample of its pass               ok
+ui: the end boundary seals held notes and disarms while playback and live monitoring continue ok
+ui: a late note snapped to zero is eligible immediately on the first playback loop ok
+ui: later loops and knob/input gestures cannot extend or overwrite the completed take ok
+ui: a one-step pattern activates at its wrap rather than disarming immediately ok
+ui: an empty one-step take also disarms after exactly one pass                 ok
+ui: STOP clears pending runtime state and leaves the track armed for the next start ok
+ui: an armed stopped start records immediately and seals at the first real end ok
+ui: independent track lengths punch in at their own starts                     ok
+ui: the longer track starts while the shorter track is still recording         ok
+ui: the shorter track disarms without interrupting the longer take             ok
+ui: the longer track finishes at its own end                                   ok
+ui: a large external-clock batch can punch in and finish an empty pass without missing either boundary ok
+ui: cancelling a waiting pass preserves sounding backing notes and their remaining gates ok
+ui: manual punch-out seals the note immediately rather than recording a later key release ok
+ui: MIDI Continue keeps a stopped armed take waiting for a complete pattern    ok
+ui: the continued take begins at loop zero                                     ok
+ui: the continued take also disarms after one full pattern                     ok
+ui: a held punch-in note retains its velocity even after the jam capture ring wraps ok
+ui: short audio ticks retain exact fractional recording time at every division ok
+ui: large external-clock batches retain the wide recording calculation         ok
+ui: short audio ticks retain exact fractional recording time at every division ok
+ui: large external-clock batches retain the wide recording calculation         ok
+ui: short audio ticks retain exact fractional recording time at every division ok
+ui: large external-clock batches retain the wide recording calculation         ok
+ui: short audio ticks retain exact fractional recording time at every division ok
+ui: large external-clock batches retain the wide recording calculation         ok
+ui: short audio ticks retain exact fractional recording time at every division ok
+ui: large external-clock batches retain the wide recording calculation         ok
+ui: short audio ticks retain exact fractional recording time at every division ok
+ui: large external-clock batches retain the wide recording calculation         ok
+ui: short audio ticks retain exact fractional recording time at every division ok
+ui: large external-clock batches retain the wide recording calculation         ok
+ui: short audio ticks retain exact fractional recording time at every division ok
+ui: large external-clock batches retain the wide recording calculation         ok
+ui: short audio ticks retain exact fractional recording time at every division ok
+ui: large external-clock batches retain the wide recording calculation         ok
+ui: short audio ticks retain exact fractional recording time at every division ok
+ui: large external-clock batches retain the wide recording calculation         ok
+ui: short audio ticks retain exact fractional recording time at every division ok
+ui: large external-clock batches retain the wide recording calculation         ok
+ui: short audio ticks retain exact fractional recording time at every division ok
+ui: large external-clock batches retain the wide recording calculation         ok
+ui: short audio ticks retain exact fractional recording time at every division ok
+ui: large external-clock batches retain the wide recording calculation         ok
+ui: short audio ticks retain exact fractional recording time at every division ok
+ui: large external-clock batches retain the wide recording calculation         ok
+ui: short audio ticks retain exact fractional recording time at every division ok
+ui: large external-clock batches retain the wide recording calculation         ok
+ui: short audio ticks retain exact fractional recording time at every division ok
+ui: large external-clock batches retain the wide recording calculation         ok
+ui: short audio ticks retain exact fractional recording time at every division ok
+ui: large external-clock batches retain the wide recording calculation         ok
+ui: short audio ticks retain exact fractional recording time at every division ok
+ui: large external-clock batches retain the wide recording calculation         ok
+ui: short audio ticks retain exact fractional recording time at every division ok
+ui: large external-clock batches retain the wide recording calculation         ok
+ui: short audio ticks retain exact fractional recording time at every division ok
+ui: large external-clock batches retain the wide recording calculation         ok
+ui: OFF records two same-pitch hits inside one step with separate velocities/durations ok
+ui: OFF replays both hits at their exact captured edges through local/USB/TRS input ok
+ui: changing QNT after a take cannot move its playback                         ok
+ui: changing the next take's QNT preserves the completed take byte-for-byte    ok
+ui: OFF records two same-pitch hits inside one step with separate velocities/durations ok
+ui: OFF replays both hits at their exact captured edges through local/USB/TRS input ok
+ui: changing QNT after a take cannot move its playback                         ok
+ui: changing the next take's QNT preserves the completed take byte-for-byte    ok
+ui: OFF records two same-pitch hits inside one step with separate velocities/durations ok
+ui: OFF replays both hits at their exact captured edges through local/USB/TRS input ok
+ui: changing QNT after a take cannot move its playback                         ok
+ui: changing the next take's QNT preserves the completed take byte-for-byte    ok
+ui: overlapping chord notes store independent releases                         ok
+ui: replay releases the short chord note while keeping the longer one held     ok
+ui: the longer chord note releases at its own captured time                    ok
+ui: an unquantized late-loop note crosses zero without an extra beginning onset ok
+ui: a completed unquantized take stays at its captured time after changing QNT ok
+ui: active and inactive bank recordings survive save/load and replay at their original time ok
+ui: the complete new project fits its base and two extension sectors           ok
+ui: a full recorder preserves all existing notes and reports the capacity limit ok
+ui: a full bank copy fails before changing the destination or source           ok
+ui: clearing recorded steps makes their event slots reusable                   ok
+ui: bank copy includes original timing and independent duration                ok
+ui: copied recordings replay at their captured time                            ok
+ui: deleting the overview step silences its timed notes                        ok
+ui: manual undo restores the original timed note                               ok
+ui: timing QNT stays per-track, survives sound loads and leaves scale QNT separate ok
+ui: slow divisions retain onset/release precision even at the end of a 64-step pattern ok
+ui: a long pattern replays its late unquantized note at the captured edge      ok
+ui: recording over a sounding event replaces it without a duplicate entry      ok
+ui: standalone FUN16 restores the active bank and original recorded timing     ok
+ui: new templates preserve per-track timing quantization                       ok
+ui: a template of an older format (TPLA) is not read                           ok
+ui: recording timing QNT cannot become recorded knob automation                ok
+ui: all 1024 notes survive save/load and replay with exact independent edges   ok
+ui: a full completed take keeps its stored timing when the next-take QNT changes ok
+Raw recording tests passed

@@ -1,0 +1,10 @@
+== upgrade: a project with a generator on each track saved, booted, loaded (tests/upgrade_check.sh: from an older build)
+upgrade: saved slot 1 (a generator on each track) to build/host/upgrade_self.nor
+upgrade: the slot is listed after boot                                      ok
+upgrade: the project loads (not EMPTY SLOT / OLD FORMAT)                    ok
+upgrade: its tempo and its step come back                                   ok
+upgrade: its name comes back                                                ok
+upgrade: Tessera: a generator on each track again                           ok
+upgrade: Tessera: the saved block equal byte for byte (EVOLVE, FORM, every setting) ok
+upgrade: autosave keeps a change of the generators alone (PROB turned)      ok
+upgrade: autosave after a load, nothing changed: no flash written           ok

@@ -1,0 +1,6 @@
+== PHYS: stability C-1..G9 over the parameter corners, worst-case cost against PHASE WIRE, demos
+phys_test: cost: no instruction counter on this host (proc_pid_rusage); not checked
+phys_test: stability: 5760 renders (4 models x notes 0..127 x STRC, BRIT, DAMP, POS, BOW corners), largest output MODAL 4.91 STRING 21.36 MEMB 1.47 SYMP 19.92 (limit 16, strings 24, SYMP 32): ok
+phys_test: torture (all parameters and the pitch swept, retriggers, model switches, 4 x 6 s): output peak 22523 ok
+phys_test: demos in build/phys_demo: 9 presets, 4 models
+phys_test: all checks ok

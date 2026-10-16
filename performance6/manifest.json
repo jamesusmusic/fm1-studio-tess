@@ -1,0 +1,21 @@
+{
+  "version": "v1.4.1-studio-tess.6",
+  "source_commit": "72305f27c6b29a9c4a7d6f27541e62b3e8db93f4",
+  "main": "firmware-candidates/studio-melodee-tess-1.4.1-dual-performance6.fwsc",
+  "diagnostic": "diagnostics/single-core/studio-melodee-tess-1.4.1-single-performance6-DIAGNOSTIC.fwsc",
+  "base": "Audio Hardening 5",
+  "build": {
+    "MELODEE_RAM_AUDIO": 1,
+    "MELODEE_DUAL_CORE": 1,
+    "MELODEE_CORE1_TEST": 0
+  },
+  "single_build": {
+    "MELODEE_RAM_AUDIO": 1,
+    "MELODEE_DUAL_CORE": 0,
+    "STUDIO_SINGLE_DIAGNOSTIC": 1
+  },
+  "project_feature_format": "HMF2 (116 bytes; imports HMF1)",
+  "hardware_test_candidate": true,
+  "mpe": "deferred",
+  "ui_tweaks": "deferred"
+}

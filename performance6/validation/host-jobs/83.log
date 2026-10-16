@@ -1,0 +1,60 @@
+== TESSERA generators: notes per scenario against tests/tessera_baseline.txt, stops clean, saved block
+tessera: turing: no note held after the stop, log complete                                      ok
+tessera: turing: 65 notes, as the baseline                                                      ok
+tessera: turing_len8_prob30_oct3: no note held after the stop, log complete                     ok
+tessera: turing_len8_prob30_oct3: 69 notes, as the baseline                                     ok
+tessera: euclid: no note held after the stop, log complete                                      ok
+tessera: euclid: 16 notes, as the baseline                                                      ok
+tessera: euclid_13_5_rot3_roll: no note held after the stop, log complete                       ok
+tessera: euclid_13_5_rot3_roll: 49 notes, as the baseline                                       ok
+tessera: markov: no note held after the stop, log complete                                      ok
+tessera: markov: 129 notes, as the baseline                                                     ok
+tessera: markov_tension81_density60_oct3: no note held after the stop, log complete             ok
+tessera: markov_tension81_density60_oct3: 83 notes, as the baseline                             ok
+tessera: morph: no note held after the stop, log complete                                       ok
+tessera: morph: 32 notes, as the baseline                                                       ok
+tessera: morph_64_son_rumba: no note held after the stop, log complete                          ok
+tessera: morph_64_son_rumba: 44 notes, as the baseline                                          ok
+tessera: evolve_turing_lock90_every1_amount50: no note held after the stop, log complete        ok
+tessera: evolve_turing_lock90_every1_amount50: 138 notes, as the baseline                       ok
+tessera: evolve_euclid_every1_amount80: no note held after the stop, log complete               ok
+tessera: evolve_euclid_every1_amount80: 75 notes, as the baseline                               ok
+tessera: evolve_markov_lock60_every2: no note held after the stop, log complete                 ok
+tessera: evolve_markov_lock60_every2: 257 notes, as the baseline                                ok
+tessera: evolve_morph_lock100_every1: no note held after the stop, log complete                 ok
+tessera: evolve_morph_lock100_every1: 146 notes, as the baseline                                ok
+tessera: form_turing_abac_contrast80_flourish5: no note held after the stop, log complete       ok
+tessera: form_turing_abac_contrast80_flourish5: 157 notes, as the baseline                      ok
+tessera: form_markov_aaba_lock50: no note held after the stop, log complete                     ok
+tessera: form_markov_aaba_lock50: 385 notes, as the baseline                                    ok
+tessera: form_euclid_abcb_morph_aabc: no note held after the stop, log complete                 ok
+tessera: form_euclid_abcb_morph_aabc: 219 notes, as the baseline                                ok
+tessera: tweak_shift_drop_human_follow: no note held after the stop, log complete               ok
+tessera: tweak_shift_drop_human_follow: 152 notes, as the baseline                              ok
+tessera: scale_root_transpose: no note held after the stop, log complete                        ok
+tessera: scale_root_transpose: 103 notes, as the baseline                                       ok
+tessera: division_gate_length: no note held after the stop, log complete                        ok
+tessera: division_gate_length: 119 notes, as the baseline                                       ok
+tessera: all_four_tracks: no note held after the stop, log complete                             ok
+tessera: all_four_tracks: 1088 notes, as the baseline                                           ok
+tessera: transport_stop_start: no note held after the stop, log complete                        ok
+tessera: transport_stop_start: 286 notes, as the baseline                                       ok
+tessera: mute_and_unmute: no note held after the stop, log complete                             ok
+tessera: mute_and_unmute: 65 notes, as the baseline                                             ok
+tessera: knobs_while_playing: no note held after the stop, log complete                         ok
+tessera: knobs_while_playing: 75 notes, as the baseline                                         ok
+tessera: midi_clock_start_stop_continue: no note held after the stop, log complete              ok
+tessera: midi_clock_start_stop_continue: 159 notes, as the baseline                             ok
+tessera: swing_track40_global30: no note held after the stop, log complete                      ok
+tessera: swing_track40_global30: 105 notes, as the baseline                                     ok
+tessera: track_len_shorter_than_loop: no note held after the stop, log complete                 ok
+tessera: track_len_shorter_than_loop: 105 notes, as the baseline                                ok
+tessera: pattern_switch_while_playing: no note held after the stop, log complete                ok
+tessera: pattern_switch_while_playing: 97 notes, as the baseline                                ok
+tessera: song_chain_two_banks: no note held after the stop, log complete                        ok
+tessera: song_chain_two_banks: 63 notes, as the baseline                                        ok
+tessera: glo_mute_and_unmute: no note held after the stop, log complete                         ok
+tessera: glo_mute_and_unmute: 57 notes, as the baseline                                         ok
+tessera: the same scenario twice: the same notes                                                ok
+tessera: saved block: round trip, out-of-range block refused whole                              ok
+tessera: saved block: the same bytes as the baseline                                            ok

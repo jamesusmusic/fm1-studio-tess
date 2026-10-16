@@ -1,0 +1,7 @@
+== Studio features: weighted harmony, SONG bars, MIDI lifecycle and one-pass REC
+features: all 16 12-tone scales/12 roots, inside/outside extremes, resolution, chord bias, SONG key override, range fallback and OFF RNG identity passed
+features: USB MIDI channel/velocity, retrigger, queue-full deferred note-offs, channel changes and STEP note 0 passed
+features: REC waits for loop zero, records one pass for all four generators, preserves final pitches/velocities/gates, prevents stacking, replays through STEP/MIDI and protects occupied patterns
+features: captured MIDI note 0 releases during STEP replay; Stop, bank changes and exhausted recording capacity are safe
+features: explicit SONG bar durations advance harmony rows and stop at song end
+features: full settings/SONG round trip, malformed load atomicity and legacy-180-byte import passed

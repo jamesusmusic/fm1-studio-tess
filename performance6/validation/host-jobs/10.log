@@ -1,0 +1,2 @@
+== aligned libc: copy/clear bounds, ordering and float aliasing
+Aligned libc: every length 0..256, all alignment pairs, canaries, compare ordering, float aliasing and FNV vectors: OK

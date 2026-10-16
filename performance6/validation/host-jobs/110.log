@@ -1,0 +1,16 @@
+== NOISE: colour slopes, key-tracked filter and clock, META period, DC, clipping, retrigger, cost, demos
+noise: ANLG COLR   0 (white): -0.18 dB/oct (want +0 +-1.0)                                    ok
+noise: ANLG COLR  64 (pink): -3.21 dB/oct (want -3 +-1.0)                                     ok
+noise: ANLG COLR 127 (brown): -6.16 dB/oct (want -6 +-1.5)                                    ok
+noise: LFSR COLR   0 (white): -0.03 dB/oct (want +0 +-1.0)                                    ok
+noise: LFSR COLR  64 (pink): -3.08 dB/oct (want -3 +-1.0)                                     ok
+noise: LFSR COLR 127 (brown): -5.88 dB/oct (want -6 +-1.5)                                    ok
+noise: filter tracks the key: peaks 345 / 705 / 1416 Hz at C3 C4 C5 (FREQ 710 Hz at C4)       ok
+noise: LFSR clock follows the key: 264 transitions at C3, 531 at C4 (x2.01, want 2)           ok
+noise: META (93) periodic at the key: r = 0.973 at 9 periods of C4; LFSR L23 r = 0.068        ok
+noise: no DC: worst |mean| 0.45 % of a voice's full scale (RAIN)                              ok
+noise: no clipping at the corners: voice sum peak 329504 (8 voices, limit 384000), mix peak 31502 ok
+noise: a note from silence renders the same samples again (every preset)                      ok
+noise: cost: no instruction counter on this host (proc_pid_rusage); not measured
+noise: demos in build/noise_demo: the 4 presets, each playing its suggested pattern
+noise_test: all checks ok

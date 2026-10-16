@@ -1,0 +1,91 @@
+== FM6: the DX7's algorithms, pitch, levels, envelopes, modulation; DC, clipping, macros, patches, voices, cost, demos
+fm6: SysEx: a DX7 frame waits for the main loop                                                       ok
+fm6: SysEx: editor traffic does not discard a pending DX7 frame                                       ok
+fm6: SysEx: a second Yamaha frame does not discard the pending frame                                  ok
+fm6: SysEx: the next frame after it (a clock byte inside is not part of it)                           ok
+fm6: algorithms: the 32 against the DX7 diagrams (modulators, carriers, feedback)                     ok
+fm6: algorithms: each sounds at full levels and feedback, bounded                                     ok
+fm6: algorithms: engine 0, 3 / 4, FB 0: same samples                                                  ok
+fm6: algorithms: engine 0, 3 / 4, FB 7: same samples                                                  ok
+fm6: algorithms: engine 0, 5 / 6, FB 0: same samples                                                  ok
+fm6: algorithms: engine 0, 5 / 6, FB 7: same samples                                                  ok
+fm6: algorithms: engine 1, 3 / 4, FB 0: same samples                                                  ok
+fm6: algorithms: engine 1, 3 / 4, FB 7: stack feedback changes the sound                              ok
+fm6: algorithms: engine 1, 5 / 6, FB 0: same samples                                                  ok
+fm6: algorithms: engine 1, 5 / 6, FB 7: stack feedback changes the sound                              ok
+fm6: algorithms: engine 2, 3 / 4, FB 0: same samples                                                  ok
+fm6: algorithms: engine 2, 3 / 4, FB 7: same samples                                                  ok
+fm6: algorithms: engine 2, 5 / 6, FB 0: same samples                                                  ok
+fm6: algorithms: engine 2, 5 / 6, FB 7: same samples                                                  ok
+fm6: patches: the 24 factory patches and the init voice: 7-bit, pack(unpack(x)) == x                  ok
+fm6: patches: any 128 bytes unpack into range (2000 random records)                                   ok
+fm6: patches: a 32-voice bank SysEx: checksum, its 32 records back as they were                       ok
+fm6: patches: a single-voice SysEx (155 bytes): back to the same packed record                        ok
+fm6: pitch: A4 at 440 Hz                                                                              ok
+fm6: pitch: ratio 3.51                                                                                ok
+fm6: pitch: ratio 0.5                                                                                 ok
+fm6: pitch: fixed 100 Hz on notes 40 and 80                                                           ok
+fm6: pitch: fixed 1995 Hz                                                                             ok
+fm6: pitch: detune +7 at A4                                                                           ok
+fm6: pitch: transpose +12                                                                             ok
+fm6: levels: OUTPUT 99 -> 90: -6.77 dB (DX7: -6.77)                                                   ok
+fm6: levels: velocity 127 -> 64 at sensitivity 7: -15.80 dB (DX7: -15.8)                              ok
+fm6: levels: key scaling -LIN 99, two octaves up: -53.63 dB                                           ok
+fm6: envelopes: RATE 50 decay to -60 dB: 0.935 s (0.93)                                               ok
+fm6: envelopes: RATE 60 release ends the voice: 0.464 s                                               ok
+fm6: envelopes: RATE 99 attack                                                                        ok
+fm6: envelopes: sustain at L3 80: -13.80 dB                                                           ok
+fm6: envelopes: a note decayed to L3 0 stays keyed while held (Dexed's), ends after its release       ok
+fm6: modulation: feedback 0 / 7: 2nd harmonic -117.7 / -7.0 dB                                        ok
+fm6: modulation: index: 2f/f -2.70 dB at OUTPUT 70 (Bessel -2.72), -5.17 dB at 85 (-5.21)             ok
+fm6: modulation: LFO vibrato: 403.4 .. 479.9 Hz                                                       ok
+fm6: modulation: LFO tremolo (AMS 3): -74.5 dB                                                        ok
+fm6: modulation: pitch envelope at L4 / L1 82: an octave up                                           ok
+fm6: modulation: pitch envelope back to the note                                                      ok
+fm6: factory patches C1..C7, velocity 30 / 127: peak 28561 (VOICE_FS 24000), |mean| at most 15.2
+fm6: no clipping: every factory patch, C1..C7, velocity 30 and 127: a voice below 2 x VOICE_FS        ok
+fm6: no DC: |mean| below 1 % of VOICE_FS                                                              ok
+fm6: macros at 0: the patch as it is                                                                  ok
+fm6: macros at 0: a note from silence renders the same samples twice                                  ok
+fm6: MLVL -40 / 0 / +40: centroid 131 / 146 / 797 Hz
+fm6: MLVL: + brighter, - darker                                                                       ok
+fm6: MRAT 0 / +3: centroid 146 / 205 Hz
+fm6: MRAT: + raises the modulators' ratios (brighter)                                                 ok
+fm6: MEG 0 / +50: centroid at 0.5 s 132 / 179 Hz
+fm6: MEG: + the modulators decay slower (brighter later)                                              ok
+fm6: VMOD 0 / +5: centroid ratio vel 127 / 40 1.13 / 1.47
+fm6: VMOD: + velocity moves the brightness more                                                       ok
+fm6: FB 0 / +6 (OP6 alone): centroid 131 / 159 Hz
+fm6: FB: + more feedback (brighter)                                                                   ok
+fm6: ALG: 1..32 replaces the patch's algorithm, PAT (0) keeps it                                      ok
+fm6: DTUN 0 / 127 (3 carriers): level swing over 50 ms windows 1.012 / 18.428
+fm6: DTUN: the carriers apart: they beat                                                              ok
+fm6: factory preset loads its corresponding patch with E7 unused                                      ok
+fm6: factory preset loads its corresponding patch with E7 unused                                      ok
+fm6: factory preset loads its corresponding patch with E7 unused                                      ok
+fm6: factory preset loads its corresponding patch with E7 unused                                      ok
+fm6: factory preset loads its corresponding patch with E7 unused                                      ok
+fm6: factory preset loads its corresponding patch with E7 unused                                      ok
+fm6: factory preset loads its corresponding patch with E7 unused                                      ok
+fm6: factory preset loads its corresponding patch with E7 unused                                      ok
+fm6: factory preset loads its corresponding patch with E7 unused                                      ok
+fm6: factory preset loads its corresponding patch with E7 unused                                      ok
+fm6: factory preset loads its corresponding patch with E7 unused                                      ok
+fm6: factory preset loads its corresponding patch with E7 unused                                      ok
+fm6: factory preset loads its corresponding patch with E7 unused                                      ok
+fm6: factory preset loads its corresponding patch with E7 unused                                      ok
+fm6: factory preset loads its corresponding patch with E7 unused                                      ok
+fm6: factory preset loads its corresponding patch with E7 unused                                      ok
+fm6: factory preset loads its corresponding patch with E7 unused                                      ok
+fm6: factory preset loads its corresponding patch with E7 unused                                      ok
+fm6: factory preset loads its corresponding patch with E7 unused                                      ok
+fm6: factory preset loads its corresponding patch with E7 unused                                      ok
+fm6: factory preset loads its corresponding patch with E7 unused                                      ok
+fm6: factory preset loads its corresponding patch with E7 unused                                      ok
+fm6: factory preset loads its corresponding patch with E7 unused                                      ok
+fm6: factory preset loads its corresponding patch with E7 unused                                      ok
+fm6: voices: 18 keys in POLY: 16 voices (Dexed's), each one budget unit                               ok
+fm6: voices: all free some seconds after the release (the operator envelopes end them)                ok
+fm6: cost: no instruction counter on this host (proc_pid_rusage); not measured
+fm6: demos in build/fm6_demo: the 25 presets, each playing its suggested pattern
+fm6_test: all checks ok

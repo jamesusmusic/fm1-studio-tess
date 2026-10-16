@@ -1,0 +1,2 @@
+== system clock: read only, never written
+clock: read only, the SPL's 360, a kept 320 or 396, an unknown multiplier: OK

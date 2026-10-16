@@ -1,0 +1,121 @@
+== Recorded notes: individual selection/deletion, zoom, undo, playback ownership and persistence
+ui: NOTES selects chronological hits in their actual interval, including a hit rounded to the next overview step ok
+ui: HIT selects a repeated pitch independently of its chord neighbour          ok
+ui: zoom and QNT preserve selection and original events                        ok
+ui: EDIT removes only the selected hit and preserves neighbouring event bytes  ok
+ui: deleted off-grid hits stay silent; neighbours retain exact onsets and releases ok
+ui: undo restores timing, velocity, duration and the selected hit's focus      ok
+ui: EDIT plus OCT+ redoes one deletion without deleting its successor          ok
+ui: one-hit deletion survives project save/load                                ok
+ui: same-pitch deletions each become an edit even when the overview is unchanged ok
+ui: the latest eight deletions undo byte-for-byte, restoring the last hit's overview ok
+ui: eight deletions redo without resurrecting the oldest two                   ok
+ui: a new one-hit deletion drops the old redo branch                           ok
+ui: slot reuse by recording undoes the take instead of stale deletions         ok
+ui: redo restores the new take in its reused slot                              ok
+ui: late-loop events select in their final step although the overview is step zero ok
+ui: late-loop deletion clears its step-zero overview                           ok
+ui: late-loop undo restores the event and overview                             ok
+ui: empty interval deletion leaves neighbouring notes and manual history alone ok
+ui: zoom clamps at one step                                                    ok
+ui: zoom clamps at sixteen steps                                               ok
+ui: drum deletion preserves repeated kicks and other lane hits                 ok
+ui: drum deletion undoes without opening the EDIT layer                        ok
+ui: sounding-event deletion preserves overlapping same-pitch ownership and its final release ok
+ui: a live EDIT tap without audio passage does not delete a selected hit on release ok
+ui: swung off-grid notes draw at their original quarter-step position at maximum zoom ok
+ui: changing the next-take quantization leaves a completed take's display unchanged ok
+ui: zoom windows clip safely to the last step of an odd-length loop            ok
+ui: a partially filled zoom window starts at its final bank and ends at the loop ok
+ui: switching banks clears stale hit selection                                 ok
+ui: returning to the recorded bank selects its first original hit              ok
+ui: switching tracks cannot select another track's recording                   ok
+ui: event deletion rebuilds the surviving overview's pitch and accent          ok
+ui: EDIT held plus any encoder consumes deletion                               ok
+ui: EDIT held plus any encoder consumes deletion                               ok
+ui: EDIT held plus any encoder consumes deletion                               ok
+ui: EDIT held plus any encoder consumes deletion                               ok
+ui: EDIT held plus any encoder consumes deletion                               ok
+ui: EDIT held plus any encoder consumes deletion                               ok
+ui: EDIT held plus any encoder consumes deletion                               ok
+ui: release-frame selection consumes EDIT without deleting a note              ok
+ui: EDIT hold undo cannot delete the restored hit on release                   ok
+ui: recording and releasing notes on another track preserves the selected hit  ok
+ui: recording between history sync/end cannot be mistaken for an undoable UI edit ok
+ui: MIDI audition on NOTES plays and releases normally without entering or replacing steps ok
+ui: PLAY with EDIT held requests transport without deleting a note on release  ok
+ui: song-chain protection also blocks individual note deletion                 ok
+ui: GLO layer keep their own knobs inside NOTES                                ok
+ui: sequence navigation exposes exactly one note editor                        ok
+ui: PITCH edits only the highlighted hit and keeps exact timing                ok
+ui: pitch undo restores exact event bytes and selection                        ok
+ui: VEL changes the highlighted hit's playback velocity                        ok
+ui: LENGTH snaps one captured note to the next quarter without moving its onset ok
+ui: length undo keeps the preceding velocity edit                              ok
+ui: ENV plus LENGTH gives a fine sixteenth-step duration edit                  ok
+ui: MOVE preserves a captured note's fractional onset, duration and neighbours ok
+ui: move undo restores position and focus without dropping prior edits         ok
+ui: KNOB 1 back from a step's first note: the step before, an empty one too    ok
+ui: ..the step before on its last recorded note                                ok
+ui: MIDI can add a manual note in free space beside a recorded take            ok
+ui: the same KNOB 1 jog reaches manual and recorded notes                      ok
+ui: property edits and mixed note types survive save/load                      ok
+ui: neighbouring recorded pitch still plays after editing and reload           ok
+ui: edited recorded note still plays on its original timeline                  ok
+ui: manual chords select and transpose one pitch at a time                     ok
+ui: DELETE removes the highlighted chord pitch and retains other pitches and tails ok
+ui: chord deletion undo restores the selected pitch and its focus              ok
+ui: manual velocity edits control playback even after an accent                ok
+ui: ENV plus VEL retains manual slide editing without opening a page           ok
+ui: zoom and navigation never mutate a manual chord                            ok
+ui: reverse note navigation reaches the final hit in dense intervals           ok
+ui: moving a recorded note into a manual tie is refused without changing the take ok
+ui: an overview cell with no event onset cannot overwrite a recording          ok
+ui: the first recorded drum hit keeps live lane-key mapping and the grid       ok
+ui: a live drum EDIT tap consumes release without deleting the overview        ok
+ui: stopping drum recording reveals precise note editing in the same page      ok
+ui: holding EDIT during REC erases the playhead step, not the editor cursor    ok
+ui: an erase pass removes every crossed step without waiting for screen refresh ok
+ui: physical EDIT release stops immediately and consumes the delete tap        ok
+ui: a new EDIT press erases the current step again                             ok
+ui: erasing inside a sounding manual tie removes its onset and complete tail   ok
+ui: a single-step loop is erased on every passage                              ok
+ui: erase uses actual intervals and preserves an unvisited hit sharing the rounded cell ok
+ui: the next interval erases its own recorded hit and leaves later event bytes intact ok
+ui: an erased recording pass survives save/load without resurrecting hits      ok
+ui: starting erase inside a sustained recorded note removes its event and sounding ownership ok
+ui: keys still audition during erase without recording notes or recreating ties ok
+ui: recording resumes normally after EDIT release                              ok
+ui: step-zero erase retains a final-interval hit rounded across the loop       ok
+ui: erasing the final interval removes the wrapped overview without ghost notes ok
+ui: disarm, track/bank/page changes and stop/restart cancel the captured erase gesture ok
+ui: rearming REC while EDIT remains held requires a new erase press            ok
+ui: disarm, track/bank/page changes and stop/restart cancel the captured erase gesture ok
+ui: disarm, track/bank/page changes and stop/restart cancel the captured erase gesture ok
+ui: disarm, track/bank/page changes and stop/restart cancel the captured erase gesture ok
+ui: disarm, track/bank/page changes and stop/restart cancel the captured erase gesture ok
+ui: swung erase leaves the upcoming step until its actual boundary             ok
+ui: swung erase follows the extended step's exact boundary                     ok
+ui: live drum erase removes all current lane hits while keeping the drum grid  ok
+ui: live drum erase crosses lane hits and releases without an extra grid delete ok
+ui: EDIT hold outside live NOTES never opens a navigation layer or deletes on release ok
+ui: EDIT hold outside live NOTES never opens a navigation layer or deletes on release ok
+ui: EDIT hold outside live NOTES never opens a navigation layer or deletes on release ok
+ui: a long live NOTES erase never also opens EDIT's engine layer or deletes on release ok
+ui: a long live NOTES erase never also opens EDIT's engine layer or deletes on release ok
+ui: an already held GLO layer keeps EDIT from starting an erase gesture        ok
+ui: bulk fixture includes late notes rounded outside their onset intervals     ok
+ui: EDIT deletes every selected onset, including late notes, and preserves neighbours sharing its overview ok
+ui: bulk delete undo restores all precise events byte-for-byte                 ok
+ui: bulk delete redo removes both events again                                 ok
+ui: bulk delete at loop end removes the late event's step-zero overview only   ok
+ui: exact selection after a move deletes selected events rather than the cursor's neighbour ok
+ui: Clear pattern physically erases the bank's precise events and preserves other owners ok
+ui: pattern clear undo restores exact events and motion together               ok
+ui: pattern clear redo from the pattern page deletes events and motion again   ok
+ui: a long note recorded after clearing cannot revive old notes                ok
+ui: playback after clearing sounds only the newly recorded long note           ok
+ui: cleared events stay deleted through project save/load                      ok
+ui: overwritten dormant events are retired before new recording can reactivate their overview ok
+ui: full pattern clear also deletes retained events beyond a shortened LEN     ok
+Recorded note editing: all passed

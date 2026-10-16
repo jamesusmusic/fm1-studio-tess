@@ -1,0 +1,3 @@
+== Studio storage: all banks, compact timing, rename and track lifecycle
+studio: all 32 banks retain distinct notes/timings and SONG assignments; rename retains features; track removal shifts generator/routing ownership and add resets only its new track
+studio: real .3 NOR migrates all four full feature blocks; interrupted page/header/erase writes preserve the sidecar and retry; completed boot is read-only

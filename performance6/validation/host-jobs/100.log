@@ -1,0 +1,14 @@
+== CZ-1: every knob changes a full tone; the dim ones leave INIT and factory tones bit for bit
+cz1 knobs: renders are deterministic                                          ok
+cz1 knobs: every knob changes the sound of a full tone (131 of 131)           ok
+cz1 knobs: none of them drawn dim on that tone                                ok
+cz1 knobs: INIT            : its 113 dim knobs leave the sound bit for bit    ok
+cz1 knobs:     BRASS 1     : its 97 dim knobs leave the sound bit for bit     ok
+cz1 knobs:    SYNTH.BASS   : its 100 dim knobs leave the sound bit for bit    ok
+cz1 knobs:     PIANO 1     : its 99 dim knobs leave the sound bit for bit     ok
+cz1 knobs:    MUSIC BOX    : its 81 dim knobs leave the sound bit for bit     ok
+cz1 knobs:      BELLS      : its 87 dim knobs leave the sound bit for bit     ok
+cz1 knobs:   FAT ENSEMBLE  : its 96 dim knobs leave the sound bit for bit     ok
+cz1 knobs:     JET ROAR    : its 72 dim knobs leave the sound bit for bit     ok
+cz1 knobs:   LINE2 SHORT   : its 93 dim knobs leave the sound bit for bit     ok
+cz1 knob test passed (838 dim knobs checked)

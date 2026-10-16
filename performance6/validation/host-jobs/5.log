@@ -1,0 +1,23 @@
+== DSP render (CZ-1 preset 0)
+== TRACKS: 4-track pattern, live recording (lengths, swing), voice budget, engine switch, cost
+tracks: recording: late clap rounds to step 4 = 39; step 4 keeps 3 notes, triggers 3 hits (want 3: no repeated clap) ok
+tracks: recording: MIDI ch 3 -> lead step 1 = 84 (want 84) ok; keys -> pad step 14 = 2 notes 60 64 ok
+tracks: voices sounding at most 11 (budget 16) ok; given up to another part 35; 0 samples near full scale
+tracks: stealing across parts: 5 voices taken; largest sample step at a take / before it: at most 0.48 x (a hard cut: several x) ok
+tracks: TRS MIDI IN: ch 1..4 -> parts ok, ch 10 filtered ok, ch 5 filtered then accepted in SEL ok; note-offs (running status, vel 0) ok
+tracks: TRS MIDI IN: note-off after another track was selected reaches the note's track ok; ch 3 records into armed track 3 ok
+tracks: recording lengths: held 3.2 steps -> NOTE TIE TIE and a 0.2-step tail ok; 0.3 step -> one step ok; past the middle of the next -> NOTE TIE ok
+tracks: recording lengths: a chord ties until its last key ok; seals at LEN 4 boundary ok; MONO legato A..B -> A TIE B TIE ok
+tracks: recording with SWING 50 %: notes round to the nearest swung onset ok
+tracks: engine switch CZ-1 -> FM6 (release tail): largest sample step 0 in the 10 ms after, 12 in the 0.1 s before (0.00 x)
+tracks: engine switch CZ-1 -> - (chord held): largest sample step 2642 in the 10 ms after, 22771 in the 0.1 s before (0.12 x)
+tracks: engine switch CZ-1 -> SID (chord held): largest sample step 3223 in the 10 ms after, 14564 in the 0.1 s before (0.22 x)
+tracks: engine switch: at most 0.22 x the step before (a hard cut: several x) ok
+tracks: a note during the switch sounds on the new engine (-) ok
+tracks: WAVs in build/tracks_demo: tracks_demo.wav (mix), t1_bass.wav, t2_pad.wav, t3_lead.wav, t4_drums.wav, steal.wav, engine_switch.wav
+tracks: one part, 8 notes held (host -O2, ns per sample, heaviest preset per engine): SID TRI ORGAN 138.3, DRUM SID KIT 19.9, FM6 FLUTE 274.8, CZ-1 JET ROAR 314.8, PROPHET Faint Memories 670.1
+tracks: worst single part: PROPHET Faint Memories 670.1 ns
+tracks: FM6 + PHASE + VOICE + drums, 3 + 3 + 2 notes: 137.9 ns (0.21 x the worst single part), 9 voices
+tracks: the same, 8 + 8 + 4 notes asked for (budget keeps 8): 93.4 ns (0.14 x)
+tracks: two VOICE parts, 4 + 4 voices (the heaviest 8 the budget allows): 21.3 ns (0.03 x); no notes but the drums (buses, 3 idle parts): 38.7 ns
+tracks: all checks ok

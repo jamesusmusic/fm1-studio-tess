@@ -1,0 +1,156 @@
+== editor: real C protocol, malformed transfers and queue recovery
+editor: general slot exports a complete 7-bit USB frame                        ok
+editor: general export has a valid checksum and exact bounded length           ok
+editor: bad general checksum cannot stage or mutate a saved preset             ok
+editor: named general import opens its pool without loading the track          ok
+editor: chosen general slot retains the entire record and name                 ok
+editor: general bulk export sends used selected slots and skips empty slots    ok
+editor: Prophet import keeps all twenty name bytes and opens P slots from another engine ok
+editor: Prophet export reproduces the received frame and opaque bytes          ok
+editor: CZ USB export/import retains all sixteen name bytes                    ok
+editor: FM6 bulk export sends two independently valid named voice frames       ok
+editor: DX7 voice import retains packed bytes without loading or overwriting   ok
+editor: cancel releases a pending import without changing its destination      ok
+editor: native motion write retains high parameter bit and tagged value        ok
+editor: native motion query encodes the high id in the spare step bit          ok
+editor: native motion delete removes the same high parameter id                ok
+editor: legacy motion wire writes retain the original format                   ok
+editor: overlapping native/common IDs coexist through the protocol             ok
+editor: typed native delete retains the common engine event                    ok
+editor: typed common delete retains the native event                           ok
+editor: legacy delete clears the remaining raw ID                              ok
+editor: Prophet PUT loads a selected track with every opaque byte intact       ok
+editor: Prophet GET re-encodes a complete reusable native SysEx frame          ok
+editor: native field edit touches only its documented offset                   ok
+editor: out-of-range native field edit leaves the full patch unchanged         ok
+editor: native rename keeps all twenty name bytes                              ok
+editor: foreign native SysEx is rejected without changing the track            ok
+editor: PATTERN selects a track's bank without changing track selection        ok
+editor: PATTERN rejects out-of-range bank IDs                                  ok
+editor: bank SONG independently assigns four track banks                       ok
+editor: malformed bank SONG leaves the arrangement unchanged                   ok
+editor: sample upload and erase commands cannot write into pattern storage     ok
+editor: sample inventory advertises zero user slots                            ok
+editor: INFO preserves existing IDs and advertises the shared 384-slot library ok
+editor: UI_SET updates the actual palette and reports RAM-only saving          ok
+editor: out-of-range palette leaves the display unchanged                      ok
+editor: the retired font weight is not supported (rc 2), UI_STATE says 127     ok
+editor: retired FX latch cannot be enabled                                     ok
+editor: unsupported preference is reported without applying it                 ok
+editor: FAV_SET marks DRUM as a normal engine                                  ok
+editor: FAV_GET reads the bounded favorite range                               ok
+editor: empty user slot cannot be starred                                      ok
+editor: saved user slot can be starred without changing its sound              ok
+editor: favorite range cannot cross the end of user slots                      ok
+editor: short favorite writes return an error without reading absent bytes     ok
+editor: UI_STATE rejects unexpected request bytes                              ok
+editor: SONG still responds through its original command                       ok
+editor: upper-slot favorites change the editor synchronization signature       ok
+editor: realtime bytes interleaved in SysEx do not enter the editor frame      ok
+editor: a non-realtime status aborts SysEx without changing parameters         ok
+editor: a valid request works after an aborted frame                           ok
+editor: a channel event in another USB packet aborts an unfinished SysEx       ok
+editor: USB channel packets reject mismatched CIN and high data bits           ok
+editor: USB program and channel pressure keep their one-byte payload           ok
+editor: USB MIDI ring stops at capacity across counter wrap                    ok
+editor: USB rejects new messages until the audio consumer clears overflow      ok
+editor: USB resumes after the audio consumer clears overflow                   ok
+editor: UART DMA overrun never combines a stale partial note with new data     ok
+editor: UART receives a complete fresh note after DMA recovery                 ok
+editor: UART discards running-status data after lost bytes until a new status  ok
+editor: UART recovers immediately on a complete channel message                ok
+editor: UART queue overflow latches the same recovery flag as USB              ok
+editor: UART rejects a new stream until audio clears overflow                  ok
+editor: UART resumes valid running status after audio clears overflow          ok
+editor: legacy 8-byte step writes preserve lane data                           ok
+editor: full grid step writes preserve high lane bits and constrain accents    ok
+editor: partial or oversized step payloads never mutate a valid step           ok
+editor: TRACK_STEP accepts its legacy payload on an unselected track           ok
+editor: TRACK_STEP rejects an incomplete grid extension                        ok
+editor: SONG sets and queries the complete chain without changing selection    ok
+editor: SONG invalid repeats leave the chain unchanged                         ok
+editor: SONG cannot replace a chain while its start is pending                 ok
+editor: SONG PLAY refuses extra argument bytes                                 ok
+editor: PROJECT refuses an invalid slot instead of wrapping to slot 0          ok
+editor: UP_STORE rejects bytes after its name terminator without saving        ok
+editor: a successful PROJECT save confirms its slot                            ok
+editor: PROJECT never confirms an old used slot when STOP timed out            ok
+editor: NAMES of every engine carries all its presets and both titles          ok
+editor: NATIVE saves F064 independently of general user records                ok
+editor: NATIVE GET returns exact DX7 VMEM bytes                                ok
+editor: NATIVE saves Z128 without using general or FM6 slots                   ok
+editor: malformed native nibbles cannot replace a committed tone               ok
+editor: last native page clamps to Z128 and reports 128 slots                  ok
+editor: native load targets track 3 and preserves pan, level and pattern       ok
+editor: same-engine native load also keeps track macros                        ok
+editor: native status encodes Z128 without a 7-bit overflow                    ok
+editor: highest native preset can be favorited through editor                  ok
+editor: native STORE captures just the complete tone                           ok
+editor: native rename retains all 16 CZ name bytes                             ok
+editor: native erase clears favorite and current preset origin                 ok
+editor: wrong-engine store cannot create a native preset                       ok
+editor: shared STORE addresses U384 and captures sound parameters              ok
+editor: shared LIST clamps the final page and reports 384 slots                ok
+editor: shared LOAD preserves wide identity, mix and sequence on track 3       ok
+editor: shared GET returns the actual engine of U384                           ok
+editor: shared command rejects U385                                            ok
+editor: incoming Prophet asks before overwriting a CZ shared slot              ok
+editor: shared PUT preserves every native name byte when requested             ok
+editor: shared ERASE clears U384 and the loaded origin                         ok
+editor: FM6_GET factory 4: the packed record                                   ok
+editor: FM6_PUT track 3: rc 0, the track's patch                               ok
+editor: FM6_GET track 3: as sent                                               ok
+editor: retired FM6 bank GET returns rc 3                                      ok
+editor: retired FM6 bank PUT returns rc 3                                      ok
+editor: user U64 owns its sanitized FM6 voice                                  ok
+editor: FM6_LIST advertises 24 factory voices and no bank                      ok
+editor: retired FM6 bank ERASE returns rc 3                                    ok
+editor: FM6_PUT: a fifth track or a short record: rc 1                         ok
+editor: FM6_GET retired bank: rc 3                                             ok
+editor: UP_PUT stores a v4 record (no flash here: kept in RAM)                 ok
+editor: UP_PUT keeps every value (PAN -20, FLT -40, min and max)               ok
+editor: UP_GET returns the values and the pattern UP_PUT sent                  ok
+editor: CZ PUT preserves all eight DCA points, velocity and hidden waves       ok
+editor: CZ GET returns exact low-first tone nibbles                            ok
+editor: invalid CZ upload leaves live patch intact                             ok
+editor: CZ tone uses atomic ordinary preset storage                            ok
+editor: loading user CZ preset restores all 144 native bytes                   ok
+editor: native tones survive project serialization                             ok
+editor: native tones survive full pattern-bank serialization                   ok
+editor: native tone bytes and mode survive a saved template                    ok
+editor: settings transfer accepts every supported template layout              ok
+editor: settings transfer accepts every supported template layout              ok
+editor: settings transfer accepts every supported template layout              ok
+editor: settings transfer accepts every supported template layout              ok
+editor: settings transfer accepts every supported template layout              ok
+editor: settings transfer accepts every supported template layout              ok
+editor: settings transfer accepts every supported template layout              ok
+editor: settings transfer rejects undersized template payload                  ok
+editor: shared host bank commits through bounded archive staging               ok
+editor: shared host bank commits through bounded archive staging               ok
+editor: shared host bank commits through bounded archive staging               ok
+editor: shared host bank commits through bounded archive staging               ok
+editor: shared host bank commits through bounded archive staging               ok
+editor: shared host bank commits through bounded archive staging               ok
+editor: shared host bank commits through bounded archive staging               ok
+editor: shared host bank commits through bounded archive staging               ok
+editor: shared CZ records preserve complete voices across bank evictions       ok
+editor: shared CZ records preserve complete voices across bank evictions       ok
+editor: shared CZ records preserve complete voices across bank evictions       ok
+editor: shared CZ records preserve complete voices across bank evictions       ok
+editor: shared CZ records preserve complete voices across bank evictions       ok
+editor: shared CZ records preserve complete voices across bank evictions       ok
+editor: shared CZ records preserve complete voices across bank evictions       ok
+editor: shared CZ records preserve complete voices across bank evictions       ok
+editor: full backups include all 22 shared preset objects and custom state     ok
+editor: direct Casio MIDI SysEx stages exact named tone in the CZ user list    ok
+editor: invalid direct Casio SysEx leaves the native tone intact               ok
+editor: direct Casio tone request exports exact native bytes                   ok
+editor: A4 SET updates device tuning without writing project globals           ok
+editor: A4 GET returns the device reference                                    ok
+editor: DUMP reports device A4 instead of the unused project field             ok
+editor: A4 SET clamps to its supported range                                   ok
+editor: BUDGET SET changes the device pool without changing project data       ok
+editor: BUDGET GET reports the live allowance                                  ok
+editor: SCL DESC carries every legacy and microtonal name in one complete frame ok
+editor test passed

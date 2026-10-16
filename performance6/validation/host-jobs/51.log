@@ -1,0 +1,27 @@
+== 32 pattern banks: chords, ties, independent loop switching, copy and persistence
+ui: bank copy preserves four-note chords, wrapped ties, grid, chance and automation ok
+ui: copied bank plays its own automation                                       ok
+ui: editing or clearing a copy leaves the source chord and motion intact       ok
+ui: identical-bank switches invalidate manual undo history                     ok
+ui: playing bank choices queue without replacing the sounding chord            ok
+ui: shorter track switches at its own loop end while the longer track keeps playing ok
+ui: longer track switches at its own boundary with its four-note chord         ok
+ui: selecting the active bank cancels a pending switch                         ok
+ui: STOP applies queued banks and releases sequenced notes                     ok
+ui: complete project saves all 32 banks                                        ok
+ui: project restores arrangement and active bank selection                     ok
+ui: every bank round-trips chord, ties, timing, chance, hits and bank-specific automation ok
+ui: invalid bank IDs are rejected even with a valid checksum                   ok
+ui: malformed inactive-bank chord is rejected before publication               ok
+ui: SEQ bank keys stay silent and do not record notes                          ok
+ui: SEQ plus eighth white key selects bank 8 without a page tap                ok
+ui: SEQ plus two pattern keys does not copy                                    ok
+ui: the compact held-pattern dialog copies its full chord                      ok
+ui: SONG starts four independently assigned banks with four-note chords        ok
+ui: SONG protects its bank selections and contents while running               ok
+ui: SONG repeats the first row without changing its bank assignments           ok
+ui: SONG changes all four banks together at track one's loop boundary          ok
+ui: SONG completion restores original banks and releases all sequence voices   ok
+ui: replacing motion in another bank preserves valid tagged duplicates         ok
+ui: retired user sample sources remain silent in GRAIN                         ok
+pattern bank tests passed

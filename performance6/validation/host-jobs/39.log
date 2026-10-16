@@ -1,0 +1,22 @@
+== update loader: other app -> this build
+interrupted app write leaves bootloader and current banks intact ok
+interrupted update retains the flash resume record       ok
+legacy Prophet banks are ignored; current bank area is untouched ok
+project extensions survive firmware installation         ok
+  rc 0, 1185 requests, 145 sector erases
+install completes                                        ok
+app area == the new package's flash.bin                  ok
+flash head [0, 0x4000) untouched                         ok
+finish asked (0xF0000000)                                ok
+update record cleared (RAM + flash)                      ok
+no write outside the allowed windows                     ok
+re-run with the same package erases nothing              ok
+foreign key / damaged app head refused, nothing erased   ok
+invalid stub marker refused before any erase             ok
+invalid stub marker refused before any erase             ok
+invalid stub marker refused before any erase             ok
+invalid stub marker refused before any erase             ok
+invalid stub marker refused before any erase             ok
+marker must erase before changing any body byte          ok
+older smaller partition refused before erasing anything  ok
+loader test passed

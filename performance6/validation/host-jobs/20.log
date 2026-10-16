@@ -1,0 +1,5 @@
+== capture gating, derived caches and silent-track clocks
+performance: capture off/configuration/suspend/resume produces no stale stems
+performance: derived caches follow edits and effective matrix parameters
+performance: silent tracks retain LFO/bend/rotor/FM6 clocks, fades and DIST zeros
+Performance transition tests passed

@@ -1,0 +1,59 @@
+== user presets (UP_PUT parser, bank round trip, versions, PHYS DRUM -> DRUM, grid records)
+In file included from tests/../firmware/src/core.h:498,
+                 from tests/upreset_test.c:13:
+tests/../firmware/src/performance.h:24:28: warning: ‘performance_voice’ defined but not used [-Wunused-variable]
+   24 | static performance_voice_t performance_voice[NTRK][NVOICE] __attribute__((section(".pool")));
+      |                            ^~~~~~~~~~~~~~~~~
+tests/../firmware/src/core.h:459:16: warning: ‘trk’ defined but not used [-Wunused-variable]
+  459 | static track_t trk[NTRK];        /* the instrument: four parts */
+      |                ^~~
+tests/../firmware/src/core.h:313:21: warning: ‘drum_patch’ defined but not used [-Wunused-variable]
+  313 | static drum_patch_t drum_patch[NTRK];
+      |                     ^~~~~~~~~~
+tests/../firmware/src/core.h:298:16: warning: ‘voice_was’ defined but not used [-Wunused-variable]
+  298 | static uint8_t voice_was;
+      |                ^~~~~~~~~
+In file included from tests/../firmware/src/core.h:10:
+tests/../firmware/src/tuning.h:8:16: warning: ‘tuning_a4’ defined but not used [-Wunused-variable]
+    8 | static int16_t tuning_a4 = A4_DEFAULT;
+      |                ^~~~~~~~~
+pre-1.0 Melodee 58-param record rejected       ok
+pre-1.0 Melodee 62-param record rejected       ok
+fork record hidden without changing its saved bytes ok
+UP_PUT frame < 640 bytes                       ok
+UP_PUT parses                                  ok
+UP_PUT values (negative v14 too)               ok
+pattern: rest drops flags, tie has no note     ok
+UP_PUT short frame -> args                     ok
+every short prefix rejected without record changes ok
+short optional tail rejected                   ok
+UP_PUT past last slot -> args                  ok
+UP_PUT bad engine -> args                      ok
+UP_PUT engine 1 (DIGITAL): kept as it is       ok
+UP_PUT empty name -> args                      ok
+UP_PUT 13-char name -> args                    ok
+UP_PUT 12-char name ok                         ok
+name shown upper case                          ok
+legacy wire bank fits one object               ok
+bank save                                      ok
+bank load: the record is back                  ok
+other slots empty                              ok
+bank 0 never written -> empty                  ok
+banks in 0xDC000..0xDFFFF                      ok
+bank with another record size -> empty         ok
+record with another version -> empty           ok
+a version 3 record (a drum grid) is used       ok
+UP_PUT kind 1: a grid record, accents only on hits ok
+UP_PUT kind 0: a note pattern (version 2)      ok
+UP_PUT short grid rejected, record unchanged   ok
+UP_PUT unknown kind rejected                   ok
+UP_PUT trailing byte rejected                  ok
+a grid record: bank round trip                 ok
+np < P_COUNT: mapped by count                  ok
+old record (np 53): SLICER and matrix defaults, E0..E7 kept ok
+old record (np 57): SLICER kept, matrix defaults, E0..E7 kept ok
+v4 / v5 records of 89 and 69 parameters: E0..E7 at 83..90, the chord keys their defaults ok
+np == P_COUNT: as stored                       ok
+steps -> pattern                               ok
+empty sequencer -> empty pattern               ok
+user preset test passed

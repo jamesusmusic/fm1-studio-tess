@@ -1,0 +1,90 @@
+== USB/TRS clock, bend, sustain, ownership and panic recovery
+ui: USB maximum bend is exactly the default +2 semitones                       ok
+ui: USB minimum bend is exactly the default -2 semitones                       ok
+ui: bend centre is zero                                                        ok
+ui: RPN0 supports semitone and cent bend sensitivity                           ok
+ui: selecting NRPN cancels RPN data entry                                      ok
+ui: bend is smoothed toward the target in the real voice renderer              ok
+ui: bend smoothing reaches the exact target without changing saved pitch       ok
+ui: Reset Controllers centres bend and preserves RPN sensitivity               ok
+ui: existing modwheel/expression/aftertouch stay routed to the track           ok
+ui: drum track ignores pitch bend                                              ok
+ui: pedal holds a released synth note and its owner                            ok
+ui: pedal release releases its held note                                       ok
+ui: All Notes Off honours sustain rather than hard-killing                     ok
+ui: Reset Controllers releases pedal-held notes                                ok
+ui: drum note-offs do not accumulate pedal-held owners                         ok
+ui: All Sound Off ignores pedal and discards all track ownership               ok
+ui: USB/TRS channels can share one sounding note with independent owners       ok
+ui: one channel's note-off preserves another channel's hold                    ok
+ui: last channel owner releases the shared note                                ok
+ui: MIDI release cannot cut a still-held local keyboard note                   ok
+ui: local release after MIDI release ends the shared note                      ok
+ui: note-off follows its note-on across selected-track changes                 ok
+ui: preset panic forgets old pedal owners so later pedal-up preserves new notes ok
+ui: queue overflow recovers ownership and releases stuck notes                 ok
+ui: USB mode ignores TRS Start                                                 ok
+ui: USB Start begins at step zero                                              ok
+ui: USB six pulses advance exactly one 16th step                               ok
+ui: external Stop advances to its timestamp and releases sequence notes        ok
+ui: external Continue resumes the existing step position                       ok
+ui: lost clock times out and releases transport notes                          ok
+ui: Start after timeout restarts cleanly at the master's phase                 ok
+ui: external-clock playback applies recorded motion                            ok
+ui: external Stop restores the musical parameter base                          ok
+ui: TRS mode ignores USB Start                                                 ok
+ui: TRS Start begins at step zero                                              ok
+ui: TRS six pulses advance exactly one 16th step                               ok
+ui: external Stop advances to its timestamp and releases sequence notes        ok
+ui: external Continue resumes the existing step position                       ok
+ui: lost clock times out and releases transport notes                          ok
+ui: Start after timeout restarts cleanly at the master's phase                 ok
+ui: external-clock playback applies recorded motion                            ok
+ui: external Stop restores the musical parameter base                          ok
+ui: wrong-source clocks cannot advance the ARP                                 ok
+ui: selected-source MIDI clock advances the ARP                                ok
+ui: TRS realtime interleaving preserves the incomplete note message            ok
+ui: external clock timestamps survive uint32 millisecond wrap                  ok
+ui: clock pulses and wrong-source transport cannot take over local PLAY        ok
+ui: local PLAY runs internally before MIDI transport is received               ok
+ui: selected-source Stop arms sync and stops locally started playback          ok
+ui: after external transport claims playback, missing clocks still time out    ok
+ui: ARP HOLD on the external clock plays the upper octave                      ok
+ui: external Stop ends the sounding ARP note                                   ok
+ui: external Stop keeps the latched HOLD chord                                 ok
+ui: Continue plays the latched chord again                                     ok
+ui: a lost external clock stops the transport and ends the ARP note            ok
+ui: a tap while the external transport is stopped sounds                       ok
+ui: its ARP gate still ends in real time                                       ok
+ui: internal clock: STOP leaves the free-running ARP note to its gate          ok
+ui: internal clock: the ARP keeps stepping after STOP                          ok
+ui: a USB burst fills the MIDI ring without overflowing it                     ok
+ui: the packet that does not fit is refused (left for the next poll)           ok
+ui: TRS MIDI into a ring full of USB still fits (no overflow)                  ok
+ui: the ring drains with no panic: the held note keeps sounding                ok
+ui: the refused packet is taken once the ring has room                         ok
+ui: the held note survives all 88 events                                       ok
+ui: free space below one packet refuses a whole packet                         ok
+ui: USB: every channel in all four ranges maps or is filtered, including controllers ok
+ui: SEL still accepts every channel                                            ok
+ui: note-off follows its owner after switching to a range excluding its channel ok
+ui: excluded channel cannot start new notes while pedal-up still releases its original note ok
+ui: excluded channel panic clears its original owner                           ok
+ui: pedal-up while excluded and without owners prevents stale sustain on re-entry ok
+ui: channel 14 cannot start an armed take in CH1-4                             ok
+ui: TRS: every channel in all four ranges maps or is filtered, including controllers ok
+ui: SEL still accepts every channel                                            ok
+ui: note-off follows its owner after switching to a range excluding its channel ok
+ui: excluded channel cannot start new notes while pedal-up still releases its original note ok
+ui: excluded channel panic clears its original owner                           ok
+ui: pedal-up while excluded and without owners prevents stale sustain on re-entry ok
+ui: channel 14 cannot start an armed take in CH1-4                             ok
+ui: DRUM 10 cannot bypass CH1-4                                                ok
+ui: DRUM 10 within CH9-12 plays the first DRUM track                           ok
+ui: DRUM note-off follows its owner after changing range                       ok
+ui: ROUT SEL: channel 10 still the DRUM track                                  ok
+ui: SEL without a DRUM track uses selection                                    ok
+ui: range without a DRUM track uses its normal channel offset                  ok
+ui: DRUM 2 overrides track 2 inside CH1-4, channel 10 stays filtered           ok
+ui: DRUM OFF: channel 2 track 2 again                                          ok
+MIDI control/clock integration tests passed

@@ -1,0 +1,9 @@
+{
+  "offline_packages_valid": true,
+  "entry_and_boot_sector_unchanged_from_audio5": true,
+  "non_flash_entries_unchanged": {
+    "(100, 'ota.bin')": true
+  },
+  "dual_bytes": 610534,
+  "single_bytes": 610534
+}

@@ -1,0 +1,22 @@
+== regression: golden renders, health, voices, CPU budget
+regress: voices: budget of 8 across 4 parts: 4 POLY parts, random notes: at most 11 voices active (budget 16), part 3 at most 4 (cap 16), 741 voices taken, 0 still fading after their block, all free 6.86 s after the note-offs ok
+regress: voices: reuse before the stolen tail fades: same-note retrigger and full local-cap replacement before the fade: at most 16 voices, both MONO parts kept, all released ok
+regress: voices: budget after a live mode change: POLY / UNISON chord -> MONO / LEGATO / UNISON: extra voices reclaimed, leads kept, budget 16 ok
+regress: voices: budget after voice mode changes: POLY -> MONO / LEGATO and lower UNISON cap: at most 16 voices, all four leads kept, all released ok
+regress: voices: note-offs after live voice mode changes: 76 cases: all 16 VCE pairs, both key-up orders and caps 8 / 4; no stale fallback, MONO / LEGATO / UNISON priority leads and fallback preserved ok
+regress: voices: a stolen voice fades: 5 takes; largest sample step at a take 7501 vs 15626 before it (0.48 x, limit 1.50 x) ok
+regress: voices: MONO keeps its note: MONO part held its note through 905 voices taken from the others: lost in 0 blocks ok
+regress: voices: LEGATO keeps its note: LEGATO part held its note through 905 voices taken from the others: lost in 0 blocks ok
+regress: voices: UNISON keeps its note: UNISON part held its note through 912 voices taken from the others: lost in 0 blocks ok
+regress: routing: no hanging notes: 14133 random MIDI / key events on ch 1-4, 5, 10, 16 and the keys, track selection changing, 3 rounds: no gate left on, every voice free ok
+regress: CPU: no instruction counter on this host (proc_pid_rusage); the budget is not checked
+regress: CPU, one part with 8 notes held (VOICE 4), heaviest preset per engine (instructions / ns per sample):
+regress:   SID      INIT SID            0 instr     0.0 ns
+regress:   DRUM     808 KIT             0 instr     0.0 ns
+regress:   FM6      TINE EP             0 instr     0.0 ns
+regress:   CZ-1     INIT TONE           0 instr     0.0 ns
+regress:   PROPHET  INIT PROPHET        0 instr     0.0 ns
+regress:   idle                         0 instr    19.9 ns
+regress:   idle_drums                   0 instr    40.0 ns
+regress:   3parts_full_drums            0 instr   103.6 ns
+regress: 337 golden renders (0 changed, 0 gone), 0 health failures, 0 voice / routing checks failed, 0 CPU entries over budget (0 notes), 0 crashes; 18.0 s

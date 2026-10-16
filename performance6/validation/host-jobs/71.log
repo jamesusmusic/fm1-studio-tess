@@ -1,0 +1,20 @@
+== audio: overload protection, bounded fades and DMA diagnostics
+audio: overload keeps each part's MONO lead and lowest POLY note                  ok
+audio: part diagnostics attribute the cut to its actual track                     ok
+audio: overload frees its victim within one control block                         ok
+audio: a lead alone on each part stays protected                                  ok
+audio: overload frees a held one-shot drum without waiting for its decay          ok
+audio: UNISON loses an extra voice and retains its lead                           ok
+audio: overload can reclaim stale POLY voices after a MONO / LEGATO change        ok
+audio: overload can reclaim stale POLY voices after a MONO / LEGATO change        ok
+audio: released voices shed the quieter tail first                                ok
+audio: an auxiliary interrupt does not render a DMA half                          ok
+audio: one slow half records elapsed load but does not shed yet                   ok
+audio: a second slow half in a row requests shedding                              ok
+audio: DMA advancing during a render is counted once                              ok
+audio: TIMER5 nested in the render counts toward the deadline                     ok
+audio: slow halves that are not consecutive do not shed                           ok
+audio: steady CPU load converges without integer smoothing bias                   ok
+audio: output test still advances the active synth                                ok
+audio: normal build retains audible physical output                               ok
+audio: all passed

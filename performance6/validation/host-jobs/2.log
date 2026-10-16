@@ -1,0 +1,26 @@
+== FX: three-slot chains, reverb decay/density/rate conversion, smooth Tape, track ownership, dry bypass and frozen legacy storage
+Frozen FUN16/FUN17, FBKK, TPLF/TPLG: notes, banks, timing, motion, engine IDs and original insert preserved: OK
+Frozen FUN18/FBKK18/TPLH: all three inserts preserved; send bus defaults off: OK
+Shared send/return: post-fader sum, no dry doubling when OFF, one 4KiB tank, preset independence, UI and project/template persistence: OK
+Separate sends: independent inputs/returns, inactive-slot silence, routing fade, old chain imports, UI and project/template persistence: OK
+Three serial slots: independent bypass, live tails, preset/engine/undo/user independence, project/template and page navigation: OK
+Reverb: dense stereo reflections, controllable decay, bounded response and silence after the tail: OK
+Reverb: present bass/mids, bounded hot wet peaks, sustained deep tail and DEPTH in every slot: OK
+Reverb rate conversion: exact FIR reference through integrator wraps, preserved mids and alias-band rejection: OK
+FX performance safety: cached stereo conversion, arbitrary blocks/wraps, exact shifts, mono pan and genuine spread: OK
+Tape: maximum jitter/rate have smooth phase/filter transitions, bounded stereo output, no allocation and no denormal tail: OK
+Chorus: full-band independent stereo, bounded hot inputs, exact silent tail, 2 KiB/slot, RATE/DEPTH, insert/send persistence and bypass release: OK
+FX tone: bass/treble rejection, -3 dB cutoffs, smooth edits across FULL, per-slot editor/routing, persistence and frozen FUN20/TPLJ, FUN21/TPLK imports: OK
+No boom: ECHO, ROOM and REVERB keep their bass under their mids, no low note ringing over them: OK
+Not harsh, not thin: their highs under the mids, no high note ringing over them, the bass within 15 dB: OK
+FX rack: rows, effect list, slot pages named after their effect, OCT+/OCT-/FX/SELECT navigation, SHARED, SPLIT sends and its sheet: OK
+PHASER: deterministic, audible controls, bounded extremes, zero-mix bypass: OK
+WIDTH: deterministic, audible controls, bounded extremes, zero-mix bypass: OK
+FORMANT: deterministic, audible controls, bounded extremes, zero-mix bypass: OK
+TAPE: deterministic, audible controls, bounded extremes, zero-mix bypass: OK
+SPIT: deterministic, audible controls, bounded extremes, zero-mix bypass: OK
+ECHO: deterministic, audible controls, bounded extremes, zero-mix bypass: OK
+ROOM: deterministic, audible controls, bounded extremes, zero-mix bypass: OK
+REVERB: deterministic, audible controls, bounded extremes, zero-mix bypass: OK
+CHORUS: deterministic, audible controls, bounded extremes, zero-mix bypass: OK
+FX: tails, allocator exhaustion/recovery, FX button/knobs/Esc and project round trip: OK

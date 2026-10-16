@@ -1,0 +1,2 @@
+== audio worker: stalled jobs and wrapping deadlines
+audio worker: busy/offline, stall and fault retire, immediate soft-reset bar, misread requests never run, answered misreads kept, wrapping deadline ok

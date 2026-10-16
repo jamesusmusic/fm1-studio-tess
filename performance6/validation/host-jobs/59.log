@@ -1,0 +1,21 @@
+== Concert pitch: A4 frequency, engines, modulation, held notes and project-independent settings
+ui: 440 Hz preserves every original pitch-table entry                          ok
+ui: 400..480 Hz tunes A4 and every note to the frequency ratio                 ok
+ui: Concert pitch leaves octave and other dimensionless ratios unchanged       ok
+ui: PHASE: all oscillator pitches follow A4=432                                ok
+ui: SID: all oscillator pitches follow A4=432                                  ok
+ui: TRIO: all oscillator pitches follow A4=432                                 ok
+ui: CZ-1: all oscillator pitches follow A4=432                                 ok
+ui: FM6 held notes: ratio and fixed operators follow the A4 reference once     ok
+ui: GLOBAL knob 1 selects 432 Hz without writing the project                   ok
+ui: A4 card shows 432 Hz                                                       ok
+ui: Loading a project keeps the device's chosen A4                             ok
+ui: Loading a project keeps the shared workload allowance                      ok
+ui: Loading a template keeps the device's chosen A4                            ok
+ui: Loading a template keeps the device workload allowance                     ok
+ui: TUNE remains an independent cents adjustment                               ok
+ui: A4 knob clamps at 400 Hz                                                   ok
+ui: A4 knob clamps at 480 Hz                                                   ok
+ui: Matrix pitch modulation retains A4 tuning and the fine offset              ok
+ui: PHYS sympathetic root strings follow the concert reference                 ok
+Concert pitch test passed

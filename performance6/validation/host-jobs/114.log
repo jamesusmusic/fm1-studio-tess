@@ -1,0 +1,48 @@
+== regression: target cost of the render loops (pi32v2 disassembly)
+target: sid_render       1094 instructions,  572 in loops, 3 divides,  5 calls there: cost  1031 (budget 1204) note: -14 % (BUDGET_UPDATE=1 to keep it)
+target: cz_native_render   562 instructions,  347 in loops, 2 divides,  8 calls there: cost   570 (budget 583) ok
+target: cz_native_wave    121 instructions,    0 in loops, 0 divides,  0 calls there: cost     0 (budget 0) ok
+target: drum_render       232 instructions,   72 in loops, 0 divides,  0 calls there: cost    72 (budget 72) ok
+target: fm6_render       1269 instructions, 1103 in loops, 3 divides,  0 calls there: cost  3530 (budget 3385) ok
+target: p5_samples       1041 instructions,  913 in loops, 19 divides,  0 calls there: cost  1065 (budget 1075) ok
+target: p5_mod_samples    168 instructions,   97 in loops, 1 divides,  0 calls there: cost   105 (budget 105) ok
+target: dr_bd             282 instructions,  121 in loops, 1 divides,  0 calls there: cost   129 (budget 127) ok
+target: dr_sd             192 instructions,  135 in loops, 1 divides,  0 calls there: cost   143 (budget 137) ok
+target: dr_tom            305 instructions,  104 in loops, 1 divides,  0 calls there: cost   112 (budget 105) ok
+target: dr_rs             170 instructions,  139 in loops, 1 divides,  0 calls there: cost   147 (budget 148) ok
+target: dr_cl              87 instructions,   59 in loops, 1 divides,  0 calls there: cost    67 (budget 70) ok
+target: dr_cp              97 instructions,   61 in loops, 0 divides,  0 calls there: cost    61 (budget 59) ok
+target: dr_ma              76 instructions,   46 in loops, 0 divides,  0 calls there: cost    46 (budget 49) ok
+target: dr_metal          168 instructions,  114 in loops, 0 divides,  0 calls there: cost   114 (budget 121) ok
+target: dr_cb             106 instructions,   65 in loops, 0 divides,  0 calls there: cost    65 (budget 68) ok
+target: dr_cy             191 instructions,  109 in loops, 0 divides,  0 calls there: cost   109 (budget 114) ok
+target: dr_hat            110 instructions,   34 in loops, 0 divides,  0 calls there: cost    34 (budget 37) ok
+target: drum_source       137 instructions,   15 in loops, 0 divides,  0 calls there: cost    15 (budget 15) ok
+target: drum_limit         29 instructions,   15 in loops, 1 divides,  0 calls there: cost    23 (budget 22) ok
+target: drum_color         45 instructions,   19 in loops, 0 divides,  0 calls there: cost    19 (budget 19) ok
+target: dr_metal_tune      20 instructions,    8 in loops, 0 divides,  0 calls there: cost     8 (budget 8) ok
+target: d9_render_bd      379 instructions,  220 in loops, 0 divides,  2 calls there: cost   220 (budget 224) ok
+target: d9_render_sd      470 instructions,  276 in loops, 0 divides,  2 calls there: cost   276 (budget 280) ok
+target: d9_render_tom     603 instructions,  295 in loops, 0 divides,  1 calls there: cost   295 (budget 3064) note: -90 % (BUDGET_UPDATE=1 to keep it)
+target: d9_render_rim     252 instructions,  172 in loops, 0 divides,  1 calls there: cost   172 (budget 4383) note: -96 % (BUDGET_UPDATE=1 to keep it)
+target: d9_render_clap    309 instructions,  176 in loops, 0 divides,  3 calls there: cost   176 (budget 1047) note: -83 % (BUDGET_UPDATE=1 to keep it)
+target: d9_render_smp     254 instructions,  166 in loops, 0 divides,  1 calls there: cost   199 (budget 1444) note: -86 % (BUDGET_UPDATE=1 to keep it)
+target: fm1_alnk0_irq    1947 instructions, 1011 in loops, 3 divides, 48 calls there: cost  2139 (budget 18778) note: -89 % (BUDGET_UPDATE=1 to keep it)
+target: track_render_audio   900 instructions,  543 in loops, 5 divides, 12 calls there: cost   607 (budget 821) note: -26 % (BUDGET_UPDATE=1 to keep it)
+target: midi_parameter    171 instructions,   22 in loops, 0 divides,  2 calls there: cost    22 (budget 47) note: -53 % (BUDGET_UPDATE=1 to keep it)
+target: audition_tick      80 instructions,   65 in loops, 0 divides,  2 calls there: cost   140 (budget 129) ok
+target: click_render       76 instructions,   30 in loops, 0 divides,  0 calls there: cost    30 (budget 30) ok
+target: mod_begin         195 instructions,  146 in loops, 0 divides,  3 calls there: cost   161 (budget 158) ok
+target: mod_voice         130 instructions,   30 in loops, 0 divides,  1 calls there: cost    30 (budget 30) ok
+target: mod_end            18 instructions,    7 in loops, 0 divides,  0 calls there: cost     7 (budget 7) ok
+target: fx_filter          93 instructions,   58 in loops, 0 divides,  0 calls there: cost   172 (budget 176) ok
+target: fx_down            94 instructions,   57 in loops, 0 divides,  0 calls there: cost   126 (budget 126) ok
+target: fx_up             177 instructions,  141 in loops, 0 divides,  0 calls there: cost   141 (budget 141) ok
+target: fx_time           410 instructions,  345 in loops, 0 divides,  0 calls there: cost   345 (budget 351) ok
+target: mix_fx_samples    134 instructions,   82 in loops, 0 divides,  0 calls there: cost    82 (budget 82) ok
+target: fx_tape           180 instructions,   87 in loops, 0 divides,  0 calls there: cost   255 (budget 259) ok
+target: fx_reverb         700 instructions,  642 in loops, 0 divides,  0 calls there: cost  1104 (budget 1016) ok
+target: fx_chorus         122 instructions,   97 in loops, 0 divides,  0 calls there: cost    97 (budget 97) ok
+target: mix_extra_sends    42 instructions,   36 in loops, 0 divides,  0 calls there: cost    87 (budget 94) ok
+target: fx_bus_kernel     145 instructions,   98 in loops, 0 divides,  4 calls there: cost   203 (budget 267) note: -24 % (BUDGET_UPDATE=1 to keep it)
+target: dr8_run           122 instructions,   19 in loops, 0 divides,  0 calls there: cost    19 (budget 20) ok
