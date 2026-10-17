@@ -1,4 +1,6 @@
 /* SPDX-License-Identifier: GPL-3.0-only */
+/* Studio Tess contributions — By: Inputsignwave.
+ * See repository-root CREDITS.md and Tess_Developer_Handoff.md. */
 /* Studio generative harmony, USB note output and one-pass performance capture.
  * Bounded control-rate work only. No allocation, UI, flash or storage in ticks. */
 static struct {

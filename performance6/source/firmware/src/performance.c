@@ -1,5 +1,7 @@
 /* SPDX-License-Identifier: GPL-3.0-only
  * Copyright (C) 2026 Kerem Kilic (Ellic Studio) */
+/* Studio Tess contributions — By: Inputsignwave.
+ * See repository-root CREDITS.md and Tess_Developer_Handoff.md. */
 static void performance_start(track_t *t, voice_t *v)
 {
     performance_voice_t *s=&performance_voice[t-trk][v-t->v];

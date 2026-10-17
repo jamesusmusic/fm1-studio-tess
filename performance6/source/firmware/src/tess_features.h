@@ -1,4 +1,6 @@
 /* SPDX-License-Identifier: GPL-3.0-only */
+/* Studio Tess contributions — By: Inputsignwave.
+ * See repository-root CREDITS.md and Tess_Developer_Handoff.md. */
 #pragma once
 enum { HARM_OFF, HARM_KEY, HARM_SONG };
 typedef struct { uint8_t mode, low, high, outside, bias, resolve, midi, channel; } harm_track_t;

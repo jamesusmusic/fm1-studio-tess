@@ -1,6 +1,9 @@
 # Source attribution
 
-- New Melodee code is credited to `Kerem Kilic (Ellic Studio)`; do not copy Leo Kuroshita's copyright header into independently written files.
+- Studio Tess custom additions, porting, integration, fixes and hardening are credited as `By: Inputsignwave`. Preserve this exact spelling when moving or porting our contributions; see the repository-root CREDITS.md and Tess_Developer_Handoff.md.
+- In mixed upstream files, add a scoped Studio Tess contribution notice alongside the existing notices. Do not credit unchanged upstream/vendor code to Inputsignwave.
+
+- Upstream Melodee code is credited to `Kerem Kilic (Ellic Studio)`; do not copy Leo Kuroshita's copyright header into independently written files.
 - Preserve the applicable SPDX licence identifier and all actual third-party notices.
 - For mixed files, credit Melodee's work and identify retained Felucca code with `Portions Copyright (C) 2026 Leo Kuroshita (@kurogedelic), Hügelton Instruments`.
 - Check source history and provenance when moving, extracting, porting or replacing code. A shared licence, include, protocol, or generic boilerplate does not establish authorship.

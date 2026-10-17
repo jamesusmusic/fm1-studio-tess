@@ -1,5 +1,7 @@
 # Studio Tess Performance 6
 
+**By: Inputsignwave** — Studio Tess custom features, integration, bug fixes and hardening. Original Melodee, Tess, Felucca and third-party credits remain applicable.
+
 **v1.4.1-studio-tess.6 — dual-core hardware-test candidate on Audio Hardening 5.**
 
 Read **INSTALL.md** first. Preserve a full pre-install backup: new HMF2 project

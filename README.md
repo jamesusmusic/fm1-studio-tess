@@ -1,5 +1,7 @@
 # FM-1 Studio Tess custom firmware
 
+**By: Inputsignwave** — Studio Tess custom features, integration, bug fixes and hardening. Original Melodee, Tess, Felucca and third-party credits remain applicable.
+
 Development snapshot for the M-VAVE FM-1, combining Melodee synthesizers and sound design with Tess generative sequencing and studio additions.
 
 **Current baseline: v1.4.1-studio-tess.6 (Performance 6).** Dual core is primary; single core is diagnostic only. The user reports successful use, while the full hardware acceptance matrix and intermittent FM6 Bells fault remain unresolved.

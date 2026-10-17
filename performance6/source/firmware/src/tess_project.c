@@ -1,4 +1,6 @@
 /* SPDX-License-Identifier: GPL-3.0-only */
+/* Studio Tess contributions — By: Inputsignwave.
+ * See repository-root CREDITS.md and Tess_Developer_Handoff.md. */
 /* Studio Tess: generator/harmony state lives in the same A/B commit as its
  * project's music. The former TSR1/TSR3 object is read before shared presets
  * may claim its sectors. Never use the factory key_mac sector for custom data. */

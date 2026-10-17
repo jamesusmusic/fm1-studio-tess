@@ -1,5 +1,7 @@
 /* SPDX-License-Identifier: GPL-3.0-only
  * Copyright (C) 2026 Kerem Kilic (Ellic Studio) */
+/* Studio Tess contributions — By: Inputsignwave.
+ * See repository-root CREDITS.md and Tess_Developer_Handoff.md. */
 /* Studio performance controls. Defaults are an exact bypass. */
 #pragma once
 enum { DUR_STEP, DUR_FIXED, DUR_HIT };

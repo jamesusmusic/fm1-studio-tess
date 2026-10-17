@@ -1,5 +1,9 @@
 # Tess / Melodee Studio development handoff
 
+**By: Inputsignwave** — Studio Tess custom features, integration, bug fixes and hardening. Original Melodee, Tess, Felucca and third-party credits remain applicable.
+
+Attribution update, 17 October 2026: when porting the Studio Tess contributions described here into Tess/Tessera, retain the exact contributor name **Inputsignwave** in source comments and project credits. Scope this credit to the custom additions and fixes; preserve every existing author and licence notice. See [CREDITS.md](CREDITS.md). The Word companion is the original 16 October snapshot.
+
 Developer summary and technical reference for Claude Code
 
 16 October 2026 | M-VAVE FM-1 | Current baseline: v1.4.1-studio-tess.6 (Performance 6)
