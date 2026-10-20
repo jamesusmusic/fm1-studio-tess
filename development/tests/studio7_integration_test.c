@@ -11,9 +11,9 @@ static void s7_advance(uint32_t n)
 {while(n){uint32_t part=n>CTL?CTL:n;seq_advance(part);n-=part;while(mo_r!=mo_w){uint32_t packet=midi_out_q[mo_r++%MQ];if(((packet>>8)&0xF0u)==0x90u&&((packet>>24)&127u))midi_heard++;}}}
 static void s7_reset(uint32_t mode)
 {
-    ui_power_on();tessera_reset();recording_reset();
+    ui_power_on();tessera_reset();recording_reset();usb.config=0;
     song.ntrk=4;song.g[G_BPM]=240;song.sel=0;
-    tessera.mode[0]=(uint8_t)mode;studio7_track[0].mode=(uint8_t)mode;
+    tessera.mode[0]=(uint8_t)mode;studio7_track[0].mode=(uint8_t)mode;studio7_track[0].seeded=mode>=TESS_ENG_GRIDS;
     trk[0].p[P_SLEN]=16;trk[0].p[P_SDIV]=2;trk[0].p[P_RECQ]=0;
     if(mode==TESS_ENG_KIT){host_preset(&trk[0],ENGI_DRUM,0);studio7_track[0].kit.enabled=1;for(uint32_t l=0;l<8;l++)studio7_track[0].kit.density[l]=100;}
     else host_preset(&trk[0],ENGI_CZ,0);
@@ -51,6 +51,23 @@ static void performed_capture(void)
     tessera.mode[0]=0;harm_track[0].midi=1;usb.config=1;heard=midi_heard=0;seq_start();s7_advance(seq_beat_samples()*4u);seq_stop();assert(midi_heard==count);
     puts("studio7: phase/3:2 performance captured with fractional onsets and replayed in STEP");
 }
+static void chord_and_kit_owners(void)
+{
+    s7_reset(TESS_ENG_BOUNCE);s7_track_t *s=&studio7_track[0];s->bounce.balls=3;s->bounce.speed=64;s->bounce.angle=0;
+    performance[0].mode=DUR_HIT;performance[0].overlap=0;seq_start();
+    for(uint32_t l=0;l<3;l++){s->bounce.x[l]=250;s->bounce.y[l]=(uint8_t)(40+l*60);s->bounce.off[l]=0;}s->bounce.dir=0;
+    s7_advance(1);uint32_t owners=0;for(uint32_t l=0;l<4;l++)owners+=duration_run[0][l].on;
+    assert(owners==3);seq_stop();for(uint32_t l=0;l<4;l++)assert(!duration_run[0][l].on);
+    s7_reset(TESS_ENG_KIT);s=&studio7_track[0];s->kit.human=100;
+    for(uint32_t i=0;i<16;i++){trk[0].step[i]=(step_t){.time=ST_NOTE,.hit=255,.acc=85,.vel=93};s->kit.anchors[i]=255;}
+    pattern_commit(&trk[0]);uint32_t source_hash=proj_hash(pattern_at(0,0),sizeof(pattern_t));pattern_request(&trk[0],1);
+    for(uint32_t l=0;l<8;l++)s->kit.density[l]=0;
+    assert(!features_capture_prepare(&trk[0]));rec_set(&trk[0],1);seq_start();s7_advance(seq_beat_samples()*4u+CTL);seq_stop();
+    uint32_t captured=0,notes=0;for(uint32_t i=0;i<RECORD_MAX;i++)if(recording[i].vel){captured++;assert(recording[i].vel==93);for(uint32_t l=0;l<8;l++)if(recording[i].note==DRUM_LANE_NOTE[l])notes|=1u<<l;}
+    assert(captured==128&&notes==255);assert(source_hash==proj_hash(pattern_at(0,0),sizeof(pattern_t)));
+    for(uint32_t l=0;l<8;l++)assert(!studio7_run[0].drum[l].on);
+    puts("studio7: BOUNCE retains three HIT keys; eight anchored lanes capture to another bank without changing source");
+}
 static void project_extension(void)
 {
     s7_reset(TESS_ENG_AWAKE);s7_track_t *t=&studio7_track[0];t->meter.enabled=1;t->meter.drift=-99;t->meter.phase=4095;t->kit.anchors[63]=255;t->kit.source=7;t->awake.a[7]=0x87;
@@ -70,4 +87,4 @@ static void ui_ranges(void)
     puts("studio7: control extremes keep all settings valid");
 }
 int main(void)
-{setbuf(stdout,0);new_generators();independent_clock();performed_capture();project_extension();ui_ranges();return 0;}
+{setbuf(stdout,0);new_generators();independent_clock();performed_capture();chord_and_kit_owners();project_extension();ui_ranges();return 0;}

@@ -3,7 +3,7 @@
  * Generator-local musical time; no hardware, float accumulation or LCM buffer. */
 #pragma once
 #include <stdint.h>
-#if __STDC_HOSTED__
+#ifndef MELODEE_FREESTANDING
 #include <string.h>
 #endif /* target unity build supplies its freestanding libc */
 #define S7_QUARTER 1048576u

@@ -15,7 +15,7 @@ static uint32_t studio7_rand(uint32_t tr)
 static void studio7_restart(uint32_t tr)
 {
     s7_track_t *s=&studio7_track[tr];
-    studio7_random[tr]=gen_stream(s->seed);
+    studio7_random[tr]=gen_stream(s->seeded||tessera.mode[tr]<TESS_ENG_GRIDS?s->seed:rng());
     s->grids.step_idx=0;memset(s->grids.perturb,0,3);
     gen_bounce_serve(&s->bounce,s->seed);
     s->awake.pos_a=s->awake.pos_b=0;s->poly.pos=3;s->poly.tick=0;
@@ -226,7 +226,7 @@ static void studio7_reset_event(track_t *t,const s7_meter_t *m)
 static void studio7_kit_plan(track_t *t,const s7_meter_t *m,uint32_t bn,uint32_t bd)
 {
     uint32_t tr=trk_index(t);s7_track_t *s=&studio7_track[tr];
-    if(!drum_track(t)||t->p[P_MUTE])return;
+    if(!drum_track(t)||t->p[P_MUTE]||((seq_hush>>tr)&1u))return;
     uint32_t index=studio7_run[tr].clock.index,bank=s->kit.source;
     const pattern_t *p=pattern_at(tr,bank);
     uint32_t len=bank==t->pattern?(uint32_t)t->p[P_SLEN]:(uint32_t)p->timing[0];
@@ -258,7 +258,8 @@ static void studio7_tick(track_t *t,uint32_t n)
     uint32_t div=(uint32_t)t->p[P_SDIV],bn=div<6u?1u:1u<<(div-5u),bd=div<6u?DIV_DEN[div]:1u;
     if(t->seq_pos>=0x7FFFFFFFu)seq_grid_tick(t,0);
     int kit=tessera.mode[tr]==TESS_ENG_KIT;
-    if(kit&&!studio7_run[tr].primed){studio7_kit_plan(t,m,bn,bd);studio7_run[tr].primed=1;}
+    if(t->p[P_MUTE])tessera_kill(t);
+    if(kit&&!studio7_run[tr].primed&&!t->p[P_MUTE]){studio7_kit_plan(t,m,bn,bd);studio7_run[tr].primed=1;}
     while(budget--){
         uint64_t next=studio7_run[tr].clock.next,now=studio7_run[tr].now;
         for(uint32_t j=0;j<16;j++)if(studio7_run[tr].pending[j].on&&studio7_run[tr].pending[j].at<next)next=studio7_run[tr].pending[j].at;
@@ -272,7 +273,7 @@ static void studio7_tick(track_t *t,uint32_t n)
             studio7_run[tr].now+=delta/quarter;studio7_run[tr].fraction=delta%quarter;
             studio7_reset_event(t,m);
         }
-        if(kit&&!studio7_run[tr].primed){studio7_kit_plan(t,m,bn,bd);studio7_run[tr].primed=1;}
+        if(kit&&!studio7_run[tr].primed&&!t->p[P_MUTE]){studio7_kit_plan(t,m,bn,bd);studio7_run[tr].primed=1;}
         int fired=0;studio7_fractional=1;
         features_capture_guard(t);
         for(uint32_t j=0;j<16;j++)if(studio7_run[tr].pending[j].on&&studio7_run[tr].pending[j].at<=studio7_run[tr].now){
@@ -283,7 +284,7 @@ static void studio7_tick(track_t *t,uint32_t n)
         if(s7_clock_take(&studio7_run[tr].clock,m,studio7_run[tr].now,bn,bd,&onset)){
             studio7_run[tr].event++;fired=1;
             if(kit){tessera_evolve_tick(t,tr);studio7_reset_event(t,m);studio7_kit_plan(t,m,bn,bd);}
-            else tessera_clock_step(t);
+            else if(!((seq_hush>>tr)&1u))tessera_clock_step(t);
         }
         studio7_fractional=0;
         if(!n&&!fired)break;

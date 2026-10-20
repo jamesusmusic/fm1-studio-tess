@@ -8,6 +8,7 @@
 /* build.py: MELODEE_<NAME>=0 / 1 in the environment overrides these. Elsewhere: MELODEE_SLICE
  * (core.h: the SLICE engine), MELODEE_ICONS (icons.c, the parameter icons; on by default),
  * MELODEE_OTA_RAMONLY (ota.c). */
+#define MELODEE_FREESTANDING 1 /* target unity supplies libc; vendor clang reports HOSTED */
 #include "build_options.h"      /* defaults shared with crt0.S */
 #ifndef MELODEE_CACHE_RAM
 #define MELODEE_CACHE_RAM 0     /* opt-in: seven data-cache ways as RAM; keep the full data cache for audio by default */

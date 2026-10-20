@@ -88,7 +88,7 @@ static void studio7_ui_knob(uint32_t graph,uint32_t slot,int32_t delta)
         if(slot==2)studio7_roll(tr);
         if(slot==3)s->grids.chaos=(uint8_t)clamp((int32_t)s->grids.chaos+d,0,100);break;
     case GR_S7_KIT:
-        if(slot==0){if(!drum_track(TSEL)){fm1_irq_on();ui_message("SELECT DRUM ENGINE");return;}tessera_kill(TSEL);k->enabled=(uint8_t)clamp((int32_t)k->enabled+dir,0,1);tessera.mode[tr]=TESS_ENG_KIT;}
+        if(slot==0){if(!drum_track(TSEL)){fm1_irq_on();ui_message("SELECT DRUM ENGINE");return;}tessera_kill(TSEL);k->enabled=(uint8_t)clamp((int32_t)k->enabled+dir,0,1);if(tessera.mode[tr]<TESS_ENG_GRIDS)s->seeded=1;tessera.mode[tr]=TESS_ENG_KIT;}
         if(slot==1){studio7_drum_stop(tr);k->source=(uint8_t)clamp((int32_t)k->source+d,0,7);}
         if(slot==2)k->variation=(uint8_t)clamp((int32_t)k->variation+d,0,100);
         if(slot==3)k->fill=(uint8_t)clamp((int32_t)k->fill+d,0,100);break;
