@@ -263,11 +263,13 @@ static void studio7_kit_plan(track_t *t,const s7_meter_t *m,uint32_t bn,uint32_t
     uint64_t local=s7_div64((uint64_t)index*S7_QUARTER*bn,bd,0),bar=s7_div64(local,s7_bar_units(m),0);
     uint64_t condbar=m->reference==1?studio7_run[tr].clock.next/(4u*S7_QUARTER):m->reference==2?(bar>=studio7_run[tr].section_bar?bar-studio7_run[tr].section_bar:0u):m->reference==3?index/(len?len:1u):bar;
     if(!studio7_condition(m->condition,condbar))return;
-    uint32_t hit=base->hit,acc=base->acc&hit;
+    uint32_t hit=base->time==ST_NOTE?base->hit:0u,acc=base->acc&hit;
+    uint32_t velocity=(base->flags&SF_ACCENT)?127u:(base->vel?base->vel:96u);
     s7_kit_out_t out;
-    if(!s7_kit_generate(&out,&s->kit,s->seed,step,(uint32_t)bar,hit,acc,base->vel,s7_group_accent(m,local),step+1u==len))return;
+    if(!s7_kit_generate(&out,&s->kit,s->seed,step,(uint32_t)bar,hit,acc,velocity,s7_group_accent(m,local),step+1u==len))return;
     uint64_t interval=s7_div64((uint64_t)S7_QUARTER*bn*m->ratio_d*10000u,bd*m->ratio_n*(uint32_t)(10000+(m->freeze?0:m->drift)),0);
     for(uint32_t l=0;l<8;l++)if(out.hit>>l&1u){
+        if(!s->kit.enabled||(s->kit.anchors[step]>>l&1u))out.velocity[l]=(uint8_t)((acc>>l&1u)?127u:velocity);
         int64_t at=(int64_t)studio7_run[tr].clock.next+(int64_t)interval*out.offset[l]/256;
         if(at<(int64_t)studio7_run[tr].now)at=(int64_t)studio7_run[tr].now;
         for(uint32_t j=0;j<16;j++)if(!studio7_run[tr].pending[j].on){

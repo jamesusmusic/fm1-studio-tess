@@ -63,7 +63,7 @@ static void chord_and_kit_owners(void)
     pattern_commit(&trk[0]);uint32_t source_hash=proj_hash(pattern_at(0,0),sizeof(pattern_t));pattern_request(&trk[0],1);
     for(uint32_t l=0;l<8;l++)s->kit.density[l]=0;
     assert(!features_capture_prepare(&trk[0]));rec_set(&trk[0],1);seq_start();s7_advance(seq_beat_samples()*4u+CTL);seq_stop();
-    uint32_t captured=0,notes=0;for(uint32_t i=0;i<RECORD_MAX;i++)if(recording[i].vel){captured++;assert(recording[i].vel==93);for(uint32_t l=0;l<8;l++)if(recording[i].note==DRUM_LANE_NOTE[l])notes|=1u<<l;}
+    uint32_t captured=0,notes=0;for(uint32_t i=0;i<RECORD_MAX;i++)if(recording[i].vel){captured++;for(uint32_t l=0;l<8;l++)if(recording[i].note==DRUM_LANE_NOTE[l]){notes|=1u<<l;assert(recording[i].vel==((85u>>l&1u)?127u:93u));}}
     assert(captured==128&&notes==255);assert(source_hash==proj_hash(pattern_at(0,0),sizeof(pattern_t)));
     for(uint32_t l=0;l<8;l++)assert(!studio7_run[0].drum[l].on);
     puts("studio7: BOUNCE retains three HIT keys; eight anchored lanes capture to another bank without changing source");
