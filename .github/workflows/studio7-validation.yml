@@ -51,11 +51,15 @@ jobs:
         run: |
           ./build.sh --release 1.4.1-studio-tess.7-dev1
           cp build/melodee-1.4.1-studio-tess.7-dev1.fwsc build/melodee.fwsc
+      - name: Link memory diagnostics
+        if: failure()
+        run: |
+          if [ -f build/melodee.map ]; then tail -70 build/melodee.map; fi
       - name: Full registered host and web checks
         run: bash tests/run_tests.sh
       - name: New foundations and sanitizers
         run: |
-          for unit in step clock kit state; do
+          for unit in math step clock kit state; do
             cc -std=c11 -O2 -Wall -Wextra -Werror -Wno-unused-function -Ifirmware/src tests/studio7_${unit}_test.c -o build/studio7_${unit}_test
             build/studio7_${unit}_test
             cc -std=c11 -O1 -g -fsanitize=address,undefined -Ifirmware/src tests/studio7_${unit}_test.c -o build/studio7_${unit}_sanitize
@@ -70,6 +74,7 @@ jobs:
           path: |
             development/build/host/log/
             development/build/*.dis
+            development/build/*.map
             development/build/*.elf
             development/build/*audio*.json
             development/build/melodee-1.4.1-studio-tess.7-dev1.fwsc

@@ -358,6 +358,7 @@ if core && [ $TABLES = 1 ]; then
     t "Studio performance UI and sound saves" performance_ui_test -O1 $FW
     t "Studio features: weighted harmony, SONG bars, MIDI lifecycle and one-pass REC" tess_features_test -O2 $FW
     t "Studio storage: all banks, compact timing, rename and track lifecycle" studio_storage_test -O1 $FW -- python3 tests/studio_upgrade_check.py "$OUT/studio_storage_test"
+    t "Studio 7: bounded target integer division" studio7_math_test -O2 $FW
     t "Studio 7: frozen Performance 6 bank migration" studio7_upgrade_test -O2 $FW
     t "Studio 7: lossless inactive-bank step codec" studio7_step_test -O2 $FW
     t "Studio 7: exact local timing, polymeter and phase" studio7_clock_test -O2 $FW

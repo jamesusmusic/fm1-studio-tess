@@ -151,7 +151,7 @@ static int studio7_condition(uint32_t condition,uint64_t bar)
 {
     static const uint8_t ab[9][2]={{0,1},{1,2},{2,2},{1,4},{2,4},{3,4},{4,4},{1,8},{8,8}};
     if(!condition)return 1;if(condition==9)return bar==0;if(condition==10)return bar!=0;
-    return condition<9&&bar%ab[condition][1]==ab[condition][0]-1u;
+    return condition<9&&s7_mod64(bar,ab[condition][1])==ab[condition][0]-1u;
 }
 static uint64_t studio7_bar_at(const track_t *t,uint32_t tr)
 {
@@ -159,9 +159,9 @@ static uint64_t studio7_bar_at(const track_t *t,uint32_t tr)
     uint32_t div=(uint32_t)t->p[P_SDIV],bn=div<6u?1u:1u<<(div-5u),bd=div<6u?DIV_DEN[div]:1u;
     uint32_t index=studio7_local(t)?studio7_run[tr].clock.index-1u:studio7_run[tr].grid_index;
     if(m->reference==1&&studio7_local(t))return studio7_run[tr].clock.last/(4u*S7_QUARTER);
-    uint64_t local=(uint64_t)index*S7_QUARTER*bn/bd;
+    uint64_t local=s7_div64((uint64_t)index*S7_QUARTER*bn,bd,0);
     if(m->reference==3)return index/(uint32_t)(t->p[P_SLEN]?t->p[P_SLEN]:1);
-    uint64_t bar=local/(m->enabled?s7_bar_units(m):4u*S7_QUARTER);
+    uint64_t bar=s7_div64(local,m->enabled?s7_bar_units(m):4u*S7_QUARTER,0);
     return m->reference==2&&bar>=studio7_run[tr].section_bar?bar-studio7_run[tr].section_bar:bar;
 }
 static uint32_t studio7_bars(const track_t *t,uint32_t tr)
@@ -169,7 +169,7 @@ static uint32_t studio7_bars(const track_t *t,uint32_t tr)
     const s7_meter_t *m=&studio7_track[tr].meter;uint32_t div=(uint32_t)t->p[P_SDIV];
     uint32_t bn=div<6?1u:1u<<(div-5u),bd=div<6?DIV_DEN[div]:1u;
     uint32_t index=studio7_run[tr].clock.index?studio7_run[tr].clock.index-1u:0u;
-    uint32_t bar=(uint32_t)((uint64_t)index*S7_QUARTER*bn/bd/s7_bar_units(m)),old=studio7_run[tr].bar;
+    uint32_t bar=(uint32_t)(s7_div64(s7_div64((uint64_t)index*S7_QUARTER*bn,bd,0),s7_bar_units(m),0)),old=studio7_run[tr].bar;
     studio7_run[tr].bar=bar;
     return bar>=old?bar-old:0;
 }
@@ -185,7 +185,7 @@ static uint8_t studio7_accent(const track_t *t,uint8_t vel)
     if(!m->enabled)return vel;
     uint32_t div=(uint32_t)t->p[P_SDIV],bn=div<6?1u:1u<<(div-5u),bd=div<6?DIV_DEN[div]:1u;
     uint32_t index=studio7_run[tr].clock.index?studio7_run[tr].clock.index-1u:0u;
-    int accent=s7_group_accent(m,(uint64_t)index*S7_QUARTER*bn/bd);
+    int accent=s7_group_accent(m,s7_div64((uint64_t)index*S7_QUARTER*bn,bd,0));
     return (uint8_t)clamp((int32_t)vel+accent*6,1,127);
 }
 static void studio7_mutate(uint32_t tr,uint32_t amount)
@@ -231,13 +231,13 @@ static void studio7_kit_plan(track_t *t,const s7_meter_t *m,uint32_t bn,uint32_t
     const pattern_t *p=pattern_at(tr,bank);
     uint32_t len=bank==t->pattern?(uint32_t)t->p[P_SLEN]:(uint32_t)p->timing[0];
     uint32_t step=index%(len?len:1u);const step_t *base=bank==t->pattern?&t->step[step]:&p->step[step];
-    uint64_t local=(uint64_t)index*S7_QUARTER*bn/bd,bar=local/s7_bar_units(m);
+    uint64_t local=s7_div64((uint64_t)index*S7_QUARTER*bn,bd,0),bar=s7_div64(local,s7_bar_units(m),0);
     uint64_t condbar=m->reference==1?studio7_run[tr].clock.next/(4u*S7_QUARTER):m->reference==2?(bar>=studio7_run[tr].section_bar?bar-studio7_run[tr].section_bar:0u):m->reference==3?index/(len?len:1u):bar;
     if(!studio7_condition(m->condition,condbar))return;
     uint32_t hit=base->hit,acc=base->acc&hit;
     s7_kit_out_t out;
     if(!s7_kit_generate(&out,&s->kit,s->seed,step,(uint32_t)bar,hit,acc,base->vel,s7_group_accent(m,local),step+1u==len))return;
-    uint64_t interval=(uint64_t)S7_QUARTER*bn*m->ratio_d*10000u/((uint64_t)bd*m->ratio_n*(10000+(m->freeze?0:m->drift)));
+    uint64_t interval=s7_div64((uint64_t)S7_QUARTER*bn*m->ratio_d*10000u,bd*m->ratio_n*(uint32_t)(10000+(m->freeze?0:m->drift)),0);
     for(uint32_t l=0;l<8;l++)if(out.hit>>l&1u){
         int64_t at=(int64_t)studio7_run[tr].clock.next+(int64_t)interval*out.offset[l]/256;
         if(at<(int64_t)studio7_run[tr].now)at=(int64_t)studio7_run[tr].now;
@@ -270,7 +270,7 @@ static void studio7_tick(track_t *t,uint32_t n)
         if(chunk){
             studio7_drum_tick(t,chunk);features_duration_tick(t,chunk);seq_grid_tick(t,chunk);n-=chunk;
             uint64_t delta=(uint64_t)chunk*S7_QUARTER+studio7_run[tr].fraction;
-            studio7_run[tr].now+=delta/quarter;studio7_run[tr].fraction=delta%quarter;
+            uint32_t remainder;studio7_run[tr].now+=s7_div64(delta,quarter,&remainder);studio7_run[tr].fraction=remainder;
             studio7_reset_event(t,m);
         }
         if(kit&&!studio7_run[tr].primed&&!t->p[P_MUTE]){studio7_kit_plan(t,m,bn,bd);studio7_run[tr].primed=1;}
@@ -289,5 +289,5 @@ static void studio7_tick(track_t *t,uint32_t n)
         studio7_fractional=0;
         if(!n&&!fired)break;
     }
-    if(n){studio7_drum_stop(tr);features_duration_tick(t,n);seq_grid_tick(t,n);uint64_t delta=(uint64_t)n*S7_QUARTER+studio7_run[tr].fraction;studio7_run[tr].now+=delta/quarter;studio7_run[tr].fraction=delta%quarter;s7_clock_realign(&studio7_run[tr].clock,m,studio7_run[tr].now,1);}
+    if(n){studio7_drum_stop(tr);features_duration_tick(t,n);seq_grid_tick(t,n);uint64_t delta=(uint64_t)n*S7_QUARTER+studio7_run[tr].fraction;uint32_t remainder;studio7_run[tr].now+=s7_div64(delta,quarter,&remainder);studio7_run[tr].fraction=remainder;s7_clock_realign(&studio7_run[tr].clock,m,studio7_run[tr].now,1);}
 }
