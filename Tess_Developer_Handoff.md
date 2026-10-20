@@ -4,6 +4,8 @@
 
 Attribution update, 17 October 2026: when porting the Studio Tess contributions described here into Tess/Tessera, retain the exact contributor name **Inputsignwave** in source comments and project credits. Scope this credit to the custom additions and fixes; preserve every existing author and licence notice. See [CREDITS.md](CREDITS.md). The Word companion is the original 16 October snapshot.
 
+Performance 7 supplement (20 October 2026): see [the new developer validation report](development/STUDIO7_VALIDATION.md) and [build status](development/STUDIO7_BUILD_STATUS.md). This document and its Word companion preserve the Performance 6 history. The user reports no current audio faults in that installed build.
+
 Developer summary and technical reference for Claude Code
 
 16 October 2026 | M-VAVE FM-1 | Current baseline: v1.4.1-studio-tess.6 (Performance 6)

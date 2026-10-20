@@ -21,3 +21,15 @@ This credit applies to Studio Tess contributions, not to the entire upstream cod
 - Bundled third-party components: retain their individual notices and licences in the source and LICENSES directories.
 
 Grids, BOUNCE, AWAKE and POLY remain credited to their actual upstream authors and source projects when integrated. Inputsignwave credit covers our port/adaptations and original additions, not authorship of those algorithms.
+
+## Performance 7 additions
+
+By: Inputsignwave
+
+Our Performance 7 contributions include selective Tess generator integration,
+independent local timing and rhythmic conditions, coordinated KIT development,
+note ownership and fractional capture integration, FBK7 storage adaptation,
+resource hardening and validation. See `development/STUDIO7_BUILD_STATUS.md` and
+`development/STUDIO7_VALIDATION.md` for implementation and test scope. The pinned
+Grids/BOUNCE/AWAKE/POLY algorithms retain their upstream authorship; our credit
+applies to porting, integration and our original additions.
