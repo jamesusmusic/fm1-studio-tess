@@ -4,6 +4,25 @@
 #define TESSERA_H
 
 #include <stdint.h>
+#include "studio7_state.h"
+static s7_track_t studio7_track[4] __attribute__((section(".pool")));
+static uint32_t studio7_random[4];
+static void studio7_restart(uint32_t tr);
+static int studio7_local(const track_t *t);
+static void studio7_tick(track_t *t,uint32_t n);
+static void studio7_start(void);
+static void studio7_emit(track_t *t);
+static void studio7_drum_stop(uint32_t tr);
+static int studio7_knob(uint32_t tr,uint32_t k,int32_t s);
+static void studio7_roll(uint32_t tr);
+static uint32_t studio7_rand(uint32_t tr);
+static int studio7_allow(const track_t *t);
+static uint32_t studio7_bars(const track_t *t,uint32_t tr);
+static uint8_t studio7_accent(const track_t *t,uint8_t vel);
+static void studio7_mutate(uint32_t tr,uint32_t amount);
+
+static uint32_t tess_random_track=4;
+static uint8_t studio7_batch,studio7_fractional;
 
 #define TESSERA_TRACKS 4
 
@@ -14,6 +33,11 @@ enum {
     TESS_ENG_EUCLID,      /* Euclidean rhythm generator */
     TESS_ENG_MARKOV,      /* 1st-order Markov pitch matrix */
     TESS_ENG_MORPH,       /* Vector/Morph interpolation */
+    TESS_ENG_GRIDS,
+    TESS_ENG_BOUNCE,
+    TESS_ENG_AWAKE,
+    TESS_ENG_POLY,
+    TESS_ENG_KIT,
     TESS_ENG_COUNT
 };
 
@@ -89,6 +113,7 @@ typedef struct {
     uint8_t  note[32];    /* Markov / Morph phrase: bit 7 = hit, bits 0..6 = note */
     uint8_t  vel[16];     /* 4 bits per step */
 } tessera_sec_t;
+static void studio7_sec(uint32_t tr,tessera_sec_t *s,int load);
 
 /* Master Tessera Engine State */
 typedef struct {

@@ -95,6 +95,7 @@ static struct { uint32_t stage; } melodee_dbg;
 #include "../firmware/src/gfx.c"
 #include "../firmware/src/panel.c"
 #include "../firmware/src/ui.c"
+#include "../firmware/src/ui_studio7.c"
 #include "../firmware/src/icons.c"
 #include "../firmware/src/ui_graph.c"
 #include "../firmware/src/ui_draw.c"

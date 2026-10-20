@@ -2,6 +2,7 @@
 static void features_ui_knob(uint32_t graph, uint32_t slot, int32_t delta)
 {
     if (slot >= 4u || !delta) return;
+    if(graph>=GR_S7_METER){studio7_ui_knob(graph,slot,delta);return;}
     if(graph>=GR_DURATION){
         performance_t *p=&performance[song.sel];
         int32_t s=tess_knob_delta(delta);

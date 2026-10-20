@@ -150,7 +150,11 @@ static void head_chip_text(char *b)
 {
     const page_t *pg = cur_page();
     uint32_t e = TSEL->eng_req % NENGINES;
-    if (designer_on() && !name_on() && designer_head_chip(b)) {   /* the designer's START, FEATURES, original */
+    const s7_meter_t *m=&studio7_track[song.sel].meter;
+    if(tessera.mode[song.sel]&&m->enabled){
+        str_cpy(b,m->freeze?"HOLD ":"LOCAL ",16);fmt_int(b+str_len(b),m->numerator);
+        str_cpy(b+str_len(b),"/",2);fmt_int(b+str_len(b),m->denominator);
+    } else if (designer_on() && !name_on() && designer_head_chip(b)) {   /* the designer's START, FEATURES, original */
     } else if (new_on()) {                                     /* NEW SONG */
         str_cpy(b, "NEW SONG", 16);
     } else if (ptc_on()) {                              /* PATTERNS' Copy to: "copy 3 to 5" */
@@ -677,7 +681,12 @@ static void draw_columns(void)
         uint32_t graph = cur_page()->graph;
         const harm_track_t *h = &harm_track[song.sel];
         char b[4][16];
-        if(graph>=GR_DURATION){
+        if(graph>=GR_S7_METER){
+            for(uint32_t k=0;k<4;k++){
+                char value[16];studio7_ui_value(graph,k,value);
+                draw_column(k,studio7_ui_label(graph,k),value,"",VAL(k),-1,ICON_AUTO);
+            }
+        }else if(graph>=GR_DURATION){
             const performance_t *p=&performance[song.sel];
             static const char *const modes[]={"STEP","FIXED","HIT"};
             static const char *const lengths[]={"1/32","1/16","1/8","1/4","1/2","1 BAR"};
@@ -813,6 +822,17 @@ static void draw_columns(void)
                     }
                 }
                 return;
+            } else if(m>=TESS_ENG_GRIDS){
+                static const char *const names[]={"GRIDS","BOUNCE","AWAKE","POLY","KIT"};
+                draw_column(0,"MODE",names[m-TESS_ENG_GRIDS],"",VAL(0u),m*1000/(TESS_ENG_COUNT-1),ICON_AUTO);
+                s7_track_t *g=&studio7_track[tr];
+                const char *label[3];int32_t value[3];
+                if(m==TESS_ENG_GRIDS){label[0]="MAP X";label[1]="MAP Y";label[2]="DENS";value[0]=g->grids.x;value[1]=g->grids.y;value[2]=g->grids.dens;}
+                else if(m==TESS_ENG_BOUNCE){label[0]="SPEED";label[1]="ANGLE";label[2]="BALLS";value[0]=g->bounce.speed;value[1]=g->bounce.angle;value[2]=g->bounce.balls;}
+                else if(m==TESS_ENG_AWAKE){label[0]="LEN A";label[1]="LEN B";label[2]="PROB";value[0]=g->awake.len_a;value[1]=g->awake.len_b;value[2]=g->awake.prob;}
+                else if(m==TESS_ENG_POLY){label[0]="RHYTHM";label[1]="DIV";label[2]="SPAN";value[0]=g->poly.sel+1;value[1]=g->poly.div[g->poly.sel%4];value[2]=g->poly.span;}
+                else{label[0]="SOURCE";label[1]="VARY";label[2]="FILL";value[0]=g->kit.source+1;value[1]=g->kit.variation;value[2]=g->kit.fill;}
+                for(uint32_t k=0;k<3;k++){char v[16];fmt_int(v,value[k]);draw_column(k+1,label[k],v,"",VAL(k+1),-1,ICON_AUTO);}
             } else if (m == TESS_ENG_TURING) {
                 const tessera_turing_t *tur = &tessera.turing[tr];
                 uint8_t tlen = tur->len ? tur->len : 16;

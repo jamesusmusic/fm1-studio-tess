@@ -69,8 +69,10 @@ static void TESSERA_NOTE_HOOK(track_t *t, uint32_t note, uint32_t vel);
 #define TESS_IRQ_OFF() ((void)0)                  /* host has no audio interrupt */
 #define TESS_IRQ_ON() ((void)0)
 #endif
+#include "../firmware/src/gen.c"
 #include "../firmware/src/tessera.c"
 #include "../firmware/src/tess_features.c"
+#include "../firmware/src/studio7.c"
 #ifdef TESSERA_NOTE_HOOK
 #undef trk_note_on
 #endif

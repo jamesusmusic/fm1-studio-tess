@@ -613,7 +613,7 @@ static int seq_is_empty(const track_t *t)
  * so the undo goes back past the whole browse. Eight levels fit in ordinary SRAM,
  * leaving the data cache available for flash reads. Not snapshotted: power-on, projects (a project load drops them all) */
 enum { UNDO_SOUND = 1, UNDO_PAT = 2 };
-static int features_page(uint32_t graph) { return graph >= GR_HARM && graph <= GR_FM_PERF; }
+static int features_page(uint32_t graph) { return graph >= GR_HARM && graph <= GR_S7_POLY; }
 static const char *const HARM_NAMES[] = {"OFF", "KEY", "SONG"};
 static const char *const HARM_CHORD_NAMES[] = {"TRACK", "DIA3", "DIA7", "MAJ", "MIN", "DOM7", "MAJ7", "MIN7", "SUS4", "POWER"};
 static void features_note_name(char *b, uint32_t note)

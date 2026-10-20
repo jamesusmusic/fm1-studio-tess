@@ -814,6 +814,7 @@ static __attribute__((noinline)) void audition_tick(uint32_t n)
 static void seq_start(void)
 {
     tessera_ensure_init();
+    studio7_start();
     cin_left = 0; /* MIDI Start also cancels a pending local count-in. */
     uint32_t i;
     seq_erase_request = 0;
@@ -1088,7 +1089,7 @@ static void seq_grid_tick(track_t *t, uint32_t n)
             uint32_t tr_idx = trk_index(t);
             if (tr_idx < TESSERA_TRACKS && tessera.mode[tr_idx] != TESS_ENG_OFF) {
                 features_capture_guard(t);
-                tessera_clock_step(t);
+                if(!studio7_local(t))tessera_clock_step(t);
             } else {
                 seq_step(t, s, step_gate(s) ? step_samples(t, period, t->seq_idx) : period, skip);
             }
@@ -1101,6 +1102,7 @@ static void seq_grid_tick(track_t *t, uint32_t n)
  * loop zero once. MIDI batches may cross several boundaries in one call. */
 static void seq_tick(track_t *t, uint32_t n)
 {
+    if(studio7_local(t)&&song.playing){studio7_tick(t,n);return;}
     features_duration_tick(t,n);
     seq_erase_pass(t, t->seq_idx, 0);
     if (tessera.mode[trk_index(t)]) { seq_grid_tick(t, n); return; } /* captured notes stay silent until STEP */

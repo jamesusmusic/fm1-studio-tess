@@ -6,7 +6,7 @@
  * all that is theirs (the sound and its patches, the eight patterns, their column of the song, motion, takes) and the
  * last place is left empty. A removal goes as a project load does: the project packed as SAVE packs it (proj_wire_u),
  * its tracks moved there, loaded back. Included by project.c */
-#define TRK_BANK_BYTES ((NPAT - 1u) * NSTEP * BANK_STEP_SIZE)  /* a track's banks but the active one, packed */
+#define TRK_BANK_BYTES ((NPAT - 1u) * NSTEP * STUDIO7_STEP_BITS / 8u)  /* a track's banks but the active one, packed */
 
 static void track_say(uint32_t k, const char *what)     /* "TRACK 2 REMOVED" */
 {
@@ -99,7 +99,8 @@ static int track_remove(uint32_t k)
     raw[BANK_ACTIVE_OFF + last] = 0;
     for (i = 0; i < (NPAT - 1u) * NSTEP; i++) {
         step_t e = {{0}, 0, ST_REST};
-        bank_step_pack(raw + BANK_EXTRA_OFF + last * TRK_BANK_BYTES + i * BANK_STEP_SIZE, &e);
+        uint8_t wire[8];uint32_t bit=i*STUDIO7_STEP_BITS;
+        bank_step_pack(wire,&e);s7_step_pack(raw+BANK_EXTRA_OFF+last*TRK_BANK_BYTES,&bit,wire);
     }
     for (i=0;i<NPAT;i++) { int16_t time[4];for(j=0;j<4u;j++)time[j]=TP[P_SLEN+j].def;bank_timing_put(raw,last,i,time); }
     for (r = 0; r < CHAIN_ROWS; r++) {
@@ -114,6 +115,10 @@ static int track_remove(uint32_t k)
     if (!proj_pack((project_store_t *)(raw + 8u), p))
         goto fail;
     features_packed_remove(p->tess,k);
+    /* Move complete independent records, including inactive settings/anchors. */
+    for(j=k;j<last;j++)memcpy(p->s7+4u+j*S7_TRACK_BYTES,p->s7+4u+(j+1u)*S7_TRACK_BYTES,S7_TRACK_BYTES);
+    s7_track_t empty=s7_track_default();s7_track_encode(p->s7+4u+last*S7_TRACK_BYTES,&empty);
+    memcpy(raw+BANK_S7_OFF,p->s7,S7_STATE_BYTES);
     bank_tess_set(raw,p->tess);
     if (!bank_valid(raw, BANK_STORE_SIZE) || project_restore_runtime(&proj_scratch))
         goto fail;
