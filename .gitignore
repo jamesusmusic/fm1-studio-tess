@@ -6,3 +6,5 @@ __pycache__/
 !.env.example
 .build-env/
 development/build/
+.build-tools/
+.build-deps/
