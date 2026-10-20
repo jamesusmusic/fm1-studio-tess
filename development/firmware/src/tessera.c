@@ -578,6 +578,7 @@ void tessera_clock_step(track_t *t)
     if(!performance[tr].mode)features_midi_off(t, tessera.last_note[tr]);
 
     tessera_evolve_tick(t, tr);
+    if(!studio7_after_evolve(t))return;
 
     if (t->p[P_MUTE]) {
         if (tessera.active_gate[tr]) {

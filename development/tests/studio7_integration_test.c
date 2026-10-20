@@ -68,6 +68,26 @@ static void chord_and_kit_owners(void)
     for(uint32_t l=0;l<8;l++)assert(!studio7_run[0].drum[l].on);
     puts("studio7: BOUNCE retains three HIT keys; eight anchored lanes capture to another bank without changing source");
 }
+static void phase_form_and_midi(void)
+{
+    s7_reset(TESS_ENG_KIT);trk[0].step[0]=(step_t){.time=ST_NOTE,.hit=1,.vel=100};studio7_track[0].kit.anchors[0]=1;seq_start();s7_advance(1);
+    uint32_t owners=0;for(uint32_t l=0;l<8;l++)owners+=studio7_run[0].drum[l].on;
+    assert(owners);studio7_ui_knob(GR_S7_PHASE,3,1);
+    uint32_t after=0;for(uint32_t l=0;l<8;l++)after+=studio7_run[0].drum[l].on;
+    assert(owners==after&&studio7_run[0].clock.next>studio7_run[0].now);seq_stop();
+    s7_reset(TESS_ENG_AWAKE);s7_meter_t *m=&studio7_track[0].meter;
+    m->enabled=1;m->numerator=1;m->group_count=1;memset(m->group,0,8);m->group[0]=1;m->phase=1024;m->reset=2;
+    tessera.evolve[0].every=1;tessera.evolve[0].form=1;tessera.evolve[0].contrast=0;
+    seq_start();for(uint32_t n=0;n<seq_beat_samples()*8u;n+=CTL){uint32_t before=heard;s7_advance(CTL);assert(heard-before<=1u);}
+    assert(heard>16);seq_stop();
+    s7_reset(TESS_ENG_AWAKE);m=&studio7_track[0].meter;m->enabled=1;m->ratio_n=5;m->ratio_d=4;
+    midi_sync_active=1;midi_beat_samples=22050;seq_start();s7_advance(MIDI_BEAT_UNITS*4u);
+    uint32_t count=studio7_run[0].clock.index;midi_beat_samples=44100;s7_advance(MIDI_BEAT_UNITS*4u);
+    assert(count==21&&studio7_run[0].clock.index==41);seq_stop();midi_sync_active=0;
+    s7_reset(TESS_ENG_KIT);m=&studio7_track[0].meter;m->enabled=1;m->ratio_n=8;trk[0].p[P_SLEN]=64;
+    assert(features_capture_prepare(&trk[0])&&features_notice==2&&!(song.rec&1));
+    puts("studio7: alignment retains drum owners; phased FORM resets emit once; 5:4 follows MIDI ticks across tempo estimates; over-capacity capture refuses cleanly");
+}
 static void project_extension(void)
 {
     s7_reset(TESS_ENG_AWAKE);s7_track_t *t=&studio7_track[0];t->meter.enabled=1;t->meter.drift=-99;t->meter.phase=4095;t->kit.anchors[63]=255;t->kit.source=7;t->awake.a[7]=0x87;
@@ -87,4 +107,4 @@ static void ui_ranges(void)
     puts("studio7: control extremes keep all settings valid");
 }
 int main(void)
-{setbuf(stdout,0);new_generators();independent_clock();performed_capture();chord_and_kit_owners();project_extension();ui_ranges();return 0;}
+{setbuf(stdout,0);new_generators();independent_clock();performed_capture();chord_and_kit_owners();phase_form_and_midi();project_extension();ui_ranges();return 0;}
