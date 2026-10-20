@@ -102,6 +102,7 @@ static void studio7_emit(track_t *t)
     if(t->p[P_MUTE]){tessera_kill(t);return;}
     if(!performance[tr].mode||drum_track(t))seq_release(t);
     tessera_evolve_tick(t,tr);
+    if(!studio7_after_evolve(t))return;
     gen_clock_t clk={(uint8_t)tessera.evolve[tr].pos_now,(uint8_t)tess_steps_per_bar(t),(uint8_t)(t->p[P_ROOT]%12)};
     gen_out_t out={0};
     switch(tessera.mode[tr]){
@@ -131,12 +132,14 @@ static void studio7_emit(track_t *t)
     }
     studio7_batch=0;
 }
+static void studio7_pending_clear(uint32_t tr)
+{memset(studio7_run[tr].pending,0,sizeof studio7_run[tr].pending);studio7_run[tr].primed=0;}
 static void studio7_drum_stop(uint32_t tr)
 {
     for(uint32_t l=0;l<8;l++)if(studio7_run[tr].drum[l].on){
         uint32_t note=studio7_run[tr].drum[l].note;trk_note_off(&trk[tr],note);features_midi_off(&trk[tr],note);studio7_run[tr].drum[l].on=0;
     }
-    memset(studio7_run[tr].pending,0,sizeof studio7_run[tr].pending);studio7_run[tr].primed=0;
+    studio7_pending_clear(tr);
 }
 static void studio7_drum_tick(track_t *t,uint32_t n)
 {
@@ -223,6 +226,24 @@ static void studio7_reset_event(track_t *t,const s7_meter_t *m)
         studio7_run[tr].bar=studio7_run[tr].section_bar=0;
     }
 }
+/* A FORM reset defers this boundary's note to the freshly aligned clock.
+ * Its first admitted event then runs once, including a nonzero phase. */
+static __attribute__((noinline)) int studio7_after_evolve(const track_t *t)
+{
+    uint32_t tr=trk_index(t);const s7_meter_t *m=&studio7_track[tr].meter;
+    if(studio7_run[tr].section==tessera.evolve[tr].sec)return 1;
+    uint32_t div=(uint32_t)t->p[P_SDIV],bn=div<6?1u:1u<<(div-5u),bd=div<6?DIV_DEN[div]:1u;
+    uint32_t index=studio7_local(t)?studio7_run[tr].clock.index-1u:studio7_run[tr].grid_index;
+    studio7_run[tr].section_bar=(uint32_t)s7_div64(s7_div64((uint64_t)index*S7_QUARTER*bn,bd,0),m->enabled?s7_bar_units(m):4u*S7_QUARTER,0);
+    studio7_run[tr].section=tessera.evolve[tr].sec;
+    if(m->reset==2&&studio7_local(t)){
+        studio7_pending_clear(tr);studio7_restart(tr);
+        s7_clock_start(&studio7_run[tr].clock,m,studio7_run[tr].now);
+        studio7_run[tr].bar=studio7_run[tr].section_bar=0;
+        return 0;
+    }
+    return 1;
+}
 static void studio7_kit_plan(track_t *t,const s7_meter_t *m,uint32_t bn,uint32_t bd)
 {
     uint32_t tr=trk_index(t);s7_track_t *s=&studio7_track[tr];
@@ -283,7 +304,7 @@ static void studio7_tick(track_t *t,uint32_t n)
         uint64_t onset;
         if(s7_clock_take(&studio7_run[tr].clock,m,studio7_run[tr].now,bn,bd,&onset)){
             studio7_run[tr].event++;fired=1;
-            if(kit){tessera_evolve_tick(t,tr);studio7_reset_event(t,m);studio7_kit_plan(t,m,bn,bd);}
+            if(kit){tessera_evolve_tick(t,tr);if(studio7_after_evolve(t))studio7_kit_plan(t,m,bn,bd);}
             else if(!((seq_hush>>tr)&1u))tessera_clock_step(t);
         }
         studio7_fractional=0;

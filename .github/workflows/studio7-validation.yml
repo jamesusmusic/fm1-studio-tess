@@ -67,6 +67,10 @@ jobs:
           done
           cc -std=c11 -O2 -Ifirmware/src tests/gen_test.c -o build/studio7_gen_test
           build/studio7_gen_test
+          for unit in studio7_integration studio_storage; do
+            cc -O1 -g -fsanitize=address,undefined -ffp-contract=off -w -Ibuild/gen -Ifirmware/src tests/${unit}_test.c -lm -o build/${unit}_sanitize
+            build/${unit}_sanitize
+          done
       - uses: actions/upload-artifact@v4
         if: always()
         with:

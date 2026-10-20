@@ -13,6 +13,8 @@ static void studio7_tick(track_t *t,uint32_t n);
 static void studio7_start(void);
 static void studio7_emit(track_t *t);
 static void studio7_drum_stop(uint32_t tr);
+static void studio7_pending_clear(uint32_t tr);
+static int studio7_after_evolve(const track_t *t);
 static int studio7_knob(uint32_t tr,uint32_t k,int32_t s);
 static void studio7_roll(uint32_t tr);
 static uint32_t studio7_rand(uint32_t tr);
