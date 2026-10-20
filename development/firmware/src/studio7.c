@@ -21,6 +21,14 @@ static void studio7_restart(uint32_t tr)
     s->awake.pos_a=s->awake.pos_b=0;s->poly.pos=3;s->poly.tick=0;
     if(s->seeded){tessera.turing[tr].reg=gen_turing_pick(gen_stream(s->seed));tessera.euclid[tr].step_idx=0;tessera.markov[tr].cur_state=0;tessera.morph[tr].step_idx=(tessera.morph[tr].step_idx&0xF0u)|15u;}
 }
+static __attribute__((noinline)) s7_meter_t studio7_meter(uint32_t tr)
+{
+    const s7_meter_t *saved=&studio7_track[tr].meter;
+    if(saved->enabled)return *saved;
+    s7_meter_t m=s7_meter_default();
+    m.reset=saved->reset;m.condition=saved->condition;m.reference=saved->reference;
+    return m;
+}
 static void studio7_start(void)
 {
     for(uint32_t tr=0;tr<4;tr++){
@@ -30,7 +38,7 @@ static void studio7_start(void)
             studio7_run[tr].now=0;studio7_run[tr].fraction=0;
         }else{
             studio7_restart(tr);memset(&studio7_run[tr],0,sizeof studio7_run[tr]);
-            s7_meter_t m=studio7_track[tr].meter.enabled?studio7_track[tr].meter:s7_meter_default();
+            s7_meter_t m=studio7_meter(tr);
             s7_clock_start(&studio7_run[tr].clock,&m,0);
         }
         studio7_run[tr].initialized=1;studio7_run[tr].bank=trk[tr].pattern;
@@ -230,7 +238,7 @@ static void studio7_reset_event(track_t *t,const s7_meter_t *m)
  * Its first admitted event then runs once, including a nonzero phase. */
 static __attribute__((noinline)) int studio7_after_evolve(const track_t *t)
 {
-    uint32_t tr=trk_index(t);const s7_meter_t *m=&studio7_track[tr].meter;
+    uint32_t tr=trk_index(t);s7_meter_t effective=studio7_meter(tr);const s7_meter_t *m=&effective;
     if(studio7_run[tr].section==tessera.evolve[tr].sec)return 1;
     uint32_t div=(uint32_t)t->p[P_SDIV],bn=div<6?1u:1u<<(div-5u),bd=div<6?DIV_DEN[div]:1u;
     uint32_t index=studio7_local(t)?studio7_run[tr].clock.index-1u:studio7_run[tr].grid_index;
@@ -273,8 +281,8 @@ static void studio7_kit_plan(track_t *t,const s7_meter_t *m,uint32_t bn,uint32_t
 static void studio7_tick(track_t *t,uint32_t n)
 {
     uint32_t tr=trk_index(t),quarter=seq_beat_samples(),budget=256;
-    s7_meter_t fallback=s7_meter_default();
-    s7_meter_t *m=studio7_track[tr].meter.enabled?&studio7_track[tr].meter:&fallback;
+    s7_meter_t effective=studio7_meter(tr);
+    s7_meter_t *m=&effective;
     if(!quarter||!s7_meter_valid(m)){seq_grid_tick(t,n);return;}
     uint32_t div=(uint32_t)t->p[P_SDIV],bn=div<6u?1u:1u<<(div-5u),bd=div<6u?DIV_DEN[div]:1u;
     if(t->seq_pos>=0x7FFFFFFFu)seq_grid_tick(t,0);

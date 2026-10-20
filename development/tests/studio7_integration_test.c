@@ -88,6 +88,16 @@ static void phase_form_and_midi(void)
     assert(features_capture_prepare(&trk[0])&&features_notice==2&&!(song.rec&1));
     puts("studio7: alignment retains drum owners; phased FORM resets emit once; 5:4 follows MIDI ticks across tempo estimates; over-capacity capture refuses cleanly");
 }
+static void disabled_meter_and_kit_condition(void)
+{
+    s7_reset(TESS_ENG_KIT);s7_meter_t *m=&studio7_track[0].meter;
+    m->phase=3000;m->ratio_n=8;m->drift=100;m->freeze=1;
+    seq_start();s7_advance(seq_beat_samples());assert(studio7_run[0].clock.index==5);
+    uint64_t next=studio7_run[0].clock.next;studio7_ui_knob(GR_S7_PHASE,0,-1);assert(studio7_run[0].clock.next==next);seq_stop();
+    s7_reset(TESS_ENG_KIT);studio7_track[0].meter.condition=2;
+    seq_start();s7_advance(seq_beat_samples()*2u);assert(!heard);s7_advance(seq_beat_samples()*5u);assert(heard);seq_stop();
+    puts("studio7: inactive phase/ratio/drift edits stay bypassed, and KIT conditions work with LOCAL off");
+}
 static void project_extension(void)
 {
     s7_reset(TESS_ENG_AWAKE);s7_track_t *t=&studio7_track[0];t->meter.enabled=1;t->meter.drift=-99;t->meter.phase=4095;t->kit.anchors[63]=255;t->kit.source=7;t->awake.a[7]=0x87;
@@ -107,4 +117,4 @@ static void ui_ranges(void)
     puts("studio7: control extremes keep all settings valid");
 }
 int main(void)
-{setbuf(stdout,0);new_generators();independent_clock();performed_capture();chord_and_kit_owners();phase_form_and_midi();project_extension();ui_ranges();return 0;}
+{setbuf(stdout,0);new_generators();independent_clock();performed_capture();chord_and_kit_owners();phase_form_and_midi();disabled_meter_and_kit_condition();project_extension();ui_ranges();return 0;}

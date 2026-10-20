@@ -57,7 +57,7 @@ static void studio7_ui_knob(uint32_t graph,uint32_t slot,int32_t delta)
     fm1_irq_off();
     switch(graph){
     case GR_S7_METER:
-        if(slot==0){m->enabled=(uint8_t)clamp((int32_t)m->enabled+dir,0,1);s7_clock_start(&studio7_run[tr].clock,m,studio7_run[tr].now);}
+        if(slot==0){m->enabled=(uint8_t)clamp((int32_t)m->enabled+dir,0,1);s7_meter_t effective=studio7_meter(tr);studio7_pending_clear(tr);s7_clock_start(&studio7_run[tr].clock,&effective,studio7_run[tr].now);}
         if(slot==1){m->numerator=(uint8_t)clamp((int32_t)m->numerator+d,1,16);studio7_group_count(m,m->group_count);}
         if(slot==2){int32_t i=m->denominator==4?0:m->denominator==8?1:2;i=clamp(i+dir,0,2);m->denominator=(uint8_t)(4u<<i);}
         if(slot==3)studio7_group_count(m,clamp((int32_t)m->group_count+dir,1,8));break;
@@ -77,10 +77,10 @@ static void studio7_ui_knob(uint32_t graph,uint32_t slot,int32_t delta)
         if(slot==2)m->condition=(uint8_t)clamp((int32_t)m->condition+dir,0,10);
         if(slot==3)m->reference=(uint8_t)clamp((int32_t)m->reference+dir,0,3);break;
     case GR_S7_PHASE:
-        if(slot==0){m->phase=(uint16_t)clamp((int32_t)m->phase+d*16,0,4095);studio7_pending_clear(tr);s7_clock_realign(&studio7_run[tr].clock,m,studio7_run[tr].now,0);}
+        if(slot==0){m->phase=(uint16_t)clamp((int32_t)m->phase+d*16,0,4095);if(m->enabled){studio7_pending_clear(tr);s7_clock_realign(&studio7_run[tr].clock,m,studio7_run[tr].now,0);}}
         if(slot==1)m->drift=(int16_t)clamp((int32_t)m->drift+d,-100,100);
         if(slot==2)m->freeze=(uint8_t)clamp((int32_t)m->freeze+dir,0,1);
-        if(slot==3){studio7_pending_clear(tr);s7_clock_realign(&studio7_run[tr].clock,m,studio7_run[tr].now,dir>0);}break;
+        if(slot==3){s7_meter_t effective=studio7_meter(tr);studio7_pending_clear(tr);s7_clock_realign(&studio7_run[tr].clock,&effective,studio7_run[tr].now,dir>0);}break;
     case GR_S7_RESET:if(slot==0)m->reset=(uint8_t)clamp((int32_t)m->reset+dir,0,3);break;
     case GR_S7_SEED:
         if(slot==0){s->seeded=(uint8_t)clamp((int32_t)s->seeded+dir,0,1);studio7_restart(tr);}
