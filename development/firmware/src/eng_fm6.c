@@ -874,6 +874,17 @@ static inline __attribute__((always_inline)) float fm6_output_clip(float x)
 static __attribute__((noinline,section(".dsp_text"))) void fm6_output(fm6_voice_t *s, const float *sum, int32_t *out, uint32_t n, const vmod_t *m, int32_t gain, int add)
 {
     float scale = (float)gain * (1.0f / 131072.0f);
+    /* Studio Tess optimization — By: Inputsignwave. A worker exclusively owns
+     * this voice until join. Without a pending/active correction, no sample
+     * inside this block can start one. Keep its last output once per block. */
+    if(!s->correction_pending && !s->correction){
+        int32_t last=s->output_last;
+        for(uint32_t i=0;i<n;i++){
+            last=(int32_t)(fm6_output_clip(sum[i])*(float)amp_at(m,i)*scale);
+            if(add)out[i]+=last;else out[i]=last;
+        }
+        s->output_last=last;return;
+    }
     for (uint32_t i = 0; i < n; i++) {
         int32_t y = (int32_t)(fm6_output_clip(sum[i]) * (float)amp_at(m, i) * scale);
         if(s->correction_pending){

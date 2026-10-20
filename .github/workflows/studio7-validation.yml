@@ -45,17 +45,21 @@ jobs:
           fi
           test "$(git -C "$AC79_SDK" rev-parse HEAD)" = d179b4484759423312073f5fbb232501aa491047
       - name: Compile original baseline configuration
-        run: ./build.sh --release 1.4.1-studio-tess.6-validation
+        run: |
+          ./build.sh --release 1.4.1-studio-tess.6-validation
+          cp build/melodee-1.4.1-studio-tess.6-validation.fwsc build/melodee.fwsc
       - name: Full registered host and web checks
         run: bash tests/run_tests.sh
       - name: New foundations and sanitizers
         run: |
-          for unit in step clock kit; do
-            cc -std=c11 -O2 -Wall -Wextra -Werror -Ifirmware/src tests/studio7_${unit}_test.c -o build/studio7_${unit}_test
+          for unit in step clock kit state; do
+            cc -std=c11 -O2 -Wall -Wextra -Werror -Wno-unused-function -Ifirmware/src tests/studio7_${unit}_test.c -o build/studio7_${unit}_test
             build/studio7_${unit}_test
             cc -std=c11 -O1 -g -fsanitize=address,undefined -Ifirmware/src tests/studio7_${unit}_test.c -o build/studio7_${unit}_sanitize
             build/studio7_${unit}_sanitize
           done
+          cc -std=c11 -O2 -Ifirmware/src tests/gen_test.c -o build/studio7_gen_test
+          build/studio7_gen_test
       - uses: actions/upload-artifact@v4
         if: always()
         with:
