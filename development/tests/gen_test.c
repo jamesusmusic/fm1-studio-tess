@@ -10,6 +10,10 @@
  * inside the generator's range; a rest leaves out's {note 60, vel 100} (LOCK records it); the random draws per
  * step are exactly those tests/tessera_baseline.txt depends on; mutation keeps the settings in range. Also Euclid's
  * hits per cycle (= PULSES) and Turing at PROB 0 repeating every LENGTH steps. Prints the host cost per step. */
+/* Expose the POSIX benchmark clock in strict C11 builds. */
+#ifndef _POSIX_C_SOURCE
+#define _POSIX_C_SOURCE 200809L
+#endif
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
