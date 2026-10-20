@@ -276,7 +276,7 @@ def build_app(stub):
         raise SystemExit("resident audio requires MELODEE_SIZE=1 for the verified IR placement pass")
     elf = OUT / "melodee.elf"
     extra_ld = ["--defsym=AUDIO_RESIDENT=1"] if os.environ.get("MELODEE_RAM_AUDIO") == "1" else []
-    tc("pi32v2/bin/ld", "--gc-sections", *extra_ld, "-T", FW / "app.ld", OUT / "crt0.o", OUT / "fm1_vec.o", OUT / "fm1_isr.o",
+    tc("pi32v2/bin/ld", "--gc-sections", *extra_ld, "-Map", OUT / "melodee.map", "-T", FW / "app.ld", OUT / "crt0.o", OUT / "fm1_vec.o", OUT / "fm1_isr.o",
        OUT / "melodee.o", "-o", elf)
     for sect in ("text.bin", "data.bin", "ramtext.bin", "dsptext.bin", "dsptables.bin", "audiotext.bin"):
         (OUT / sect).unlink(missing_ok=True)

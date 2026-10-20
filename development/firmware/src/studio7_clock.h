@@ -3,6 +3,7 @@
  * Generator-local musical time; no hardware, float accumulation or LCM buffer. */
 #pragma once
 #include <stdint.h>
+#include "studio7_math.h"
 #ifndef MELODEE_FREESTANDING
 #include <string.h>
 #endif /* target unity build supplies its freestanding libc */
@@ -15,7 +16,8 @@ typedef struct {
     int16_t drift; /* basis points: -100..100; positive runs faster */
 } s7_meter_t;
 typedef struct {
-    uint64_t next,last,remainder,denominator;
+    uint64_t next,last;
+    uint32_t remainder,denominator;
     uint32_t index;
     uint8_t started;
 } s7_clock_t;
@@ -44,7 +46,7 @@ static uint32_t s7_bar_units(const s7_meter_t *m)
 {return S7_QUARTER*4u*m->numerator/m->denominator;}
 static int s7_group_accent(const s7_meter_t *m,uint64_t time)
 {
-    uint32_t pos=(uint32_t)(time%s7_bar_units(m)),at=0;
+    uint32_t pos=s7_mod64(time,s7_bar_units(m)),at=0;
     for(uint32_t i=0;i<m->group_count;i++){
         if(pos==at)return i?1:2;
         at+=S7_QUARTER*4u*m->group[i]/m->denominator;
@@ -64,13 +66,13 @@ static int s7_clock_take(s7_clock_t *c,const s7_meter_t *m,uint64_t now,
                          uint32_t base_n,uint32_t base_d,uint64_t *onset)
 {
     if(!s7_meter_valid(m)||!base_n||base_n>16||!base_d||base_d>8||c->next>now)return 0;
-    uint64_t den=(uint64_t)base_d*m->ratio_n*(uint32_t)(10000+(m->freeze?0:m->drift));
+    uint32_t den=base_d*m->ratio_n*(uint32_t)(10000+(m->freeze?0:m->drift));
     uint64_t num=(uint64_t)S7_QUARTER*base_n*m->ratio_d*10000u;
-    if(c->denominator&&c->denominator!=den)c->remainder=c->remainder*den/c->denominator;
+    if(c->denominator&&c->denominator!=den)c->remainder=(uint32_t)s7_div64((uint64_t)c->remainder*den,c->denominator,0);
     c->denominator=den;
     *onset=c->last=c->next;c->started=1;c->index++;
     uint64_t value=num+c->remainder;
-    c->next+=value/den;c->remainder=value%den;
+    c->next+=s7_div64(value,den,&c->remainder);
     return 1;
 }
 /* Re-align changes future placement only: a hit already emitted at `now`
@@ -78,7 +80,7 @@ static int s7_clock_take(s7_clock_t *c,const s7_meter_t *m,uint64_t now,
 static int s7_clock_realign(s7_clock_t *c,const s7_meter_t *m,uint64_t now,int quantized)
 {
     if(!s7_meter_valid(m))return 0;
-    uint64_t span=s7_bar_units(m),at=quantized?(now/span+1u)*span:now;
+    uint32_t span=s7_bar_units(m);uint64_t at=quantized?(s7_div64(now,span,0)+1u)*span:now;
     at+=(uint64_t)span*m->phase/S7_PHASE_UNITS;
     if(c->started&&at<=c->last)at+=span;
     c->next=at;c->remainder=c->denominator=0;return 1;

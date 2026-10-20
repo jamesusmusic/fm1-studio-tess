@@ -97,7 +97,8 @@ static void bank_upgrade_layout(uint8_t *raw)
         uint8_t old[8];memcpy(old,raw+BANK_EXTRA_OFF+i*8u,8u);
         s7_step_pack(raw+BANK_EXTRA_OFF,&bit,old);
     }
-    memmove(raw+BANK_TIMING_OFF,raw+BANK_V6_TIMING_OFF,BANK_S7_OFF-BANK_TIMING_OFF);
+    volatile uint8_t *move=raw; /* forward overlap, no freestanding memmove dependency */
+    for(uint32_t i=0;i<BANK_S7_OFF-BANK_TIMING_OFF;i++)move[BANK_TIMING_OFF+i]=move[BANK_V6_TIMING_OFF+i];
     memset(raw+BANK_S7_OFF,0,BANK_STORE_SIZE-4u-BANK_S7_OFF);
     uint32_t m=BANK_MAGIC;memcpy(raw,&m,4u);
 }
