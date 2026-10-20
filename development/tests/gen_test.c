@@ -1,3 +1,5 @@
+/* Studio Tess 7 integration and validation modifications — By: Inputsignwave.
+ * Upstream authorship and licence notices below remain applicable. */
 /* SPDX-License-Identifier: GPL-3.0-only
  * Copyright (C) 2026 Theo Dainis (melodee-tess) */
 /* Unit test of the note generators (firmware/src/gen.c) on their own: no sequencer, no tracks, no Melodee; only

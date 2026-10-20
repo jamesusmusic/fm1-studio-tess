@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Studio Tess 7 integration and validation modifications — By: Inputsignwave.
 # SPDX-License-Identifier: GPL-3.0-only
 # Modifications Copyright (C) 2026 Kerem Kilic (Ellic Studio)
 # Copyright (C) 2026 ChoralRoot FM-1 contributors

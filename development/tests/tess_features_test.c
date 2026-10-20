@@ -1,3 +1,5 @@
+/* Studio Tess 7 integration and validation modifications — By: Inputsignwave.
+ * Upstream authorship and licence notices below remain applicable. */
 /* SPDX-License-Identifier: GPL-3.0-only */
 #define main hostsim_main
 #include "hostsim.c"

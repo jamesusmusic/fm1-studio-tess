@@ -1,3 +1,5 @@
+/* Studio Tess 7 integration and validation modifications — By: Inputsignwave.
+ * Upstream authorship and licence notices below remain applicable. */
 /* SPDX-License-Identifier: GPL-3.0-only */
 /* Exercise the bounded flash allocation and the real boot/track paths. */
 #define STUDIO_STORAGE_TEST_INCLUDE
