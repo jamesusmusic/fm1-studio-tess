@@ -1,3 +1,5 @@
+/* Studio Tess 7 integration and validation modifications — By: Inputsignwave.
+ * Upstream authorship and licence notices below remain applicable. */
 /* SPDX-License-Identifier: GPL-3.0-only
  * Copyright (C) 2026 Kerem Kilic (Ellic Studio) */
 /* The tracks in use (song.ntrk, core.h trk_n): one to start with, up to NTRK, always from track 1. Stage's sheet adds

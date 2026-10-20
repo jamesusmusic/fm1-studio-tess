@@ -35,7 +35,7 @@ jobs:
         id: build-deps
         with:
           path: .build-deps
-          key: studio7-jieli-sdk-d179b448-v2
+          key: studio7-jieli-sdk-d179b448-v3
       - name: Toolchain and pinned SDK
         run: |
           if [ ! -x "$JIELI_TOOLCHAIN/pi32v2/bin/clang" ]; then
@@ -46,7 +46,7 @@ jobs:
         if: steps.build-deps.outputs.cache-hit != 'true'
         with:
           path: .build-deps
-          key: studio7-jieli-sdk-d179b448-v2
+          key: studio7-jieli-sdk-d179b448-v3
       - name: Compile Studio 7 development candidate
         run: |
           ./build.sh --release 1.4.1-studio-tess.7-dev1
