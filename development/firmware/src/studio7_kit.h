@@ -4,7 +4,9 @@
  * Lane roles: kick, snare, closed hat, open hat, four percussion roles. */
 #pragma once
 #include <stdint.h>
+#if __STDC_HOSTED__
 #include <string.h>
+#endif /* target unity build supplies its freestanding libc */
 typedef struct {
     uint8_t enabled,density[8],role[8],variation,fill,human,ghost,accent;
     uint8_t anchors[64],source;
@@ -19,7 +21,8 @@ return x^(x>>16);}
 static s7_kit_t s7_kit_default(void)
 {
     s7_kit_t k={0};k.ghost=40;k.accent=115;
-    for(uint32_t i=0;i<8;i++){k.role[i]=(uint8_t)i;k.density[i]=50;}
+    static const uint8_t roles[8]={0,1,4,2,3,5,6,7}; /* BD SD CP CH OH TM RS CB */
+    for(uint32_t i=0;i<8;i++){k.role[i]=roles[i];k.density[i]=50;}
     return k;
 }
 static int s7_kit_valid(const s7_kit_t *k)
@@ -52,6 +55,13 @@ static int s7_kit_generate(s7_kit_out_t *out,const s7_kit_t *k,uint32_t seed,
         if(bar&&s7_hash(h^bar)%100u<k->variation)h=s7_hash(h^bar*0xC2B2AE35u);
         uint32_t density=k->density[l],chance=(base_hit&bit)?density:density/4u;
         if(density&&group_accent&&role<2)chance+=(100u-chance)/3u;
+        if(!(base_hit&bit)){
+            /* Shared structural roles: kick establishes the downbeat, snare
+             * answers subgroup accents, percussion leaves room between them. */
+            if(group_accent==2&&role==1)chance/=3u;
+            if(group_accent==1&&role==0)chance/=2u;
+            if(role>=4&&!phrase_end&&s7_hash(seed^step*0x27D4EB2Du)%3u)chance/=2u;
+        }
         if(density&&phrase_end)chance+=(100u-chance)*k->fill/100u;
         int play=!k->enabled?(base_hit&bit)!=0:(lock&bit)!=0||h%100u<chance;
         if(!play)continue;

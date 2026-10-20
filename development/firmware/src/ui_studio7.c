@@ -3,20 +3,20 @@
  * Central graph/slot IDs, labels, ranges and help for project-owned controls. */
 static uint8_t s7_ui_lane,s7_ui_step,s7_ui_group;
 static const struct {const char *label[4],*help;} S7_CONTROLS[]={
-    {{"LOCAL","BEATS","UNIT","GROUPS"},"Independent local meter"},
-    {{"COUNT","GROUP","BEATS","TOTAL"},"Groups add to the meter"},
-    {{"NUM","DEN","COND","REFERENCE"},"NUM events against DEN"},
-    {{"PHASE","DRIFT","FREEZE","ALIGN"},"Align: left NOW, right BAR"},
-    {{"RESET","LOCAL","METER","RATE"},"Reset at the chosen event"},
-    {{"SEEDED","SEED","ROLL","CHAOS"},"Seed repeats after PLAY"},
-    {{"DEVELOP","SOURCE","VARY","FILL"},"Develop a DRUM pattern"},
-    {{"LANE","DENSITY","ROLE","SOURCE"},"Roles coordinate eight lanes"},
-    {{"HUMAN","GHOST","ACCENT","VARY"},"Anchors keep their timing"},
-    {{"STEP","MASK","PROTECT","CLEAR"},"Protect existing source hits"},
-    {{"STEP","A","B","PROB"},"A plays, B transposes A"},
-    {{"PITCH 1","PITCH 2","PITCH 3","PITCH 4"},"Four independent dividers"}
+    {{"LOCAL","BEATS","UNIT","GRPS"},"Local meter"},
+    {{"COUNT","GROUP","BEATS","TOTAL"},"Accent grouping"},
+    {{"NUM","DEN","COND","REF"},"NUM against DEN"},
+    {{"PHASE","DRIFT","HOLD","ALIGN"},"NOW < ALIGN > BAR"},
+    {{"RESET","LOCAL","METER","RATE"},"Clock reset event"},
+    {{"RNG","SEED","ROLL","CHAOS"},"Repeat from PLAY"},
+    {{"KIT","SRC","VARY","FILL"},"Develop source kit"},
+    {{"LANE","DENS","ROLE","SRC"},"Eight kit roles"},
+    {{"HUMAN","GHOST","ACC","VARY"},"Anchors keep time"},
+    {{"STEP","MASK","LOCK","CLEAR"},"Protect source hits"},
+    {{"STEP","A","B","PROB"},"A + B transposes"},
+    {{"P1","P2","P3","P4"},"Four dividers"}
 };
-static const char *const S7_ROLE_NAME[]={"KICK","SNARE","CH HAT","OP HAT","PERC 1","PERC 2","PERC 3","PERC 4"};
+static const char *const S7_ROLE_NAME[]={"KICK","SNARE","CH","OH","PERC 1","PERC 2","PERC 3","PERC 4"};
 static const char *const S7_RESET_NAME[]={"PLAY","BANK","FORM","KEEP"};
 static const char *const S7_REF_NAME[]={"LOCAL","MASTER","SECTION","PATTERN"};
 static const char *studio7_ui_label(uint32_t graph,uint32_t slot)
@@ -31,7 +31,7 @@ static void studio7_ui_value(uint32_t graph,uint32_t slot,char out[16])
     case GR_S7_METER:v=slot==0?m->enabled:slot==1?m->numerator:slot==2?m->denominator:m->group_count;break;
     case GR_S7_GROUP:v=slot==0?m->group_count:slot==1?s7_ui_group+1:slot==2?m->group[s7_ui_group%m->group_count]:m->numerator;break;
     case GR_S7_RATIO:if(slot==2)text=STUDIO7_COND_NAME[m->condition];else if(slot==3)text=S7_REF_NAME[m->reference];else v=slot==0?m->ratio_n:m->ratio_d;break;
-    case GR_S7_PHASE:if(slot==3)text="NOW/BAR";else v=slot==0?m->phase:slot==1?m->drift:m->freeze;break;
+    case GR_S7_PHASE:if(slot==3)text="TURN";else v=slot==0?m->phase:slot==1?m->drift:m->freeze;break;
     case GR_S7_RESET:if(slot==0)text=S7_RESET_NAME[m->reset];else if(slot==1)text=m->enabled?"ON":"OFF";else if(slot==2){fmt_int(out,m->numerator);str_cpy(out+str_len(out),"/",2);fmt_int(out+str_len(out),m->denominator);return;}else{fmt_int(out,m->ratio_n);str_cpy(out+str_len(out),":",2);fmt_int(out+str_len(out),m->ratio_d);return;}break;
     case GR_S7_SEED:if(slot==2)text="ROLL";else v=slot==0?s->seeded:slot==1?s->seed:s->grids.chaos;break;
     case GR_S7_KIT:v=slot==0?k->enabled:slot==1?k->source+1:slot==2?k->variation:k->fill;break;
@@ -84,7 +84,7 @@ static void studio7_ui_knob(uint32_t graph,uint32_t slot,int32_t delta)
     case GR_S7_RESET:if(slot==0)m->reset=(uint8_t)clamp((int32_t)m->reset+dir,0,3);break;
     case GR_S7_SEED:
         if(slot==0){s->seeded=(uint8_t)clamp((int32_t)s->seeded+dir,0,1);studio7_restart(tr);}
-        if(slot==1){s->seed=(uint16_t)clamp((int32_t)s->seed+d,1,128);s->seeded=1;studio7_restart(tr);}
+        if(slot==1){s->seed=(uint16_t)clamp((int32_t)s->seed+d,1,128);s->seeded=1;if(tessera.mode[tr]==TESS_ENG_AWAKE)gen_awake_fill(&s->awake,s->seed);if(tessera.mode[tr]==TESS_ENG_POLY)gen_poly_fill(&s->poly,s->seed);if(tessera.mode[tr]==TESS_ENG_EUCLID)tessera.euclid[tr].pitch_seed=(uint8_t)s->seed;studio7_restart(tr);}
         if(slot==2)studio7_roll(tr);
         if(slot==3)s->grids.chaos=(uint8_t)clamp((int32_t)s->grids.chaos+d,0,100);break;
     case GR_S7_KIT:
