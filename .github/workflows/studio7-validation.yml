@@ -1,0 +1,67 @@
+name: Studio Tess development validation
+on:
+  push:
+    branches: [studio-tess-7]
+    paths: ['development/**', '.github/workflows/studio7-validation.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: studio7-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  target-and-host:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: development
+    env:
+      JIELI_TOOLCHAIN: ${{ github.workspace }}/.build-deps/jieli/toolchain
+      AC79_SDK: ${{ github.workspace }}/.build-deps/sdk
+      MELODEE_RAM_AUDIO: '1'
+      PARALLEL: '2'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libharfbuzz-dev libfribidi-dev libraqm-dev
+          python -m pip install Pillow fonttools
+      - uses: actions/cache@v4
+        with:
+          path: .build-deps
+          key: studio7-jieli-sdk-d179b448-v1
+      - name: Toolchain and pinned SDK
+        run: |
+          if [ ! -x "$JIELI_TOOLCHAIN/pi32v2/bin/clang" ]; then
+            tools/get_toolchain.sh "$GITHUB_WORKSPACE/.build-deps/jieli"
+          fi
+          if [ ! -d "$AC79_SDK/.git" ]; then
+            git clone --depth 1 --branch AC79NN_SDK_V1.2.1_2023-12-13 https://gitee.com/Jieli-Tech/fw-AC79_AIoT_SDK.git "$AC79_SDK"
+          fi
+          test "$(git -C "$AC79_SDK" rev-parse HEAD)" = d179b4484759423312073f5fbb232501aa491047
+      - name: Compile original baseline configuration
+        run: ./build.sh --release 1.4.1-studio-tess.6-validation
+      - name: Full registered host and web checks
+        run: bash tests/run_tests.sh
+      - name: Lossless step codec and sanitizers
+        run: |
+          cc -std=c11 -O2 -Wall -Wextra -Werror -Ifirmware/src tests/studio7_step_test.c -o build/studio7_step_test
+          build/studio7_step_test
+          cc -std=c11 -O1 -g -fsanitize=address,undefined -Ifirmware/src tests/studio7_step_test.c -o build/studio7_step_sanitize
+          build/studio7_step_sanitize
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: development-validation-${{ github.sha }}
+          path: |
+            development/build/host/log/
+            development/build/*.dis
+            development/build/*.elf
+            development/build/*audio*.json
+            development/build/ui_new/report.txt
+          retention-days: 14
