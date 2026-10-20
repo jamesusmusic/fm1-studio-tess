@@ -4,7 +4,7 @@
  * Lane roles: kick, snare, closed hat, open hat, four percussion roles. */
 #pragma once
 #include <stdint.h>
-#if __STDC_HOSTED__
+#ifndef MELODEE_FREESTANDING
 #include <string.h>
 #endif /* target unity build supplies its freestanding libc */
 typedef struct {

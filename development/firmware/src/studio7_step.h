@@ -5,7 +5,7 @@
  * No note, inactive field, velocity, probability or bank is discarded. */
 #pragma once
 #include <stdint.h>
-#if __STDC_HOSTED__
+#ifndef MELODEE_FREESTANDING
 #include <string.h>
 #endif /* target unity build supplies its freestanding libc */
 #define STUDIO7_STEP_BITS 61u

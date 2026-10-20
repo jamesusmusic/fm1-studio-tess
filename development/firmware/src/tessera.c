@@ -761,6 +761,7 @@ static void tess_knob_body(uint32_t k, int32_t s)
              * arp_note == 0 as an owner, so a clamped MIDI note 0 could hang. */
             tessera_kill(&trk[tr]);
         }
+        if(m>=TESS_ENG_GRIDS&&mode<TESS_ENG_GRIDS)studio7_track[tr].seeded=1;
         tessera.mode[tr] = (uint8_t)m;
         studio7_track[tr].mode=(uint8_t)m;studio7_restart(tr);
         if (tessera.evolve[tr].form) tess_form_restart(tr);   /* the sections were another engine's */
