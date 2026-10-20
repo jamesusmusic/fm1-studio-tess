@@ -51,6 +51,18 @@ jobs:
         run: |
           ./build.sh --release 1.4.1-studio-tess.7-dev1
           cp build/melodee-1.4.1-studio-tess.7-dev1.fwsc build/melodee.fwsc
+      - uses: actions/upload-artifact@v4
+        with:
+          name: studio7-target-${{ github.sha }}
+          path: |
+            development/build/*.fwsc
+            development/build/melodee.bin
+            development/build/*.elf
+            development/build/*.dis
+            development/build/*.map
+            development/build/*audio*.json
+            development/build/release-*/SHA256SUMS
+          retention-days: 14
       - name: Link memory diagnostics
         if: failure()
         run: |

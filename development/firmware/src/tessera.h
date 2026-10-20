@@ -11,6 +11,7 @@ static void studio7_restart(uint32_t tr);
 static int studio7_local(const track_t *t);
 static void studio7_tick(track_t *t,uint32_t n);
 static void studio7_start(void);
+static s7_meter_t studio7_meter(uint32_t tr);
 static void studio7_emit(track_t *t);
 static void studio7_drum_stop(uint32_t tr);
 static void studio7_pending_clear(uint32_t tr);
