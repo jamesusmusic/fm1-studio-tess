@@ -1,15 +1,34 @@
 # Studio FM-1 roadmap
 
+## Current execution — 20 October 2026
+
+By: Inputsignwave
+
+Performance 7 is implemented on `studio-tess-7`: selective Grids/BOUNCE/AWAKE/POLY,
+independent meters and accent groups, ratios, phase/drift/freeze/realignment,
+fractional capture and coordinated eight-lane KIT development with anchors,
+densities, accents, ghost notes, hats, seeds, variations and fills. All synth
+engines are retained. FBK7 fits the same atomic A/B allocation and imports FBKT/FBKK.
+See `development/STUDIO7_BUILD_STATUS.md` and `development/STUDIO7_VALIDATION.md`
+for exact software evidence and remaining physical acceptance. No device was
+flashed. The user reports no current audio faults in installed Performance 6.
+
+The dated checklists below retain the original planning/hardware-report context.
+They do not indicate that the features just listed are still unimplemented.
+Hardware acceptance and measured polish come next; broader phrase/arrangement
+tools, sound/timbre morphing, BRANCH/LOGIC, SLOTH/OCHD and MPE remain later work.
+
+
 ## Generator integration and attribution — agreed 17 October 2026
 
 By: Inputsignwave
 
-- [ ] Selectively integrate Grids, BOUNCE, AWAKE and POLY, retaining the full existing synth engine set, including FM6, CZ-1 and Prophet. Do not adopt the donor MACRO/reduced-engine build profile.
-- [ ] Preserve our FBKT atomic project storage and legacy migration; adapt donor TSR3/TSR4 fields and backup conversion to our format without reintroducing overlapping flash objects.
-- [ ] Verify harmony/SONG, note durations, MIDI note ownership, one-pass capture, FORM/EVOLVE, repeatable seeds and CPU/voice budgets for the new generators.
-- [ ] Retain upstream generator credits and mark our original work, ports, fixes and hardening as Inputsignwave in source and handoff material.
+- [x] Selectively integrate Grids, BOUNCE, AWAKE and POLY, retaining the full existing synth engine set, including FM6, CZ-1 and Prophet. Do not adopt the donor MACRO/reduced-engine build profile.
+- [x] Preserve atomic project storage, object identities and legacy migration; adapt the donor fields into FBK7 without overlapping flash objects, importing original FBKT/FBKK layouts.
+- [x] Verify harmony/SONG, durations, MIDI ownership, capture, FORM/EVOLVE, seeds and software budgets; hardware acceptance remains pending.
+- [x] Retain upstream generator credits and mark our original work, ports, fixes and hardening as Inputsignwave in source and handoff material.
 
-The user reports that the Tess developer has received our build and has adopted or intends to adopt our features and bug fixes. This is collaboration context, not independent verification of which patches have landed upstream. Preserve Inputsignwave credit with ported contributions. Generator work above is approved and pending; the attribution update does not implement it.
+The user reports that the Tess developer has received our build and has adopted or intends to adopt our features and bug fixes. This is collaboration context, not independent verification of which patches have landed upstream. Preserve Inputsignwave credit with ported contributions. The generator work above is implemented in Performance 7; the earlier attribution-only update did not implement it.
 
 ## Goal
 Keep Melodee's synth engines and sound-design facilities, adding Tessera generative sequencing and rhythm morphing. The synth FM-1 may be played from a Seaboard RISE or sequenced by the Polyend Tracker. A second FM-1 with a groovebox focus remains optional. zp12 is excluded.

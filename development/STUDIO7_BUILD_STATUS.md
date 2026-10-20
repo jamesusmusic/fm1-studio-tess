@@ -3,8 +3,8 @@
 By: Inputsignwave
 
 This is the active expanded patch, based on the preserved Performance 6 snapshot.
-It is a development candidate until the complete target, host, storage, emulator
-and resource checks below pass. No device has been flashed by this work.
+The software validation record and remaining physical acceptance are documented
+in `STUDIO7_VALIDATION.md`. No device has been flashed by this work.
 
 ## Implemented paths
 
@@ -79,11 +79,21 @@ and CPU budgets passed in the focused and complete baseline suites.
   state round trips and malformed/truncated input rejection passed locally,
   including AddressSanitizer/UndefinedBehaviorSanitizer in the foundations stage.
 - Original generator note/state baseline: unchanged after adapter integration.
-- Actual .7 full host/web run: in progress; results must be recorded before release.
-- Actual .7 target build/resource/disassembly run: pending publication of this commit.
-- Emulator v0.2.0: Performance 6 package booted, 43 LCD frames and a 2.81-second
-  WAV produced. Actual .7 emulator run is still required. Unimplemented MMIO in
-  this emulator limits claims about hardware equivalence.
+- Actual .7 full local host/web run: passed in 164 seconds, including target
+  disassembly budgets and registered recovery tests. All 337 golden renders remain
+  unchanged with no health, routing, CPU-budget failures or crashes.
+- Target `8057dbd`: native Linux compilation and package creation passed. Audio
+  working arena 49,600 bytes (minimum 49,152); four largest engine states 30,448.
+  Resident-call checks and unavailable-runtime-helper checks pass.
+- Actual .7 emulator v0.2.0: package boot/note audio and synthetic four-track
+  AWAKE/POLY/BOUNCE/KIT project completed 3,000 emulated milliseconds each;
+  45/148 LCD frames, audible-range PCM and zero clipped samples. Package/application
+  hashes match the rebuilt target. Eight unsupported MMIO addresses and an offline
+  CPU1 worker limit this evidence to the emulator's serial fallback.
+- Final CI full host/web plus strict/sanitizer checks: passed, 20 October 2026.
+  Full suite completed in 434 seconds, with 337 unchanged renders and no budget,
+  routing or health failures. Run:
+  https://github.com/jamesusmusic/fm1-studio-tess/actions/runs/39449681801 .
 - Hardware check remains for cold starts, real MIDI/USB, busy kits and long sessions.
   The user reports no active audio faults in the current installed build.
 

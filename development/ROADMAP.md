@@ -121,6 +121,12 @@ firmware has no active audio fault report. Preserve Performance 6 as the baselin
 - [x] Implement/test pure local clock, deterministic kit, state and lossless step codecs.
 - [x] Connect the new modes, controls, fractional capture and project state.
 - [x] Pass focused real-sequencer, capture, track-removal and control-extreme checks.
-- [ ] Complete the expanded full host/web, target resource and disassembly checks.
-- [ ] Run the actual .7 firmware package in the chip emulator and package the candidate.
+- [x] Complete the expanded full host/web, target resource and disassembly checks.
+- [x] Run the actual .7 firmware package in the chip emulator and prepare the candidate.
 - [ ] Hardware acceptance on the FM-1 (no automated flash).
+
+Final software validation: CI run 39449681801 passed on compiled commit `8057dbd`.
+Full Linux host/web suite: 434 s; local suite: 164 s; 337 unchanged sound renders.
+Strict/sanitizer, target resident-call/resource checks and exact-byte package
+emulator smoke checks pass. CPU1 remains offline in the emulator; physical
+acceptance is still required. No hardware flash or main merge was performed.
