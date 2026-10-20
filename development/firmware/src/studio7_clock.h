@@ -3,7 +3,9 @@
  * Generator-local musical time; no hardware, float accumulation or LCM buffer. */
 #pragma once
 #include <stdint.h>
+#if __STDC_HOSTED__
 #include <string.h>
+#endif /* target unity build supplies its freestanding libc */
 #define S7_QUARTER 1048576u
 #define S7_PHASE_UNITS 4096u
 typedef struct {

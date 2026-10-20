@@ -14,7 +14,7 @@ int main(void)
         assert(s7_kit_generate(&b,&k,seed,s,bar,9,1,96,s%4==0,s==63));
         assert(!memcmp(&a,&b,sizeof a));assert((a.hit&k.anchors[s])==k.anchors[s]);
         assert((a.accent&k.anchors[s])==(1u&k.anchors[s]));
-        assert(!(a.accent&~a.hit));assert((a.hit&12)!=12);
+        assert(!(a.accent&~a.hit));assert((a.hit&24)!=24);
         for(uint32_t l=0;l<8;l++){
             if(k.anchors[s]&(1u<<l))assert(a.velocity[l]==96&&!a.offset[l]);
             if(a.hit&(1u<<l))assert(a.velocity[l]&&a.velocity[l]<=127);

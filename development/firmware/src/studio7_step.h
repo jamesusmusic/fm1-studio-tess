@@ -5,7 +5,9 @@
  * No note, inactive field, velocity, probability or bank is discarded. */
 #pragma once
 #include <stdint.h>
+#if __STDC_HOSTED__
 #include <string.h>
+#endif /* target unity build supplies its freestanding libc */
 #define STUDIO7_STEP_BITS 61u
 #define STUDIO7_STEP_PAIR_COUNT 6816u
 static uint32_t s7_bits_get(const uint8_t *b,uint32_t *at,uint32_t n)

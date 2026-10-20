@@ -1195,9 +1195,9 @@ static void graph_features(const track_t *t, uint32_t graph)
 {
     if(graph>=GR_S7_METER){
         const char *help=studio7_ui_help(graph);
-        cv_text_c(120,18,TY_TX,help,T_TEXT,T_SURF);
+        cv_text_c(120,18,TY_LB,help,T_TEXT,T_SURF);
         cv_text_c(120,53,TY_LB,"Saved with this project",T_MID,T_SURF);
-        cv_text_c(120,83,TY_LB,"REC keeps performed timing",T_THEME,T_SURF);return;
+        cv_text_c(120,83,TY_LB,"REC keeps timing",T_THEME,T_SURF);return;
     }
     if(graph>=GR_DURATION){
         cv_text_c(120,14,TY_TX,graph==GR_DURATION?"Generator note timing":graph==GR_FM_TONE?"FM tone macros":"FM amplitude envelope",T_TEXT,T_SURF);

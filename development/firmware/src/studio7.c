@@ -232,7 +232,7 @@ static void studio7_kit_plan(track_t *t,const s7_meter_t *m,uint32_t bn,uint32_t
     uint32_t len=bank==t->pattern?(uint32_t)t->p[P_SLEN]:(uint32_t)p->timing[0];
     uint32_t step=index%(len?len:1u);const step_t *base=bank==t->pattern?&t->step[step]:&p->step[step];
     uint64_t local=(uint64_t)index*S7_QUARTER*bn/bd,bar=local/s7_bar_units(m);
-    uint64_t condbar=m->reference==1?studio7_run[tr].clock.next/(4u*S7_QUARTER):m->reference==2?bar-studio7_run[tr].section_bar:m->reference==3?index/(len?len:1u):bar;
+    uint64_t condbar=m->reference==1?studio7_run[tr].clock.next/(4u*S7_QUARTER):m->reference==2?(bar>=studio7_run[tr].section_bar?bar-studio7_run[tr].section_bar:0u):m->reference==3?index/(len?len:1u):bar;
     if(!studio7_condition(m->condition,condbar))return;
     uint32_t hit=base->hit,acc=base->acc&hit;
     s7_kit_out_t out;
@@ -272,6 +272,7 @@ static void studio7_tick(track_t *t,uint32_t n)
             studio7_run[tr].now+=delta/quarter;studio7_run[tr].fraction=delta%quarter;
             studio7_reset_event(t,m);
         }
+        if(kit&&!studio7_run[tr].primed){studio7_kit_plan(t,m,bn,bd);studio7_run[tr].primed=1;}
         int fired=0;studio7_fractional=1;
         features_capture_guard(t);
         for(uint32_t j=0;j<16;j++)if(studio7_run[tr].pending[j].on&&studio7_run[tr].pending[j].at<=studio7_run[tr].now){
