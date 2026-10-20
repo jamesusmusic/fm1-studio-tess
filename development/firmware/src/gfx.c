@@ -67,7 +67,7 @@ static uint32_t ty_pixel(void);
 /* Most regions (cards, header, footer) fit the small second canvas. Draw
  * there while SPI reads the first; large graphs reuse the full canvas only
  * after its transfer finishes. No second full-screen-sized allocation. */
-#define CV_ALT_MAX (240u * 8u)                   /* (240 x 24: the diff's hashes took the rest, below) */
+#define CV_ALT_MAX (240u * 4u)                   /* small DMA staging; larger rectangles safely use primary */
 /* Decoded projects use this canvas between draws. A borrow waits for SPI;
  * the wire/archive buffer stays separate because transfers span UI frames. */
 static union {

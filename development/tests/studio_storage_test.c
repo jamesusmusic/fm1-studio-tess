@@ -63,9 +63,33 @@ static void compact_and_tracks(void)
     track_add();assert(trk_n()==4&&!tessera.mode[3]&&!harm_track[3].midi);
     puts("studio: all 32 banks retain distinct notes/timings and SONG assignments; rename retains features; track removal shifts generator/routing ownership and add resets only its new track");
 }
+static void studio7_archives(void)
+{
+    reset();song.ntrk=4;
+    for(uint32_t tr=0;tr<4;tr++){
+        tessera.mode[tr]=(uint8_t)(TESS_ENG_GRIDS+tr);studio7_track[tr].mode=tessera.mode[tr];
+        studio7_track[tr].seeded=1;studio7_track[tr].seed=(uint16_t)(128-tr);
+        studio7_track[tr].meter.enabled=1;studio7_track[tr].meter.drift=(int16_t)(-100+tr*60);
+        studio7_track[tr].kit.anchors[63]=(uint8_t)(1u<<tr);
+    }
+    assert(!project_save(1));uint8_t expected[S7_STATE_BYTES],got[S7_STATE_BYTES];
+    assert(s7_state_encode(expected,sizeof expected,studio7_track));
+    assert(!ed_bk_capture());static uint8_t archive[BANK_STORE_SIZE];uint8_t legacy[TESS_FULL_BYTES];
+    memcpy(archive,ED_BK_RAW,sizeof archive);memcpy(legacy,ed_bk_tess_live,sizeof legacy);
+    tessera_reset();assert(!put_all(0,archive,sizeof archive,st_crc32(archive,sizeof archive)));
+    assert(s7_state_encode(got,sizeof got,studio7_track)&&!memcmp(expected,got,sizeof got));
+    assert(!put_all(31,legacy,sizeof legacy,st_crc32(legacy,sizeof legacy)));
+    assert(s7_state_encode(got,sizeof got,studio7_track)&&!memcmp(expected,got,sizeof got));
+    for(uint32_t tr=0;tr<4;tr++)assert(tessera.mode[tr]==TESS_ENG_GRIDS+tr);
+    studio7_track[0].meter.drift=100;fail_prog_call=prog_calls+1u;assert(project_save(1));fail_prog_call=0;
+    project_load(1);assert(s7_state_encode(got,sizeof got,studio7_track)&&!memcmp(expected,got,sizeof got));
+    uint32_t before=erases;archive[BANK_S7_OFF+5]=255;bank_checksum(archive);
+    assert(put_all(2,archive,sizeof archive,st_crc32(archive,sizeof archive))==2u&&erases==before);
+    puts("studio7: complete archive/legacy companion restore preserve new state; torn saves and malformed extension leave committed settings intact");
+}
 int main(int argc,char **argv)
 {
-    compact_and_tracks();
+    compact_and_tracks();studio7_archives();
     if(argc==3)migration(argv[1],argv[2]);
     return 0;
 }

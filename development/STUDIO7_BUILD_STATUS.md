@@ -57,7 +57,7 @@ offsets and are converted only on a subsequent save/rename/migration. No new NOR
 sectors, loader changes or 0x9D000 writes are involved. Older firmware cannot read
 FBK7; retain a Performance 6 backup for rollback.
 
-The secondary canvas is reduced from 24 to 8 rows to recover 7,680 bytes of SRAM.
+The secondary canvas is reduced from 24 to 4 rows to recover 9,600 bytes of SRAM.
 Larger rectangles use its existing primary-buffer fallback and wait for DMA.
 The LCD ownership test covers both overlapped small draws and the new fallback;
 this trades some main-loop display overlap for audio memory, without changing
