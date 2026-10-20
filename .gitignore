@@ -4,3 +4,7 @@ __pycache__/
 .env
 .env.*
 !.env.example
+.build-env/
+development/build/
+.build-tools/
+.build-deps/
