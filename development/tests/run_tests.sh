@@ -358,6 +358,12 @@ if core && [ $TABLES = 1 ]; then
     t "Studio performance UI and sound saves" performance_ui_test -O1 $FW
     t "Studio features: weighted harmony, SONG bars, MIDI lifecycle and one-pass REC" tess_features_test -O2 $FW
     t "Studio storage: all banks, compact timing, rename and track lifecycle" studio_storage_test -O1 $FW -- python3 tests/studio_upgrade_check.py "$OUT/studio_storage_test"
+    t "Studio 7: lossless inactive-bank step codec" studio7_step_test -O2 $FW
+    t "Studio 7: exact local timing, polymeter and phase" studio7_clock_test -O2 $FW
+    t "Studio 7: coordinated kit invariants and anchors" studio7_kit_test -O2 $FW
+    t "Studio 7: versioned state and malformed records" studio7_state_test -O2 $FW
+    t "Studio 7: sequencer, capture, project and UI integration" studio7_integration_test -O2 $FW
+    t "Tess donor generators: pinned pure module contracts" gen_test -O2 $FW
     t "Studio feature UI: controls, REC undo/redo and overwrite protection" tess_features_ui_test -O1 -DMELODEE_USB_AUDIO=1 $FW
     t "double-tap layers, SCREEN OFF, LFO 2 SYNC / TRIG / POL" layer_screen_test \
         -O1 -DMELODEE_USB_AUDIO=1 $FW

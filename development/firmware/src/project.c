@@ -57,6 +57,7 @@ typedef struct {
     char name[PROJ_NAME_LEN];                  /* the project's name: upper-case ASCII 32..126, 0-padded; "" = none */
     uint16_t user[NTRK];                    /* shared slot + 1; sound remains embedded independently */
     uint8_t tess[TESS_FULL_BYTES], tess_valid; /* custom state, serialized only in the full bank extension */
+    uint8_t s7[S7_STATE_BYTES], s7_valid; /* Studio 7 bank extension; By: Inputsignwave */
     uint32_t sum;
 } __attribute__((may_alias)) project_t;
 /* The four formerly reserved runtime bytes keep Prophet user-slot origins.
@@ -132,7 +133,8 @@ static int proj_ok(const project_t *q)
     if (q->magic != PROJ_MAGIC || q->size != sizeof *q || q->sum != proj_sum(q) ||
         q->sel >= NTRK || q->parts > NPART || q->phys > PROJ_PHYS ||
         !chain_valid(&q->chain) || !motion_valid(&q->motion) ||
-        (q->tess_valid && !tess_full_valid(q->tess, TESS_FULL_BYTES))) return 0;
+        (q->tess_valid && !tess_full_valid(q->tess, TESS_FULL_BYTES)) ||
+        (q->s7_valid && !s7_state_decode(0,q->s7,S7_STATE_BYTES))) return 0;
     for (uint32_t k = 0; k < NTRK; k++) if (q->t[k].engine >= NENGINES || q->pattern[k] >= NPAT || !drum_patch_valid(&q->drum[k]) || !p5_patch_valid(&q->p5[k])) return 0;
     for (uint32_t i = 0; i < RECORD_MAX; i++) if (!recording_valid(&q->recording[i])) return 0;
     return 1;
@@ -366,7 +368,8 @@ static int proj_unpack(project_t *q, const uint8_t *b)
     }
     proj_motion_ids(&q->motion, np);
     if (!chain_valid(&q->chain) || !motion_valid(&q->motion) ||
-        (q->tess_valid && !tess_full_valid(q->tess, TESS_FULL_BYTES))) return 0;
+        (q->tess_valid && !tess_full_valid(q->tess, TESS_FULL_BYTES)) ||
+        (q->s7_valid && !s7_state_decode(0,q->s7,S7_STATE_BYTES))) return 0;
     for (t = 0; t < NTRK; t++)
         for (i = 0; i < FM6_PACKED; i++)
             q->fm6[t][i] = b[end + t * FM6_PACKED + i] & 0x7Fu;
@@ -560,6 +563,8 @@ static void project_capture(project_t *p)
     motion_unguard(f);
     memcpy(p->name, proj_name, str_len(proj_name));
     tess_full_pack(p->tess); p->tess_valid = 1;
+    for(uint32_t k=0;k<NTRK;k++)studio7_track[k].mode=tessera.mode[k];
+    p->s7_valid=(uint8_t)s7_state_encode(p->s7,S7_STATE_BYTES,studio7_track);
     p->sum = proj_sum(p);
 }
 
@@ -762,6 +767,8 @@ static int project_restore_runtime(const project_t *input)
     }
     tessera_reset();
     if (p->tess_valid) tess_full_unpack(p->tess, TESS_FULL_BYTES);
+    if (p->s7_valid){s7_state_decode(studio7_track,p->s7,S7_STATE_BYTES);for(uint32_t k=0;k<NTRK;k++)tessera.mode[k]=studio7_track[k].mode;}
+    for(uint32_t k=0;k<NTRK;k++)studio7_restart(k);
     song.ntrk = (uint8_t)(p->parts - 1u < NTRK ? p->parts : NTRK);
     song.sel = (uint8_t)(p->sel < song.ntrk ? p->sel : 0u);
     fm1_irq_on();

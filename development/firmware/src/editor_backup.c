@@ -211,7 +211,14 @@ static uint32_t ed_bk_commit_inner(void)
 #endif
     } else if (ed_bk_id == 31u) {
         if (!ed_bk_len) tessera_reset();
-        else if (!tess_full_unpack(raw, ed_bk_len)) return 2;
+        else {
+            if(!tess_full_valid(raw,ed_bk_len))return 2;
+            for(uint32_t tr=0;tr<4;tr++)studio7_track[tr].mode=tessera.mode[tr];
+            s7_state_encode(proj_scratch.s7,S7_STATE_BYTES,studio7_track);
+            if(!tess_full_unpack(raw,ed_bk_len))return 2;
+            s7_state_decode(studio7_track,proj_scratch.s7,S7_STATE_BYTES);
+            for(uint32_t tr=0;tr<4;tr++)if(studio7_track[tr].mode>=TESS_ENG_GRIDS&&!raw[tr*TESS_PK_TRACK])tessera.mode[tr]=studio7_track[tr].mode;
+        }
         sync_reload = 1; ui.force = 1; return 0;
     } else if(ed_bk_id==8u){return ed_bk_len?2u:0u;
     } else return 1;

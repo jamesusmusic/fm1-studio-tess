@@ -14,7 +14,7 @@ typedef struct {
     gen_awake_t awake;
     gen_poly_t poly;
     uint16_t seed;
-    uint8_t seeded;
+    uint8_t seeded,mode;
     s7_meter_t meter;
     s7_kit_t kit;
 } s7_track_t;
@@ -26,11 +26,12 @@ static s7_track_t s7_track_default(void)
     for(uint32_t i=0;i<8;i++)t.awake.a[i]=0x21;
     t.poly.div[0]=3;t.poly.div[1]=4;t.poly.span=2;
     for(uint32_t i=0;i<4;i++)t.poly.pitch[i]=(uint8_t)(i*2u);
-    t.meter=s7_meter_default();t.kit=s7_kit_default();return t;
+    t.meter=s7_meter_default();t.kit=s7_kit_default();
+    return t;
 }
 static int s7_track_valid(const s7_track_t *t)
 {
-    if(!t->seed||t->seed>128||t->seeded>1||t->grids.dens>100||t->grids.chaos>100||
+    if(!t->seed||t->seed>128||t->seeded>1||t->mode>9||t->grids.dens>100||t->grids.chaos>100||
        !t->bounce.speed||t->bounce.speed>64||t->bounce.angle>90||!t->bounce.balls||t->bounce.balls>4||
        !t->awake.len_a||t->awake.len_a>16||!t->awake.len_b||t->awake.len_b>16||t->awake.prob>100||
        !t->poly.span||t->poly.span>3||!s7_meter_valid(&t->meter)||!s7_kit_valid(&t->kit))return 0;
@@ -42,7 +43,8 @@ static int s7_track_valid(const s7_track_t *t)
 static void s7_u16_put(uint8_t **p,uint32_t v)
 {*(*p)++=(uint8_t)v;*(*p)++=(uint8_t)(v>>8);}
 static uint32_t s7_u16_get(const uint8_t **p)
-{uint32_t v=(*p)[0]|(uint32_t)(*p)[1]<<8;*p+=2;return v;}
+{uint32_t v=(*p)[0]|(uint32_t)(*p)[1]<<8;*p+=2;
+return v;}
 static void s7_track_encode(uint8_t out[S7_TRACK_BYTES],const s7_track_t *t)
 {
     uint8_t *p=out;memset(out,0,S7_TRACK_BYTES);
@@ -63,7 +65,7 @@ static void s7_track_encode(uint8_t out[S7_TRACK_BYTES],const s7_track_t *t)
     const s7_kit_t *k=&t->kit;
     *p++=k->enabled;memcpy(p,k->density,8);p+=8;memcpy(p,k->role,8);p+=8;
     *p++=k->variation;*p++=k->fill;*p++=k->human;*p++=k->ghost;*p++=k->accent;
-    memcpy(p,k->anchors,64);
+    memcpy(p,k->anchors,64);p+=64;*p++=t->mode;*p++=t->kit.source;
 }
 static int s7_track_decode(s7_track_t *out,const uint8_t in[S7_TRACK_BYTES])
 {
@@ -85,10 +87,11 @@ static int s7_track_decode(s7_track_t *out,const uint8_t in[S7_TRACK_BYTES])
     s7_kit_t *k=&t.kit;
     k->enabled=*p++;memcpy(k->density,p,8);p+=8;memcpy(k->role,p,8);p+=8;
     k->variation=*p++;k->fill=*p++;k->human=*p++;k->ghost=*p++;k->accent=*p++;
-    memcpy(k->anchors,p,64);p+=64;
+    memcpy(k->anchors,p,64);p+=64;t.mode=*p++;t.kit.source=*p++;
     while(p<in+S7_TRACK_BYTES)if(*p++)return 0;
     if(!s7_track_valid(&t))return 0;
-    if(out)*out=t;return 1;
+    if(out)*out=t;
+    return 1;
 }
 static int s7_state_encode(uint8_t *out,uint32_t size,const s7_track_t track[4])
 {

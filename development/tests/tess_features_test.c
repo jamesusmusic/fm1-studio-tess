@@ -125,7 +125,7 @@ static void midi(void)
 }
 static void capture(void)
 {
-    for (uint32_t mode = TESS_ENG_TURING; mode < TESS_ENG_COUNT; mode++) {
+    for (uint32_t mode = TESS_ENG_TURING; mode < TESS_ENG_GRIDS; mode++) {
         reset();
         tessera_knob(0, (int32_t)mode);
         tessera.turing[0].reg = 0xFFFF;

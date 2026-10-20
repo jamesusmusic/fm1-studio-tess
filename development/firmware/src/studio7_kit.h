@@ -7,14 +7,15 @@
 #include <string.h>
 typedef struct {
     uint8_t enabled,density[8],role[8],variation,fill,human,ghost,accent;
-    uint8_t anchors[64];
+    uint8_t anchors[64],source;
 } s7_kit_t;
 typedef struct {
     uint8_t hit,accent,velocity[8];
     int8_t offset[8]; /* signed 1/256 step; caller schedules with lookahead */
 } s7_kit_out_t;
 static uint32_t s7_hash(uint32_t x)
-{x^=x>>16;x*=0x7FEB352Du;x^=x>>15;x*=0x846CA68Bu;return x^(x>>16);}
+{x^=x>>16;x*=0x7FEB352Du;x^=x>>15;x*=0x846CA68Bu;
+return x^(x>>16);}
 static s7_kit_t s7_kit_default(void)
 {
     s7_kit_t k={0};k.ghost=40;k.accent=115;
@@ -23,7 +24,7 @@ static s7_kit_t s7_kit_default(void)
 }
 static int s7_kit_valid(const s7_kit_t *k)
 {
-    if(k->enabled>1||k->variation>100||k->fill>100||k->human>100||
+    if(k->source>7||k->enabled>1||k->variation>100||k->fill>100||k->human>100||
        !k->ghost||k->ghost>127||!k->accent||k->accent>127)return 0;
     uint32_t roles=0;
     for(uint32_t i=0;i<8;i++){
@@ -43,7 +44,8 @@ static int s7_kit_generate(s7_kit_out_t *out,const s7_kit_t *k,uint32_t seed,
     uint32_t lock=k->anchors[step]&base_hit,closed=0,open=0;
     for(uint32_t l=0;l<8;l++){
         uint32_t bit=1u<<l,role=k->role[l];
-        if(role==2)closed=bit;if(role==3)open=bit;
+        if(role==2)closed=bit;
+        if(role==3)open=bit;
         uint32_t h=s7_hash(seed^step*0x9E3779B9u^role*0x85EBCA6Bu);
         /* Variation is a chance to depart from the repeatable core. At zero,
          * all bars repeat; returning to a bar index is reproducible. */
@@ -68,5 +70,6 @@ static int s7_kit_generate(s7_kit_out_t *out,const s7_kit_t *k,uint32_t seed,
         o.hit&=(uint8_t)~remove;o.accent&=o.hit;
         for(uint32_t l=0;l<8;l++)if(remove&(1u<<l)){o.velocity[l]=0;o.offset[l]=0;}
     }
-    *out=o;return 1;
+    *out=o;
+    return 1;
 }

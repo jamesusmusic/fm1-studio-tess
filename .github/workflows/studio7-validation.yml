@@ -44,10 +44,10 @@ jobs:
             git clone --depth 1 --branch AC79NN_SDK_V1.2.1_2023-12-13 https://gitee.com/Jieli-Tech/fw-AC79_AIoT_SDK.git "$AC79_SDK"
           fi
           test "$(git -C "$AC79_SDK" rev-parse HEAD)" = d179b4484759423312073f5fbb232501aa491047
-      - name: Compile original baseline configuration
+      - name: Compile Studio 7 development candidate
         run: |
-          ./build.sh --release 1.4.1-studio-tess.6-validation
-          cp build/melodee-1.4.1-studio-tess.6-validation.fwsc build/melodee.fwsc
+          ./build.sh --release 1.4.1-studio-tess.7-dev1
+          cp build/melodee-1.4.1-studio-tess.7-dev1.fwsc build/melodee.fwsc
       - name: Full registered host and web checks
         run: bash tests/run_tests.sh
       - name: New foundations and sanitizers
@@ -69,5 +69,9 @@ jobs:
             development/build/*.dis
             development/build/*.elf
             development/build/*audio*.json
+            development/build/melodee-1.4.1-studio-tess.7-dev1.fwsc
+            development/build/melodee-app.bin
+            development/build/melodee.bin
+            development/build/release-*/SHA256SUMS
             development/build/ui_new/report.txt
           retention-days: 14

@@ -109,6 +109,21 @@ void graph_tessera_viz(uint32_t tr, int is_panel) {
     uint16_t dim = is_panel ? T_LINE : T_RAISE;
     int32_t y_base = is_panel ? 38 : 14;
 
+    if(mode>=TESS_ENG_GRIDS){
+        const s7_track_t *s=&studio7_track[tr];
+        if(mode==TESS_ENG_BOUNCE){
+            for(uint32_t j=0;j<s->bounce.balls;j++)cv_rrect(18+s->bounce.x[j]*200/255,y_base+s->bounce.y[j]*55/255,6,6,3,c,bg);
+        }else{
+            uint32_t count=mode==TESS_ENG_AWAKE?16u:mode==TESS_ENG_KIT?8u:mode==TESS_ENG_POLY?4u:3u;
+            for(uint32_t j=0;j<count;j++){
+                uint32_t v=mode==TESS_ENG_AWAKE?gen_awake_a(&s->awake,j)*6u:mode==TESS_ENG_KIT?s->kit.density[j]/2u:mode==TESS_ENG_POLY?s->poly.div[j]*3u:s->grids.dens/2u;
+                int32_t x=16+j*208/count,w=208/count-3;
+                cv_rect(x,y_base+55-(int32_t)v,w,v?v:2,c);
+                if(mode==TESS_ENG_AWAKE&&j==s->awake.pos_a)cv_rect(x,y_base+59,w,2,c);
+            }
+        }
+        return;
+    }
     if (mode == TESS_ENG_TURING) {
         const tessera_turing_t *tur = &tessera.turing[tr];
         uint32_t len = tur->len ? tur->len : 16u;
@@ -1178,6 +1193,12 @@ static void graph_scope(uint16_t c, int32_t top, int32_t h)
 /* Each arrangement row selects one bank per track. graph_y, graph_h: the panel's place (ui_pages.c: under its rings) */
 static void graph_features(const track_t *t, uint32_t graph)
 {
+    if(graph>=GR_S7_METER){
+        const char *help=studio7_ui_help(graph);
+        cv_text_c(120,18,TY_TX,help,T_TEXT,T_SURF);
+        cv_text_c(120,53,TY_LB,"Saved with this project",T_MID,T_SURF);
+        cv_text_c(120,83,TY_LB,"REC keeps performed timing",T_THEME,T_SURF);return;
+    }
     if(graph>=GR_DURATION){
         cv_text_c(120,14,TY_TX,graph==GR_DURATION?"Generator note timing":graph==GR_FM_TONE?"FM tone macros":"FM amplitude envelope",T_TEXT,T_SURF);
         cv_text_c(120,43,TY_LB,graph==GR_DURATION?"DIV sets rhythm only":graph==GR_FM_TONE?"Zero = original tone":"Editing ADSR enables it",T_MID,T_SURF);
@@ -1249,6 +1270,7 @@ static void draw_graph(void)
         graph_scope(c, 0, H_GRAPH);
     } else {
         switch (pg->graph) {
+        case GR_S7_METER: case GR_S7_GROUP: case GR_S7_RATIO: case GR_S7_PHASE: case GR_S7_RESET: case GR_S7_SEED: case GR_S7_KIT: case GR_S7_LANE: case GR_S7_HUMAN: case GR_S7_ANCHOR: case GR_S7_AWAKE: case GR_S7_POLY: 
         case GR_HARM: case GR_RANGE: case GR_OUTPUT: case GR_SONG_CHORD: case GR_SONG_KEY: case GR_DURATION: case GR_FM_AMP: case GR_FM_TONE: case GR_FM_PERF:
             cv_oy=0;graph_features(t,pg->graph);
             break;

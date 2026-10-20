@@ -187,7 +187,15 @@ static int features_capture_prepare(track_t *t)
         if (steps[k].n || steps[k].hit || steps[k].time == ST_TIE) { features_notice = 1; return 1; }
     if (bank==t->pattern) recording_prune(t);
     for (uint32_t i = 0; i < RECORD_MAX; i++) if (!recording[i].vel) free++;
-    if (free < NSTEP) { features_notice = 2; return 1; }
+    uint32_t needed=NSTEP;
+    if(tessera.mode[tr]>=TESS_ENG_GRIDS||studio7_track[tr].meter.enabled){
+        const s7_meter_t *m=&studio7_track[tr].meter;
+        uint32_t hits=(uint32_t)t->p[P_SLEN];
+        if(m->enabled)hits=(hits*m->ratio_n*101u+m->ratio_d*100u-1u)/(m->ratio_d*100u)+2u;
+        uint32_t voices=tessera.mode[tr]==TESS_ENG_KIT?8u:tessera.mode[tr]==TESS_ENG_GRIDS||tessera.mode[tr]==TESS_ENG_BOUNCE?3u:1u;
+        needed=hits*voices;
+    }
+    if (free < needed) { features_notice = 2; return 1; }
     feature_run.capture[tr] = 1;
     feature_run.bank[tr] = (uint8_t)bank;
     return 0;
@@ -219,7 +227,7 @@ static void features_capture_note(track_t *t, uint32_t note, uint32_t vel, uint3
     if (!recording_note(t, note, vel, step)) { rec_set(t, 0); features_notice = 2; return; }
     uint32_t i = recording_head[recording_owner(t)];
     recorded_note_t *r = &recording[i];
-    r->on = 0; /* the generator triggered at this grid boundary */
+    if(!studio7_fractional)r->on = 0; /* legacy grid boundary; local clocks retain performed fraction */
     uint32_t span = step_samples(t, period, step);
     if (gate > span) gate = span; /* the generator releases on its next step */
     recording_run[i].held = (uint32_t)((uint64_t)(gate ? gate : 1u) * RECORD_UNIT / period);
@@ -362,6 +370,7 @@ static void features_packed_remove(uint8_t *state,uint32_t track)
 static void features_reset_track(uint32_t k)
 {
     tessera_kill(&trk[k]);features_midi_stop(k);
+    studio7_track[k]=s7_track_default();
     performance[k]=performance_default();
     memset(&tessera.turing[k],0,sizeof tessera.turing[k]);memset(&tessera.euclid[k],0,sizeof tessera.euclid[k]);
     memset(&tessera.markov[k],0,sizeof tessera.markov[k]);memset(&tessera.morph[k],0,sizeof tessera.morph[k]);
@@ -432,7 +441,7 @@ static void features_duration_on(track_t *t,uint32_t note,uint32_t velocity)
     const performance_t *p=&performance[tr];
     /* HIT and REPLACE are monophonic key ownership, with natural audio tails.
      * OVERLAP permits four held pitches; same-pitch retrigger ends its old key. */
-    for(uint32_t k=0;k<4;k++)if(duration_run[tr][k].on && (p->mode==DUR_HIT || !p->overlap || duration_run[tr][k].note==note))features_duration_release(t,k);
+    for(uint32_t k=0;k<4;k++)if(duration_run[tr][k].on && ((!studio7_batch && (p->mode==DUR_HIT || !p->overlap)) || duration_run[tr][k].note==note))features_duration_release(t,k);
     for(uint32_t k=0;k<4;k++)if(!duration_run[tr][k].on){slot=k;break;}
     if(slot==4){slot=0;for(uint32_t k=1;k<4;k++)if(duration_run[tr][k].held>duration_run[tr][slot].held)slot=k;features_duration_release(t,slot);}
     static const uint8_t divs[]={3,2,1,0,6,7};
@@ -444,7 +453,7 @@ static void features_duration_on(track_t *t,uint32_t note,uint32_t velocity)
         uint32_t step=t->seq_idx%NSTEP;
         if(!recording_note(t,note,velocity,step)){rec_set(t,0);features_notice=2;return;}
         uint32_t i=recording_head[recording_owner(t)];duration_run[tr][slot].rec=(uint16_t)i;
-        recording[i].on=0;recording_flags[i]=5; /* held and heard, no quantization */
+        if(!studio7_fractional)recording[i].on=0;recording_flags[i]=5; /* held and heard, no quantization */
         step_t *s=&t->step[step];memset(s,0,sizeof *s);
         s->time=ST_NOTE;s->n=1;s->note[0]=(uint8_t)note;s->vel=(uint8_t)velocity;s->flags=SF_RECORDED;s->acc=255;t->seq_active=1;
     }

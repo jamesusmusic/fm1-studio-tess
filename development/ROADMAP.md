@@ -106,3 +106,21 @@ Current workaround: on the affected track use FEEL > DIV 1/4 or 1/2, GATE near
 100%, HUMAN 0. Slower DIV also slows the rhythm; this is not independent note
 length. Increasing the patch's release alone does not let the attack complete
 while its key is held. Audio bug fixing remains the immediate priority.
+
+## Expanded Studio Tess 7 execution (20 October 2026)
+
+By: Inputsignwave
+
+The approved expanded patch now has runtime, control, recording and FBK7 storage
+integration in `studio-tess-7`. See `STUDIO7_BUILD_STATUS.md` for the implemented
+paths, precise compatibility contract, validation evidence and remaining checks.
+This integrates the updated handoff with our existing plans; current installed
+firmware has no active audio fault report. Preserve Performance 6 as the baseline.
+
+- [x] Pin and selectively adapt Tess v1.3.3 Grids, BOUNCE, AWAKE and POLY.
+- [x] Implement/test pure local clock, deterministic kit, state and lossless step codecs.
+- [x] Connect the new modes, controls, fractional capture and project state.
+- [x] Pass focused real-sequencer, capture, track-removal and control-extreme checks.
+- [ ] Complete the expanded full host/web, target resource and disassembly checks.
+- [ ] Run the actual .7 firmware package in the chip emulator and package the candidate.
+- [ ] Hardware acceptance on the FM-1 (no automated flash).

@@ -89,13 +89,16 @@
 #include "tessera.h"
 #include "song_chain.c"
 #include "seq.c"
+#include "gen.c"
 #include "tessera.c"
 #include "tess_features.c"
+#include "studio7.c"
 #include "audio.c"
 
 /* -------------------------------------------------------------- UI --- */
 #include "panel.c"
 #include "ui.c"
+#include "ui_studio7.c"
 #include "icons.c"               /* parameter icons (MELODEE_ICONS), used by ui_draw.c */
 #include "ui_graph.c"
 #include "ui_draw.c"
