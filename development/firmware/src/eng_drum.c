@@ -307,7 +307,7 @@ static void drum_note_on(track_t *t, voice_t *v)
     drum_flash[(uint32_t)(t - trk) % NTRK] |= (uint8_t)(1u << drum_lane(v->note));
     v->s[3]=(int32_t)drum_event_length; v->s[4]=drum_event_pitch; v->s[5]=drum_event_length!=0;
     if(drum_issid(t)) {                                  /* the hit's own length: its SID voice's gate */
-        #if MELODEE_RETIRED_REFERENCE
+#if MELODEE_RETIRED_REFERENCE
         v->s[2]=DK_SID; v->s[5]=0; v->env_out=32767; dsk_hit(t,v->note,v->vel);
 #else
         v->active=v->gate=v->stage=0; v->env=0;

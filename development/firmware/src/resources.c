@@ -73,7 +73,7 @@ static __attribute__((noinline)) void *resource_allocate(uint32_t id, uint32_t b
     /* Pointer-bearing host state needs 8-byte alignment; target pointers are
      * 4 bytes, preserving the target arena layout. By: Inputsignwave. */
     const uintptr_t alignment=sizeof(uintptr_t);
-    uint32_t size = (bytes + (uint32_t)alignment-1u) & ~((uint32_t)alignment-1u);
+    uint32_t size = (bytes + 3u) & ~3u;
     if (!size) { resource_release(id); return 0; }
     for (uint32_t bank = 0; bank < RESOURCE_BANKS; bank++) {
         if (bank == RESOURCE_CACHE_BANK && !RESOURCE_CACHE_AVAILABLE) continue;
@@ -99,7 +99,7 @@ static __attribute__((noinline)) void *resource_allocate(uint32_t id, uint32_t b
                 if (used > resource_peak) resource_peak = used;
                 return p;
             }
-            at = next;
+            at = (next+alignment-1u)&~(alignment-1u);
         }
     }
     resource_failures++;

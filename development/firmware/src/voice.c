@@ -483,11 +483,11 @@ static void mono_push(track_t *t, uint32_t note)       /* the latest key on top 
 /* SID's MODEL C64 in POLY: the keys held (the mono stack) are the chord its one voice arpeggiates (eng_sid.c) */
 static int trk_chord(const track_t *t) {
 #if MELODEE_RETIRED_REFERENCE
-return ENGINES[t->engine] == &ENG_SID && sid_chord(t);
+    return ENGINES[t->engine] == &ENG_SID && sid_chord(t);
 #else
-(void)t; return 0;
+    (void)t; return 0;
 #endif
- }
+}
 
 static void trk_note_on_work(track_t *t, uint32_t note, uint32_t vel)
 {

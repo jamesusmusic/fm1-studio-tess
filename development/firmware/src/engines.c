@@ -82,7 +82,8 @@ static void eng_state_reset(void) { for (uint32_t k = 0; k < NPART; k++) eng_sta
 static int eng_state_prepare(const track_t *t)
 {
     uint32_t size = t->engine==ENGI_DRUM?drum_bytes(t):eng_state_size(t->engine);
-    return !size || resource_get(RES_ENGINE0 + (uint32_t)(t - trk), size) != 0;
+    if(!size){resource_release(RES_ENGINE0+(uint32_t)(t-trk));return 1;}
+    return resource_get(RES_ENGINE0 + (uint32_t)(t - trk), size) != 0;
 }
 static phys_slot_t *phys_slots(uint32_t part) { return resource_get(RES_ENGINE0 + part % NPART, sizeof(phys_slot_t) * PHYS_POLY); }
 static drum909_part_t *drum909_part(uint32_t part) { return resource_get(RES_ENGINE0 + part % NPART, sizeof(drum909_part_t)); }

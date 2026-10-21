@@ -10,12 +10,13 @@ static uint64_t pcm_hash(uint32_t e,uint32_t pi,uint32_t fx)
     host_preset(&trk[0],e,pi);trk[0].p[P_FXTYPE]=(int16_t)fx;
     trk[0].p[P_FXMIX]=fx?64:0;trk[0].p[P_FXRATE]=60;trk[0].p[P_FXCHAR]=64;
     for(uint32_t i=0;i<4;i++)trk_note_on(&trk[0],48+i*7,100);
-    uint64_t h=1469598103934665603ull;int32_t b[CTL*2];
+    uint64_t h=1469598103934665603ull,energy=0;int32_t b[CTL*2];
     for(uint32_t j=0;j<FS/CTL;j++){
         if(j==FS/CTL/2)for(uint32_t i=0;i<4;i++)trk_note_off(&trk[0],48+i*7);
         mix_block(b,CTL);
-        for(uint32_t k=0;k<CTL*2;k++)h=(h^(uint32_t)b[k])*1099511628211ull;
+        for(uint32_t k=0;k<CTL*2;k++){h=(h^(uint32_t)b[k])*1099511628211ull;energy+=(uint64_t)abs(b[k]);}
     }
+    assert(energy>0);
     return h;
 }
 static void parity(void)
@@ -102,5 +103,10 @@ int main(int argc,char **argv)
     for(uint32_t k=0;k<NENG_SHOWN;k++)assert(eng_vis(k)==(k==0?ENGI_PROPHET:k==1?ENGI_FM6:ENGI_DRUM));
     assert(!eng_state_size(3) && !eng_state_size(ENGI_CZ));
     assert(ENG_DRUM.npresets==2 && TRK_DEF[2][0]==ENGI_FM6);
-    legacy();bypass();stress();return 0;
+    legacy();bypass();stress();
+    reset();host_preset(&trk[0],ENGI_DRUM,0);assert(eng_state_prepare(&trk[0]));
+    assert(resource[RES_ENGINE0].size);trk[0].p[P_E0]=DK_SID;
+    assert(eng_state_prepare(&trk[0]) && !resource[RES_ENGINE0].size);
+    puts("production: live 808-to-retired-kit transition releases its allocation");
+    return 0;
 }
