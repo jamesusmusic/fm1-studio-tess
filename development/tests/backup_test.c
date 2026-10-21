@@ -21,6 +21,8 @@ static void lcd_blit(uint32_t x, uint32_t y, uint32_t w, uint32_t h, const uint1
 #include "../firmware/src/gfx.c"
 #include "../firmware/src/panel.c"
 #include "../firmware/src/ui.c"
+/* No list rendering in this persistence harness; no list pages are collapsed. */
+static int list_gone(uint32_t i) { (void)i;return 0; }
 static void panel_setup(void) {}
 
 static uint8_t nor[0x100000], flash_ok = 1;

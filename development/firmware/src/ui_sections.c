@@ -1,3 +1,4 @@
+/* Studio Tess Sound Designer navigation — By: Inputsignwave. */
 /* SPDX-License-Identifier: GPL-3.0-only
  * Copyright (C) 2026 Kerem Kilic (Ellic Studio) */
 /* An engine's EDIT pages in sections (docs/design README "Sound pages, fast", mock/r7_sound_nav): Prophet's Osc,
@@ -10,6 +11,7 @@
 #define SEC_MAX 16
 #define SEC_TAB_H 26                                    /* the tabs: rows 30 .. 55 (a pill 24 tall at 31) */
 static const struct { const char *prefix, *name; } SEC_RULE[] = {   /* a page's section by its title (first match) */
+    {"DESIGNER", "Designer"},
     {"P5 OSC", "Osc"}, {"P5 B WAVES", "Osc"}, {"P5 MIXER", "Mixer"}, {"P5 FILTER", "Filter"}, {"P5 FLT ENV", "Filter"},
     {"P5 AMP", "Amp"}, {"P5 ENV MOD", "Mod"}, {"P5 POLYMOD", "Mod"}, {"P5 MOD FLT", "Mod"}, {"P5 LFO", "LFO"},
     {"P5 WHEEL", "Wheel"}, {"P5 UNISON", "Voice"}, {"P5 BEND", "Voice"}, {"P5 STORE", "Store"},

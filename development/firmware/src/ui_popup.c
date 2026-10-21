@@ -1,3 +1,5 @@
+/* Studio Tess navigation update — By: Inputsignwave.
+ * Existing upstream notices remain applicable. */
 /* SPDX-License-Identifier: GPL-3.0-only
  * Copyright (C) 2026 Kerem Kilic (Ellic Studio) */
 /* Popups (docs/design: mock/r6_popups, README "Popups"), over the page dimmed (ui_draw.c: drawn under cv_dim).
@@ -80,7 +82,7 @@ static void ps_fav(void) { preset_mark(!preset_favorite()); }
 static void ps_undo(void) { undo_step(0); }
 static const sheet_row_t SHEET_SOUND[] = {
     {"Init sound", 0, 0, 0, CF_INIT_SOUND}, {"Save as user\x85", 0, 0, ps_save, 0}, {"Favourite", ps_fav_v, 0, ps_fav, 0},
-    {"Undo last load", 0, 0, ps_undo, 0}, {"Sound designer", 0, 0, designer_open, 0}};
+    {"Undo last load", 0, 0, ps_undo, 0}};
 /* Stage's: the sound's, then the tracks: the one added (the next), the one removed (the selected: its question) */
 static void ps_trk_v(char *b, uint32_t k, int none)
 {
@@ -95,9 +97,10 @@ static void ps_trk_v(char *b, uint32_t k, int none)
 static void ps_add_v(char *b) { ps_trk_v(b, trk_n(), trk_n() >= NTRK); }
 static void ps_remove_v(char *b) { ps_trk_v(b, song.sel, trk_n() < 2u); }
 static const sheet_row_t SHEET_STAGE[] = {
+    {"Create new track", ps_add_v, 0, track_add, 0},
     {"Init sound", 0, 0, 0, CF_INIT_SOUND}, {"Save as user\x85", 0, 0, ps_save, 0}, {"Favourite", ps_fav_v, 0, ps_fav, 0},
-    {"Undo last load", 0, 0, ps_undo, 0}, {"Sound designer", 0, 0, designer_open, 0},
-    {"Add track", ps_add_v, 0, track_add, 0}, {"Remove track", ps_remove_v, 0, 0, CF_DEL_TRACK}};
+    {"Undo last load", 0, 0, ps_undo, 0},
+    {"Remove track", ps_remove_v, 0, 0, CF_DEL_TRACK}};
 /* the song's (SONG) */
 static int ps_song_free(void)
 {
@@ -164,6 +167,13 @@ static const sheet_row_t SHEET_SHARED[] = {{"Routing", sh_route_v, sh_route_turn
                                            {"Clear shared FX", 0, 0, 0, CF_CLEAR_SHARED}};
 /* PATTERNS' (OCT+): the selected track's pattern; Copy to: its place picked on the grid (ui_patterns.c) */
 static const sheet_row_t SHEET_PATTERNS[] = {{"Copy to\x85", 0, 0, ptc_start, 0}, {"Delete pattern", 0, 0, 0, CF_DEL_PAT}};
+
+static void home_pattern_copy(void); /* ui_menu.c */
+static const sheet_row_t SHEET_HOME_TRACK[] = {{"Remove track",ps_remove_v,0,0,CF_DEL_TRACK}};
+static const sheet_row_t SHEET_HOME_PATTERN[] = {
+    {"Quantize",nt_quantize_v,nt_quantize_grid,nt_quantize,0},
+    {"Copy to\x85",0,0,home_pattern_copy,0}, {"Delete pattern",0,0,0,CF_DEL_PAT},
+    {"Clear pattern",0,0,0,CF_CLEAR_SEQ}, {"Clear motion",0,0,0,CF_CLEAR_MOTION}};
 
 /* the step's: NOTES' note at the cursor (KNOB 1 its length, velocity, chance), the drum grid's hit of the lane there */
 static void st_cap(uint32_t c, char *b)                 /* NOTES' column c as its chip shows it (draw_columns) */

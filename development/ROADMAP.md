@@ -1,5 +1,126 @@
 # Studio FM-1 roadmap
 
+## Top priority for 21 October 2026 — navigation and page guide
+
+By: Inputsignwave
+
+User feedback, 20 October: Performance 7 is installed and **working perfectly**
+in their testing. Treat it as the working baseline for the navigation work.
+This records positive device feedback without claiming that every formal
+endurance/acceptance scenario has been exercised.
+
+Tomorrow's first development work is page/menu organisation and a function
+reference, ahead of additional feature development.
+
+- [ ] **First layout change: conditional generator pages.** Keep PATTERN MODE
+  always accessible; show beat/generator-specific parameters only for the mode
+  selected on the current track. Hide irrelevant generator pages from scrolling
+  and page maps, preserve their saved settings, and retain applicable shared
+  controls. See [the agreed visibility rule](docs/GENERATOR_VISIBILITY_DRAFT.md).
+- [ ] Move the current **hold-OCT+ action sheets into the HOME menu**, as
+  requested: sound tools, track actions, pattern/selected-note actions, song
+  section/jam actions and shared-FX actions. **Create New Track** is the first
+  directly selectable item (renamed from Add track). Move **Sound Designer**
+  out of these actions into the **EDIT** menu. Preserve the target
+  context, selections, undo and existing action checks. Inventory OCT+ tap
+  actions separately so no functions disappear during remapping.
+  See [the editable HOME actions draft](docs/HOME_ACTIONS_DRAFT.md).
+- [ ] **FM6 EDIT: map the physical ALGORITHM knob to FM algorithm selection
+  (1–32)** for the selected track, with immediate value/diagram and sound updates.
+  Preserve the rest of the patch and existing save behavior. The current encoder
+  selects tracks; revise that behavior in the FM6 editing context and document
+  track selection in the new map. See [control mapping decisions](docs/CONTROL_MAPPING_DRAFT.md).
+- [ ] Move **OUTPUT from SEQ to GLO (Global), as the second page after MIXER**.
+  Keep MIDI output enable/channel
+  scoped to the selected track, show its target clearly, and retain existing
+  note-release and project-save behavior. This changes the page location, not
+  the scope of its settings.
+- [ ] **Colour/aesthetic identity:** include a UI colour change in this update
+  as the first step toward our own Studio Tess visual identity. Review the
+  current palette/track/status swatches before choosing replacements; keep
+  contrast, selected/inactive states and track identities clear. See the
+  [current colour reference](docs/UI_COLOUR_REFERENCE.md). **LO-FI is the provisional palette choice** (21 October); use it as the starting point for menu mockups and the new visual identity.
+- [ ] Inventory the current pages, controls and navigation paths, including the
+  new Performance 7 pages, and identify crowded or misplaced groups.
+- [ ] **Layout correction, 21 October:** keep all existing sequencer pages in
+  **SEQ**, including beat development, rhythm MORPH/EVOLVE/FORM/TWEAK, meters,
+  phase, seeds, AWAKE/POLY, HARMONY and NOTE RANGE. Only OUTPUT leaves SEQ
+  for GLO. Sound Designer is the only function being moved into EDIT; do not
+  add a duplicate GENERATOR page there. Reduce SEQ scrolling through conditional
+  generator visibility instead of relocating its controls.
+- [ ] Keep core sequencing, pattern/transport and recording controls easy to find;
+  group related generator, beat-development and editing controls coherently.
+  Preserve quick access during playback and the existing hardware navigation model.
+- [ ] Create a page guide with a quick navigation map and a reference for every
+  page/function: where to find it, what it changes, scope (track/bank/project/global),
+  defaults/bypass, applicable modes/engines, and save/recall behavior.
+- [ ] Explain relationships and precedence with examples: MODE/generator versus
+  the source grid; DIV versus meter/grouping/ratio; phase/drift/HOLD/ALIGN/reset;
+  FORM/EVOLVE/MORPH and seeds/conditions; anchors/density/fills/hats; harmony/pitch;
+  note length/release; capture destination and STEP replay. Link related pages
+  and make inactive or mode-dependent controls clear.
+- [ ] Validate the reorganised navigation in UI tests/screenshots and on the FM-1,
+  checking page selection, labels/help and access to every existing control.
+  Keep audio, timing, storage and established parameter behavior unchanged by
+  the navigation-only patch. Update the guide to match the final layout.
+
+Performance 8 implementation is in progress on `studio-tess-8`. The corrected
+page families, generator visibility, HOME actions, FM6 algorithm encoder and
+LO-FI default are implemented locally. The page/function reference is
+[STUDIO8_PAGE_GUIDE.md](docs/STUDIO8_PAGE_GUIDE.md). Full target validation and
+packaging are required before this candidate is delivered. The working
+Performance 7 package remains preserved.
+
+## Planned phase — character reverb and playable FX
+
+By: Inputsignwave
+
+Added 20 October 2026. Navigation reorganisation and the page/function guide
+remain the next-session priority; this is additional development roadmap scope.
+
+### Character reverb and stereo space
+
+- [ ] Research and audition a more interesting reverb alongside the current one,
+  using the Walrus Audio stereo Slöer pedal as a loose creative reference for
+  atmosphere and playability. Develop an original design; choose specific
+  behaviours by listening and testing rather than assuming the pedal's internals.
+- [ ] Explore adjustable wobble/modulation, tape-like movement and coloration,
+  diffusion/texture, and stereo width/imaging. Separate useful performance
+  controls from deeper editing, with predictable neutral settings.
+- [ ] Compare candidate algorithms on short percussion, sustained chords, FM
+  transients and evolving textures. Evaluate tail smoothness, stereo motion,
+  mono compatibility and useful ranges at both subtle and extreme settings.
+- [ ] Measure CPU, delay-buffer memory and worst-case four-track/voice/FX load
+  before choosing an implementation. The current resident-audio build has tight
+  SRAM headroom; prototype bounded resource use before committing to features.
+- [ ] Preserve dry bypass, existing project/FX compatibility, stable gain and
+  clean parameter changes. Define tail handling for switching, bypass and STOP.
+
+### Keyboard-triggered performance FX
+
+- [ ] Add an explicit performance-FX keyboard mode for beat repeats, slices and
+  stutter, with a clear way to enter/leave it and see the active action.
+- [ ] Explore keys selecting repeat divisions, slice positions and stutter
+  gestures; define momentary press/release behaviour first, then evaluate latch
+  and quick variation controls. Choose mappings during UI design.
+- [ ] Decide which actions process buffered audio, which retrigger sequencer/MIDI
+  events, and whether both are useful. Document the difference: audio processing
+  alone does not create repeated notes at an external MIDI instrument.
+- [ ] Define track/bus targeting, buffer capture/freeze and return to normal
+  playback. Preserve the source pattern and distinguish temporary performance
+  gestures from destructive edits or recorded results.
+- [ ] Synchronise rhythmic gestures to internal/external clock and define how
+  they follow local meter, ratios and phase. Evaluate quantised starts/releases
+  and immediate response as explicit options.
+- [ ] Keep transitions click-controlled and output bounded; release reliably on
+  key-up, mode/track changes, STOP and clock loss where applicable. Ensure FX
+  keys cannot leave stuck MIDI notes or silently alter normal keyboard playing.
+- [ ] Define whether/how performances are captured into audio, sequencer events
+  or automation, according to the chosen implementation and available capacity.
+- [ ] Include FX signal flow, keyboard mappings, scope, timing, capture and
+  relationships with other controls in the page/function guide. Validate both
+  sound and navigation on the FM-1 before adopting the new FX build.
+
 ## Goal
 Keep Melodee's synth engines and sound-design facilities, adding Tessera generative sequencing and rhythm morphing. The synth FM-1 may be played from a Seaboard RISE or sequenced by the Polyend Tracker. A second FM-1 with a groovebox focus remains optional. zp12 is excluded.
 
@@ -130,3 +251,20 @@ Full Linux host/web suite: 434 s; local suite: 164 s; 337 unchanged sound render
 Strict/sanitizer, target resident-call/resource checks and exact-byte package
 emulator smoke checks pass. CPU1 remains offline in the emulator; physical
 acceptance is still required. No hardware flash or main merge was performed.
+
+## Official FM1 Open tools review — 21 October 2026
+
+By: Inputsignwave
+
+Reviewed official source/SDK commit `4c7496d`; all 65 manifest file hashes match.
+Useful reference areas: RGB565 dirty-band rendering, custom glyphs, audio/MIDI
+diagnostics, bounded I/O contracts and reproducible build guards. The workbench
+is a separate application preview; our chip emulator remains complementary.
+The public FX code is basic browser reverb/delay, not a ready-made character
+reverb or keyboard-stutter implementation.
+
+- [ ] Apply relevant findings during UI/resource profiling and later FX design.
+- [ ] Evaluate any binary-SDK/platform adoption separately, preserving our engines,
+  FBK7 atomic storage and working baseline. This does not change current priorities.
+
+See [the source-based assessment](docs/OFFICIAL_FM1_OPEN_REVIEW.md) for exact files, limits and proposed order. No firmware code or toolchain was changed.

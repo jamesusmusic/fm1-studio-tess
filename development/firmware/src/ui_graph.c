@@ -1,3 +1,4 @@
+/* Studio Tess 8 navigation modifications — By: Inputsignwave. */
 /* Studio Tess 7 integration and validation modifications — By: Inputsignwave.
  * Upstream authorship and licence notices below remain applicable. */
 /* SPDX-License-Identifier: GPL-3.0-only
@@ -1272,6 +1273,12 @@ static void draw_graph(void)
         graph_scope(c, 0, H_GRAPH);
     } else {
         switch (pg->graph) {
+        case GR_DESIGNER:
+            cv_oy=0;
+            cv_text_c(120,18,TY_TX,"Sound Designer",T_TEXT,T_SURF);
+            cv_text_c(120,49,TY_LB,"Build or shape a sound",T_MID,T_SURF);
+            cv_text_c(120,79,TY_LB,"KNOB 1 or OCT+ opens",T_THEME,T_SURF);
+            break;
         case GR_S7_METER: case GR_S7_GROUP: case GR_S7_RATIO: case GR_S7_PHASE: case GR_S7_RESET: case GR_S7_SEED: case GR_S7_KIT: case GR_S7_LANE: case GR_S7_HUMAN: case GR_S7_ANCHOR: case GR_S7_AWAKE: case GR_S7_POLY: 
         case GR_HARM: case GR_RANGE: case GR_OUTPUT: case GR_SONG_CHORD: case GR_SONG_KEY: case GR_DURATION: case GR_FM_AMP: case GR_FM_TONE: case GR_FM_PERF:
             cv_oy=0;graph_features(t,pg->graph);

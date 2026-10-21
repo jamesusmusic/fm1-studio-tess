@@ -112,7 +112,7 @@ static void ui_ranges(void)
     s7_reset(TESS_ENG_AWAKE);
     for(uint32_t g=GR_S7_METER;g<=GR_S7_POLY;g++)for(uint32_t k=0;k<4;k++){
         studio7_ui_knob(g,k,2147483647);studio7_ui_knob(g,k,-2147483647);
-        assert(s7_track_valid(&studio7_track[0]));char value[16];studio7_ui_value(g,k,value);assert(value[0]);
+        assert(s7_track_valid(&studio7_track[0]));char value[16];studio7_ui_value(g,k,value);assert(value[0] || !studio7_ui_label(g,k)[0]);
     }
     puts("studio7: control extremes keep all settings valid");
 }

@@ -1,3 +1,4 @@
+/* Studio Tess HOME actions and context preservation — By: Inputsignwave. */
 /* SPDX-License-Identifier: GPL-3.0-only
  * Copyright (C) 2026 Kerem Kilic (Ellic Studio)
  * Portions Copyright (C) 2026 Leo Kuroshita (@kurogedelic), Hügelton Instruments */
@@ -10,18 +11,18 @@
  * PRESETS scrolls from ABOUT through all credits. ui.menu: 1 list, 2 information. */
 /* ------------------------------------------------------------ menu --- */
 #define MENU_HEAD H_HEAD                 /* the menu's own title strip */
-enum { MI_COLOR, MI_FONT, MI_HOLD, MI_LIGHTS,
+enum { MI_CREATE, MI_SOUND, MI_TRACKS, MI_PATTERN, MI_SELECTED, MI_SONG, MI_SHARED, MI_COLOR, MI_FONT, MI_HOLD, MI_LIGHTS,
 #if MELODEE_USB_AUDIO
        MI_USB, MI_USB_INPUT,
 #endif
-       MI_CLICK, MI_CLICK_LEVEL, MI_COUNTIN, MI_PREVIEW, MI_ADD, MI_AUTOSAVE, MI_PICKER, MI_ACCEL, MI_HOME_SEL, MI_GLO_SEL, MI_SCREEN, MI_PANEL, MI_ABOUT, MI_DESIGNER, MI_BACK,
+       MI_CLICK, MI_CLICK_LEVEL, MI_COUNTIN, MI_PREVIEW, MI_ADD, MI_AUTOSAVE, MI_PICKER, MI_ACCEL, MI_HOME_SEL, MI_GLO_SEL, MI_SCREEN, MI_PANEL, MI_ABOUT, MI_BACK,
        MI_COUNT };
-static const char *const MI_NAME[MI_COUNT] = {"COLOR", "FONT", "HOLD", "LIGHTS",
+static const char *const MI_NAME[MI_COUNT] = {"CREATE NEW TRACK", "SOUND TOOLS", "TRACK ACTIONS", "PATTERN ACTIONS", "SELECTED NOTES", "SONG ACTIONS", "SHARED FX", "COLOR", "FONT", "HOLD", "LIGHTS",
 #if MELODEE_USB_AUDIO
                                               "USB AUDIO", "USB INPUT",
 #endif
                                               "AUDIO CLICK", "CLICK LEVEL", "COUNT-IN", "NOTE PREVIEW", "CHORD ENTRY",
-                                              "AUTOSAVE", "PICKER POPUPS", "KNOB ACCEL", "HOME SELECT", "GLO SELECT", "SCREEN OFF", "CALIBRATION", "ABOUT", "SOUND DESIGNER", "BACK"};
+                                              "AUTOSAVE", "PICKER POPUPS", "KNOB ACCEL", "HOME SELECT", "GLO SELECT", "SCREEN OFF", "CALIBRATION", "ABOUT", "BACK"};
 #if MELODEE_USB_AUDIO
 /* USB AUDIO's four settings, as ua_off_want (UA_OFF_OUT | UA_OFF_IN) */
 static const char *const MI_USB_NAME[4] = {"IN+OUT", "IN", "OUT", "OFF"};
@@ -187,7 +188,7 @@ static void menu_head(void)
 {
     if (head_waiting()) { draw_head(); return; }
     cv_begin(240, MENU_HEAD, T_BG);
-    cv_text(8, ty_y(MENU_HEAD / 2, TY_TX), TY_TX, ui.menu == 2 ? "About" : "Settings", T_THEME);
+    cv_text(8, ty_y(MENU_HEAD / 2, TY_TX), TY_TX, ui.menu == 2 ? "About" : "Home menu", T_THEME);
     if (ui.menu >= 2) {                               /* the way back at the right, the REC mark before it (then */
         cv_icon_mid(218, MENU_HEAD / 2, 16, ICON_X_UNDO, T_MID, T_BG);   /* (OCT-) */
         draw_rec_mark(196, T_BG);
@@ -332,7 +333,38 @@ static void menu_close(void)
     settings_save();                                   /* palette / panel table, if changed */
     ui.menu = 0;
     ui.force = 1;
-    go_home();
+    song.seq_mode = !ui.home && cur_page()->fam == FAM_SEQ;
+}
+
+static void notes_bulk_sheet_open(void); /* ui_input.c */
+static void home_pattern_copy(void)
+{
+    if (chain_busy() || pattern_empty(song.sel, TSEL->pattern)) {
+        ptc_start();
+        return;
+    }
+    for (uint32_t i=0;i<NPAGES;i++) if(PAGES[i].graph==GR_PATGRID) {
+        ui.home=0;ui.page=(uint8_t)i;page_entered();break;
+    }
+    ptc_start();
+}
+static void home_action(uint32_t item)
+{
+    char target[20]="T1 / Pattern 1";
+    target[1]=(char)('1'+song.sel);target[13]=(char)('1'+TSEL->pattern);
+    if(item==MI_SELECTED && (!bulk.on || ui.home || cur_page()->graph!=GR_ROLL || grid_on() || slot_kind())) {
+        ui_message("SELECT NOTES IN SEQ");return;
+    }
+    menu_close();
+    if(item==MI_CREATE) track_add();
+    else if(item==MI_SOUND) sheet_open("Sound tools",target,SHEET_SOUND,NELEM(SHEET_SOUND));
+    else if(item==MI_TRACKS) sheet_open("Track actions",target,SHEET_HOME_TRACK,NELEM(SHEET_HOME_TRACK));
+    else if(item==MI_PATTERN) sheet_open("Pattern actions",target,SHEET_HOME_PATTERN,NELEM(SHEET_HOME_PATTERN));
+    else if(item==MI_SELECTED) notes_bulk_sheet_open();
+    else if(item==MI_SONG) {
+        str_cpy(target,"Row ",sizeof target);fmt_int(target+4,ui.song_row+1u);
+        sheet_open("Song actions",target,SHEET_SONG,NELEM(SHEET_SONG));
+    } else if(item==MI_SHARED) sheet_open("Shared FX","All tracks",SHEET_SHARED,NELEM(SHEET_SHARED));
 }
 
 /* menu: PRESETS moves, OCT+ confirms, OCT- cancels (ABOUT -> list -> close) */
@@ -441,8 +473,9 @@ static void menu_input(uint32_t oct)                  /* oct: ui_input.c oct_tap
             panel_setup();
             ui.force = 1;
             break;
-        case MI_DESIGNER:
-            menu_close();designer_open();
+        case MI_CREATE: case MI_SOUND: case MI_TRACKS: case MI_PATTERN:
+        case MI_SELECTED: case MI_SONG: case MI_SHARED:
+            home_action(ui.menu_sel);
             break;
         case MI_ABOUT:
             ui.menu = 2;

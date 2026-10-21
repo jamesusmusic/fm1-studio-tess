@@ -1,0 +1,101 @@
+name: Studio Tess 8 navigation validation
+on:
+  push:
+    branches: [studio-tess-8]
+    paths: ['development/**', '.github/workflows/studio8-validation.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: studio8-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  target-and-host:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: development
+    env:
+      JIELI_TOOLCHAIN: ${{ github.workspace }}/.build-deps/jieli/toolchain
+      AC79_SDK: ${{ github.workspace }}/.build-deps/sdk
+      MELODEE_RAM_AUDIO: '1'
+      PARALLEL: '2'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libharfbuzz-dev libfribidi-dev libraqm-dev
+          python -m pip install Pillow fonttools
+      - uses: actions/cache/restore@v4
+        id: build-deps
+        with:
+          path: .build-deps
+          key: studio7-jieli-sdk-d179b448-v3
+      - name: Toolchain and pinned SDK
+        run: |
+          if [ ! -x "$JIELI_TOOLCHAIN/pi32v2/bin/clang" ]; then
+            tools/get_toolchain.sh "$GITHUB_WORKSPACE/.build-deps/jieli"
+          fi
+          python tools/get_studio7_sdk.py "$AC79_SDK"
+      - uses: actions/cache/save@v4
+        if: steps.build-deps.outputs.cache-hit != 'true'
+        with:
+          path: .build-deps
+          key: studio7-jieli-sdk-d179b448-v3
+      - name: Compile Studio 8 development candidate
+        run: |
+          ./build.sh --release 1.4.1-studio-tess.8-dev1
+          cp build/melodee-1.4.1-studio-tess.8-dev1.fwsc build/melodee.fwsc
+      - uses: actions/upload-artifact@v4
+        with:
+          name: studio8-target-${{ github.sha }}
+          path: |
+            development/build/*.fwsc
+            development/build/melodee.bin
+            development/build/*.elf
+            development/build/*.dis
+            development/build/*.map
+            development/build/*audio*.json
+            development/build/release-*/SHA256SUMS
+          retention-days: 14
+      - name: Link memory diagnostics
+        if: failure()
+        run: |
+          if [ -f build/melodee.map ]; then tail -70 build/melodee.map; fi
+      - name: New foundations and sanitizers
+        run: |
+          for unit in math step clock kit state; do
+            cc -std=c11 -O2 -Wall -Wextra -Werror -Wno-unused-function -Ifirmware/src tests/studio7_${unit}_test.c -o build/studio7_${unit}_test
+            build/studio7_${unit}_test
+            cc -std=c11 -O1 -g -fsanitize=address,undefined -Ifirmware/src tests/studio7_${unit}_test.c -o build/studio7_${unit}_sanitize
+            build/studio7_${unit}_sanitize
+          done
+          cc -std=c11 -O2 -Ifirmware/src tests/gen_test.c -o build/studio7_gen_test
+          build/studio7_gen_test
+          for unit in studio7_integration studio_storage studio8_navigation; do
+            cc -O1 -g -fsanitize=address,undefined -ffp-contract=off -w -Ibuild/gen -Ifirmware/src tests/${unit}_test.c -lm -o build/${unit}_sanitize
+            build/${unit}_sanitize
+          done
+      - name: Full registered host and web checks
+        run: bash tests/run_tests.sh
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: development-validation-${{ github.sha }}
+          path: |
+            development/build/host/log/
+            development/build/*.dis
+            development/build/*.map
+            development/build/*.elf
+            development/build/*audio*.json
+            development/build/melodee-1.4.1-studio-tess.8-dev1.fwsc
+            development/build/melodee-app.bin
+            development/build/melodee.bin
+            development/build/release-*/SHA256SUMS
+            development/build/ui_new/report.txt
+          retention-days: 14

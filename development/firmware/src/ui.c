@@ -1,3 +1,4 @@
+/* Studio Tess 8 navigation modifications — By: Inputsignwave. */
 /* Studio Tess 7 integration and validation modifications — By: Inputsignwave.
  * Upstream authorship and licence notices below remain applicable. */
 /* SPDX-License-Identifier: GPL-3.0-only
@@ -253,8 +254,22 @@ static int native_page(uint32_t i, uint32_t fam)       /* page i: one of fam's n
     return 0;
 }
 
+/* Shared musical pages follow the selected track's active generator. */
+static int generator_page(const page_t *pg)
+{
+    return pg->graph==GR_EVOLVE ||
+        pg->graph==GR_FORM || pg->graph==GR_TWEAK ||
+        (pg->graph>=GR_S7_METER && pg->graph<=GR_S7_POLY);
+}
 static int page_visible(uint32_t i)
 {
+    uint32_t graph=PAGES[i].graph, mode=tessera.mode[song.sel%TESSERA_TRACKS];
+    if(generator_page(&PAGES[i])) {
+        if(!mode) return 0;
+        if(graph==GR_S7_AWAKE && mode!=TESS_ENG_AWAKE) return 0;
+        if(graph==GR_S7_POLY && mode!=TESS_ENG_POLY) return 0;
+        if(graph>=GR_S7_KIT && graph<=GR_S7_ANCHOR && mode!=TESS_ENG_KIT) return 0;
+    }
     if(PAGES[i].graph>=GR_FM_AMP && PAGES[i].graph<=GR_FM_PERF)return TSEL->eng_req==ENGI_FM6;
     if (PAGES[i].fam == FAM_FX && PAGES[i].graph != GR_FXRACK)   /* a slot's page (its MIX first): while it holds an
                                                                  * effect (the rack shows it either way) */
@@ -369,6 +384,15 @@ static void page_entered(void)
         undo_seal();
     }
     ui.force = 1;
+}
+
+/* A track/mode change cannot leave knobs bound to a now-hidden page. */
+static void navigation_fix(void)
+{
+    if(ui.home || ui.menu || ui.designer_mode || page_visible(ui.page)) return;
+    uint32_t fam=cur_page()->fam;
+    ui.page=(uint8_t)page_first(fam);
+    page_entered();
 }
 
 static int step_on(const step_t *st) { return st->time == ST_NOTE && (st->n || st->hit); }
@@ -1111,6 +1135,7 @@ static void track_select(uint32_t i)
     ui.bank = 0;
     sync_reload = 1;
     ui.force = 1;
+    navigation_fix();
 }
 
 static int slice_page_ok(void) { return 0; }
@@ -1125,6 +1150,7 @@ static uint32_t act_cols(void)                   /* the columns that are actions
     const page_t *pg = cur_page();
     if (ui.home)
         return 0;
+    if (pg->graph == GR_DESIGNER) return 1u;
     if (pg->graph == GR_SONG)
         return 1u;                               /* PLAY / STOP (also the PLAY button; TAKE JAM: REC held) */
     if (pg->graph == GR_SLICES)
@@ -1137,12 +1163,13 @@ static uint32_t act_cols(void)                   /* the columns that are actions
 /* the action OCT+ does: its column + 1, 0 = none picked yet */
 static uint32_t act_col(void)
 {
-    if (!ui.home && cur_page()->graph == GR_SONG) return 1u;
+    if (!ui.home && (cur_page()->graph == GR_SONG || cur_page()->graph == GR_DESIGNER)) return 1u;
     return ui.act;
 }
 
 static const char *act_name(uint32_t c)          /* column c's action (the footer hint) */
 {
+    if(cur_page()->graph==GR_DESIGNER) return "OPEN";
     if (cur_page()->graph == GR_SONG)
         return song.playing || chain_busy() ? "STOP" : "PLAY";
     if (cur_page()->graph == GR_SLICES)

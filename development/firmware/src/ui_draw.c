@@ -1,3 +1,4 @@
+/* Studio Tess 8 navigation modifications — By: Inputsignwave. */
 /* Studio Tess 7 integration and validation modifications — By: Inputsignwave.
  * Upstream authorship and licence notices below remain applicable. */
 /* SPDX-License-Identifier: GPL-3.0-only
@@ -679,6 +680,11 @@ static void draw_columns(void)
         return;
     }
 #endif
+    if(cur_page()->graph==GR_DESIGNER) {
+        draw_column(0,"OPEN","TURN","",VAL(0u),-1,ICON_AUTO);
+        for(c=1;c<4;c++)draw_column(c,"","","",T_DIM,-1,ICON_NONE);
+        return;
+    }
     if (features_page(cur_page()->graph)) {
         uint32_t graph = cur_page()->graph;
         const harm_track_t *h = &harm_track[song.sel];
@@ -1262,11 +1268,7 @@ static int own_screen(void)                             /* a page drawn whole by
 /* the page (or Stage): its own screen, the redesign's, else its cards, panel and footer */
 static void draw_page(void)
 {
-    if (!ui.home && !page_visible(ui.page)) {          /* an OP page (DIGITAL's, retired): EDIT 1; an FX slot
-                                                         * emptied (the editor): its rack */
-        ui.page = (uint8_t)page_first(cur_page()->fam == FAM_FX ? FAM_FX : FAM_EDIT);
-        page_entered();
-    }
+    navigation_fix();
     cursor_fix();
     if (designer_screen()) {                            /* the sound designer's START, FEATURES (ui_designer.c) */
         designer_draw();

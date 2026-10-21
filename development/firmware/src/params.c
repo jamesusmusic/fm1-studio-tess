@@ -1,3 +1,4 @@
+/* Studio Tess 8 navigation modifications — By: Inputsignwave. */
 /* Studio Tess 7 integration and validation modifications — By: Inputsignwave.
  * Upstream authorship and licence notices below remain applicable. */
 /* SPDX-License-Identifier: GPL-3.0-only
@@ -484,7 +485,7 @@ enum { GR_NONE, GR_ADSR, GR_LFO, GR_STEPS, GR_ARP, GR_SCALE, GR_ROLL, GR_BROWSE,
        GR_MOD, GR_PATS, GR_SONG, GR_MOTION, GR_CHORD, GR_SLICES,
        GR_FMEG, GR_FMPEG, GR_FMSTORE, GR_CZTOOLS, GR_SCALE_PICKER, GR_DRUMHIT, GR_PATGRID,
        GR_FXRACK, GR_EVOLVE, GR_FORM, GR_TWEAK,
-       GR_HARM, GR_RANGE, GR_OUTPUT, GR_SONG_CHORD, GR_SONG_KEY, GR_DURATION, GR_FM_AMP, GR_FM_TONE, GR_FM_PERF, GR_S7_METER, GR_S7_GROUP, GR_S7_RATIO, GR_S7_PHASE, GR_S7_RESET, GR_S7_SEED, GR_S7_KIT, GR_S7_LANE, GR_S7_HUMAN, GR_S7_ANCHOR, GR_S7_AWAKE, GR_S7_POLY }; /* NOTES shares GR_ROLL for steps and recorded events */
+       GR_DESIGNER, GR_HARM, GR_RANGE, GR_OUTPUT, GR_SONG_CHORD, GR_SONG_KEY, GR_DURATION, GR_FM_AMP, GR_FM_TONE, GR_FM_PERF, GR_S7_METER, GR_S7_GROUP, GR_S7_RATIO, GR_S7_PHASE, GR_S7_RESET, GR_S7_SEED, GR_S7_KIT, GR_S7_LANE, GR_S7_HUMAN, GR_S7_ANCHOR, GR_S7_AWAKE, GR_S7_POLY }; /* NOTES shares GR_ROLL for steps and recorded events */
 
 typedef struct {
     const char *title;
@@ -591,6 +592,7 @@ static const page_t PAGES[] = {
     {"VOICE", FAM_EDIT, SC_TRACK, GR_NONE, {P_VOICE, P_GLIDE, P_GLMODE, P_PRIO}},
     {"VOICE 2", FAM_EDIT, SC_TRACK, GR_NONE, {P_ALLOC, P_DETUNE, P_PAN, P_MUTE}},
     {"VOICE 3", FAM_EDIT, SC_TRACK, GR_NONE, {P_SPRD, 0xFF, 0xFF, 0xFF}},
+    {"OUTPUT", FAM_GLO, SC_TRACK, GR_OUTPUT, {255,255,255,255}},
     {"GLOBAL", FAM_GLO, SC_GLOBAL, GR_NONE, {G_A4, G_BUDGET, G_CLOCK, G_TUNE}}, /* device reference/budget; CLK/TUNE kept */
     {"SYSTEM", FAM_GLO, SC_GLOBAL, GR_NONE, {G_MIDI, G_DRUMCH, G_ROUTE, G_INFO}},
     {"PRESETS", FAM_SAVE, SC_GLOBAL, GR_BROWSE, {0xFF, 0xFF, 0xFF, 0xFF}},   /* browser: KNOB 1 LIST, 2 / PRESETS the sounds */
@@ -615,13 +617,13 @@ static const page_t PAGES[] = {
     {"DRUM ANCHORS", FAM_SEQ, SC_TRACK, GR_S7_ANCHOR, {255,255,255,255}},
     {"AWAKE EDIT", FAM_SEQ, SC_TRACK, GR_S7_AWAKE, {255,255,255,255}},
     {"POLY PITCHES", FAM_SEQ, SC_TRACK, GR_S7_POLY, {255,255,255,255}},
+    {"DESIGNER", FAM_EDIT, SC_TRACK, GR_DESIGNER, {255,255,255,255}},
     {"NOTE LENGTH", FAM_SEQ, SC_TRACK, GR_DURATION, {255,255,255,255}},
     {"FM AMP", FAM_EDIT, SC_TRACK, GR_FM_AMP, {255,255,255,255}},
     {"FM TONE", FAM_EDIT, SC_TRACK, GR_FM_TONE, {255,255,255,255}},
     {"FM AMP MODE", FAM_EDIT, SC_TRACK, GR_FM_PERF, {255,255,255,255}},
     {"HARMONY", FAM_SEQ, SC_TRACK, GR_HARM, {255,255,255,255}},
     {"NOTE RANGE", FAM_SEQ, SC_TRACK, GR_RANGE, {255,255,P_ROOT,P_SCALE}},
-    {"OUTPUT", FAM_SEQ, SC_TRACK, GR_OUTPUT, {255,255,255,255}},
     {"FEEL", FAM_SEQ, SC_TRACK, GR_NONE, {P_SDIV, P_SSWING, P_SGATE, 0xFF}},   /* timing, reachable while Tessera owns PATTERN */
     {"TEMPO", FAM_SEQ, SC_GLOBAL, GR_NONE, {G_BPM, G_SWING, G_TRK_RECQ, 0xFF}},   /* the project's: saved with it; QNT: the
                                                                                   * selected track's (TIMING's, folded in) */

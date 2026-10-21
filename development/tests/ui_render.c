@@ -1101,7 +1101,7 @@ static void setup(int s)
     }
     case S_STAGE_T2: song.ntrk = 2; go_home(); track_select(1); input_on(TSEL, 62, 100); break;
     case S_STAGE_T3: song.ntrk = 3; go_home(); trk[1].pattern_next = 2; song.rec = 4u; break;
-    case S_SHEET_STAGE: song.ntrk = 2; song.playing = 0; go_home(); page_sheet_open(); pop.sel = 5; break;
+    case S_SHEET_STAGE: song.ntrk = 2; song.playing = 0; go_home(); page_sheet_open(); pop.sel = 0; break;
     case S_CONFIRM_TRACK: song.ntrk = 3; song.playing = 0; go_home(); track_select(1); confirm_open(CF_DEL_TRACK, 1); break;
     /* .. MIXER with one, two (track 2 selected, its PAN turned), three (track 3 muted, track 1 armed); PATTERNS and SONG
      * with two; GLO with two (track 2 muted); NEW SONG's roles as they open without a template */
