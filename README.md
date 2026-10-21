@@ -17,8 +17,8 @@ editor identification and console use Inputsignwave. Bundled tools recognise
 the new name and legacy device names. Update/recovery identities, protocol IDs
 and FBK7 storage remain compatible. Repository and branch names remain stable.
 
-The branded candidate is `1.4.1-inputsignwave.8-dev2`. Fresh validation is tracked
-in [the branding record](development/INPUTSIGNWAVE_BRANDING.md). The preceding
+The branded candidate is `1.4.1-inputsignwave.8-dev2`. Full local/Linux, native target, sanitizer, USB and UI validation passed; see
+[the branding record](development/INPUTSIGNWAVE_BRANDING.md). The preceding
 navigation candidate passed [these checks](development/STUDIO8_VALIDATION.md).
 
 - [Page/function guide](development/docs/STUDIO8_PAGE_GUIDE.md)

@@ -1,4 +1,12 @@
-# Building Melodee
+# Building Inputsignwave
+
+By: Inputsignwave
+
+Inputsignwave retains the upstream Melodee build pipeline and compatibility
+filenames below. For the branded Performance 8 candidate use
+`MELODEE_RAM_AUDIO=1 ./build.sh --release 1.4.1-inputsignwave.8-dev2`.
+The public install filename is `inputsignwave-1.4.1-performance8-dev2.fwsc`;
+CI copies the byte-identical generated release package to that filename.
 
 The build makes three files in `build/`:
 

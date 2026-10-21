@@ -1,6 +1,10 @@
-# Studio Tess 8 — page and function guide
+# Inputsignwave Performance 8 — page and function guide
 
 By: Inputsignwave · 21 October 2026
+
+Inputsignwave is the firmware name, previously Studio Tess. The current
+branding candidate is `1.4.1-inputsignwave.8-dev2`; see
+[branding and attribution](../INPUTSIGNWAVE_BRANDING.md).
 
 This guide describes the navigation candidate built from the working Performance 7.
 All existing sound engines and sequencing features remain. Generator settings
