@@ -30,3 +30,8 @@ build/removal/wavetable build/removal
 python3 tests/wavetable_spectral.py build/removal
 $cc_task $flags -g -fsanitize=address,undefined tests/wavetable_test.c -lm -o build/removal/wavetable_sanitize
 UBSAN_OPTIONS=halt_on_error=1 ASAN_OPTIONS=detect_leaks=0 build/removal/wavetable_sanitize
+$cc_task $flags -DMELODEE_USB_AUDIO=1 -Itests tests/ui_render.c -lm -o build/removal/ui_render
+mkdir -p build/wavetable-ui/ppm
+build/removal/ui_render build/wavetable-ui
+$cc_task $flags tests/wavetable_emulator_fixture.c -lm -o build/removal/emulator_fixture
+build/removal/emulator_fixture build/removal/wavetable-fixture.nor
