@@ -50,3 +50,16 @@ attribution record. See `development/INPUTSIGNWAVE_BRANDING.md` and
 Melodee, Tess/Tessera, Felucca and third-party algorithms remain their respective
 authors' work. Renaming our firmware does not replace their notices, claim their
 authorship or change the GPL and bundled component licence terms.
+
+## Performance 9 removal foundation
+
+By: Inputsignwave
+
+Our changes retire SID, CZ, SID drum kits, ROOM and REVERB from the production
+DSP while preserving legacy identities and saved payloads; add silent/bypass
+compatibility, default-track and UI/editor handling, host alignment hardening,
+production PCM/concurrency/allocation/sanitizer checks and target resource
+comparisons. See `development/docs/PERFORMANCE9_REMOVAL_REPORT.md`. The new
+engines and replacement reverb are not yet implemented. Historical/reference
+sources retain their original authors and licences; retained upstream DSP
+remains the work of its respective authors.

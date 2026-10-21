@@ -2,11 +2,12 @@
 
 By: Inputsignwave
 
-Inputsignwave retains the upstream Melodee build pipeline and compatibility
-filenames below. For the branded Performance 8 candidate use
-`MELODEE_RAM_AUDIO=1 ./build.sh --release 1.4.1-inputsignwave.8-dev2`.
-The public install filename is `inputsignwave-1.4.1-performance8-dev2.fwsc`;
-CI copies the byte-identical generated release package to that filename.
+For the measured removal baseline use
+`MELODEE_RAM_AUDIO=1 ./build.sh --release 1.4.1-inputsignwave.9-removal1`.
+The public install filename is `inputsignwave-1.4.1-performance9-removal1.fwsc`.
+This candidate removes SID, CZ, SID drums, ROOM and REVERB; new engines/reverb
+are subsequent work. See [resource measurements](docs/PERFORMANCE9_REMOVAL_REPORT.md).
+The installed Performance 8 Dev2 package remains preserved for rollback.
 
 The build makes three files in `build/`:
 

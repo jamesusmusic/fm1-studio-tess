@@ -9,6 +9,19 @@ application USB/editor/console identity and compatible host discovery; preserve
 upstream notices, protocol/storage/update identities and archived baselines.
 See [branding and validation](development/INPUTSIGNWAVE_BRANDING.md).
 
+## Performance 9 removal baseline — built and offline validated
+
+By: Inputsignwave
+
+SID, CZ, SID drums, ROOM and REVERB are removed from the production DSP.
+Prophet, FM6, 808/909 and other FX remain. Flash recovered: **34,988 B**;
+audio-working SRAM recovered: **20,240 B** across disjoint banks. Main arena:
+**64,640 B**. No replacement engines or reverb are added yet. Production PCM,
+legacy storage/bypass, sanitizer and concurrency tests pass; the complete local
+suite passed in 210 s; Linux CI passed in 360 s. The exact-package emulator
+smoke and production UI checks also pass. No hardware was flashed.
+See [measurements and validation](development/docs/PERFORMANCE9_REMOVAL_REPORT.md).
+
 ## Next update — engine choices and reverb auditions (21 October 2026)
 
 By: Inputsignwave
@@ -18,20 +31,20 @@ on their FM-1. No audio fault is currently reported; this is feature development
 
 - [ ] Keep Prophet, FM6 and DRUM. Evaluate a wavetable engine with wavefolding
   first, then a focused modal/resonator engine if measured resources permit.
-- [ ] **Confirmed: remove SID and CZ entirely from the next build**, including
+- [x] **Confirmed: remove SID and CZ entirely from the next build**, including
   SID drum kits and their shared SID synthesis code. Retain Prophet, FM6 and
   the non-SID DRUM models. The user approved this on 21 October 2026.
-- [ ] Preserve retired SID/CZ engine IDs and the SID drum-kit value; never reuse
+- [x] Preserve retired SID/CZ engine IDs and the SID drum-kit value; never reuse
   or silently remap them. Old retired-engine tracks must remain silent, retain
   their saved data and be identifiable as unavailable. Apply the same explicit
   unavailable behaviour to old SID drum kits rather than substituting 808.
-- [ ] Replace the default third track's SID sound with a deliberate FM6 default.
+- [x] Replace the default third track's SID sound with a deliberate FM6 default.
   Remove SID/CZ from browsing, Sound Designer, editor capabilities and active
   factory assets/code. Keep historical source/build archives and upstream credits.
-- [ ] Validate old-project round trips, unavailable-engine handling, default
+- [x] Validate old-project round trips, unavailable-engine handling, default
   tracks, engine selection and retained-engine sound regressions. Compare target
   flash, SRAM and audio-arena usage before allocating the savings to new work.
-- [ ] **Confirmed: retire both ROOM and REVERB from the next build**, replacing
+- [x] **Confirmed: retire both ROOM and REVERB from the next build**, replacing
   them entirely with our own reverb offering. Remove their old DSP and
   selectable entries; reserve both stored FX IDs and retain saved parameters.
   Legacy ROOM/REVERB slots must bypass transparently without allocating a tank,

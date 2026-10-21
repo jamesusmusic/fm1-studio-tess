@@ -2,7 +2,11 @@
 
 By: Inputsignwave
 
-21 October 2026. Planning and research only; no DSP or firmware changes yet.
+21 October 2026. Replacement reverb remains research/prototype work. The
+Performance 9 removal baseline now excludes both old reverbs and the retired
+engines; see [the completed measurements](PERFORMANCE9_REMOVAL_REPORT.md).
+It recovers 34,988 B of app flash and 20,240 B across disjoint working-memory
+banks; its main contiguous arena is 64,640 B. Replacement DSP is not yet added.
 
 ## Confirmed retirement decision
 
