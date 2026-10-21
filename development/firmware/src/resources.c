@@ -26,9 +26,10 @@ extern uint8_t _resource_cache_start[], _resource_cache_end[];
 #endif
 #define RESOURCE_MAIN_CAPACITY ((uint32_t)((uintptr_t)_resource_end - (uintptr_t)_resource_start))
 #else
-static uint32_t resource_host[40960];
-static uint32_t resource_host_low[5120], resource_host_data[512], resource_host_retained[1024];
-static uint32_t resource_host_cache[7168], resource_host_cache_enabled;
+static _Alignas(uintptr_t) uint32_t resource_host[40960];
+static _Alignas(uintptr_t) uint32_t resource_host_low[5120], resource_host_data[512], resource_host_retained[1024];
+static _Alignas(uintptr_t) uint32_t resource_host_cache[7168];
+static uint32_t resource_host_cache_enabled;
 #define RESOURCE_CACHE_AVAILABLE resource_host_cache_enabled
 #define _resource_cache_start ((uint8_t *)resource_host_cache)
 #define _resource_cache_end ((uint8_t *)(resource_host_cache + 7168))
