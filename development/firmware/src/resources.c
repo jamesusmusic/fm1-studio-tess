@@ -1,3 +1,4 @@
+/* Engine/space retirement and compatibility — By: Inputsignwave. */
 /* SPDX-License-Identifier: GPL-3.0-only
  * Copyright (C) 2026 Kerem Kilic (Ellic Studio) */
 /* Bounded audio working-memory arena. Only the audio owner (or boot/host
@@ -69,11 +70,14 @@ static void resource_release(uint32_t id) { resource[id].size = 0; }
 static __attribute__((noinline)) void *resource_allocate(uint32_t id, uint32_t bytes)
 {
     if (bytes > RESOURCE_CAPACITY) { resource_failures++; return 0; }
-    uint32_t size = (bytes + 3u) & ~3u;
+    /* Pointer-bearing host state needs 8-byte alignment; target pointers are
+     * 4 bytes, preserving the target arena layout. By: Inputsignwave. */
+    const uintptr_t alignment=sizeof(uintptr_t);
+    uint32_t size = (bytes + (uint32_t)alignment-1u) & ~((uint32_t)alignment-1u);
     if (!size) { resource_release(id); return 0; }
     for (uint32_t bank = 0; bank < RESOURCE_BANKS; bank++) {
         if (bank == RESOURCE_CACHE_BANK && !RESOURCE_CACHE_AVAILABLE) continue;
-        uintptr_t at = (uintptr_t)resource_banks[bank].start;
+        uintptr_t at = ((uintptr_t)resource_banks[bank].start+alignment-1u)&~(alignment-1u);
         uintptr_t limit = (uintptr_t)resource_banks[bank].end;
         /* Each collision advances past a live block; at most RES_COUNT passes.
          * Integer addresses permit distinct host arrays and disjoint SRAM banks. */

@@ -1,3 +1,4 @@
+/* Engine/space retirement and compatibility — By: Inputsignwave. */
 /* Studio Tess 8 navigation modifications — By: Inputsignwave. */
 /* SPDX-License-Identifier: GPL-3.0-only
  * Copyright (C) 2026 Kerem Kilic (Ellic Studio)
@@ -1110,6 +1111,9 @@ static void edit_param(uint32_t slot, int32_t steps)
     if (!d || !vp || d->max == d->min)
         return;
     v = enum_step(d, *vp, clamp(*vp + accel(EN_K1 + slot, steps, desc_range(d)), d->min, d->max));
+    if(!MELODEE_RETIRED_REFERENCE && d->names==N_FX && (v==FX_ROOM || v==FX_REVERB))
+        v=steps>0?FX_CHORUS:FX_ECHO;
+    if(!MELODEE_RETIRED_REFERENCE && d->names==N_DRUM_KIT && v==DK_SID)v=DK_909;
     *vp = (int16_t)v;
     if(pg->scope==SC_P5){
         uint8_t old[MO_NATIVE_N];uint32_t f=motion_guard();

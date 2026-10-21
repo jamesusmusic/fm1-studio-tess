@@ -1,3 +1,4 @@
+/* Engine/space retirement and compatibility — By: Inputsignwave. */
 /* Studio Tess 7 integration and validation modifications — By: Inputsignwave.
  * Upstream authorship and licence notices below remain applicable. */
 /* SPDX-License-Identifier: GPL-3.0-only
@@ -118,7 +119,9 @@
 #endif
 #include "upreset.c"             /* user presets (RAM mirror; flash with MELODEE_FLASH) */
 #include "project.c"
+#if MELODEE_RETIRED_REFERENCE
 #include "cz_store.c"
+#endif
 #include "fm6_store.c"            /* FM6: DX7 SysEx, the STORE shortcut to user presets */
 #if MELODEE_OTA
 #define OTA_SCRATCH proj_wire_borrow()   /* the update entry stages in the project staging RAM */

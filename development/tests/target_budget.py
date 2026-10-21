@@ -198,7 +198,7 @@ def main():
         for kernel in kernels:
             if fns.get(kernel):
                 for key, value in cost(fns[kernel]).items(): res[parent][key] += value
-    retired = {"trio_render", "trio_pass", "wheel_render", "wheel_block", "phys_render",
+    retired = {"sid_render", "cz_native_render", "cz_native_wave", "fx_reverb", "trio_render", "trio_pass", "wheel_render", "wheel_block", "phys_render",
                "phase_render", "formant_render", "noise_render",
                "px_modal_block", "px_modal_run", "px_memb_block", "px_string_excite",
                "px_string_run", "px_symp_run"}

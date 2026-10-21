@@ -1,3 +1,4 @@
+/* Engine/space retirement and compatibility — By: Inputsignwave. */
 /* SPDX-License-Identifier: GPL-3.0-only
  * Copyright (C) 2026 Kerem Kilic (Ellic Studio)
  * Portions Copyright (C) 2026 Leo Kuroshita (@kurogedelic), Hügelton Instruments */
@@ -43,8 +44,12 @@ static int32_t drum_event_pitch;
 static uint32_t drum_event_length;
 static int drum_is909(const track_t *t) { return t->p[P_E0] == DK_909; }
 static int drum_issid(const track_t *t) { return t->p[P_E0] == DK_SID; }
+#if MELODEE_RETIRED_REFERENCE
 typedef struct dsk_part dsk_part_t;
 static uint32_t dsk_bytes(void);
+#else
+static uint32_t dsk_bytes(void) { return 0; }
+#endif
 static uint32_t drum_bytes(const track_t *t) { return drum_is909(t) ? sizeof(drum909_part_t) : drum_issid(t) ? dsk_bytes() : sizeof(drum_lane_t)*DV_NLANE; }
 static drum909_part_t *drum909_of(const track_t *t)
 {
@@ -145,7 +150,7 @@ static void drum_block(track_t *t)
     if(drum_is909(t)) { drum909_part_t *k=drum909_of(t); if(k)k->nz=d9_noise_block(&k->d,CTL); }
 }
 
-static const char *const N_DRUM_KIT[] = {"808", "808", "808", "808", "808", "909", "SID"};
+static const char *const N_DRUM_KIT[] = {"808", "808", "808", "808", "808", "909", MELODEE_RETIRED_REFERENCE ? "SID" : "SID GONE"};
 static const char *const N_DRUM_KICK[] = {"PUNCH", "ROUND"};
 
 /* General MIDI notes 35..81 -> the drum (DVT_*; DVT_PUNCH: the kick KICK picks) and semitones from its
@@ -169,7 +174,9 @@ static uint32_t drum_gm(const int16_t *p, uint32_t note, int32_t *st)
         t = DVT_ROUND;
     return t;
 }
-#include "drum_sid.c"                          /* KIT SID */
+#if MELODEE_RETIRED_REFERENCE
+#include "drum_sid.c"
+#endif
 
 /* ----------------------------------------------------- the grid's lanes --- */
 /* A step's lane hits (step_t.hit / acc, the DRUM grid: SEQ > STEP on a DRUM track) play these GM notes, on any
@@ -300,7 +307,12 @@ static void drum_note_on(track_t *t, voice_t *v)
     drum_flash[(uint32_t)(t - trk) % NTRK] |= (uint8_t)(1u << drum_lane(v->note));
     v->s[3]=(int32_t)drum_event_length; v->s[4]=drum_event_pitch; v->s[5]=drum_event_length!=0;
     if(drum_issid(t)) {                                  /* the hit's own length: its SID voice's gate */
-        v->s[2]=DK_SID; v->s[5]=0; v->env_out=32767; dsk_hit(t,v->note,v->vel); return;
+        #if MELODEE_RETIRED_REFERENCE
+        v->s[2]=DK_SID; v->s[5]=0; v->env_out=32767; dsk_hit(t,v->note,v->vel);
+#else
+        v->active=v->gate=v->stage=0; v->env=0;
+#endif
+        return;
     }
     if(drum_is909(t)) {
         drum909_part_t *k=drum909_of(t); if(!k)return;
@@ -342,7 +354,9 @@ static void drum_note_on(track_t *t, voice_t *v)
 static int32_t drum_amp(track_t *t, voice_t *v, int32_t adsr)
 {
     if(v->s[2]==DK_SID || drum_issid(t)) {               /* the chip: on while any of it sounds */
+#if MELODEE_RETIRED_REFERENCE
         if(v->s[2]==DK_SID && drum_issid(t) && dsk_tick(t)) { v->env=1<<24; return 32767*127/(v->vel?v->vel:1); }
+#endif
         v->active=v->gate=v->stage=0; v->env=0; return 0;
     }
     if(v->s[5] && v->s[3]<=0){v->active=v->gate=v->stage=0;v->env=0;return 0;}
@@ -395,8 +409,10 @@ static __attribute__((noinline)) void drum_color(drum_lane_t *L,int32_t value,in
 static void drum_render_into(track_t *t,voice_t *v,int32_t *out,uint32_t n,const vmod_t *m,dr_scratch_t *scratch,const int16_t *p)
 {
     if (p[P_E0] == DK_SID) {
+#if MELODEE_RETIRED_REFERENCE
         if (v->s[2] == DK_SID)
             dsk_render(t, out, n > CTL ? CTL : n, m, p);
+#endif
         return;
     }
     drum_lane_t *L = drum_lane_of(t, v);
@@ -430,7 +446,7 @@ static void drum_render_into(track_t *t,voice_t *v,int32_t *out,uint32_t n,const
         if (g)
             s = (softclip((s * g) >> 12) * mk) >> 15;
         s = voice_amp(soft_knee(s + (s >> 2), 24000), m, i);
-        out[i] += s << 1;
+        out[i] += s * 2;
     }
 }
 
@@ -448,8 +464,10 @@ static int32_t drum_keys(const track_t *t, uint32_t k)
 static const preset_t DRUM_PRESETS[] = {
     {"808 KIT", {DK_808, 64, 64, 64, 64, 100, 0, 0}, {0, 100, 127, 100}, 0, 0},
     {"909 KIT", {DK_909, 64, 64, 64, 64, 100, 0, 0}, {0, 100, 127, 100}, 0, 0},
+#if MELODEE_RETIRED_REFERENCE
     {"SID KIT", {DK_SID, 64, 80, 64, 64, 100, 0, 0}, {0, 100, 127, 100}, 0, 0},    /* every drum on the SID */
     {"SID DIGI", {DK_SID, 64, 80, 64, 64, 100, 1, 0}, {0, 100, 127, 100}, 0, 0},   /* kick, snare on $D418 */
+#endif
 };
 /* KIT SID: KICK is DIGI (KICK and SNARE on $D418), DRV the filter's resonance */
 static const char *const N_DRUM_DIGI[] = {"OFF", "ON"};

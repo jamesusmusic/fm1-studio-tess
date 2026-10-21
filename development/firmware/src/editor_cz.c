@@ -1,3 +1,4 @@
+/* Engine/space retirement and compatibility — By: Inputsignwave. */
 /* SPDX-License-Identifier: GPL-3.0-only
  * Copyright (C) 2026 Kerem Kilic (Ellic Studio) */
 /* Full native Casio tone over the editor transport, nibble-packed, low first.
@@ -12,6 +13,9 @@ static int ed_cz_handle(uint32_t cmd, const uint8_t *a, uint32_t n)
         return 1;
     }
     if (cmd != ED_CZ_GET && cmd != ED_CZ_PUT) return 0;
+    if(!MELODEE_RETIRED_REFERENCE && cmd==ED_CZ_PUT){
+        ed_b(n?a[0]:127u);ed_b(n>1u?a[1]:127u);ed_b(2);return 1;
+    }
     uint32_t target = n ? a[0] : 127u, index = n > 1u ? a[1] : 127u, rc = 0;
     uint8_t raw[CZ_BYTES];
     if (target > 2u || index >= (target == 2u ? 128u : target ? UP_SLOTS : NTRK) || (target==2u && cmd==ED_CZ_PUT)) rc = 1;

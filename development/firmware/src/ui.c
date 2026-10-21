@@ -1,3 +1,4 @@
+/* Engine/space retirement and compatibility — By: Inputsignwave. */
 /* Studio Tess 8 navigation modifications — By: Inputsignwave. */
 /* Studio Tess 7 integration and validation modifications — By: Inputsignwave.
  * Upstream authorship and licence notices below remain applicable. */
@@ -240,9 +241,9 @@ static const char *const *native_titles(uint32_t fam)
     static const char *const CZ_LFO[] = {"CZ VIBRATO", 0};
     uint32_t e = TSEL->eng_req;
     if (fam == FAM_ENV)
-        return e == ENGI_PROPHET ? P5_ENV : e == ENGI_FM6 ? FM_ENV : e == ENGI_CZ ? CZ_ENV : 0;
+        return e == ENGI_PROPHET ? P5_ENV : e == ENGI_FM6 ? FM_ENV : MELODEE_RETIRED_REFERENCE && e == ENGI_CZ ? CZ_ENV : 0;
     if (fam == FAM_LFO)
-        return e == ENGI_PROPHET ? P5_LFO : e == ENGI_FM6 ? FM_LFO : e == ENGI_CZ ? CZ_LFO : 0;
+        return e == ENGI_PROPHET ? P5_LFO : e == ENGI_FM6 ? FM_LFO : MELODEE_RETIRED_REFERENCE && e == ENGI_CZ ? CZ_LFO : 0;
     return 0;
 }
 static int native_page(uint32_t i, uint32_t fam)       /* page i: one of fam's native pages (a prefix of its title) */
@@ -289,7 +290,7 @@ static int page_visible(uint32_t i)
         return TSEL->eng_req == 2u && eng_ok(2u) && TSEL->p[P_E7] == 1;
     if(PAGES[i].scope==SC_P5 || PAGES[i].scope==SC_P5STORE)return TSEL->eng_req==ENGI_PROPHET;
     if (PAGES[i].scope == SC_CZ1)
-        return TSEL->eng_req == ENGI_CZ;               /* CZ-1's tone: every panel value */
+        return MELODEE_RETIRED_REFERENCE && TSEL->eng_req == ENGI_CZ;               /* CZ-1's tone: every panel value */
     if (PAGES[i].scope == SC_FM6 || PAGES[i].scope == SC_FMOP)
         return TSEL->eng_req == ENGI_FM6;              /* FM6's patch, operators and functions */
 #if MELODEE_SLICE

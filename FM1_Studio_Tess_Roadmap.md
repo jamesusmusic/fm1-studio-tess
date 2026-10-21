@@ -9,6 +9,49 @@ application USB/editor/console identity and compatible host discovery; preserve
 upstream notices, protocol/storage/update identities and archived baselines.
 See [branding and validation](development/INPUTSIGNWAVE_BRANDING.md).
 
+## Next update — engine choices and reverb auditions (21 October 2026)
+
+By: Inputsignwave
+
+The user reports that Inputsignwave Performance 8 Dev2 installs and works well
+on their FM-1. No audio fault is currently reported; this is feature development.
+
+- [ ] Keep Prophet, FM6 and DRUM. Evaluate a wavetable engine with wavefolding
+  first, then a focused modal/resonator engine if measured resources permit.
+- [ ] **Confirmed: remove SID and CZ entirely from the next build**, including
+  SID drum kits and their shared SID synthesis code. Retain Prophet, FM6 and
+  the non-SID DRUM models. The user approved this on 21 October 2026.
+- [ ] Preserve retired SID/CZ engine IDs and the SID drum-kit value; never reuse
+  or silently remap them. Old retired-engine tracks must remain silent, retain
+  their saved data and be identifiable as unavailable. Apply the same explicit
+  unavailable behaviour to old SID drum kits rather than substituting 808.
+- [ ] Replace the default third track's SID sound with a deliberate FM6 default.
+  Remove SID/CZ from browsing, Sound Designer, editor capabilities and active
+  factory assets/code. Keep historical source/build archives and upstream credits.
+- [ ] Validate old-project round trips, unavailable-engine handling, default
+  tracks, engine selection and retained-engine sound regressions. Compare target
+  flash, SRAM and audio-arena usage before allocating the savings to new work.
+- [ ] **Confirmed: retire both ROOM and REVERB from the next build**, replacing
+  them entirely with our own reverb offering. Remove their old DSP and
+  selectable entries; reserve both stored FX IDs and retain saved parameters.
+  Legacy ROOM/REVERB slots must bypass transparently without allocating a tank,
+  muting the dry signal or silently selecting a replacement. Identify the
+  unavailable effects in the UI/editor. Give replacement algorithms new IDs.
+  Keep the installed Dev2 and archived host renders as comparison references.
+- [ ] Audition different reverbs as part of this update: compact plate, modulated
+  ambient space, tight room/chamber, and tape-coloured space. Compare against
+  archived ROOM and REVERB renders before selecting what ships. Tape character is a
+  processing option, not necessarily another reverb algorithm.
+- [ ] Produce matched host audio comparisons, then alternate target candidates
+  after memory/CPU gates pass. Start with one candidate on the shared send;
+  decide whether multiple types can coexist only after profiling.
+- [ ] Budget engine and FX changes together, including future repeats/stutter
+  buffers. Do not assume engine removal releases equivalent working RAM.
+
+See [the reverb audition plan](development/docs/REVERB_AUDITION_PLAN.md) for candidates, source references,
+resource constraints, code areas and acceptance checks. Research is complete
+for this shortlist; implementation, listening comparisons and profiling remain.
+
 ## Top priority for 21 October 2026 — navigation and page guide
 
 By: Inputsignwave
@@ -85,12 +128,13 @@ The working Performance 7 package remains preserved for rollback.
 
 By: Inputsignwave
 
-Added 20 October 2026. Navigation reorganisation and the page/function guide
-remain the next-session priority; this is additional development roadmap scope.
+Added 20 October; expanded 21 October 2026. The navigation build is installed
+and reported working. Reverb auditions now accompany the next engine update;
+keyboard performance FX remain a subsequent implementation stage.
 
 ### Character reverb and stereo space
 
-- [ ] Research and audition a more interesting reverb alongside the current one,
+- [ ] Research and audition a replacement for the retired ROOM and REVERB effects,
   using the Walrus Audio stereo Slöer pedal as a loose creative reference for
   atmosphere and playability. Develop an original design; choose specific
   behaviours by listening and testing rather than assuming the pedal's internals.

@@ -1,3 +1,4 @@
+/* Engine/space retirement and compatibility — By: Inputsignwave. */
 /* SPDX-License-Identifier: GPL-3.0-only
  * Copyright (C) 2026 Kerem Kilic (Ellic Studio)
  * Portions Copyright (C) 2026 Leo Kuroshita (@kurogedelic), Hügelton Instruments */
@@ -8,9 +9,13 @@
 #if MELODEE_PROPHET
 #include "eng_prophet_test.c"
 #endif
+#if MELODEE_RETIRED_REFERENCE
 #include "eng_phase.c"
 #include "eng_cz.c"
 #include "eng_sid.c"
+#else
+#include "retired_audio.c"
+#endif
 #include "eng_formant.c"
 #include "eng_trio.c"
 #include "eng_wheel.c"
@@ -54,11 +59,13 @@ static uint32_t eng_state_size(uint32_t e)
     case ENGI_PHYS: return sizeof(phys_slot_t) * PHYS_POLY;
     case 7: return sizeof(drw_part_t);
 #endif
+#if MELODEE_RETIRED_REFERENCE
 #if MELODEE_LEGACY_EXTRAS
     case 2:                                         /* (PHASE: CZ-1's core) */
 #endif
     case ENGI_CZ: return sizeof(cz_part_t);
     case 3: return sizeof(sid_part_t);              /* SID (eng_sid.c) */
+#endif
     case ENGI_DRUM: return sizeof(drum909_part_t);
     case ENGI_FM6: return sizeof(fm6_part_t);
 #if MELODEE_SLICE
@@ -80,11 +87,17 @@ static int eng_state_prepare(const track_t *t)
 static phys_slot_t *phys_slots(uint32_t part) { return resource_get(RES_ENGINE0 + part % NPART, sizeof(phys_slot_t) * PHYS_POLY); }
 static drum909_part_t *drum909_part(uint32_t part) { return resource_get(RES_ENGINE0 + part % NPART, sizeof(drum909_part_t)); }
 static drum_lane_t *drum_kit_part(uint32_t part) { return resource_get(RES_ENGINE0 + part % NPART, sizeof(drum_lane_t) * DV_NLANE); }
+#if MELODEE_RETIRED_REFERENCE
 static dsk_part_t *dsk_part(uint32_t part) { return resource_get(RES_ENGINE0 + part % NPART, sizeof(dsk_part_t)); }
+#endif
 static drw_part_t *drw_of(const track_t *t) { return resource_get(RES_ENGINE0 + (uint32_t)(t - trk), sizeof(drw_part_t)); }
 static fm6_part_t *fm6_part(uint32_t part) { return resource_get(RES_ENGINE0 + part % NPART, sizeof(fm6_part_t)); }
+#if MELODEE_RETIRED_REFERENCE
 static cz_part_t *cz_part(uint32_t part) { return resource_get(RES_ENGINE0 + part % NPART, sizeof(cz_part_t)); }
+#endif
+#if MELODEE_RETIRED_REFERENCE
 static sid_part_t *sid_part(uint32_t part) { return resource_get(RES_ENGINE0 + part % NPART, sizeof(sid_part_t)); }
+#endif
 #if MELODEE_PROPHET
 static p5_part_t *p5_part(uint32_t part) { return resource_get(RES_ENGINE0 + part % NPART, sizeof(p5_part_t)); }
 #endif
@@ -173,11 +186,16 @@ static const uint8_t ENGINE_ORDER[NENG_SHOWN] = {
     ENGI_PROPHET,                /* Prophet replaces ANALOG in new-sound browsing */
     12,                          /* FM6 */
 #if MELODEE_LEGACY_EXTRAS
-    2, ENGI_CZ, 3, 5,             /* PHASE CZ-1 SID VOICE */
+    2, 5,
+#if MELODEE_RETIRED_REFERENCE
+    ENGI_CZ, 3,
+#endif
     6, 7, 9,
     11,                          /* NOISE */
 #else
-    ENGI_CZ, 3,                   /* CZ-1 SID */
+#if MELODEE_RETIRED_REFERENCE
+    ENGI_CZ, 3,                   /* historical host reference only */
+#endif
 #endif
 #if MELODEE_SLICE
     13,                          /* SLICE */
@@ -192,7 +210,7 @@ static int eng_extra_retired(uint32_t e)
 #if !MELODEE_PROPHET_PROTOTYPE
     if (e == ENGI_ANALOG) return 1;
 #endif
-    return e == ENGI_DIGITAL || (!MELODEE_LEGACY_EXTRAS && (e == 2u || e == 5u || e == 6u || e == 7u || e == 9u || e == 11u));
+    return (!MELODEE_RETIRED_REFERENCE && (e == 3u || e == ENGI_CZ)) || e == ENGI_DIGITAL || (!MELODEE_LEGACY_EXTRAS && (e == 2u || e == 5u || e == 6u || e == 7u || e == 9u || e == 11u));
 }
 /* the engines one can pick, in ENGINE_ORDER: eng_ok(e), the n-th of them
  * eng_vis(n), e's place among them eng_rank(e), the next / previous one eng_step(e, dir) (wraps) */
@@ -220,5 +238,5 @@ static uint32_t eng_step(uint32_t e, int32_t dir)
 }
 
 /* the parts at power-on (engine, preset; the steps empty): bass, pad, lead, drums */
-static const uint8_t TRK_DEF[NPART][2] = {{ENGI_PROPHET, 4}, {ENGI_FM6, 4}, {3, 0}, {ENGI_DRUM, 0}}; /* PROPHET FUNK
+static const uint8_t TRK_DEF[NPART][2] = {{ENGI_PROPHET, 4}, {ENGI_FM6, 4}, {MELODEE_RETIRED_REFERENCE ? 3u : ENGI_FM6, 0}, {ENGI_DRUM, 0}}; /* PROPHET FUNK
                                                     * BASS II (was ANALOG ACID), FM6 PAD (was DIGITAL PAD), SID INIT SID, DRUM KIT */

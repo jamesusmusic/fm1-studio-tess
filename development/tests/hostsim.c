@@ -168,7 +168,7 @@ static void host_power_on_sound(track_t *t, uint32_t k) { host_preset(t, TRK_DEF
 
 /* the plain synth a test plays when the engine is not what it tests (ANALOG's place until 2.0 retired it): CZ-1,
  * on the generic voice path (NPOLY voices, no cap of its own) as ANALOG was */
-#define HOST_SYNTH ENGI_CZ
+#define HOST_SYNTH (MELODEE_RETIRED_REFERENCE ? ENGI_CZ : ENGI_FM6)
 
 /* Explicit legacy fixture: hidden from factory browsing, still used by saved GM projects. */
 static void host_808_kit(track_t *t)

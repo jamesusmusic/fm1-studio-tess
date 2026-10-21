@@ -1,3 +1,4 @@
+/* Engine/space retirement and compatibility — By: Inputsignwave. */
 /* SPDX-License-Identifier: GPL-3.0-only
  * Copyright (C) 2026 Kerem Kilic (Ellic Studio) */
 /* Three stereo inserts per track, four sections per side per filter slot.
@@ -20,12 +21,19 @@ typedef struct {
     int16_t rate, character;
     uint8_t type, mono, decim, failed;
     int32_t echo, damp[4];
+#if MELODEE_RETIRED_REFERENCE
     uint16_t comb[4];
     uint16_t rev_pos[8], rev_span[8], rev_ap[8];
-    int32_t rev_damp[8], rev_gain[8], rev_input, rev_input2, rev_l, rev_r, rev_prev_l, rev_prev_r;
-    int32_t rev_bass[8];
+#endif
+    int32_t rev_l, rev_r, rev_prev_l, rev_prev_r;
+    int32_t rev_damp[8]; /* filter resampling histories are shared */
     int16_t rev_rate, rev_char;
+#if MELODEE_RETIRED_REFERENCE
+    int32_t rev_gain[8], rev_input, rev_input2, rev_bass[8];
     float rev_dc;
+#else
+    int32_t rev_bass[2];
+#endif
 } fx_state_t;
 static fx_state_t fx_state[FX_STATE_COUNT];
 static volatile uint32_t fx_epoch;
@@ -258,9 +266,11 @@ static __attribute__((noinline,section(".dsp_text"))) void fx_time(fx_state_t *r
     static const uint16_t len[4]={149,211,263,293};
     int32_t mix=f->mix;uint32_t delay=110u+(uint32_t)f->rate*31u;
     int32_t feedback=f->type==FX_ECHO?f->character*220:12000+f->character*120;
+#if MELODEE_RETIRED_REFERENCE
     if(f->type==FX_ROOM && (!f->rev_span[0] || f->rev_rate!=f->rate)){
         f->rev_rate=f->rate;for(uint32_t k=0;k<4u;k++)f->rev_span[k]=(uint16_t)((uint32_t)len[k]*(64u+(uint32_t)f->rate)/191u);
     }
+#endif
     for(uint32_t i=0;i<n;i++){
         int32_t mono=fx_div_pow2(fx_left[i]+fx_right[i],1);
         if(!f->decim){
@@ -271,7 +281,9 @@ static __attribute__((noinline,section(".dsp_text"))) void fx_time(fx_state_t *r
                                                  * not fed back; leaky, so silence stays exact) */
                 mem[f->pos]=(int16_t)clamp(mono+fx_div_pow2((f->echo-f->damp[0])*feedback,15),-32767,32767);
                 f->pos=(f->pos+1u)&4095u;
-            }else{
+            }
+#if MELODEE_RETIRED_REFERENCE
+            else{
                 int32_t sum=0;uint32_t off=0;
                 for(uint32_t k=0;k<4u;k++){
                     uint32_t span=f->rev_span[k];
@@ -283,9 +295,10 @@ static __attribute__((noinline,section(".dsp_text"))) void fx_time(fx_state_t *r
                 }
                 f->echo=fx_div_pow2(sum,1);
             }
+#endif
         }
         f->decim=(f->decim+1u)&3u;
-        fx_return(target,0,f->mono,i,f->echo,f->type==FX_ROOM?f->damp[1]+f->damp[3]:f->echo,&mix);
+        fx_return(target,0,f->mono,i,f->echo,MELODEE_RETIRED_REFERENCE && f->type==FX_ROOM?f->damp[1]+f->damp[3]:f->echo,&mix);
     }
     f->mix=mix;
 }
@@ -315,6 +328,7 @@ static __attribute__((noinline,section(".audio_text"))) void fx_chorus(fx_state_
     }
     f->pos=pos;f->rev_l=l;f->rev_r=r;f->mix=mix;
 }
+#if MELODEE_RETIRED_REFERENCE
 /* Eight-line orthogonal feedback tank, preceded by four input diffusers and
  * followed by two allpasses per output. Runs at FS/8 with input low-pass and
  * interpolated wet output. 1900 int16 samples fit one 4 KiB allocation.
@@ -427,6 +441,7 @@ static __attribute__((noinline,section(".dsp_text"))) void fx_reverb(fx_state_t 
     }
     f->mix=mix;f->decim=(uint8_t)phase;f->rev_input=a;f->rev_input2=b;f->echo=previous;f->damp[0]=difference;f->damp[1]=low;
 }
+#endif
 /* The filter inserts use a quarter-rate triangular decimator and pole,
  * independently per stereo side. Their Reverb histories are idle.
  * At most ceil(CTL/4) wet samples are staged; the dry audio stays at FS. */
@@ -532,7 +547,7 @@ static __attribute__((noinline,section(".audio_text"))) int fx_active(const trac
 #endif
     for(uint32_t slot=0;slot<FX_SLOTS;slot++){
         uint32_t base=P_FXTYPE+slot*FX_PARAMS;
-        if((t->p[base] && t->p[base+1u]) || fx_state[ti*FX_SLOTS+slot].mix)return 1;
+        if((t->p[base] && t->p[base+1u] && (MELODEE_RETIRED_REFERENCE || (t->p[base]!=FX_ROOM && t->p[base]!=FX_REVERB))) || fx_state[ti*FX_SLOTS+slot].mix)return 1;
     }
     return 0;
 }
@@ -544,6 +559,9 @@ static void fx_slot_prepare(fx_plan_t *plan,uint32_t si,const int16_t *p)
     plan->active=0;
     uint32_t type=(uint32_t)clamp(p[0],0,FX_COUNT-1);
     fx_state_t *f=&fx_state[si];
+    if(!MELODEE_RETIRED_REFERENCE && (type==FX_ROOM || type==FX_REVERB)) {
+        resource_release(RES_FX0+si); fx_zero(f); return;
+    }
     int32_t amount=clamp(p[1],0,127);
     int32_t target=type?(amount+(amount==127))*256:0;
 #if defined(MELODEE_FX_PROFILE) && MELODEE_FX_PROFILE && defined(FM1_IRQ_TARGET)
@@ -579,7 +597,7 @@ static void fx_slot_prepare(fx_plan_t *plan,uint32_t si,const int16_t *p)
 #endif
     int16_t *mem=0;
     if(f->type>=FX_ECHO){
-        uint32_t bytes=f->type==FX_CHORUS?FX_CHORUS_BYTES:f->type==FX_ROOM?2048u:f->type==FX_REVERB?FX_REVERB_BYTES:8192u;
+        uint32_t bytes=f->type==FX_CHORUS?FX_CHORUS_BYTES:f->type==FX_ROOM?2048u:f->type==FX_REVERB?4096u:8192u;
         if(!f->failed && !resource[RES_FX0+si].size){
             void *(*volatile allocate)(uint32_t,uint32_t)=fx_memory;mem=allocate(RES_FX0+si,bytes);if(!mem)f->failed=1;
         }else if(resource[RES_FX0+si].size)mem=resource[RES_FX0+si].ptr;
@@ -599,13 +617,17 @@ static __attribute__((noinline,section(".audio_text"))) int fx_slot_run(const fx
         int32_t depth=f->character*2,delay=256*65536+fx_sine(f->phase)*depth;
         int32_t step[2]={(delay-f->rev_l)/(int32_t)n,(512*65536-delay-f->rev_r)/(int32_t)n};
         void (*volatile run)(fx_state_t *,int16_t *,uint32_t,const int32_t *,int32_t)=fx_chorus;run(f,mem,n,step,target);
-    }else if(f->type==FX_REVERB){
+    }
+#if MELODEE_RETIRED_REFERENCE
+    else if(f->type==FX_REVERB){
         /* Design the slow drift beside the other block-rate coefficients,
          * keeping sine lookup calls outside the small SRAM sample kernel. */
         int32_t drift[8];for(uint32_t k=0;k<8u;k++)drift[k]=fx_sine(f->phase*(k+1u)+k*0x23456789u)*f->character/1024;
         f->phase+=n*11380u;void (*volatile setup)(fx_state_t *)=fx_reverb_setup;setup(f);
         void (*volatile run)(fx_state_t *,int16_t *,uint32_t,const int32_t *,int32_t)=fx_reverb;run(f,mem,n,drift,target);
-    }else if(f->type>=FX_ECHO){void (*volatile run)(fx_state_t *,int16_t *,uint32_t,int32_t)=fx_time;run(f,mem,n,target);}
+    }
+#endif
+    else if(f->type>=FX_ECHO){void (*volatile run)(fx_state_t *,int16_t *,uint32_t,int32_t)=fx_time;run(f,mem,n,target);}
     else {
         if(f->type==FX_TAPE){void (*volatile design)(fx_state_t *,uint32_t)=fx_tape_design;design(f,n);}
         else {if(!fx_hw_status){void (*volatile probe)(void)=fx_probe;probe();}void (*volatile design)(fx_state_t *,uint32_t)=fx_design;design(f,n);}

@@ -90,7 +90,10 @@ cd "$(dirname "$0")/.."
 [ "$(uname -s)" = Darwin ] && export DYLD_FALLBACK_LIBRARY_PATH="${DYLD_FALLBACK_LIBRARY_PATH:-/opt/homebrew/lib:/usr/local/lib:/usr/lib}"
 OUT=build/host
 LOG=$OUT/log
-CC="${CC:-cc} -O1 -ffp-contract=off -Wall -Wno-unused-function"
+# Retired DSP fixtures remain available for archive regression only. The
+# production retirement suite below compiles with the default profile (0).
+REFERENCE_CC="${CC:-cc}"
+CC="${CC:-cc} -DMELODEE_RETIRED_REFERENCE=1 -O1 -ffp-contract=off -Wall -Wno-unused-function"
 FW="-w -Ibuild/gen -Ifirmware/src"
 P5=build/prophet5/Prophet-5+10-Factory-Programs-ReadMe1.03
 SOUND=${SOUND:-1}
@@ -102,6 +105,7 @@ if [ "$UI" = renders ]; then
     python3 -c "import PIL" 2>/dev/null || { echo "UI renders need Pillow (python3 -m pip install Pillow)" >&2; exit 1; }
 fi
 [ "$PARALLEL" -ge 1 ] 2>/dev/null || { echo "PARALLEL=n, n >= 1"; exit 2; }
+echo "Historical host suite: retired DSP reference enabled; production checks run separately."
 python3 tools/gen_scales.py --check || exit 1
 python3 tools/audio_contract.py --check || exit 1
 if [ "$UI" = renders ]; then
@@ -114,6 +118,7 @@ PIL=0; python3 -c "import PIL" 2>/dev/null && PIL=1
 mkdir -p "$OUT" "$LOG"
 rm -f "$LOG"/*
 start=$(date +%s)
+if [ "$UI" != renders ]; then CC="$REFERENCE_CC" bash tests/run_retirement_tests.sh || exit 1; fi
 
 # ------------------------------------------------------------------- jobs ---
 # job FN ARGS...: FN ARGS in the background once one of the PARALLEL slots is free (fd 3, a FIFO holding a line per
