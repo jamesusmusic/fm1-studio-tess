@@ -12,12 +12,12 @@ endurance/acceptance scenario has been exercised.
 Tomorrow's first development work is page/menu organisation and a function
 reference, ahead of additional feature development.
 
-- [ ] **First layout change: conditional generator pages.** Keep PATTERN MODE
+- [x] **First layout change: conditional generator pages.** Keep PATTERN MODE
   always accessible; show beat/generator-specific parameters only for the mode
   selected on the current track. Hide irrelevant generator pages from scrolling
   and page maps, preserve their saved settings, and retain applicable shared
   controls. See [the agreed visibility rule](development/docs/GENERATOR_VISIBILITY_DRAFT.md).
-- [ ] Move the current **hold-OCT+ action sheets into the HOME menu**, as
+- [x] Move the current **hold-OCT+ action sheets into the HOME menu**, as
   requested: sound tools, track actions, pattern/selected-note actions, song
   section/jam actions and shared-FX actions. **Create New Track** is the first
   directly selectable item (renamed from Add track). Move **Sound Designer**
@@ -25,45 +25,52 @@ reference, ahead of additional feature development.
   context, selections, undo and existing action checks. Inventory OCT+ tap
   actions separately so no functions disappear during remapping.
   See [the editable HOME actions draft](development/docs/HOME_ACTIONS_DRAFT.md).
-- [ ] **FM6 EDIT: map the physical ALGORITHM knob to FM algorithm selection
+- [x] **FM6 EDIT: map the physical ALGORITHM knob to FM algorithm selection
   (1–32)** for the selected track, with immediate value/diagram and sound updates.
   Preserve the rest of the patch and existing save behavior. The current encoder
   selects tracks; revise that behavior in the FM6 editing context and document
   track selection in the new map. See [control mapping decisions](development/docs/CONTROL_MAPPING_DRAFT.md).
-- [ ] Move **OUTPUT from SEQ to GLO (Global), as the second page after MIXER**.
+- [x] Move **OUTPUT from SEQ to GLO (Global), as the second page after MIXER**.
   Keep MIDI output enable/channel
   scoped to the selected track, show its target clearly, and retain existing
   note-release and project-save behavior. This changes the page location, not
   the scope of its settings.
-- [ ] **Colour/aesthetic identity:** include a UI colour change in this update
+- [x] **Colour/aesthetic identity:** include a UI colour change in this update
   as the first step toward our own Studio Tess visual identity. Review the
   current palette/track/status swatches before choosing replacements; keep
   contrast, selected/inactive states and track identities clear. See the
   [current colour reference](development/docs/UI_COLOUR_REFERENCE.md). **LO-FI is the provisional palette choice** (21 October); use it as the starting point for menu mockups and the new visual identity.
-- [ ] Inventory the current pages, controls and navigation paths, including the
+- [x] Inventory the current pages, controls and navigation paths, including the
   new Performance 7 pages, and identify crowded or misplaced groups.
-- [ ] Reorganise pages around the task being performed. Move appropriate beat
-  development and rhythm-morphing settings out of SEQ and into EDIT, as requested.
-  Review exact groupings before implementation; distinguish rhythm MORPH from
-  the future sound/timbre morphing roadmap.
-- [ ] Keep core sequencing, pattern/transport and recording controls easy to find;
+- [x] **Layout correction, 21 October:** keep all existing sequencer pages in
+  **SEQ**, including beat development, rhythm MORPH/EVOLVE/FORM/TWEAK, meters,
+  phase, seeds, AWAKE/POLY, HARMONY and NOTE RANGE. Only OUTPUT leaves SEQ
+  for GLO. Sound Designer is the only function being moved into EDIT; do not
+  add a duplicate GENERATOR page there. Reduce SEQ scrolling through conditional
+  generator visibility instead of relocating its controls.
+- [x] Keep core sequencing, pattern/transport and recording controls easy to find;
   group related generator, beat-development and editing controls coherently.
   Preserve quick access during playback and the existing hardware navigation model.
-- [ ] Create a page guide with a quick navigation map and a reference for every
+- [x] Create a page guide with a quick navigation map and a reference for every
   page/function: where to find it, what it changes, scope (track/bank/project/global),
   defaults/bypass, applicable modes/engines, and save/recall behavior.
-- [ ] Explain relationships and precedence with examples: MODE/generator versus
+- [x] Explain relationships and precedence with examples: MODE/generator versus
   the source grid; DIV versus meter/grouping/ratio; phase/drift/HOLD/ALIGN/reset;
   FORM/EVOLVE/MORPH and seeds/conditions; anchors/density/fills/hats; harmony/pitch;
   note length/release; capture destination and STEP replay. Link related pages
   and make inactive or mode-dependent controls clear.
-- [ ] Validate the reorganised navigation in UI tests/screenshots and on the FM-1,
-  checking page selection, labels/help and access to every existing control.
-  Keep audio, timing, storage and established parameter behavior unchanged by
-  the navigation-only patch. Update the guide to match the final layout.
+- [x] Validate navigation through host tests/screenshots and full regression checks.
+  All 337 sound baselines remain unchanged. Complete Linux CI, sanitizers,
+  resource gates and exact-package emulator smoke checks passed.
+- [ ] Hardware acceptance on the FM-1: menu/track/mode changes, controls,
+  MIDI/USB, saved projects/palettes and long sessions. No automated flash.
 
-This is the agreed next-session plan; no menu relocation is included in the
-current working Performance 7 firmware.
+Performance 8 software validation is complete on `studio-tess-8`:
+[build/validation record](development/STUDIO8_VALIDATION.md) and
+[page/function guide](development/docs/STUDIO8_PAGE_GUIDE.md). CI run 39612840717 passed;
+local/full Linux suites completed in 165/298 s. The corrected page families,
+conditional pages, HOME actions, FM6 encoder and LO-FI default are included.
+The working Performance 7 package remains preserved for rollback.
 
 ## Planned phase — character reverb and playable FX
 

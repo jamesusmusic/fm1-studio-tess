@@ -1,5 +1,9 @@
 # Deferred UI proposals — 16 October 2026
 
+Historical record: current HOME/Sound Designer, algorithm encoder, colour and
+SEQ-location decisions are superseded by the Performance 8
+[page guide](docs/STUDIO8_PAGE_GUIDE.md) and [validation report](STUDIO8_VALIDATION.md).
+
 Audio investigation takes priority. This pass changes no UI implementation.
 These rows preserve the discussion; they are not approval for a later blanket
 redesign.

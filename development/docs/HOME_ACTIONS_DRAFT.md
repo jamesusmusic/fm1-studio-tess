@@ -1,5 +1,9 @@
 # HOME actions — navigation draft
 
+**Implemented in the Performance 8 candidate.** This dated planning record is
+superseded for current navigation by [the page guide](STUDIO8_PAGE_GUIDE.md).
+
+
 By: Inputsignwave
 
 User decision, 20 October 2026: include the functions currently reached by

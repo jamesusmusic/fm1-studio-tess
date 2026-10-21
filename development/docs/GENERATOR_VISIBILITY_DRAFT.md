@@ -1,5 +1,9 @@
 # Generator page visibility — agreed layout rule
 
+**Implemented in the Performance 8 candidate.** This dated planning record is
+superseded for current navigation by [the page guide](STUDIO8_PAGE_GUIDE.md).
+
+
 By: Inputsignwave
 
 21 October 2026. First requested change to the proposed navigation layout:
