@@ -8,7 +8,11 @@
  * code/data/retained-state boundary. Small banks first preserve the large
  * contiguous POOL bank for engine state and note history. */
 enum { RES_ENGINE0, RES_NOTE_HISTORY = RES_ENGINE0 + NPART, RES_FX0,
-       RES_RECORD_UNDO = RES_FX0 + FX_STATE_COUNT, RES_COUNT };
+       RES_RECORD_UNDO = RES_FX0 + FX_STATE_COUNT,
+#if MELODEE_WAVETABLE
+       RES_WAVETABLE,
+#endif
+       RES_COUNT };
 static uint8_t recording_undo_lost;
 static uint8_t recording_undo_active, recording_undo_skip;
 static struct { void *ptr; uint32_t size; } resource[RES_COUNT];

@@ -29,8 +29,10 @@ By: Inputsignwave
 The user reports that Inputsignwave Performance 8 Dev2 installs and works well
 on their FM-1. No audio fault is currently reported; this is feature development.
 
-- [ ] Keep Prophet, FM6 and DRUM. Evaluate a wavetable engine with wavefolding
-  first, then a focused modal/resonator engine if measured resources permit.
+- [ ] Keep Prophet, FM6 and DRUM. Wavetable prototype implemented at fresh ID 21;
+  host integration/spectral checks pass, target build and resource validation in progress.
+  Fold morphs precomputed bandwidth-limited spectra. Listening/hardware approval remains
+  before final adoption; a focused modal/resonator engine follows only if resources permit.
 - [x] **Confirmed: remove SID and CZ entirely from the next build**, including
   SID drum kits and their shared SID synthesis code. Retain Prophet, FM6 and
   the non-SID DRUM models. The user approved this on 21 October 2026.

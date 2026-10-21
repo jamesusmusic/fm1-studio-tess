@@ -6,7 +6,7 @@
  * spread and shared Chorus. Host elapsed time is not a device deadline. */
 #define AUDIO_MATRIX_INCLUDE 1
 #include "dual_core_test.c"
-static const uint8_t matrix_engines[6]={ENGI_PROPHET,ENGI_FM6,ENGI_CZ,3,ENGI_DRUM,ENGI_DRUM};
+static const uint8_t matrix_engines[7]={ENGI_PROPHET,ENGI_FM6,ENGI_CZ,3,ENGI_DRUM,ENGI_DRUM,ENGI_WAVETABLE};
 static uint64_t matrix_hash;
 static void matrix_setup(const uint32_t cat[4],uint32_t variant)
 {
@@ -28,7 +28,8 @@ static void matrix_setup(const uint32_t cat[4],uint32_t variant)
 #if MELODEE_RETIRED_REFERENCE
         if(c==3){trk[p].p[P_E0]=variant&1u;trk[p].p[P_E2]=(variant%3u)==0?SID_DETUNE:(variant%3u)==1?SID_SYNC:SID_RING;}
 #endif
-        for(uint32_t k=0;k<2;k++)trk_note_on(&trk[p],c>=4?(k?38:36):48+p*3+k*7,110);
+        if(c==6){trk[p].p[P_E0]=variant%128u;trk[p].p[P_E1]=(variant*3u)%128u;trk[p].p[P_E3]=60;}
+        for(uint32_t k=0;k<2;k++)trk_note_on(&trk[p],(c==4 || c==5)?(k?38:36):48+p*3+k*7,110);
         assert(active_voices(&trk[p])==2);
     }
 }
@@ -38,8 +39,8 @@ static void matrix_render(const uint32_t cat[4],uint32_t variant,int parallel)
     for(uint32_t block=0;block<96u;block++){
         int32_t out[CTL*2];
         if(block==16u)for(uint32_t p=0;p<4;p++){trk[p].p[P_SPRD]=42;trk[p].p[P_M1SRC]=MS_LFO;trk[p].p[P_M1DST]=MD_CUT;trk[p].p[P_M1AMT]=24;}
-        if(block==32u)for(uint32_t p=0;p<4;p++)for(uint32_t k=0;k<2;k++)trk_note_off(&trk[p],cat[p]>=4?(k?38:36):48+p*3+k*7);
-        if(block==40u)for(uint32_t p=0;p<4;p++)for(uint32_t k=0;k<2;k++)trk_note_on(&trk[p],cat[p]>=4?(k?38:36):48+p*3+k*7,100);
+        if(block==32u)for(uint32_t p=0;p<4;p++)for(uint32_t k=0;k<2;k++)trk_note_off(&trk[p],(cat[p]==4 || cat[p]==5)?(k?38:36):48+p*3+k*7);
+        if(block==40u)for(uint32_t p=0;p<4;p++)for(uint32_t k=0;k<2;k++)trk_note_on(&trk[p],(cat[p]==4 || cat[p]==5)?(k?38:36):48+p*3+k*7,100);
         if(block==56u){song.g[G_MFXTYPE]=FX_CHORUS;for(uint32_t p=0;p<4;p++)trk[p].p[P_FXSEND]=30;}
         if(block==72u)for(uint32_t p=0;p<4;p++){trk[p].p[P_E1]+=cat[p]==3?0:1;trk[p].p[P_LD_PIT]=4;}
         mix_block(out,CTL);
@@ -54,12 +55,12 @@ static void matrix_render(const uint32_t cat[4],uint32_t variant,int parallel)
 int main(void)
 {
     pthread_t thread;assert(!pthread_create(&thread,0,worker_thread,0));while(!AW_LOAD(&audio_worker.ready))sched_yield();
-    uint32_t cases=0;resource_failures=0;
-    for(uint32_t a=0;a<6;a++)for(uint32_t b=0;b<6;b++)for(uint32_t c=0;c<6;c++)for(uint32_t d=0;d<6;d++){
+    uint32_t cases=0,ncat=6u+MELODEE_WAVETABLE;resource_failures=0;
+    for(uint32_t a=0;a<ncat;a++)for(uint32_t b=0;b<ncat;b++)for(uint32_t c=0;c<ncat;c++)for(uint32_t d=0;d<ncat;d++){
         if(!MELODEE_RETIRED_REFERENCE && (a==2 || a==3 || b==2 || b==3 || c==2 || c==3 || d==2 || d==3))continue;
         const uint32_t cat[4]={a,b,c,d};matrix_render(cat,cases,0);matrix_render(cat,cases,1);cases++;
     }
-    assert(cases==(MELODEE_RETIRED_REFERENCE?1296u:256u) && audio_batch_pairs);
+    assert(cases==(MELODEE_RETIRED_REFERENCE?1296u:MELODEE_WAVETABLE?625u:256u) && audio_batch_pairs);
     assert(!pthread_cancel(thread));assert(!pthread_join(thread,0));
     printf("Audio matrix: %u ordered assignments, two voices per track, controls/releases/retriggers/spread/Chorus, serial/concurrent PCM identical; hash %llx: OK\n",cases,(unsigned long long)matrix_hash);
     return 0;

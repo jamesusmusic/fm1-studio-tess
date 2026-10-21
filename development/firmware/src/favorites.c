@@ -1,3 +1,4 @@
+/* Wavetable integration — By: Inputsignwave. */
 /* SPDX-License-Identifier: GPL-3.0-only
  * Copyright (C) 2026 Kerem Kilic (Ellic Studio)
  * Portions Copyright (C) 2026 Leo Kuroshita (@kurogedelic), Hügelton Instruments */
@@ -50,8 +51,16 @@ static int scale_favorite_set(uint32_t scale, int on)
 }
 static int p5_favorite_has(uint32_t slot,int factory);
 static int p5_favorite_set(uint32_t slot,int on,int factory);
+/* Wavetable's six factory stars use previously unused GRAIN bytes 12..15.
+ * Keep old GRAIN bits 0..11 and FX-key map bytes 16..31 intact. By: Inputsignwave. */
+static int wt_favorite(uint32_t preset)
+{
+    const uint8_t *p=favorites.factory[8];
+    return preset<6u && p[12]=='W' && p[13]=='T' && p[14]==1u && ((p[15]>>preset)&1u);
+}
 static int favorite_has(uint32_t engine, uint32_t preset)
 {
+    if(engine==ENGI_WAVETABLE)return MELODEE_WAVETABLE && wt_favorite(preset);
     if(engine==ENGI_PROPHET)return p5_favorite_has(preset,1);
     if(engine==USER_NATIVE_P5 || engine==USER_NATIVE_FM || engine==USER_NATIVE_CZ)engine=USER_GENERAL;
     if (engine == USER_GENERAL)
@@ -61,6 +70,13 @@ static int favorite_has(uint32_t engine, uint32_t preset)
 }
 static int favorite_set(uint32_t engine, uint32_t preset, int on)
 {
+    if(engine==ENGI_WAVETABLE){
+        if(!MELODEE_WAVETABLE || preset>=6u || wt_favorite(preset)==!!on)return 0;
+        uint8_t *p=favorites.factory[8];
+        uint8_t bits=p[12]=='W' && p[13]=='T' && p[14]==1u?p[15]:0;
+        p[12]='W';p[13]='T';p[14]=1;
+        p[15]=on?(uint8_t)(bits|(1u<<preset)):(uint8_t)(bits&~(1u<<preset));return 1;
+    }
     if(engine==ENGI_PROPHET)return p5_favorite_set(preset,on,1);
     if(engine==USER_NATIVE_P5 || engine==USER_NATIVE_FM || engine==USER_NATIVE_CZ)engine=USER_GENERAL;
     if (engine >= NENGINES || (engine == USER_GENERAL ? preset >= UP_SLOTS : engine >= 16u || preset >= 256u))

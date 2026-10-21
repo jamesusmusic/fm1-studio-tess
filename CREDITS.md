@@ -63,3 +63,8 @@ comparisons. See `development/docs/PERFORMANCE9_REMOVAL_REPORT.md`. The new
 engines and replacement reverb are not yet implemented. Historical/reference
 sources retain their original authors and licences; retained upstream DSP
 remains the work of its respective authors.
+
+Inputsignwave Performance 9 wavetable: original mathematical wave/fold bank,
+bandwidth-limited oscillator, shared bank lifetime, controls/preset/favorites/editor
+integration, spectral and storage tests — **By: Inputsignwave**. Existing Melodee,
+Felucca, Prophet, FM6 and drum notices retain their original scope and authors.

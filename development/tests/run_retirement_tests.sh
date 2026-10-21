@@ -22,3 +22,11 @@ $cc_task $flags -pthread tests/audio_matrix_test.c -lm -o build/removal/audio_ma
 build/removal/audio_matrix
 $cc_task $flags tests/fx_performance.c -lm -o build/removal/fx_performance
 build/removal/fx_performance > build/removal/fx_performance.csv
+
+# New engine stays out of historical reference goldens; validate its production paths explicitly.
+python3 tools/gen_wavetable.py firmware/src/wavetable_bank.h --check
+$cc_task $flags tests/wavetable_test.c -lm -o build/removal/wavetable
+build/removal/wavetable build/removal
+python3 tests/wavetable_spectral.py build/removal
+$cc_task $flags -g -fsanitize=address,undefined tests/wavetable_test.c -lm -o build/removal/wavetable_sanitize
+UBSAN_OPTIONS=halt_on_error=1 ASAN_OPTIONS=detect_leaks=0 build/removal/wavetable_sanitize

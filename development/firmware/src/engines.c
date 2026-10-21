@@ -22,6 +22,7 @@
 #include "eng_phys.c"           /* PHYS: DaisySP physical models (phys_dsp.c, MIT) */
 #include "eng_drum.c"           /* DRUM: synthesized 808 circuits (drum_808.c), the 909, a C64's SID (drum_sid.c) */
 #include "eng_noise.c"
+#include "eng_wavetable.c"
 #include "eng_fm6.c"            /* FM6: 6-operator FM rendered as Dexed renders it (fm6_core.c) */
 #if MELODEE_SLICE
 #include "eng_slice.c"
@@ -46,6 +47,25 @@ static const engine_t ENG_RETIRED = {         /* 13 without MELODEE_SLICE: reser
 /* Each track owns only its selected engine's working state. Simple engines
  * use voice_t alone. State is released after the old engine's switch fade. */
 #include "resources.c"
+#if MELODEE_WAVETABLE
+/* Only the audio owner allocates/copies; every track reads the same immutable bank. */
+static int wt_prepare(void)
+{
+    if(resource[RES_WAVETABLE].size==sizeof(WT_FLASH)){
+        wt_bank=(const wt_bank_t *)resource[RES_WAVETABLE].ptr;return 1;
+    }
+    void *p=resource_get(RES_WAVETABLE,sizeof(WT_FLASH));
+    wt_bank=(const wt_bank_t *)p;
+    if(p)memcpy(p,&WT_FLASH,sizeof(WT_FLASH));
+    return p!=0;
+}
+static void wt_cache_sweep(void)
+{
+    for(uint32_t t=0;t<NPART;t++)if(trk[t].engine==ENGI_WAVETABLE)
+        for(uint32_t v=0;v<NVOICE;v++)if(trk[t].v[v].active)return;
+    resource_release(RES_WAVETABLE);wt_bank=0;
+}
+#endif
 static uint32_t eng_state_size(uint32_t e)
 {
     switch (e) {
@@ -78,9 +98,17 @@ static void eng_state_clear(uint32_t part)
 {
     if (part < NPART) resource_release(RES_ENGINE0 + part);
 }
-static void eng_state_reset(void) { for (uint32_t k = 0; k < NPART; k++) eng_state_clear(k); }
+static void eng_state_reset(void) {
+    for(uint32_t k=0;k<NPART;k++)eng_state_clear(k);
+#if MELODEE_WAVETABLE
+    resource_release(RES_WAVETABLE);wt_bank=0;
+#endif
+}
 static int eng_state_prepare(const track_t *t)
 {
+#if MELODEE_WAVETABLE
+    if(t->engine==ENGI_WAVETABLE)return wt_prepare();
+#endif
     uint32_t size = t->engine==ENGI_DRUM?drum_bytes(t):eng_state_size(t->engine);
     if(!size){resource_release(RES_ENGINE0+(uint32_t)(t-trk));return 1;}
     return resource_get(RES_ENGINE0 + (uint32_t)(t - trk), size) != 0;
@@ -158,6 +186,12 @@ static const engine_t *const ENGINES[NENGINES] = {
     &ENG_CZ,                     /* 15: native Casio CZ-1 */
     &ENG_RETIRED, &ENG_RETIRED, &ENG_RETIRED, /* 16..18 reserved */
     &ENG_P5_TEST,                /* 19: Prophet (ANALOG's ID 0 stays reserved) */
+    &ENG_RETIRED,                /* 20: native Prophet browsing namespace, never a sound engine */
+#if MELODEE_WAVETABLE
+    &ENG_WAVETABLE,              /* 21: original wavetable/fold engine — By: Inputsignwave */
+#else
+    &ENG_RETIRED,
+#endif
 };
 
 /* a track's engine number as an index (the audio paths: a compare, cheaper than % NENGINES; a bad number: 0) */
@@ -201,6 +235,9 @@ static const uint8_t ENGINE_ORDER[NENG_SHOWN] = {
 #if MELODEE_SLICE
     13,                          /* SLICE */
 #endif
+#if MELODEE_WAVETABLE
+    ENGI_WAVETABLE,
+#endif
     10,                          /* DRUM */
 };
 
@@ -217,7 +254,7 @@ static int eng_extra_retired(uint32_t e)
  * eng_vis(n), e's place among them eng_rank(e), the next / previous one eng_step(e, dir) (wraps) */
 static int eng_ok(uint32_t e)
 {
-    return e < NENGINES && !(e >= 16u && e <= 18u) && !eng_extra_retired(e) && e != 4u && e != 8u && e != 14u && (MELODEE_SLICE || e != ENGI_SLICE);
+    return e < NENGINES && e!=20u && (MELODEE_WAVETABLE || e!=ENGI_WAVETABLE) && !(e >= 16u && e <= 18u) && !eng_extra_retired(e) && e != 4u && e != 8u && e != 14u && (MELODEE_SLICE || e != ENGI_SLICE);
 }
 static uint32_t eng_sound_idx(uint32_t e)
 {

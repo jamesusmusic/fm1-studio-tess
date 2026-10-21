@@ -1010,7 +1010,7 @@ static uint32_t graph_signature(void) { return graph_sig(1); }
 /* 4-letter engine tags of the preset list */
 static const char *eng_abbr(const char *name)
 {
-    static const char *const A[][2] = {{"PROPHET", "P5"},
+    static const char *const A[][2] = {{"PROPHET", "P5"}, {"WAVETABLE", "WAVE"},
                                        {"PHASE", "PHAS"}, {"CZ-1", "CZ-1"}, {"SID", "SID"},
                                        {"SAMPLE", "SMPL"}, {"VOICE", "VOCL"}, {"TRIO", "TRIO"}, {"WHEEL", "WHEL"},
                                        {"GRAIN", "GRAN"}, {"PHYS", "PHYS"}, {"DRUM", "DRUM"},

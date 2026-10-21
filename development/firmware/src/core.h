@@ -53,19 +53,24 @@
 #if defined(FM1_IRQ_TARGET) && MELODEE_RETIRED_REFERENCE
 #error Retired DSP reference mode is host-only
 #endif
+/* Original wavetable prototype — By: Inputsignwave. Historical fixtures stay unchanged. */
+#ifndef MELODEE_WAVETABLE
+#define MELODEE_WAVETABLE (!MELODEE_RETIRED_REFERENCE)
+#endif
+#define ENGI_WAVETABLE 21u /* 20 remains the native Prophet browsing namespace */
 #define MELODEE_PROPHET 1
 #define ENGI_FM6 12u
 #define ENGI_PROPHET 19u /* 16..18 reserved: historical preset namespaces */
 #define USER_GENERAL 16u
 #define USER_NATIVE_P5 20u
-#define NENGINES 20               /* 13 SLICE and 14 OBXF reserved; 15 native CZ-1 */
+#define NENGINES 22               /* 13 SLICE and 14 OBXF reserved; 15 native CZ-1 */
 #define USER_NATIVE_FM 17u
 #define USER_NATIVE_CZ 18u
 #define USER_NONE 65535u
 #define ENGI_ANALOG 0u           /* retired in 1.2: never selectable (eng_ok), its stored sounds play silent */
 #define ENGI_DIGITAL 1u          /* retired: never selectable (eng_ok), its stored sounds play silent */
-#define NENG_SHOWN (NENGINES - 8u - !MELODEE_SLICE - 6u * !MELODEE_LEGACY_EXTRAS - 2u * !MELODEE_RETIRED_REFERENCE)   /* the engines one can pick: PRESETS, the EDIT
-                                                * layer, the editor, in the display order of engines.c ENGINE_ORDER */
+#define NENG_SHOWN (3u+2u*MELODEE_RETIRED_REFERENCE+6u*MELODEE_LEGACY_EXTRAS+MELODEE_SLICE+MELODEE_WAVETABLE)
+
 #define ENGI_SLICE 13u           /* reserved without MELODEE_SLICE: never selectable (eng_ok) */
 #ifdef SMP_USER_SLOTS
 #undef SMP_USER_SLOTS

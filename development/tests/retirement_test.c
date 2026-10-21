@@ -99,8 +99,8 @@ int main(int argc,char **argv)
 {
     if(argc>1){parity();return 0;}
     assert(!MELODEE_RETIRED_REFERENCE);
-    assert(NENG_SHOWN==3 && !eng_ok(3) && !eng_ok(ENGI_CZ));
-    for(uint32_t k=0;k<NENG_SHOWN;k++)assert(eng_vis(k)==(k==0?ENGI_PROPHET:k==1?ENGI_FM6:ENGI_DRUM));
+    assert(NENG_SHOWN==3u+MELODEE_WAVETABLE && !eng_ok(3) && !eng_ok(ENGI_CZ));
+    for(uint32_t k=0;k<NENG_SHOWN;k++)assert(eng_vis(k)==(k==0?ENGI_PROPHET:k==1?ENGI_FM6:MELODEE_WAVETABLE && k==2?ENGI_WAVETABLE:ENGI_DRUM));
     assert(!eng_state_size(3) && !eng_state_size(ENGI_CZ));
     assert(ENG_DRUM.npresets==2 && TRK_DEF[2][0]==ENGI_FM6);
     legacy();bypass();stress();

@@ -104,6 +104,7 @@ def generate():
         (GEN / old).unlink(missing_ok=True)
     tools = SRC / "tools"
     subprocess.run([sys.executable, str(tools / "gen_scales.py"), "--check"], check=True)
+    subprocess.run([sys.executable, str(tools / "gen_wavetable.py"), FW / "src/wavetable_bank.h", "--check"], check=True)
     cmds = [[tools / "gen_aa_font.py", GEN / "ui_fonts.h", "--preset", "rubik"],
             [tools / "gen_icons.py", GEN / "ui_icons.h"],
             [tools / "gen_aa_keycaps.py", GEN / "ui_keycaps.h"],
