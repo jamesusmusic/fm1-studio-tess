@@ -1,4 +1,4 @@
-name: Studio Tess 8 navigation validation
+name: Inputsignwave Performance 8 validation
 on:
   push:
     branches: [studio-tess-8]
@@ -47,10 +47,11 @@ jobs:
         with:
           path: .build-deps
           key: studio7-jieli-sdk-d179b448-v3
-      - name: Compile Studio 8 development candidate
+      - name: Compile Inputsignwave Performance 8 candidate
         run: |
-          ./build.sh --release 1.4.1-studio-tess.8-dev1
-          cp build/melodee-1.4.1-studio-tess.8-dev1.fwsc build/melodee.fwsc
+          ./build.sh --release 1.4.1-inputsignwave.8-dev2
+          cp build/melodee-1.4.1-inputsignwave.8-dev2.fwsc build/melodee.fwsc
+          cp build/melodee.fwsc build/inputsignwave-1.4.1-performance8-dev2.fwsc
       - uses: actions/upload-artifact@v4
         with:
           name: studio8-target-${{ github.sha }}
@@ -93,7 +94,7 @@ jobs:
             development/build/*.map
             development/build/*.elf
             development/build/*audio*.json
-            development/build/melodee-1.4.1-studio-tess.8-dev1.fwsc
+            development/build/melodee-1.4.1-inputsignwave.8-dev2.fwsc
             development/build/melodee-app.bin
             development/build/melodee.bin
             development/build/release-*/SHA256SUMS

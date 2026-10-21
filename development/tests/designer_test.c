@@ -1,3 +1,4 @@
+/* Inputsignwave navigation validation modifications — By: Inputsignwave. */
 /* SPDX-License-Identifier: GPL-3.0-only
  * Copyright (C) 2026 Kerem Kilic (Ellic Studio) */
 /* Drive real panel input and native setters, render the resulting recipes. */

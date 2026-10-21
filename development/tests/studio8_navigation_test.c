@@ -81,4 +81,19 @@ static void algorithm(void)
     designer_close(1);assert(str_eq(cur_page()->title,"DESIGNER"));
     puts("studio8: algorithms 1..32, extreme deltas, other patch bytes, SEQ track selection and EDIT Designer passed");
 }
-int main(void){setbuf(stdout,0);setbuf(stderr,0);visibility();home_actions();algorithm();return 0;}
+static void branding(void)
+{
+    assert(str_eq(FIRMWARE_NAME,"Inputsignwave"));
+    assert(str_eq(FIRMWARE_CREDIT,"By: Inputsignwave"));
+    int custom=0,melodee=0,felucca=0,tess=0;
+    for(uint32_t i=0;i<NELEM(MENU_CREDITS);i++) {
+        const char *s=MENU_CREDITS[i].text;
+        custom|=str_eq(s,FIRMWARE_CREDIT);
+        melodee|=str_eq(s,"Melodee: Kerem Kilic, Ellic Studio / GPL-3.0");
+        felucca|=str_eq(s,"FELUCCA / UPSTREAM");
+        tess|=str_eq(s,"TESS / GENERATORS");
+    }
+    assert(custom && melodee && felucca && tess);
+    puts("Inputsignwave: device identity, exact custom credit and upstream credits retained");
+}
+int main(void){branding();setbuf(stdout,0);setbuf(stderr,0);visibility();home_actions();algorithm();return 0;}

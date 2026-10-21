@@ -1,3 +1,4 @@
+<!-- Inputsignwave branding and compatibility — By: Inputsignwave. Original upstream notices retained. -->
 <!doctype html>
 <!-- SPDX-License-Identifier: GPL-3.0-only
      Copyright (C) 2026 Kerem Kilic (Ellic Studio)
@@ -9,7 +10,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Melodee Editor</title>
+<title>Inputsignwave — FM-1</title>
 <style>
   /* Fukiai: Hügelton Instruments' icon font (MIT, FUKIAI-LICENSE.txt). Icons are text in .ic spans;
      they stay hidden until the face has loaded (html.fk), so a missing font never shows boxes. */
@@ -173,7 +174,7 @@
 <main>
   <button class="lang" id="lang"></button>
   <nav class="site">
-    <span class="brand">Melodee</span>
+    <span class="brand">Inputsignwave</span>
     <div class="links">
       <a href="../editor/" aria-current="page">Patch Editor</a>
       <a href="../installer/">Installer</a>
@@ -2447,7 +2448,7 @@ function makeMockDevice(opt = {}) {
         b(target);b(index);b(rc);if(!rc && cmd===CMD.CZ_GET)CZ.nibbles(raw).forEach(b);break;
       }
       case CMD.INFO:
-        s(opt.legacy ? "MELODEE 0.4 BETA (MOCK)" : "MELODEE v1.2.1 (MOCK)"); b(ENG.length); b(P_COUNT); b(G_COUNT); b(NSTEP); b(P_E0);
+        s(opt.legacy ? "MELODEE 0.4 BETA (MOCK)" : "Inputsignwave v1.4.1 (MOCK)"); b(ENG.length); b(P_COUNT); b(G_COUNT); b(NSTEP); b(P_E0);
         ENG.forEach((e) => s(e.name));
         if (!opt.legacy) b(NTRK);
         if (!opt.legacy && !opt.v3 && !opt.v5) {
@@ -2679,10 +2680,10 @@ function makeMockDevice(opt = {}) {
   }
 
   /* a WebMIDI-like access object: one input and one output named "Melodee" */
-  const input = { id: "mock-in", name: "Melodee", type: "input", state: "connected", onmidimessage: null };
+  const input = { id: "mock-in", name: "Inputsignwave", type: "input", state: "connected", onmidimessage: null };
   let busy = false;
   const output = {
-    id: "mock-out", name: "Melodee", type: "output", state: "connected",
+    id: "mock-out", name: "Inputsignwave", type: "output", state: "connected",
     send(data) {
       const f = unframe(data);
       if (!f) { console.error("mock: refused a frame that is not F0 7D 46 4C ... F7", data); return; }
@@ -3251,7 +3252,7 @@ async function connect() {
       }
       access.onstatechange = onState;
     }
-    const isF = (p) => /melodee|felucca/i.test(p.name || "") && p.state !== "disconnected";
+    const isF = (p) => /inputsignwave|melodee|felucca/i.test(p.name || "") && p.state !== "disconnected";
     const input = [...access.inputs.values()].find(isF);
     const output = [...access.outputs.values()].find(isF);
     if (!input || !output) { sayK("nodevice"); return; }
@@ -3304,7 +3305,7 @@ function disconnect(reasonKey = "disconnected") {
 
 function onState(e) {
   const p = e.port;
-  if (!p || !/melodee|felucca/i.test(p.name || "")) return;
+  if (!p || !/inputsignwave|melodee|felucca/i.test(p.name || "")) return;
   if (dev && p.state === "disconnected" && (p.id === dev.input.id || p.id === dev.output.id)) {
     disconnect("lost");
   } else if (!dev && wantConnected && p.state === "connected" && p.type === "output") {

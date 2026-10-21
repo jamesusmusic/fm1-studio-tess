@@ -1,8 +1,8 @@
-# Studio Tess credits
+# Inputsignwave firmware credits
 
 By: Inputsignwave
 
-Inputsignwave is the contributor name for this project's custom Studio Tess features, integration work, bug fixes and hardening documented in [Tess_Developer_Handoff.md](Tess_Developer_Handoff.md), through Performance 6. This includes the studio harmony/SONG additions, USB MIDI and one-pass capture integration, generated-note duration and FM performance controls, project migration/storage integration, and the documented generator/audio safety changes.
+Inputsignwave is the contributor name for this project's custom Studio Tess features, integration work, bug fixes and hardening documented in [Tess_Developer_Handoff.md](Tess_Developer_Handoff.md), through Performance 6, with subsequent additions listed below. This includes the studio harmony/SONG additions, USB MIDI and one-pass capture integration, generated-note duration and FM performance controls, project migration/storage integration, and the documented generator/audio safety changes.
 
 When reusing or porting these contributions, retain the name Inputsignwave in the relevant source comments and project credits/changelog. For a modified upstream file use a scoped notice such as:
 
@@ -33,3 +33,20 @@ resource hardening and validation. See `development/STUDIO7_BUILD_STATUS.md` and
 `development/STUDIO7_VALIDATION.md` for implementation and test scope. The pinned
 Grids/BOUNCE/AWAKE/POLY algorithms retain their upstream authorship; our credit
 applies to porting, integration and our original additions.
+
+## Performance 8 and firmware identity
+
+By: Inputsignwave
+
+Inputsignwave is our firmware's name (formerly Studio Tess). Our Performance 8
+contributions include conditional generator-page navigation, HOME action/context
+integration, the EDIT Sound Designer launcher, GLO OUTPUT placement, the physical
+FM6 algorithm mapping, palette-default integration and navigation validation.
+The branding update adds the on-device name and explicit `By: Inputsignwave`
+credit, application USB/editor/console names, compatible port discovery and this
+attribution record. See `development/INPUTSIGNWAVE_BRANDING.md` and
+`development/STUDIO8_VALIDATION.md` for implementation and validation scope.
+
+Melodee, Tess/Tessera, Felucca and third-party algorithms remain their respective
+authors' work. Renaming our firmware does not replace their notices, claim their
+authorship or change the GPL and bundled component licence terms.

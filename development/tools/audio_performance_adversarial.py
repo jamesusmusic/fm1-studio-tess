@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Inputsignwave branding and compatibility modifications — By: Inputsignwave.
 # SPDX-License-Identifier: GPL-3.0-only
 # Copyright (C) 2026 Kerem Kilic (Ellic Studio)
 """Final device corner cases, using existing state artifacts only. No backups."""
@@ -81,7 +82,7 @@ def main():
     if not 0<=a.level<=127:p.error('level 0..127')
     if a.output.exists():p.error('Preserve existing artifacts: output must be new')
     if not (a.backup/'manifest.json').is_file():p.error('Existing backup required')
-    a.output.mkdir(parents=True);d=ReliableDevice('Melodee');streams=contextlib.ExitStack()
+    a.output.mkdir(parents=True);d=ReliableDevice('Inputsignwave');streams=contextlib.ExitStack()
     quotas=json.loads(a.contract.read_text())['caps'];d.performance_fx=d.performance_modulation=True
     d.performance_metadata=True
     d.performance_production=a.production

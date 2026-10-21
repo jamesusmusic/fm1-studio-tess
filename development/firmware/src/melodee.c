@@ -3,6 +3,7 @@
 /* SPDX-License-Identifier: GPL-3.0-only
  * Copyright (C) 2026 Kerem Kilic (Ellic Studio)
  * Portions Copyright (C) 2026 Leo Kuroshita (@kurogedelic), Hügelton Instruments */
+#include "firmware_identity.h"
 /* MELODEE: one compilation unit (the HAL is header-only). Each file uses what the files above it
  * define, so the order matters. */
 
@@ -41,10 +42,10 @@
 #define MELODEE_ID "FM-1_900"    /* package identity (build.py: the .fwsc marker string) */
 #endif
 #ifndef MELODEE_FORK
-#define MELODEE_FORK "(studio tess)"       /* this fork: melodee(tess); the version below is upstream Melodee's */
+#define MELODEE_FORK "(Inputsignwave)"       /* this fork: melodee(tess); the version below is upstream Melodee's */
 #endif
 #ifndef MELODEE_VERSION
-#define MELODEE_VERSION "v1.4.1-studio-tess.6" /* audio hardening hardware test candidate */
+#define MELODEE_VERSION "v1.4.1-inputsignwave.8-dev2" /* branded Performance 8 candidate */
 #endif
 #if MELODEE_OTA && !MELODEE_FLASH
 #error "MELODEE_OTA needs MELODEE_FLASH"

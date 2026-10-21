@@ -1,4 +1,13 @@
-# Studio FM-1 roadmap
+# Inputsignwave FM-1 roadmap
+
+## Firmware name and attribution — 21 October 2026
+
+By: Inputsignwave
+
+The firmware is now named **Inputsignwave**. Add explicit on-device attribution,
+application USB/editor/console identity and compatible host discovery; preserve
+upstream notices, protocol/storage/update identities and archived baselines.
+See [branding and validation](development/INPUTSIGNWAVE_BRANDING.md).
 
 ## Top priority for 21 October 2026 — navigation and page guide
 

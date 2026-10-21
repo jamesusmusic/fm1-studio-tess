@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Inputsignwave branding and compatibility modifications — By: Inputsignwave.
 # SPDX-License-Identifier: GPL-3.0-only
 # Copyright (C) 2026 Kerem Kilic (Ellic Studio)
 """Prototype-only device measurements and read-only musical backups.
@@ -114,8 +115,8 @@ def usb_streams(enabled):
         yield; return
     import sounddevice as sd
     devices=sd.query_devices()
-    inp=next(i for i,x in enumerate(devices) if x['name'] in ('Melodee', 'Melodee In') and x['max_input_channels'] > 0)
-    out=next(i for i,x in enumerate(devices) if x['name'] in ('Melodee', 'Melodee Out') and x['max_output_channels'] >= 2)
+    inp=next(i for i,x in enumerate(devices) if x['name'] in ('Inputsignwave', 'Inputsignwave In', 'Melodee', 'Melodee In') and x['max_input_channels'] > 0)
+    out=next(i for i,x in enumerate(devices) if x['name'] in ('Inputsignwave', 'Inputsignwave Out', 'Melodee', 'Melodee Out') and x['max_output_channels'] >= 2)
     def silence_output(outdata,frames,when,status): outdata.fill(0)
     with sd.InputStream(device=inp,channels=4,samplerate=44100,dtype='int16',callback=lambda *args:None), \
          sd.OutputStream(device=out,channels=2,samplerate=44100,dtype='int16',callback=silence_output):
@@ -200,8 +201,8 @@ def recordings(d,args):
     directory=Path(args.output);directory.mkdir(parents=True,exist_ok=True)
     raw=unpack(next(Path(args.factory).glob('Prophet*/P5*USER*.syx')).read_bytes()[6:158])
     devices=sd.query_devices()
-    inp=next(i for i,x in enumerate(devices) if x['name'] in ('Melodee', 'Melodee In') and x['max_input_channels'] > 0)
-    out=next(i for i,x in enumerate(devices) if x['name'] in ('Melodee', 'Melodee Out') and x['max_output_channels'] >= 2)
+    inp=next(i for i,x in enumerate(devices) if x['name'] in ('Inputsignwave', 'Inputsignwave In', 'Melodee', 'Melodee In') and x['max_input_channels'] > 0)
+    out=next(i for i,x in enumerate(devices) if x['name'] in ('Inputsignwave', 'Inputsignwave Out', 'Melodee', 'Melodee Out') and x['max_output_channels'] >= 2)
     rows=json.loads((directory/'manifest.json').read_text()) if args.action=='factory-recordings' and (directory/'manifest.json').exists() else []
     try:
         d.silence();_,g=param_ids();d.request(3,[1,g['G_ROUTE'],0,64])
@@ -275,7 +276,7 @@ def recordings(d,args):
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('action',choices=['backup','restore-runtime','verify','bench','recordings','factory-recordings'])
-    parser.add_argument('--port',default='Felucca');parser.add_argument('--backup')
+    parser.add_argument('--port',default='Inputsignwave');parser.add_argument('--backup')
     parser.add_argument('--factory');parser.add_argument('--baseline',action='store_true')
     parser.add_argument('--note-base',type=int,default=60)
     parser.add_argument('--programs',type=int,nargs='+',help='one-based factory program numbers for factory-recordings')

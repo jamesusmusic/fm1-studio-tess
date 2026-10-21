@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Inputsignwave branding and compatibility modifications — By: Inputsignwave.
 # SPDX-License-Identifier: GPL-3.0-only
 # Copyright (C) 2026 Kerem Kilic (Ellic Studio)
 """Back up Prophet user banks, then remove only exact Sequential factory copies."""
@@ -46,7 +47,7 @@ def write_bank(device, ident, raw):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--port", default="Felucca")
+    parser.add_argument("--port", default="Inputsignwave")
     parser.add_argument("--backup", required=True, type=Path)
     args = parser.parse_args()
     factory = records()

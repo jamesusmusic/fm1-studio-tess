@@ -1,6 +1,8 @@
+/* Inputsignwave branding and compatibility modifications — By: Inputsignwave. */
 /* SPDX-License-Identifier: GPL-3.0-only
  * Copyright (C) 2026 Kerem Kilic (Ellic Studio)
  * Portions Copyright (C) 2026 Leo Kuroshita (@kurogedelic), Hügelton Instruments */
+#include "firmware_identity.h"
 /* Editor protocol: SysEx for the web editor (web/EDITOR_PROTOCOL.md; v2 = user presets + live sync,
  * v3 = four tracks: the v1 / v2 commands act on the selected track, cmds 27-30 reach any track;
  * v4 = TRACK_PARAM (31) and the TRACK_CHANGED push (32), enabled by WATCH bit 1).
@@ -626,7 +628,7 @@ static void ed_handle(const uint8_t *f, uint32_t n)   /* f: the bytes between F0
         break;
     }
     case ED_INFO:
-        ed_str("MELODEE " MELODEE_VERSION, 24);
+        ed_str(FIRMWARE_NAME " " MELODEE_VERSION, 24);
         ed_b(NENGINES);
         ed_b(P_COUNT);
         ed_b(G_COUNT);

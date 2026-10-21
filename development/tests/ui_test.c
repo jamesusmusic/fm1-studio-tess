@@ -1681,9 +1681,9 @@ static int test_information(void)
     press(B_OCTUP);
     ui_draw();
     bad += check("ABOUT opens one document with scrollable license text and credits", ui.menu == 2 && !ui.menu_scroll && menu_scroll_max() > MENU_DOC_H);
-    for (y = MENU_HEAD + 66; y < MENU_HEAD + 140; y++)  /* (the QR at the right, by the version) */
+    for (y = MENU_HEAD + 86; y < MENU_HEAD + 160; y++)  /* (the QR at the right, by the version) */
         for (x = 158; x < 232; x++)
-            if (x < 166 || x >= 224 || y < MENU_HEAD + 74 || y >= MENU_HEAD + 132)
+            if (x < 166 || x >= 224 || y < MENU_HEAD + 94 || y >= MENU_HEAD + 152)
                 quiet &= host_screen[y * 240 + x] == swap16(UI_QR_LIGHT);
     bad += check("ABOUT QR keeps its complete white quiet zone", quiet);
     memcpy(header, host_screen, sizeof header);

@@ -2,6 +2,7 @@
 /* SPDX-License-Identifier: GPL-3.0-only
  * Copyright (C) 2026 Kerem Kilic (Ellic Studio)
  * Portions Copyright (C) 2026 Leo Kuroshita (@kurogedelic), Hügelton Instruments */
+#include "firmware_identity.h"
 /* Melodee menu (HOME held): COLOR, FONT (the type: RUBIK or PIXEL, ui.c TY_*), HOLD (the layer threshold), LIGHTS (the keys' and buttons'
  * glow: ui_input.c ui_leds), KNOB ACCEL (ui_input.c accel_by), USB AUDIO (IN+OUT, IN, OUT or OFF; usb.c ua_off_set),
  * USB INPUT (stereo master or four track stems; usb.c ua_tracks_set),
@@ -55,7 +56,11 @@ static void draw_about_qr(int32_t x, int32_t y)
 enum { MC_TEXT, MC_TITLE, MC_URL };
 typedef struct { const char *text; uint8_t kind; } menu_credit_t;
 static const menu_credit_t MENU_CREDITS[] = {
-    {"MELODEE(TESS) / THIS FORK", MC_TITLE},
+    {FIRMWARE_NAME, MC_TITLE},
+    {FIRMWARE_CREDIT, MC_TEXT},
+    {"Custom features, integration, fixes and hardening", MC_TEXT},
+    {FIRMWARE_SOURCE, MC_URL},
+    {"TESS / GENERATORS", MC_TITLE},
     {"Tessera engines and project save: Theo Dainis", MC_TEXT},
     {"tess is short for tessera, the small tile of a mosaic: short phrases set side by side into a larger form", MC_TEXT},
     {"Melodee: Kerem Kilic, Ellic Studio / GPL-3.0", MC_TEXT},
@@ -149,16 +154,17 @@ static int32_t menu_document(int32_t y, int draw)
 {
     uint32_t i;
     if (draw) {                                       /* (docs/design: mock/r6_pages About, the large type) */
-        cv_text(6, y + 2, TY_HR, "Melodee", T_THEME);
-        cv_text(6, y + 60, TY_TX, MELODEE_VERSION, T_TEXT);
-        cv_text(6, y + 86, TY_LB, __DATE__, T_MID);
-        draw_about_qr(158, y + 66);
+        cv_text(6, y + 2, TY_TX, FIRMWARE_NAME, T_THEME);
+        cv_text(6, y + 36, TY_LB, FIRMWARE_CREDIT, T_TEXT);
+        cv_text(6, y + 60, ty_fit(TY_TX, MELODEE_VERSION, 228), MELODEE_VERSION, T_TEXT);
+        cv_text(6, y + 100, TY_LB, __DATE__, T_MID);
+        draw_about_qr(158, y + 86);
     }
-    y = menu_text("Multi-engine synthesizer", y + 146, T_SEC, draw);
+    y = menu_text("Multi-engine synthesizer", y + 174, T_SEC, draw);
     y = menu_text("\xA9 2026 Kerem Kilic, Ellic Studio", y + 6, T_TEXT, draw);
     y = menu_text("Based on Felucca by Leo Kuroshita, H\xFCgelton Instruments", y, T_TEXT, draw);
     y = menu_text("GPL-3.0-only", y, T_TEXT, draw);
-    y = menu_text("keremimo.github.io/melodee", y, T_MID, draw);
+    y = menu_text("Upstream / QR: keremimo.github.io/melodee", y, T_MID, draw);
     y = menu_text("CREDITS", y + 14, T_THEME, draw) + 8;
     for (i = 0; i < NELEM(MENU_CREDITS); i++) {
         const menu_credit_t *c = &MENU_CREDITS[i];

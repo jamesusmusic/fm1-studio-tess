@@ -1,6 +1,8 @@
+/* Inputsignwave branding and compatibility modifications — By: Inputsignwave. */
 /* SPDX-License-Identifier: GPL-3.0-only
  * Copyright (C) 2026 Kerem Kilic (Ellic Studio)
  * Portions Copyright (C) 2026 Leo Kuroshita (@kurogedelic), Hügelton Instruments */
+#include "firmware_identity.h"
 /* Serial console on the CDC-ACM function (MELODEE_CDC=1): read-only
  * diagnostics. Runs in the main loop (cdc_task); usb_poll moves the bytes.
  * The baud rate is ignored. Nothing here writes memory or flash; `uboot`
@@ -171,7 +173,7 @@ static void con_flr(const char *p)                  /* flash read over SPI (no X
 static void con_status(void)
 {
     const engine_t *e = ENGINES[TSEL->eng_req % NENGINES];
-    con_puts("melodee" MELODEE_FORK " ");
+    con_puts(FIRMWARE_NAME " ");
     con_puts(MELODEE_VERSION);
     con_puts("\r\n");
     con_kv("uptime_ms", (int32_t)fm1_ms);
@@ -345,7 +347,7 @@ static void con_exec(const char *p)
 static void cdc_task(void)                              /* main loop */
 {
     if (cdc.dtr && !con.dtr_seen) {
-        con_puts("\r\nMelodee" MELODEE_FORK " ");
+        con_puts("\r\n" FIRMWARE_NAME " ");
         con_puts(MELODEE_VERSION);
         con_puts(" console - 'help'\r\n> ");
     }
