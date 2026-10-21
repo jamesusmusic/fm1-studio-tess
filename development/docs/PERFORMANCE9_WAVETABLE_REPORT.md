@@ -22,7 +22,7 @@ recording paths apply. This engine generates sound, so it needs no sample import
 | WAVE SCAN | DEPTH | Scan depth; zero disables scanning's audible effect. |
 | WAVE TONE | TONE | Two-pole low-pass, transparent at full setting; responds to filter modulation. |
 | WAVE TONE | SUB | Blend a sine one octave below, up to half the source. |
-| WAVE TONE | COARSE | -24 to +24 semitones. |
+| WAVE TONE | SEMI | -24 to +24 semitones. |
 | WAVE TONE | FINE | -50 to +50 cents. |
 
 Front knobs map to WAVE, FOLD, TONE, DEPTH. MIDI CC74 adjusts TONE and CC71 FOLD.

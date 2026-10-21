@@ -88,7 +88,7 @@ static const engine_t ENG_WAVETABLE={
     .edit={{"WAVE",F_PCT,0,127,0,0,0},{"FOLD",F_PCT,0,127,0,0,0},
            {"RATE",F_LFOHZ,0,127,24,0,0},{"DEPTH",F_PCT,0,127,0,0,0},
            {"TONE",F_PCT,0,127,127,0,0},{"SUB",F_PCT,0,127,0,0,0},
-           {"COARSE",F_INT,-24,24,0,0,"st"},{"FINE",F_INT,-50,50,0,0,"ct"}},
+           {"SEMI",F_INT,-24,24,0,0,"st"},{"FINE",F_INT,-50,50,0,0,"ct"}},
     .presets=WT_PRESETS,.npresets=NELEM(WT_PRESETS),.poly=8,
     .note_on=wt_note_on,.render=wt_render,.knob={P_E0,P_E1,P_E4,P_E3},
 };

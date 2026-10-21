@@ -82,6 +82,30 @@ static void storage(void)
     for(uint32_t i=0;i<6;i++)assert(favorite_has(ENGI_WAVETABLE,i));
     puts("wavetable: project and user-preset signed controls round-trip, six stars persist, legacy bytes preserved: OK");
 }
+/* Bound host allocation to the first target's disjoint SRAM banks. Host data
+ * bank is smaller (2048 vs 3120), so this case is conservative, without cache. */
+static void target_capacity(void)
+{
+    const uint32_t caps[5]={3120,784,4260,0,62912};
+    const uint32_t engines[5]={ENGI_PROPHET,ENGI_FM6,ENGI_DRUM,ENGI_DRUM,ENGI_WAVETABLE};
+    uint32_t peak=0;
+    for(uint32_t scenario=0;scenario<625;scenario++){
+        fresh();uint32_t held=0,handle=RES_FX0,choices=scenario;
+        for(uint32_t b=0;b<RESOURCE_BANKS;b++)if(b!=RESOURCE_CACHE_BANK){
+            uint32_t len=(uint32_t)(resource_banks[b].end-resource_banks[b].start);
+            uint32_t cap=caps[b]&~7u;if(cap>len)cap=len;
+            resource[handle].ptr=resource_banks[b].start+cap;resource[handle].size=len-cap;
+            held+=len-cap;handle++;
+        }
+        for(uint32_t p=0;p<4;p++){
+            uint32_t c=choices%5u;choices/=5u;host_preset(&trk[p],engines[c],c==3?1u:0u);
+            assert(eng_state_prepare(&trk[p]));
+        }
+        uint32_t used=resource_used()-held;if(used>peak)peak=used;
+        assert(!resource_failures);
+    }
+    printf("wavetable: 625 four-track allocations fit target banks without cache; peak live host state %u B: OK\n",peak);
+}
 static uint64_t render_preset(uint32_t p)
 {
     fresh();host_preset(&trk[0],ENGI_WAVETABLE,p);trk[0].p[P_VOICE]=V_POLY;
@@ -113,7 +137,7 @@ static void spectral(const char *dir)
 }
 int main(int argc,char **argv)
 {
-    fresh();bank_tests();corners();storage();
+    fresh();bank_tests();corners();storage();target_capacity();
     for(uint32_t p=0;p<6;p++){uint64_t a=render_preset(p),b=render_preset(p);assert(a==b);}
     puts("wavetable: all six chord presets repeat bit-for-bit and release every voice: OK");
     if(argc>1)spectral(argv[1]);
