@@ -30,3 +30,24 @@ retired payload or user preset. Evaluate better structured packing, measured
 compression and scratch/stack ownership. Then integrate project capture/restore,
 full bank, template, individual user presets, undo and editor transfer together.
 Do not repurpose retired CZ data or change flash layout merely to make it fit.
+
+## Fixed-size alternative now tested
+
+`fixed_steps.h` packs four valid step records into exactly 241 bits, versus
+244 bits in the current four 61-bit records. It preserves all 112 note bits,
+including unused note fields, plus every valid head/flag/velocity/hit/accent/
+probability combination using a 129-bit mixed-radix control value. It therefore
+recovers **168 B across the 1,792 inactive steps**, even for fully populated
+banks. No compressibility assumption is involved. Five 32-bit limbs avoid
+floating-point or compiler-specific 128-bit types; division is storage-only.
+
+ASan/UBSan pass 95,424 rank/head combinations, all flags/velocity/probability
+boundaries represented in generated cases, all note bytes, complete bank group
+counts, and invalid-input atomicity. This is still a **prototype**: no production
+writer/migration, editor, template or sound schema uses it yet. It provides a
+bounded route worth integrating rather than shipping the variable-RLE scheme.
+
+A measured common-parameter range-packing sketch is 673 bits per track before
+allowing full-width reserved legacy bytes. It must retain those bytes and freeze
+its schema instead of trusting future descriptor ranges. No saving from that
+sketch is counted as implemented storage capacity.

@@ -22,6 +22,11 @@ the project reserved gap is zero. Expanded synth/FX state needs a compatible
 versioned representation across project/template/preset/undo/editor. A standalone
 lossless codec prototype preserves bytes and rejects bad/capacity-exceeding data,
 but is not sufficient for worst-case capacity and is not production storage.
+Full local suite passes in 182 s. Native target compile passes: app body
+546,468 B, flash spare 26,972 B; main arena unchanged at 62,848 B. These are
+foundation figures, not the combined feature budget. A second fixed-size step
+codec guarantees 168 B saving and passes sanitizer/state-preservation checks,
+but production migration and the new sound schema are not integrated.
 See [current changes, constraint and remaining work](docs/PERFORMANCE10_INTEGRATION_STATUS_2026-10-23.md).
 
 ## Performance 9 removal baseline — built and offline validated

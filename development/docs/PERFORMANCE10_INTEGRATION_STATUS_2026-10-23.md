@@ -38,6 +38,27 @@ truncation, capacity-failure and exact-byte preservation tests, but random banks
 with its 256-byte extension require 28,398 B and cannot fit. It is not integrated
 or claimed as a universal fix. No existing storage reader or flash address changed.
 
+## Validation and exact target measurements
+
+The repaired full local suite passes in **182 s**. Native Linux compile and
+registered sanitizer checks pass for source commit
+`d15d813d2921bbed4388c315743296f29d101f33`; the GitHub full suite is tracked in
+run 39873149875. The downloaded native target archive has verified SHA-256
+`ec8bcb67e13fcaf4522668018c9ad1a4b02b78f98d99892ee805d6616d34369f`.
+
+Exact application body: **546,468 / 573,440 B**, leaving **26,972 B** of flash.
+This is +1,904 B versus Wave2. Main audio arena remains **62,848 B**; other
+disjoint banks remain 3,120 + 4,260 + 784 B, excluding optional cache. These
+figures include the new Prophet bank, not the future WT/FM-kit/reverb DSP.
+No physical CPU percentage is inferred from the compile or host tests.
+
+A second storage prototype now guarantees **168 B** recovered by packing each
+four valid inactive steps into 241 rather than 244 bits. Sanitizer tests cover
+95,424 rank/head combinations, exact preservation of all note/inactive fields,
+full bank group counts and invalid-input atomicity. It avoids the RLE worst-case
+problem but is **not integrated** into any production save path. The versioned
+sound schema, old-layout migration and complete persistence coverage remain.
+
 ## Still required before the full build can be delivered
 
 - Versioned sound-state representation with defined worst-case capacity and
