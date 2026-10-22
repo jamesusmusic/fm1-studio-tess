@@ -511,3 +511,19 @@ Generated from the actual firmware page table and knob drawing code. Each engine
 | AWAKE | Mode: Awake | Len A: 8 | Len B: 8 | Probability: 100 |
 | POLY | Mode: Poly | Rhythm: 1 | Div: 3 | Span: 2 |
 | KIT | Mode: Kit | Source: 1 | Vary: 0 | Fill: 0 |
+
+## Performance 9 Wave1 engine addition — 22 October 2026
+
+By: Inputsignwave
+
+The inherited menu layout stays in place. Available engine order is now PROPHET,
+FM6, WAVETABLE, DRUM. Selecting WAVETABLE exposes its two engine edit pages:
+WAVE SCAN (WAVE, FOLD, RATE, DEPTH) and WAVE TONE (TONE, SUB, SEMI, FINE).
+The front knobs map to WAVE, FOLD, TONE, DEPTH. Its normal envelope, LFO,
+modulation, voice and sequencer pages retain their existing relationships.
+Sound Designer remains under EDIT; conditional generator pages remain in SEQ.
+
+SID/CZ and SID kits are unavailable legacy sounds. ROOM/REVERB remain unavailable
+legacy effects that pass dry audio; the replacement reverb is not part of Wave1.
+For the six factory sounds, control meanings and compatibility details, see
+[the Wave1 reference](PERFORMANCE9_WAVETABLE_REPORT.md).

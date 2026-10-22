@@ -35,6 +35,10 @@ on their FM-1. No audio fault is currently reported; this is feature development
 - [x] Review available FM-1 engine sources before finalizing Wave1 (22 October).
   See FM1_ENGINE_RESEARCH_2026-10-22.md in development/docs for pinned references.
   Keep this patch focused on WT; new donor engines require separate profiling.
+- [x] Finish Wave1 software validation and package the candidate (22 October):
+  full local suite 232 s; Linux host/web suite 534 s; native target and sanitizer
+  checks; exact-package and saved-WT emulator checks; source/licences and listening
+  samples bundled. Hardware CPU headroom is not inferred from these tools.
 - [ ] Listen and accept the WT prototype on hardware before final adoption.
   Fold morphs precomputed bandwidth-limited spectra. A focused modal/resonator engine
   follows the replacement reverb only if measured resources permit.

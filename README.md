@@ -13,7 +13,9 @@ The `studio-tess-8` branch now contains the **Performance 9 Wave1 development
 prototype**, adding an original wavetable engine with six sounds, spectral fold
 morphing, scan, tone, sub and tuning. Prophet, FM6 and 808/909 remain; SID, CZ,
 SID kits, ROOM and REVERB are retired with saved IDs and data preserved.
-The replacement reverb is the next prototype stage.
+The replacement reverb is the next prototype stage. Wave1 passes the complete
+local and Linux suites, native resource checks and exact-package emulator smoke
+tests; physical acceptance remains pending.
 
 - [Wave1 controls, code map, measurements and validation](development/docs/PERFORMANCE9_WAVETABLE_REPORT.md)
 - [Removal baseline and resource recovery](development/docs/PERFORMANCE9_REMOVAL_REPORT.md)

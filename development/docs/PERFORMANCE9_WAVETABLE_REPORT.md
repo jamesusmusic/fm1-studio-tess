@@ -3,7 +3,7 @@
 By: Inputsignwave
 
 22 October 2026. Development candidate; native target build and resource measurements completed.
-Final Linux validation is in progress. Listening and physical hardware acceptance remain pending.
+Full local and Linux validation passed. Listening and physical hardware acceptance remain pending.
 Prophet, FM6 and 808/909 remain. SID, CZ, SID kits, ROOM and REVERB remain retired.
 Replacement reverb and resonator are separate next stages.
 
@@ -146,3 +146,36 @@ It pins available engine sources, separates binary SDKs/installers from DSP sour
 and records why this build retains our current WT prototype rather than adding
 unmeasured ports. Physical/modal models and replacement reverb remain subsequent
 work with their own budget and listening gates.
+
+## Wave1 delivery record — 22 October 2026
+
+- Compiled source: `09f49a14346846f832b41440b295dfe7903e0a7f`.
+- Installable file: `inputsignwave-1.4.1-performance9-wave1.fwsc`.
+- Firmware SHA-256: `19e9bf521f1c94a41edf74b790aaa7e6ba63c8c1f042db6dce9d32a06fcd7e72`.
+- App SHA-256: `1713fac08876667c857d2623fa8325cae0b9bb12acb4ce2ead0f9d5de805d999`.
+- Complete local suite: **passed in 232 s**, including production and reference
+  tests, sanitizers, editor/installer/storage tests and UI sweeps. All 337 archived
+  reference sound goldens are unchanged. Production retained-sound comparisons:
+  **236 passed**; mixed-track serial/concurrent assignments: **625 passed**.
+- Production UI: **261 scenes across eight palettes**, plus engine/control sweeps,
+  zero lint findings and zero MONO pixels off gray. Deliberate free-text truncation
+  is reported separately by the renderer.
+- The freshly compiled app differs from the 21 October app by one byte in its
+  displayed build date; native code, table data and residency manifest are unchanged.
+  The exact fresh `.fwsc` and its decoded WT app were both rerun in the emulator;
+  frame counts and peaks match the measurements above, with zero clipped samples.
+- [Linux validation run 39795648599](https://github.com/jamesusmusic/fm1-studio-tess/actions/runs/39795648599):
+  **passed**: native target/resource/residency checks, foundation sanitizers and
+  the complete registered host/web suite (**534 s**), job `119882744445`.
+  Linux has no host instruction counter; host CPU-counter checks pass locally
+  on macOS, and native static-code cost gates pass independently.
+- The package contains the firmware, a standalone installer script and Terminal
+  command, six listening WAVs, complete development source, attribution/licence
+  texts, roadmap/page guide, linker evidence, test logs and emulator snapshots.
+  `SHA256SUMS` covers all deliverables except itself; both ZIP CRCs are checked.
+
+The previous Linux run failed because historical editor fixtures assumed only
+20 engine descriptors. Those assertions/mock descriptors are now corrected to
+22 while original IDs remain unchanged; the full corrected local run passes.
+No firmware sound goldens or pre-existing CPU limits were regenerated to hide
+failures. New hardware CPU calibration and listening acceptance remain pending.
