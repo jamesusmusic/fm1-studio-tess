@@ -12,7 +12,11 @@ static const wt_bank_t *wt_bank;
 static int wt_prepare(void); /* engines.c: audio-owner allocation, no worker mutation */
 static void wt_note_on(track_t *t,voice_t *v)
 {
-    (void)t;v->ph[1]=0;v->ph[2]=v->ph[0]/2u;
+    (void)t;
+    /* A sounding retrigger/steal keeps its oscillator, scan, filter and control
+     * ramps. Resetting them under a nonzero envelope creates a discontinuity. */
+    if(v->env || v->env_out)return;
+    v->ph[0]=v->ph[1]=v->ph[2]=0;
     for(uint32_t i=0;i<8u;i++)v->s[i]=0;
 }
 static inline __attribute__((always_inline)) int32_t wt_lerp(int32_t a,int32_t b,uint32_t f)
@@ -70,7 +74,9 @@ static __attribute__((noinline)) void wt_render(track_t *t,voice_t *v,int32_t *o
         x+=(subwave-x)*submix/254;
         low+=(int32_t)(((x-low)*cur[2])>>15);
         low2+=(int32_t)(((low-low2)*cur[2])>>15);
-        out[i]+=low2*2;phase+=inc;sub+=inc/2u;
+        /* The shared ramp includes ADSR, velocity and performance gain, and
+         * fades the last block when a voice is released or shed. */
+        out[i]+=voice_amp(low2,m,i)*2;phase+=inc;sub+=inc/2u;
     }
     v->ph[0]=phase;v->ph[2]=sub;v->s[0]=low;v->s[1]=low2;
     for(uint32_t k=0;k<4u;k++)v->s[k+2u]=target[k];

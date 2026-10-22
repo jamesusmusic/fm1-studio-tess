@@ -2,6 +2,13 @@
 
 By: Inputsignwave
 
+**22 October status:** Wave1 is packaged with WAVETABLE and no replacement reverb.
+Use [the current budget and acquired-source review](WAVE1_SPACE_AND_REVERB_SOURCES_2026-10-22.md)
+for measurements: 28,920 B flash free, 62,912 B main audio arena and a 12,384 B shared
+WT allocation while active. Pinned source snapshots have been acquired separately
+for host auditions. The Dev2 and removal-baseline figures below are historical;
+they are not Wave1's current resource budget. Both old reverbs are already retired.
+
 21 October 2026. Replacement reverb remains research/prototype work. The
 Performance 9 removal baseline now excludes both old reverbs and the retired
 engines; see [the completed measurements](PERFORMANCE9_REMOVAL_REPORT.md).
@@ -52,7 +59,7 @@ revisited after these comparisons; they are outside the first prototype scope.
   behaviour. This does not identify its internal DSP or provide code to port.
   Our tape character is a separate design idea, not a claim about that pedal.
 
-## Current implementation and resource constraints
+## Historical Dev2 implementation and resource constraints
 
 `firmware/src/fx.c` implements ROOM as four damped combs at FS/4 with a 2 KiB
 allocation. REVERB is an eight-line orthogonal feedback tank with input/output

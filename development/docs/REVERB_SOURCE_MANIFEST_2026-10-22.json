@@ -1,0 +1,431 @@
+[
+  {
+    "repo": "el-visio/dattorro-verb",
+    "revision": "41e976a0228a2472156f5c010b3bfbb444e777d2",
+    "files": [
+      {
+        "path": "LICENSE",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "fc9a6c400578c17f78c172fffbf138f9fe4b21c5",
+        "size": 1070,
+        "url": "https://raw.githubusercontent.com/el-visio/dattorro-verb/41e976a0228a2472156f5c010b3bfbb444e777d2/LICENSE",
+        "sha256": "dd018d9b785e0d2408c3b7fb54f8373ccf28f13e846b3785b0b60d7540fb2d82"
+      },
+      {
+        "path": "README.md",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "955a1d985c4bddc1e958b9ca1c68a1d545bb8f67",
+        "size": 1094,
+        "url": "https://raw.githubusercontent.com/el-visio/dattorro-verb/41e976a0228a2472156f5c010b3bfbb444e777d2/README.md",
+        "sha256": "af29363a5b290e5322bd9fc490b553e959d5350efbb096ec000ea34470c3af1c"
+      },
+      {
+        "path": "verb.c",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "24ad7254336012cc51f423661f6c2d5766a74a2c",
+        "size": 10114,
+        "url": "https://raw.githubusercontent.com/el-visio/dattorro-verb/41e976a0228a2472156f5c010b3bfbb444e777d2/verb.c",
+        "sha256": "94598ce9ecd3aec1480801c130a0f12d7c59d3903dcc9b4a56a82484d6dc8086"
+      },
+      {
+        "path": "verb.h",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "aafb35bafa84414edd8224379d063e1a66cf64e9",
+        "size": 1077,
+        "url": "https://raw.githubusercontent.com/el-visio/dattorro-verb/41e976a0228a2472156f5c010b3bfbb444e777d2/verb.h",
+        "sha256": "cc660df63294841e9cee9dc7fb06778726b279b7435fc784a50519a712a4940e"
+      },
+      {
+        "path": "verb_structs.h",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "5cb36fc4684d9a386b71a99220a9e8209caa9b56",
+        "size": 1251,
+        "url": "https://raw.githubusercontent.com/el-visio/dattorro-verb/41e976a0228a2472156f5c010b3bfbb444e777d2/verb_structs.h",
+        "sha256": "9a9812ba992b801ae88a96f865d19d7eae1f1438462fdad34e9078c806265699"
+      }
+    ]
+  },
+  {
+    "repo": "charlesvestal/fm1-fomni",
+    "revision": "7e7547f384fe70b7e89cfd725b0a211bcc60db05",
+    "files": [
+      {
+        "path": "LICENSE",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "f288702d2fa16d3cdf0035b15a9fcbc552cd88e7",
+        "size": 35149,
+        "url": "https://raw.githubusercontent.com/charlesvestal/fm1-fomni/7e7547f384fe70b7e89cfd725b0a211bcc60db05/LICENSE",
+        "sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986"
+      },
+      {
+        "path": "LICENSING.md",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "8d075fe14edfb2b6ef13ba297719e49b983a89bc",
+        "size": 2601,
+        "url": "https://raw.githubusercontent.com/charlesvestal/fm1-fomni/7e7547f384fe70b7e89cfd725b0a211bcc60db05/LICENSING.md",
+        "sha256": "7972de5d1097af6117db7da937e4e3f977527526233e3825a0057148b86ca447"
+      },
+      {
+        "path": "README.md",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "101d766a31035df00f630bb45d8abf92e0e5f0f8",
+        "size": 5136,
+        "url": "https://raw.githubusercontent.com/charlesvestal/fm1-fomni/7e7547f384fe70b7e89cfd725b0a211bcc60db05/README.md",
+        "sha256": "fb7d497e8d9f0b7ce03c8ba6b09934845a95534d33b97e1c1c44baee2bfddd7e"
+      },
+      {
+        "path": "firmware/src/dsp/omni.c",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "e72d36c7e4798d37b067336e9e077311d013146c",
+        "size": 25567,
+        "url": "https://raw.githubusercontent.com/charlesvestal/fm1-fomni/7e7547f384fe70b7e89cfd725b0a211bcc60db05/firmware/src/dsp/omni.c",
+        "sha256": "c361557d543fb0a25b26fa5d88fa2c300a948c0b0b77ac3a82083b33ff57a048"
+      },
+      {
+        "path": "firmware/src/dsp/omni.h",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "22281053c3a0ccf6178f5541210dd393d7d19607",
+        "size": 5035,
+        "url": "https://raw.githubusercontent.com/charlesvestal/fm1-fomni/7e7547f384fe70b7e89cfd725b0a211bcc60db05/firmware/src/dsp/omni.h",
+        "sha256": "3b6757ca097751badf283f01c05f5b4c60730bf7850d494eabb627aa742b00e1"
+      },
+      {
+        "path": "firmware/src/dsp/fastmath.h",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "7d2e41bf70590bafa8af0a7376bb912bf763b098",
+        "size": 7317,
+        "url": "https://raw.githubusercontent.com/charlesvestal/fm1-fomni/7e7547f384fe70b7e89cfd725b0a211bcc60db05/firmware/src/dsp/fastmath.h",
+        "sha256": "71d0fb4c242e6c03e435cebacc1e978f928ce2672d6b47a48b68372e72453349"
+      }
+    ]
+  },
+  {
+    "repo": "NicholasPratt/Prysm",
+    "revision": "f4f0bb458b45afaff4f7c843623f226d4dc62b92",
+    "files": [
+      {
+        "path": "LICENSE",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "f288702d2fa16d3cdf0035b15a9fcbc552cd88e7",
+        "size": 35149,
+        "url": "https://raw.githubusercontent.com/NicholasPratt/Prysm/f4f0bb458b45afaff4f7c843623f226d4dc62b92/LICENSE",
+        "sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986"
+      },
+      {
+        "path": "LICENSING.md",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "d113545c49d81852849e5b5b6d60bb3f56cccf0b",
+        "size": 2620,
+        "url": "https://raw.githubusercontent.com/NicholasPratt/Prysm/f4f0bb458b45afaff4f7c843623f226d4dc62b92/LICENSING.md",
+        "sha256": "f85efab4928d38252c56d467ea9c7a6dde4980de4ff579c621f631836c656374"
+      },
+      {
+        "path": "README.md",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "3d6f54ddb1372e31162064c54a667eef07e89e1d",
+        "size": 12581,
+        "url": "https://raw.githubusercontent.com/NicholasPratt/Prysm/f4f0bb458b45afaff4f7c843623f226d4dc62b92/README.md",
+        "sha256": "3fc3e10f35fdf6cc247a3a69cc92d88547af29f0167de2dc84731c014b2770c7"
+      },
+      {
+        "path": "firmware/src/engine.c",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "db885d8b0d84ba33baeaebfe5819708871f96400",
+        "size": 103027,
+        "url": "https://raw.githubusercontent.com/NicholasPratt/Prysm/f4f0bb458b45afaff4f7c843623f226d4dc62b92/firmware/src/engine.c",
+        "sha256": "7168ef8de6fdc927634c6889d29d19591d98c43b18cc633a6ef3dc450f29ea9e"
+      },
+      {
+        "path": "firmware/src/fx.c",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "545bb438531a00ea6257e275c0720c78cc34e0f9",
+        "size": 15234,
+        "url": "https://raw.githubusercontent.com/NicholasPratt/Prysm/f4f0bb458b45afaff4f7c843623f226d4dc62b92/firmware/src/fx.c",
+        "sha256": "9614b8a4d1c2c6b83d40accf66a145233c51bc14eb88e030038723608f6d3cbe"
+      },
+      {
+        "path": "firmware/gen/prysm_tables.h",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "35451457415f42c480e6121cdbf480f58b9005a3",
+        "size": 110223,
+        "url": "https://raw.githubusercontent.com/NicholasPratt/Prysm/f4f0bb458b45afaff4f7c843623f226d4dc62b92/firmware/gen/prysm_tables.h",
+        "sha256": "cfacf9f2b2f8b075ac643f3568a2a4de9413655d1a86ea645087c9c4a622af60"
+      },
+      {
+        "path": "tools/gen_prysm_tables.py",
+        "mode": "100755",
+        "type": "blob",
+        "sha": "8e4118f23e81333f52c9a9d5260367afbe1554c3",
+        "size": 11113,
+        "url": "https://raw.githubusercontent.com/NicholasPratt/Prysm/f4f0bb458b45afaff4f7c843623f226d4dc62b92/tools/gen_prysm_tables.py",
+        "sha256": "d126feb586e6f332d07e3fcb9f0dcb27a9c2357654b32155ab30a595f95714e1"
+      }
+    ]
+  },
+  {
+    "repo": "charlesvestal/fm1-loom",
+    "revision": "e88f2e00ec60d299b623c28b038db54409fdeff1",
+    "files": [
+      {
+        "path": "LICENSE",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "f288702d2fa16d3cdf0035b15a9fcbc552cd88e7",
+        "size": 35149,
+        "url": "https://raw.githubusercontent.com/charlesvestal/fm1-loom/e88f2e00ec60d299b623c28b038db54409fdeff1/LICENSE",
+        "sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986"
+      },
+      {
+        "path": "LICENSING.md",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "49e19257ca26dd3621f4285649c8b4a68ab91848",
+        "size": 9821,
+        "url": "https://raw.githubusercontent.com/charlesvestal/fm1-loom/e88f2e00ec60d299b623c28b038db54409fdeff1/LICENSING.md",
+        "sha256": "43dc9da32693cb32943c3228ddee5864c3a331591af38ca16fb29385337f9233"
+      },
+      {
+        "path": "README.md",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "3799654d4d25e76a5ec06ab30c056e09c7198a4d",
+        "size": 2871,
+        "url": "https://raw.githubusercontent.com/charlesvestal/fm1-loom/e88f2e00ec60d299b623c28b038db54409fdeff1/README.md",
+        "sha256": "d59d5d3997fc796bc979b6e1130eb55e5f530ec9e02a0798df00c9209f6eec30"
+      },
+      {
+        "path": "app/dsp/psxrev.h",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "3220ea5b3fe5d246e8605101156d10bf499728ee",
+        "size": 12830,
+        "url": "https://raw.githubusercontent.com/charlesvestal/fm1-loom/e88f2e00ec60d299b623c28b038db54409fdeff1/app/dsp/psxrev.h",
+        "sha256": "55a3762c785dec1c1c558f53d4f226389a02b71ef62f78120d2cc6a1b752b627"
+      },
+      {
+        "path": "app/dsp/fx.c",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "793d618f79c4344f340c9e899554f8c74193b956",
+        "size": 63003,
+        "url": "https://raw.githubusercontent.com/charlesvestal/fm1-loom/e88f2e00ec60d299b623c28b038db54409fdeff1/app/dsp/fx.c",
+        "sha256": "cfccfdb045fc1eee7de4f4e5016dabe5cf58134beac618f637ccd4f68110d815"
+      },
+      {
+        "path": "app/dsp/fx.h",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "16a3df87030aa834b21a82a23c803377c0f3a2b7",
+        "size": 9794,
+        "url": "https://raw.githubusercontent.com/charlesvestal/fm1-loom/e88f2e00ec60d299b623c28b038db54409fdeff1/app/dsp/fx.h",
+        "sha256": "74d469e79b6c92dc00624380c2a3704f8337ee9c8a5dbde3a08d249d74b8eb18"
+      },
+      {
+        "path": "app/dsp/synth.c",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "fb0ae0856c7b5555a44f7e4c7dbfc10463e83ad0",
+        "size": 146279,
+        "url": "https://raw.githubusercontent.com/charlesvestal/fm1-loom/e88f2e00ec60d299b623c28b038db54409fdeff1/app/dsp/synth.c",
+        "sha256": "b6ff52f696c86dfde47cbd7d37a660a69e8042cd3543a42785ec4c4a0961a604"
+      },
+      {
+        "path": "app/dsp/synth.h",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "42e1a12e13f387f8a4cfee46508eda0696311239",
+        "size": 23157,
+        "url": "https://raw.githubusercontent.com/charlesvestal/fm1-loom/e88f2e00ec60d299b623c28b038db54409fdeff1/app/dsp/synth.h",
+        "sha256": "1bb632ca90126cb72a1a1e7b2b40c52c98c530e114936335ede7ff7cbc3a20b0"
+      },
+      {
+        "path": "app/dsp/braids.h",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "e9fa9f568c54e40bf991dfd3b62ce67abeadc523",
+        "size": 46998,
+        "url": "https://raw.githubusercontent.com/charlesvestal/fm1-loom/e88f2e00ec60d299b623c28b038db54409fdeff1/app/dsp/braids.h",
+        "sha256": "b1f7a97efe7838ca905fe778c77d5d6cb18f509755e39b4f87f82ad529c5abc8"
+      },
+      {
+        "path": "tools/gen_wavetables.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "e4a127c60040adcdd515a02c31f077bbb9705ed5",
+        "size": 8862,
+        "url": "https://raw.githubusercontent.com/charlesvestal/fm1-loom/e88f2e00ec60d299b623c28b038db54409fdeff1/tools/gen_wavetables.py",
+        "sha256": "0850ab2c2e23bc9383d39657512381f14b064689172d92fa3d7100b204f278fa"
+      },
+      {
+        "path": "app/dsp/bench.h",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "48a59044a46ecb4cf353df0b62175a4c596a500c",
+        "size": 1449,
+        "url": "https://raw.githubusercontent.com/charlesvestal/fm1-loom/e88f2e00ec60d299b623c28b038db54409fdeff1/app/dsp/bench.h",
+        "sha256": "9684ea09b732b342ac87ef407273f329aa05a698b1a605d779f18a41be227683"
+      }
+    ]
+  },
+  {
+    "repo": "pichenettes/eurorack",
+    "revision": "f4cfa7697095a28d292bff758beb51deb49b5a86",
+    "files": [
+      {
+        "path": "rings/dsp/fx/reverb.h",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "3180dcc631cb75ff36f22addda99525e77459e7a",
+        "size": 5049,
+        "url": "https://raw.githubusercontent.com/pichenettes/eurorack/f4cfa7697095a28d292bff758beb51deb49b5a86/rings/dsp/fx/reverb.h",
+        "sha256": "3dd15106eb2c89396dc6fef67bc938eca01f198f751eab6ad45ea4f94a42f627"
+      },
+      {
+        "path": "rings/dsp/fx/fx_engine.h",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "872369c166499a86a4e1d63693d68893158f595e",
+        "size": 7870,
+        "url": "https://raw.githubusercontent.com/pichenettes/eurorack/f4cfa7697095a28d292bff758beb51deb49b5a86/rings/dsp/fx/fx_engine.h",
+        "sha256": "0844eaea623dd258765f5ffe4c001516273a6ac4b9be43bf07a524db8ba3f343"
+      },
+      {
+        "path": "rings/resources.h",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "d5348154a513600f2b25ed0b4b75d395d56fd14d",
+        "size": 2224,
+        "url": "https://raw.githubusercontent.com/pichenettes/eurorack/f4cfa7697095a28d292bff758beb51deb49b5a86/rings/resources.h",
+        "sha256": "0bd2344f4acc9aa3e8f82ab6d20c1d54a1030d673c8ef04f5b1fa6884a249a7e"
+      }
+    ]
+  },
+  {
+    "repo": "npi3pak/fm1-gator",
+    "revision": "92f923e0b9fe6101d5cd422cffa5946ce20d785a",
+    "files": [
+      {
+        "path": "LICENSE",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "53d1f3d01864c35841739c55aeba9700657627b7",
+        "size": 35150,
+        "url": "https://raw.githubusercontent.com/npi3pak/fm1-gator/92f923e0b9fe6101d5cd422cffa5946ce20d785a/LICENSE",
+        "sha256": "e57f1c320b8cf8798a7d2ff83a6f9e06a33a03585f6e065fea97f1d86db84052"
+      },
+      {
+        "path": "LICENSING.md",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "90906d4fe3aa00da870dcda24d81f23cb0b45a27",
+        "size": 5850,
+        "url": "https://raw.githubusercontent.com/npi3pak/fm1-gator/92f923e0b9fe6101d5cd422cffa5946ce20d785a/LICENSING.md",
+        "sha256": "6c5c6c97ebd1b8891fa2a710a0841acf11ffb7c84fdabff6693ee4b336a0a629"
+      },
+      {
+        "path": "LICENSES/MIT-Plaits-stmlib.txt",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "362def273410712a6967c46f6503c17525347d24",
+        "size": 2746,
+        "url": "https://raw.githubusercontent.com/npi3pak/fm1-gator/92f923e0b9fe6101d5cd422cffa5946ce20d785a/LICENSES/MIT-Plaits-stmlib.txt",
+        "sha256": "6fde7600ac71ff9e4bdc28b642063d1a65e195f28bb07fb52a9b476efb5aa791"
+      },
+      {
+        "path": "third_party/eurorack/plaits/dsp/engine/wavetable_engine.cc",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "44accd704c1646118a3620813f205ceabc53b214",
+        "size": 6666,
+        "url": "https://raw.githubusercontent.com/npi3pak/fm1-gator/92f923e0b9fe6101d5cd422cffa5946ce20d785a/third_party/eurorack/plaits/dsp/engine/wavetable_engine.cc",
+        "sha256": "56d4c95755dbd97bdca9158bb21f7ad61b52a6d019d9fb6c18f74a4e478d193c"
+      },
+      {
+        "path": "third_party/eurorack/plaits/dsp/engine/wavetable_engine.h",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "5d31864e1109799ddfe54dd87b93e8f0a26ac6fe",
+        "size": 2559,
+        "url": "https://raw.githubusercontent.com/npi3pak/fm1-gator/92f923e0b9fe6101d5cd422cffa5946ce20d785a/third_party/eurorack/plaits/dsp/engine/wavetable_engine.h",
+        "sha256": "7fd58a1efd6540fc1097ed2636dbb3947bb18c09c7cd4f3f03af67f3d5a5fb3b"
+      },
+      {
+        "path": "third_party/eurorack/plaits/resources.h",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "96266217e3ecb1a5eafcbbd5defba58d31cc3cf5",
+        "size": 3656,
+        "url": "https://raw.githubusercontent.com/npi3pak/fm1-gator/92f923e0b9fe6101d5cd422cffa5946ce20d785a/third_party/eurorack/plaits/resources.h",
+        "sha256": "a7ee997d0c951e968af91625f43d0876b260cb809d22345703f2656589d95bb3"
+      },
+      {
+        "path": "third_party/eurorack/plaits/resources.cc",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "5624c1e3d9aa48e954e6a197cf80b0cda0ef1fe5",
+        "size": 378421,
+        "url": "https://raw.githubusercontent.com/npi3pak/fm1-gator/92f923e0b9fe6101d5cd422cffa5946ce20d785a/third_party/eurorack/plaits/resources.cc",
+        "sha256": "de2b2adf661c0623a5ddf74326d7d3b88d7b3554c3aa0d710bf8ebd1c4cd18ef"
+      }
+    ]
+  },
+  {
+    "repo": "pichenettes/stmlib",
+    "revision": "e3bd7c9cc00e4364166f9905c0509b6ffd0535ec",
+    "files": [
+      {
+        "path": "LICENSE",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "362def273410712a6967c46f6503c17525347d24",
+        "size": 2746,
+        "url": "https://raw.githubusercontent.com/pichenettes/stmlib/e3bd7c9cc00e4364166f9905c0509b6ffd0535ec/LICENSE",
+        "sha256": "6fde7600ac71ff9e4bdc28b642063d1a65e195f28bb07fb52a9b476efb5aa791"
+      },
+      {
+        "path": "stmlib.h",
+        "mode": "100755",
+        "type": "blob",
+        "sha": "a4fc9d5cc0b5f9f4784d228783ef1c5f884781d1",
+        "size": 3142,
+        "url": "https://raw.githubusercontent.com/pichenettes/stmlib/e3bd7c9cc00e4364166f9905c0509b6ffd0535ec/stmlib.h",
+        "sha256": "3afc8589a951e882d9eea16b3eda8623dd6fb0079dd11dfbce817e65be6cfba9"
+      },
+      {
+        "path": "dsp/dsp.h",
+        "mode": "100755",
+        "type": "blob",
+        "sha": "0d6bcec315f5a4a31bc495d4f419937594c59c28",
+        "size": 4641,
+        "url": "https://raw.githubusercontent.com/pichenettes/stmlib/e3bd7c9cc00e4364166f9905c0509b6ffd0535ec/dsp/dsp.h",
+        "sha256": "98b42900c4accbe9fbb2cfe2ec6fada024b57ec9a1becff008b0f35bd4fd8ddb"
+      },
+      {
+        "path": "dsp/cosine_oscillator.h",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "27c78183bb88c9e8f7dbe04429b0d9b10955c394",
+        "size": 2940,
+        "url": "https://raw.githubusercontent.com/pichenettes/stmlib/e3bd7c9cc00e4364166f9905c0509b6ffd0535ec/dsp/cosine_oscillator.h",
+        "sha256": "a7f6429e8bca85aa19ce91e3f1908fd7fb1fdf378a61fe2c87717a94d6f30a97"
+      }
+    ]
+  }
+]

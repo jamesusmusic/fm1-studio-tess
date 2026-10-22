@@ -26,6 +26,14 @@ See [measurements and validation](docs/PERFORMANCE9_REMOVAL_REPORT.md).
 
 By: Inputsignwave
 
+**22 October hardware feedback:** Wave1 has audible note-on/release pops and some
+presets sound too similar. Prioritize Wave2 correction before reverb: the WT
+renderer omitted the shared ADSR/velocity/performance amplitude ramp and reset
+filter/control state during sounding retriggers. Restore amplitude application,
+preserve sounding state, and test rendered attack, release, velocity, pluck decay
+and edge/retrigger continuity. Wave1 acceptance is pending these fixes; do not
+describe it as fault-free based on earlier host tests. Wave2 validation in progress.
+
 The user reports that Inputsignwave Performance 8 Dev2 installs and works well
 on their FM-1. No audio fault is currently reported; this is feature development.
 
@@ -42,6 +50,12 @@ on their FM-1. No audio fault is currently reported; this is feature development
 - [ ] Listen and accept the WT prototype on hardware before final adoption.
   Fold morphs precomputed bandwidth-limited spectra. A focused modal/resonator engine
   follows the replacement reverb only if measured resources permit.
+- [x] Recheck Wave1 budgets and other wavetable banks; acquire pinned reverb source
+  references and licences (22 October). See
+  [space and acquired sources](docs/WAVE1_SPACE_AND_REVERB_SOURCES_2026-10-22.md).
+  Research snapshots are separate from firmware; no replacement reverb is in Wave1.
+  Full donor tanks do not fit unchanged. First prototype: one shared, reduced-rate
+  modulated plate, roughly 16–24 KiB delay target subject to combined-load profiling.
 - [x] **Confirmed: remove SID and CZ entirely from the next build**, including
   SID drum kits and their shared SID synthesis code. Retain Prophet, FM6 and
   the non-SID DRUM models. The user approved this on 21 October 2026.

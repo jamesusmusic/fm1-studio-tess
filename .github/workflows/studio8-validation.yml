@@ -1,4 +1,4 @@
-name: Inputsignwave Performance 8 validation
+name: Inputsignwave Performance 9 validation
 on:
   push:
     branches: [studio-tess-8]
@@ -47,11 +47,11 @@ jobs:
         with:
           path: .build-deps
           key: studio7-jieli-sdk-d179b448-v3
-      - name: Compile Inputsignwave Performance 9 wavetable candidate
+      - name: Compile Inputsignwave Performance 9 wavetable envelope fix
         run: |
-          ./build.sh --release 1.4.1-inputsignwave.9-wave1
-          cp build/melodee-1.4.1-inputsignwave.9-wave1.fwsc build/melodee.fwsc
-          cp build/melodee.fwsc build/inputsignwave-1.4.1-performance9-wave1.fwsc
+          ./build.sh --release 1.4.1-inputsignwave.9-wave2
+          cp build/melodee-1.4.1-inputsignwave.9-wave2.fwsc build/melodee.fwsc
+          cp build/melodee.fwsc build/inputsignwave-1.4.1-performance9-wave2.fwsc
       - uses: actions/upload-artifact@v4
         with:
           name: studio8-target-${{ github.sha }}
@@ -94,7 +94,7 @@ jobs:
             development/build/*.map
             development/build/*.elf
             development/build/*audio*.json
-            development/build/melodee-1.4.1-inputsignwave.9-wave1.fwsc
+            development/build/melodee-1.4.1-inputsignwave.9-wave2.fwsc
             development/build/melodee-app.bin
             development/build/melodee.bin
             development/build/release-*/SHA256SUMS

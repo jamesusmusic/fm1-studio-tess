@@ -42,7 +42,7 @@ static void corners(void)
     for(uint32_t note=0;note<128;note++)for(uint32_t corner=0;corner<256;corner++){
         for(uint32_t k=0;k<8;k++){const param_desc_t *d=&ENG_WAVETABLE.edit[k];trk[0].p[P_E0+k]=(corner&(1u<<k))?d->max:d->min;}
         voice_t v={0};wt_note_on(&trk[0],&v);
-        vmod_t m={0};m.pitch16=note*16;m.shape=64*256;
+        vmod_t m={0};m.pitch16=note*16;m.shape=64*256;m.amp0=m.amp1=32767;
         for(uint32_t j=0;j<3;j++){
             int32_t out[CTL+2];memset(out,0,sizeof out);out[0]=out[CTL+1]=0x123456;
             wt_render(&trk[0],&v,out+1,j==0?0:j==1?1:CTL,&m);
@@ -82,11 +82,11 @@ static void storage(void)
     for(uint32_t i=0;i<6;i++)assert(favorite_has(ENGI_WAVETABLE,i));
     puts("wavetable: project and user-preset signed controls round-trip, six stars persist, legacy bytes preserved: OK");
 }
-/* Bound host allocation to the first target's disjoint SRAM banks. Host data
- * bank is smaller (2048 vs 3120), so this case is conservative, without cache. */
+/* Bound host allocation conservatively below Wave1's disjoint target banks:
+ * 60 KiB main, and a smaller host data tail (2048 vs 3120), without cache. */
 static void target_capacity(void)
 {
-    const uint32_t caps[5]={3120,784,4260,0,62912};
+    const uint32_t caps[5]={3120,784,4260,0,61440};
     const uint32_t engines[5]={ENGI_PROPHET,ENGI_FM6,ENGI_DRUM,ENGI_DRUM,ENGI_WAVETABLE};
     uint32_t peak=0;
     for(uint32_t scenario=0;scenario<625;scenario++){
@@ -123,7 +123,7 @@ static uint64_t render_preset(uint32_t p)
 static uint32_t frequency(int semi,int fine,int a4)
 {
     fresh();tuning_a4=a4;trk[0].p[P_E6]=semi;trk[0].p[P_E7]=fine;assert(wt_prepare());
-    voice_t v={0};wt_note_on(&trk[0],&v);vmod_t m={0};m.pitch16=69*16;m.shape=64*256;
+    voice_t v={0};wt_note_on(&trk[0],&v);vmod_t m={0};m.pitch16=69*16;m.shape=64*256;m.amp0=m.amp1=32767;
     uint32_t crossings=0;int32_t previous=0;
     for(uint32_t at=0;at<FS;at+=CTL){
         uint32_t n=FS-at<CTL?FS-at:CTL;int32_t out[CTL]={0};wt_render(&trk[0],&v,out,n,&m);
@@ -167,7 +167,7 @@ static void wt_performance_contract(void)
     }
     /* Scan at zero depth must remain inaudible at every rate. */
     fresh();assert(wt_prepare());voice_t a={0},b={0};wt_note_on(&trk[0],&a);wt_note_on(&trk[0],&b);
-    vmod_t m={0};m.pitch16=60*16;m.shape=64*256;
+    vmod_t m={0};m.pitch16=60*16;m.shape=64*256;m.amp0=m.amp1=32767;
     for(uint32_t j=0;j<100;j++){
         int32_t x[CTL]={0},y[CTL]={0};trk[0].p[P_E2]=0;wt_render(&trk[0],&a,x,CTL,&m);
         trk[0].p[P_E2]=127;wt_render(&trk[0],&b,y,CTL,&m);assert(!memcmp(x,y,sizeof x));
@@ -190,8 +190,69 @@ static void spectral(const char *dir)
         fclose(f);
     }
 }
+/* Audible contracts: zero gain really is silent, and note edges follow the
+ * shared sample ramp even when the oscillator is at its peak. */
+static void amplitude_edges(void)
+{
+    fresh();assert(wt_prepare());
+    for(uint32_t edge=0;edge<3;edge++){
+        voice_t v={0};wt_note_on(&trk[0],&v);v.ph[0]=0x40000000u;
+        vmod_t m={0};m.pitch16=0;m.shape=64*256;
+        m.amp0=edge==2?32767:0;m.amp1=edge==1?32767:0;
+        int32_t out[CTL]={0};wt_render(&trk[0],&v,out,CTL,&m);
+        if(!edge)for(uint32_t i=0;i<CTL;i++)assert(!out[i]);
+        if(edge==1){assert(!out[0]);assert(out[CTL-1]>1000);}
+        if(edge==2){assert(out[0]>1000);assert(abs(out[CTL-1])<1000);}
+    }
+    puts("wavetable: silent gain, zero-start attack and near-zero release edge at oscillator peak: OK");
+}
+static uint64_t envelope_energy(uint32_t preset,uint32_t vel,int attack,int release,uint32_t start_ms,uint32_t end_ms,uint32_t off_ms)
+{
+    fresh();host_preset(&trk[0],ENGI_WAVETABLE,preset);
+    if(attack>=0)trk[0].p[P_ATK]=(int16_t)attack;
+    if(release>=0)trk[0].p[P_REL]=(int16_t)release;
+    trk[0].p[P_VOICE]=V_POLY;trk_note_on(&trk[0],60,vel);
+    uint64_t energy=0;uint32_t off=0;int32_t out[CTL*2];
+    for(uint32_t at=0;at<FS*end_ms/1000;at+=CTL){
+        if(!off && at>=FS*off_ms/1000){trk_note_off(&trk[0],60);off=1;}
+        mix_block(out,CTL);
+        for(uint32_t i=0;i<CTL && at+i<FS*end_ms/1000;i++)
+            if(at+i>=FS*start_ms/1000)energy+=(uint32_t)abs(out[i*2]);
+    }
+    return energy;
+}
+static void musical_envelopes(void)
+{
+    uint64_t fast=envelope_energy(0,127,0,-1,0,40,1000);
+    uint64_t slow=envelope_energy(0,127,65,-1,0,40,1000);
+    uint64_t quiet=envelope_energy(0,25,0,-1,100,200,1000);
+    uint64_t loud=envelope_energy(0,127,0,-1,100,200,1000);
+    uint64_t short_rel=envelope_energy(0,127,0,0,300,400,100);
+    uint64_t long_rel=envelope_energy(0,127,0,100,300,400,100);
+    uint64_t pluck_early=envelope_energy(5,127,-1,-1,0,100,1000);
+    uint64_t pluck_late=envelope_energy(5,127,-1,-1,700,800,1000);
+    printf("wavetable envelopes: attack fast/slow %llu/%llu; velocity loud/quiet %llu/%llu; release long/short %llu/%llu; pluck early/late %llu/%llu\n",
+        (unsigned long long)fast,(unsigned long long)slow,(unsigned long long)loud,(unsigned long long)quiet,
+        (unsigned long long)long_rel,(unsigned long long)short_rel,(unsigned long long)pluck_early,(unsigned long long)pluck_late);
+    assert(fast>1000 && slow<fast/3 && quiet<loud/3);
+    assert(long_rel>1000 && short_rel<long_rel/20);
+    assert(pluck_early>1000 && pluck_late<pluck_early/4);
+    /* Same-note retrigger must continue the sounding oscillator/filter output,
+     * compared with a copy left running (not merely compare state members). */
+    fresh();trk_note_on(&trk[0],60,100);int32_t mixed[CTL*2];
+    for(uint32_t k=0;k<16;k++)mix_block(mixed,CTL);
+    voice_t *live=0;for(uint32_t k=0;k<NVOICE;k++)if(trk[0].v[k].active)live=&trk[0].v[k];
+    assert(live);voice_t continued=*live;
+    trk_note_on(&trk[0],60,100);
+    vmod_t m={0};m.pitch16=60*16;m.shape=64*256;m.amp0=m.amp1=32767;
+    int32_t a[CTL]={0},b[CTL]={0};
+    wt_render(&trk[0],&continued,a,CTL,&m);wt_render(&trk[0],live,b,CTL,&m);
+    assert(!memcmp(a,b,sizeof a));
+    puts("wavetable: audible attack/release/velocity and pluck decay, sounding retrigger continuity: OK");
+}
 int main(int argc,char **argv)
 {
+    amplitude_edges();musical_envelopes();
     fresh();bank_tests();corners();storage();target_capacity();wt_performance_contract();
     for(uint32_t p=0;p<6;p++){uint64_t a=render_preset(p),b=render_preset(p);assert(a==b);}
     puts("wavetable: all six chord presets repeat bit-for-bit and release every voice: OK");
