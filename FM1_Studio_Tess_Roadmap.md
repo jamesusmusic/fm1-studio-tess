@@ -32,6 +32,9 @@ on their FM-1. No audio fault is currently reported; this is feature development
 - [x] Keep Prophet, FM6 and DRUM; implement the first wavetable prototype at fresh ID 21.
   Original morphing/fold spectra, scan, tone, sub and tuning; 28,920 B flash headroom,
   62,912 B main working arena, shared WT bank 12,384 B. See the Wave1 report.
+- [x] Review available FM-1 engine sources before finalizing Wave1 (22 October).
+  See FM1_ENGINE_RESEARCH_2026-10-22.md in development/docs for pinned references.
+  Keep this patch focused on WT; new donor engines require separate profiling.
 - [ ] Listen and accept the WT prototype on hardware before final adoption.
   Fold morphs precomputed bandwidth-limited spectra. A focused modal/resonator engine
   follows the replacement reverb only if measured resources permit.

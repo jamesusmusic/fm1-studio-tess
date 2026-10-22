@@ -2,7 +2,7 @@
 
 By: Inputsignwave
 
-21 October 2026. Development prototype; native target build and resource measurements completed.
+22 October 2026. Development candidate; native target build and resource measurements completed.
 Final Linux validation is in progress. Listening and physical hardware acceptance remain pending.
 Prophet, FM6 and 808/909 remain. SID, CZ, SID kits, ROOM and REVERB remain retired.
 Replacement reverb and resonator are separate next stages.
@@ -52,7 +52,11 @@ can be inferred from host elapsed time or emulator throughput.
 Host checks currently cover all 32,768 note/control corners, zero/short blocks and
 output canaries; periodicity, DC, harmonic limits; shared allocation/idle release;
 exhausted-arena failure; signed project/user-preset round trips and favorite settings;
-six deterministic chord presets with complete note release. Coherent full-fold oscillator
+six deterministic chord presets with complete note release. Final hardening also checks
+measured 440/880/220 Hz pitches, +/-50-cent tuning and A4=432 Hz, MIDI CC71/74,
+startup-template recall, poly/mono/legato/unison releases, 40 held-note engine
+switches without leaked state, and bit-identical zero-depth scan at minimum and
+maximum rates. Coherent full-fold oscillator
 measurements include interpolation images: at 1,100.89 Hz unwanted energy is -59.93 dB,
 and at 4,998.39 Hz -76.61 dB relative to intended harmonic energy. Compared with a
 naive live fold of the same source, those are improvements of 47.51 and 64.57 dB.
@@ -133,3 +137,12 @@ the local package. No hardware was flashed.
    it alongside WT + FM6 and recording; the 28,920 B flash margin is shared with all
    future work. ROOM and REVERB IDs stay retired.
 4. Reassess a focused resonator only after the reverb's measured resource cost.
+
+## Other open-source engines reviewed
+
+The requested pre-finalization review is recorded in
+[FM1_ENGINE_RESEARCH_2026-10-22.md](FM1_ENGINE_RESEARCH_2026-10-22.md).
+It pins available engine sources, separates binary SDKs/installers from DSP source,
+and records why this build retains our current WT prototype rather than adding
+unmeasured ports. Physical/modal models and replacement reverb remain subsequent
+work with their own budget and listening gates.

@@ -119,6 +119,61 @@ static uint64_t render_preset(uint32_t p)
     for(uint32_t i=0;i<NVOICE;i++)assert(!trk[0].v[i].active);
     return h;
 }
+/* Musical contracts are checked against measured output, not oscillator internals. */
+static uint32_t frequency(int semi,int fine,int a4)
+{
+    fresh();tuning_a4=a4;trk[0].p[P_E6]=semi;trk[0].p[P_E7]=fine;assert(wt_prepare());
+    voice_t v={0};wt_note_on(&trk[0],&v);vmod_t m={0};m.pitch16=69*16;m.shape=64*256;
+    uint32_t crossings=0;int32_t previous=0;
+    for(uint32_t at=0;at<FS;at+=CTL){
+        uint32_t n=FS-at<CTL?FS-at:CTL;int32_t out[CTL]={0};wt_render(&trk[0],&v,out,n,&m);
+        for(uint32_t k=0;k<n;k++){crossings+=previous<=0 && out[k]>0;previous=out[k];}
+    }
+    tuning_a4=A4_DEFAULT;return crossings;
+}
+static void wt_performance_contract(void)
+{
+    assert(abs((int)frequency(0,0,440)-440)<=1);
+    assert(abs((int)frequency(12,0,440)-880)<=1);
+    assert(abs((int)frequency(-12,0,440)-220)<=1);
+    assert(abs((int)frequency(0,50,440)-453)<=1);
+    assert(abs((int)frequency(0,-50,440)-427)<=1);
+    assert(abs((int)frequency(0,0,432)-432)<=1);
+    fresh();midi_parameter(&trk[0],74,39);midi_parameter(&trk[0],71,91);
+    assert(trk[0].p[P_E4]==39 && trk[0].p[P_E1]==91);
+    trk[0].p[P_E6]=-17;trk[0].p[P_E7]=-31;template_save();assert(!tmpl_dirty);
+    host_preset(&trk[0],ENGI_FM6,0);template_load();
+    assert(trk[0].eng_req==ENGI_WAVETABLE && trk[0].p[P_E6]==-17 && trk[0].p[P_E7]==-31);
+    for(uint32_t mode=V_POLY;mode<=V_UNISON;mode++){
+        fresh();trk[0].p[P_VOICE]=mode;trk[0].p[P_ATK]=trk[0].p[P_DEC]=trk[0].p[P_REL]=0;
+        trk[0].p[P_SUS]=127;trk_note_on(&trk[0],60,100);trk_note_on(&trk[0],64,100);
+        int32_t out[CTL*2];uint64_t energy=0;
+        for(uint32_t b=0;b<16;b++){mix_block(out,CTL);for(uint32_t k=0;k<CTL*2;k++)energy+=abs(out[k]);}
+        assert(energy && wt_bank);trk_note_off(&trk[0],60);trk_note_off(&trk[0],64);
+        for(uint32_t b=0;b<100;b++)mix_block(out,CTL);
+        for(uint32_t v=0;v<NVOICE;v++)assert(!trk[0].v[v].active);
+        assert(!wt_bank && !resource[RES_WAVETABLE].size && !resource_failures);
+    }
+    fresh();trk_note_on(&trk[0],60,100);int32_t out[CTL*2];mix_block(out,CTL);assert(wt_bank);
+    for(uint32_t round=0;round<20;round++){
+        set_engine_of(&trk[0],ENGI_FM6);
+        for(uint32_t b=0;b<16;b++)mix_block(out,CTL);
+        assert(trk[0].engine==ENGI_FM6 && !wt_bank);
+        trk_note_on(&trk[0],60,100);mix_block(out,CTL);assert(resource[RES_ENGINE0].size);
+        set_engine_of(&trk[0],ENGI_WAVETABLE);
+        for(uint32_t b=0;b<16;b++)mix_block(out,CTL);
+        assert(trk[0].engine==ENGI_WAVETABLE && !resource[RES_ENGINE0].size);
+        trk_note_on(&trk[0],64,100);mix_block(out,CTL);assert(wt_bank && !resource_failures);
+    }
+    /* Scan at zero depth must remain inaudible at every rate. */
+    fresh();assert(wt_prepare());voice_t a={0},b={0};wt_note_on(&trk[0],&a);wt_note_on(&trk[0],&b);
+    vmod_t m={0};m.pitch16=60*16;m.shape=64*256;
+    for(uint32_t j=0;j<100;j++){
+        int32_t x[CTL]={0},y[CTL]={0};trk[0].p[P_E2]=0;wt_render(&trk[0],&a,x,CTL,&m);
+        trk[0].p[P_E2]=127;wt_render(&trk[0],&b,y,CTL,&m);assert(!memcmp(x,y,sizeof x));
+    }
+    puts("wavetable: measured pitch/A4/fine tune, MIDI tone/fold, template recall, all voice modes, 40 held-note engine switches and scan OFF neutrality: OK");
+}
 static void spectral(const char *dir)
 {
     fresh();assert(wt_prepare());
@@ -137,7 +192,7 @@ static void spectral(const char *dir)
 }
 int main(int argc,char **argv)
 {
-    fresh();bank_tests();corners();storage();target_capacity();
+    fresh();bank_tests();corners();storage();target_capacity();wt_performance_contract();
     for(uint32_t p=0;p<6;p++){uint64_t a=render_preset(p),b=render_preset(p);assert(a==b);}
     puts("wavetable: all six chord presets repeat bit-for-bit and release every voice: OK");
     if(argc>1)spectral(argv[1]);
