@@ -9,26 +9,24 @@ licence notices remain intact; see [CREDITS.md](CREDITS.md).
 
 ## Current development build
 
-The `studio-tess-8` branch contains Inputsignwave Performance 8: conditional
-generator pages retained in SEQ, HOME actions, Sound Designer in EDIT, OUTPUT
-second in GLO, the FM6 algorithm encoder and provisional LO-FI colours.
-About displays **Inputsignwave** and **By: Inputsignwave**. Application USB,
-editor identification and console use Inputsignwave. Bundled tools recognise
-the new name and legacy device names. Update/recovery identities, protocol IDs
-and FBK7 storage remain compatible. Repository and branch names remain stable.
+The `studio-tess-8` branch now contains the **Performance 9 Wave1 development
+prototype**, adding an original wavetable engine with six sounds, spectral fold
+morphing, scan, tone, sub and tuning. Prophet, FM6 and 808/909 remain; SID, CZ,
+SID kits, ROOM and REVERB are retired with saved IDs and data preserved.
+The replacement reverb is the next prototype stage.
 
-The branded candidate is `1.4.1-inputsignwave.8-dev2`. Full local/Linux, native target, sanitizer, USB and UI validation passed; see
-[the branding record](development/INPUTSIGNWAVE_BRANDING.md). The preceding
-navigation candidate passed [these checks](development/STUDIO8_VALIDATION.md).
-
+- [Wave1 controls, code map, measurements and validation](development/docs/PERFORMANCE9_WAVETABLE_REPORT.md)
+- [Removal baseline and resource recovery](development/docs/PERFORMANCE9_REMOVAL_REPORT.md)
 - [Page/function guide](development/docs/STUDIO8_PAGE_GUIDE.md)
 - [Development source](development/)
 - [Roadmap](FM1_Studio_Tess_Roadmap.md)
 - [Current draft pull request](https://github.com/jamesusmusic/fm1-studio-tess/pull/2)
 
-Performance 7 is the user's working device baseline, reported as working
-perfectly. Hardware acceptance of later builds remains separate from software
-validation. No device is automatically flashed. Performance 6 remains preserved.
+The inherited Performance 8 layout keeps generator pages in SEQ, Sound Designer
+in EDIT, OUTPUT second in GLO and the provisional LO-FI palette. Its branded
+Dev2 is the user's working hardware baseline. Wave1 still needs listening and
+physical acceptance; no device is automatically flashed. Historical Performance 6
+source and the earlier handoff remain preserved.
 
 ## Developer handoff
 

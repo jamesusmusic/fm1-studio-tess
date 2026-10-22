@@ -2,7 +2,8 @@
 
 By: Inputsignwave
 
-21 October 2026. Development prototype; target compilation and resource measurements pending.
+21 October 2026. Development prototype; native target build and resource measurements completed.
+Final Linux validation is in progress. Listening and physical hardware acceptance remain pending.
 Prophet, FM6 and 808/909 remain. SID, CZ, SID kits, ROOM and REVERB remain retired.
 Replacement reverb and resonator are separate next stages.
 
@@ -60,5 +61,75 @@ They are two static fixtures, not a full-band musical quality verdict.
 Four-track concurrent playback is expanded from 256 retained assignments to 625
 ordered assignments including wavetable; serial and concurrent PCM must match.
 Historical reference goldens run with the new engine disabled. Production retained
-PCM comparisons remain independent. Full results and target budgets will be added
-after the build completes.
+PCM comparisons remain independent. The production UI also checks all engine pages and control values across eight palettes.
+
+## Exact target measurements
+
+| Quantity | Removal baseline | Wave1 |
+| --- | ---: | ---: |
+| App including unchanged 3,808-byte boot stub | 533,616 B | 548,328 B |
+| App body | 529,808 B | 544,520 B |
+| Free app-slot flash | 43,632 B | **28,920 B** |
+| Main contiguous working arena | 64,640 B | **62,912 B** |
+| Data / low / retained working banks | 3,120 / 4,260 / 784 B | unchanged |
+| Total disjoint working banks, cache excluded | 72,804 B | 71,076 B |
+
+The linked addition costs **14,712 B of flash** and **1,728 B of working-arena
+capacity**, including resident DSP code and metadata. The **12,384 B runtime bank**
+is a further allocation *within* these working banks when WT is playing, not
+another permanent deduction from the linker arena. Host dynamic state peaks at
+**35,220 B** for one WT plus three FM6 tracks. All 625 four-track engine/kit choices
+allocate successfully with banks constrained to the measured target capacities;
+the host data bank is smaller than the target, and optional cache is disabled.
+This does not prove every possible FX/history allocation combination fits.
+
+The target control-flow cost for `wt_render` is **269** (483 instructions, 219 in
+loops, four weighted divides, no loop calls), with a dedicated +10% regression
+gate. This is a static compiled-code weight, **not cycles or CPU percent**.
+FM6 remains 3,560, Prophet's sample kernel 1,065 and track rendering 558.
+The complete resident-audio closure includes `wt_note_on` and `wt_render`.
+No retired SID/CZ/SID-kit/reverb DSP is linked. Existing cost gates remain intact.
+
+## Code areas touched
+
+| Area | Files and purpose |
+| --- | --- |
+| New DSP and assets | `eng_wavetable.c`, `wavetable_bank.h`, `tools/gen_wavetable.py`: original source, fold/mip bank, oscillator, scan, tone and factory sounds. |
+| Engine identity and lifecycle | `core.h`, `engines.c`, `resources.c`, `mix.c`: append ID21, preserve ID20 namespace, shared allocation and idle release. |
+| Controls and UI | `params.c`, `midi_control.c`, `ui_graph.c`, `browse.c`: names, CC macros, abbreviated header, factory categories and visible order. |
+| Persistence | `upreset.c`, `favorites.c`: explicitly admit the new generic preset engine and store tagged factory stars without enlarging settings. Project/template wire layouts remain unchanged. |
+| Editor | `web/editor.html`: device order/filtering, extended historical mock; connected devices still supply their descriptors. |
+| Validation/build | `tools/build.py`, `tests/wavetable_test.c`, `tests/wavetable_spectral.py`, `tests/wavetable_emulator_fixture.c`, `audio_matrix_test.c`, `target_budget.py`, `run_retirement_tests.sh`, reference fixtures and CI workflow. |
+
+## Emulator evidence and practical limits
+
+The final Wave1 `.fwsc` boots and plays in pinned fm1-emu v0.2.0 for 1,800 emulated
+milliseconds: **44 LCD frames**, **70,912 stereo frames** at 44.1 kHz, peak **5,257**,
+zero clipped samples. This exercises package startup and the retained default sound.
+The decoded app from that exact package also boots a synthetic saved WAVETABLE /
+GLASS DRIFT project at entry `0x02001000`, with FM6, Prophet and 808 on other tracks:
+**31 LCD frames**, **72,320 stereo frames**, peak **529**, zero clipped samples.
+The snapshot confirms the selected WT sound. Its short keyboard hold samples only
+part of the slow attack. The package/stub path and the app-with-synthetic-NOR path
+are separate tests; the latter bypasses the package stub. Both terminate at the
+requested interpreter step limit, without an undecoded-instruction halt.
+
+Eight MMIO addresses remain unsupported and CPU1 is offline in this pinned emulator.
+Consequently these runs prove executable boot/audio/UI paths under emulation;
+they do not establish physical dual-core timing, stack high-water use, first-note
+bank-copy latency or actual device CPU headroom. Source, linker map/disassembly,
+residency manifest, host logs, waveform statistics and emulator snapshots accompany
+the local package. No hardware was flashed.
+
+## Next decisions
+
+1. Listen to the six factory auditions, particularly the transition from hollow to
+   glass/bright and the maximum fold setting; refine character rather than add controls.
+2. On-device acceptance: compare loudness, rapid wave/fold changes, held chords,
+   mono/legato/unison, project/preset recall, engine switches and live CPU load.
+3. Prototype the new stereo reverb in one shared send slot: dense plate/ambient tail,
+   controllable wobble, tape colour and width, with freeze and performance controls
+   developed after the core tail is stable. Start with a bounded buffer and measure
+   it alongside WT + FM6 and recording; the 28,920 B flash margin is shared with all
+   future work. ROOM and REVERB IDs stay retired.
+4. Reassess a focused resonator only after the reverb's measured resource cost.
