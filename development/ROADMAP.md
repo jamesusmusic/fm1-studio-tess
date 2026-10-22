@@ -9,6 +9,21 @@ application USB/editor/console identity and compatible host discovery; preserve
 upstream notices, protocol/storage/update identities and archived baselines.
 See [branding and validation](INPUTSIGNWAVE_BRANDING.md).
 
+## Performance 10 integration — 23 October 2026
+
+By: Inputsignwave
+
+Implementation started: 12 approved Prophet sounds appended after the unchanged
+200-program bank, browser/editor additions, safe extension of favorite bits and
+NIGHT as the initial palette. The Wave2 WT note-edge fix is retained. Targeted UI
+and preset persistence checks pass. This is an integration foundation, **not the
+finished combined build**. Measured bank payload is 27,904 B with only 36 B free;
+the project reserved gap is zero. Expanded synth/FX state needs a compatible
+versioned representation across project/template/preset/undo/editor. A standalone
+lossless codec prototype preserves bytes and rejects bad/capacity-exceeding data,
+but is not sufficient for worst-case capacity and is not production storage.
+See [current changes, constraint and remaining work](docs/PERFORMANCE10_INTEGRATION_STATUS_2026-10-23.md).
+
 ## Performance 9 removal baseline — built and offline validated
 
 By: Inputsignwave
@@ -26,13 +41,77 @@ See [measurements and validation](docs/PERFORMANCE9_REMOVAL_REPORT.md).
 
 By: Inputsignwave
 
+**22 October audition decisions for the restarted update:** accept all eight richer
+WT concept directions; sloopDX melodic **808 SUB only**; DX7 percussion and all
+previewed Eno/more-synth-colour sounds. Reject the other sloopDX melodic imports
+and all sloopDX drum sets; keep our existing 808/909. Package accepted DX7
+percussion **and existing FM6 percussion as playable eight-lane FM kits**, while
+retaining the individual sounds. These are pending integrations, not shipped
+features. See [approved sound direction and actual build status](docs/APPROVED_SOUND_DIRECTION_2026-10-22.md).
+
+**Preset preservation clarification, 22 October:** all approved new sound presets
+are **additions**. Retain existing FM6/Prophet presets, native 808/909 kits and WT
+preset identities/sounds alongside the new banks/kits. Do not replace old tones
+or repurpose their IDs to make room; validate old-project recall and account for
+retained assets in the combined budget. This does not undo the explicitly
+approved SID/CZ/SID-kit and ROOM/REVERB retirement. Pro-800 conversions remain
+separate work. See the additive rule in the approved-sound document above.
+
+**Additional confirmed scope, 22 October:** return to **NIGHT** UI; two wavetable
+layers with independent banks/parameters; frame scanning, cross-table A/B blend
+and sound-parameter morph with beat sync; warm drive/distortion; FX LFO modulation
+with SYNC and a time-division dial; **a new reverb implementation in this build**.
+Each WT layer also requires its own **amplitude ADSR and filter** (cutoff/resonance,
+with envelope amount); the reverb requires **separate tone and wet filter controls**
+(warm/bright shaping and low/high cuts). These are distinct from scan envelopes
+and internal tail damping. Preserve the dry signal and smooth automated changes.
+Profile these together with the accepted FM6 sounds and FM kits. Individual feature
+feasibility is not a combined resource-fit claim. See
+[dual-wavetable and FX scope](docs/DUAL_WAVETABLE_AND_FX_SCOPE_2026-10-22.md).
+
+**22 October replacement reverb prototype:** built a standalone fixed-point C
+adaptation of Mutable Instruments Rings' modulated Griesinger/Dattorro topology
+(Emilie Gillet, MIT; adaptations By: Inputsignwave). Separate tone, wet low/high
+cuts, damping, decay, width, movement and predelay controls. 22.05 kHz delay storage
+24,274 B; smaller 11.025 kHz variant 12,136 B, before state/resampler/allocator.
+Both pass sanitizer/stability tests; the complete existing host/web suite also
+passes. Fourteen effect renders / 35 listening WAVs
+cover three settings, equal-send/RMS-matched/wet-only references and isolated
+controls, with zero audition saturation/clipping. Ready to listen and begin
+integration; **not yet connected to shipping firmware, saved controls or clock**.
+See [prototype and audition report](docs/REVERB_PROTOTYPE_AUDITION_2026-10-22.md).
+
+**22 October reverb listening approval:** user likes the first plate audition;
+retain it as the replacement-reverb direction. Add independent **SIZE** and
+optional zero/off **tape WOBBLE**. Include **SWELL** (wet rise) and **INFINITE/HOLD**
+(closed-input held tail, dry keyboard remains playable) in the next prototype
+plan. These additions are not implemented yet. Size must remain distinct from
+decay; validate stable hold and its interaction with size/wobble rather than
+claiming that maximum feedback already provides infinity. Core rate and combined
+hardware fit remain open. See [controls and performance behaviour](docs/REVERB_PERFORMANCE_CONTROLS_2026-10-22.md).
+
+**22 October Prophet sound auditions:** prepared 12 new native artist-/classic-
+inspired designs plus eight curated, byte-exact existing Sequential references.
+20 dry previews and eight approved-reverb examples use the actual Prophet DSP;
+no artist-authenticated dump or new firmware integration is claimed. Reviewed the
+user's five Desktop Pro-800 collections (23 version/bank SysEx files) privately;
+conversion needs calibration and is not represented by these new patches. All
+20 native audition scenarios pass sanitizers; 28 WAV files are unclipped; the
+complete existing host/web suite passes in 188 seconds. Keep
+paid data and the private inventory out of public Git. **All 12 new Prophet
+patches are now user-approved additions**; the eight existing references remain
+unchanged and are not duplicated. See [Prophet auditions and provenance](docs/PROPHET_SOUND_AUDITIONS_2026-10-22.md).
+
 **22 October hardware feedback:** Wave1 has audible note-on/release pops and some
 presets sound too similar. Prioritize Wave2 correction before reverb: the WT
 renderer omitted the shared ADSR/velocity/performance amplitude ramp and reset
 filter/control state during sounding retriggers. Restore amplitude application,
 preserve sounding state, and test rendered attack, release, velocity, pluck decay
 and edge/retrigger continuity. Wave1 acceptance is pending these fixes; do not
-describe it as fault-free based on earlier host tests. Wave2 validation in progress.
+describe it as fault-free based on earlier host tests. Wave2 software validation
+is complete: local suite 286 s, Linux build/sanitizers/host/web success; native and
+saved-WT emulator checks pass. No Wave2 hardware flash or standalone delivery is
+assumed. Richer wave banks and FM kit routing remain separate work.
 
 The user reports that Inputsignwave Performance 8 Dev2 installs and works well
 on their FM-1. No audio fault is currently reported; this is feature development.

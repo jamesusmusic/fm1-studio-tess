@@ -68,3 +68,12 @@ Inputsignwave Performance 9 wavetable: original mathematical wave/fold bank,
 bandwidth-limited oscillator, shared bank lifetime, controls/preset/favorites/editor
 integration, spectral and storage tests — **By: Inputsignwave**. Existing Melodee,
 Felucca, Prophet, FM6 and drum notices retain their original scope and authors.
+
+## Replacement reverb audition prototype
+
+The standalone module in `development/prototypes/reverb/` adapts the modulated
+Griesinger/Dattorro topology of Mutable Instruments Rings, **Copyright 2014
+Emilie Gillet**, under the MIT licence. Its original notice is preserved in
+`plate.c` and `LICENSE-Mutable.txt`. Fixed-point C/rate/memory adaptation, additional
+tone and wet filter controls, bounded state, tests and audition packaging are
+**By: Inputsignwave**. This prototype is not yet included in production firmware.

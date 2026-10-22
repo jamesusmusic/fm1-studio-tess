@@ -71,7 +71,12 @@ edges. Wave2 adds the missing behavioural gates without changing historical gold
 Compiled source revision: `006b29ed860081f8d86818929f61689a381b1677`.
 Linux native build and registered checks:
 [run 39802915690](https://github.com/jamesusmusic/fm1-studio-tess/actions/runs/39802915690).
-Final target measurements and validation results will be recorded below after completion.
+The full local suite passed in 286 s after restoring the pinned SDK paths and
+testing the matching Wave2 application/package. Linux job 119908343338 completed
+successfully: native compile, foundation sanitizers and registered host/web suite.
+The first local run used stale packaging inputs/missing SDK files and failed four
+package/recovery checks; the complete corrected rerun passed. This records software
+validation, not physical acceptance or delivery of a new standalone release bundle.
 
 ### Exact linked budget
 

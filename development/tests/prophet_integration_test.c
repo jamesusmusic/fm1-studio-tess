@@ -30,6 +30,10 @@ int main(int argc,char **argv)
     favorite_set(0,11,1);favorite_set(ENGI_PROPHET,200,1);settings_save();
     persist_t prefs;int prefs_len=st_load(OBJ_SETTINGS,&prefs,sizeof prefs);memset(&favorites,0,sizeof favorites);
     bad+=check("all Prophet factory stars persist without overwriting retired ANALOG's stars",prefs_len==(int)sizeof prefs&&settings_import(&prefs,prefs_len)&&favorite_has(ENGI_PROPHET,0)&&favorite_has(ENGI_PROPHET,200)&&favorite_has(0,11)&&favorite_has(USER_NATIVE_P5,127));
+    uint8_t old_settings_row[32];memcpy(old_settings_row,favorites.factory[8],32);
+    favorite_set(ENGI_PROPHET,P5_FACTORY_N,1);settings_save();
+    prefs_len=st_load(OBJ_SETTINGS,&prefs,sizeof prefs);memset(&favorites,0,sizeof favorites);
+    bad+=check("last added Prophet star persists without corrupting original Prophet/WT/FX tags",prefs_len==(int)sizeof prefs&&settings_import(&prefs,prefs_len)&&favorite_has(ENGI_PROPHET,P5_FACTORY_N)&&favorite_has(ENGI_PROPHET,200)&&!memcmp(favorites.factory[8],old_settings_row,4)&&!memcmp(favorites.factory[8]+12,old_settings_row+12,20));
     track_t *t=&trk[0];t->p[P_RESERVED34]=t->p[P_RESERVED35]=t->p[P_RESERVED36]=0;t->p[P_M1AMT]=43;t->step[2]=(step_t){{64},1,ST_NOTE,0,100,0,0,100};
     bad+=check("native load selects engine 19 and keeps track effects, matrix and sequence",!native_load(ENGI_PROPHET,127,0)&&t->eng_req==19&&t->p[P_M1AMT]==TP[P_M1AMT].def&&t->step[2].note[0]==64);
     for(uint32_t j=0;j<8u;j++)t->p[P_E0+j]=17;
@@ -40,7 +44,7 @@ int main(int argc,char **argv)
     bad+=check("project embeds the complete native record without a user-slot dependency",proj_pack(&wire,&saved)&&proj_import(&readback,&wire,sizeof wire)&&!memcmp(&readback.p5[0],&p,sizeof p));
     bad+=check("project restore returns native bytes after changing the current patch",(p5_patch[0].raw[97]=0,!project_restore_runtime(&readback)&&!memcmp(p5_patch_of(t),&p,sizeof p)));
     uint32_t total;
-    bad+=check("project restore resumes Prophet browsing at native P128",!t->user_native&&t->user==128u&&preset_all_pos(&total)==328u&&total>=201u+128u);
+    bad+=check("project restore resumes Prophet browsing at native P128",!t->user_native&&t->user==128u&&preset_all_pos(&total)==P5_FACTORY_N+128u&&total>=P5_FACTORY_N+1u+128u);
     p5_patch[0].raw[97]^=1u;project_capture(&saved);
     bad+=check("new projects retain a native origin even after the live patch was edited",proj_pack(&wire,&saved)&&proj_import(&readback,&wire,sizeof wire)&&!project_restore_runtime(&readback)&&!t->user_native&&t->user==128u);
     apply_preset_to(t,200u);project_capture(&saved);
