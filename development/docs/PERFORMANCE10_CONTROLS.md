@@ -26,8 +26,8 @@ percussion gate; individual FM6 presets retain their full melodic controls.
 
 ## Stereo plate and performance FX
 
-Select PLATE on one of the three shared send buses and raise track sends.
-Only one PLATE instance is supported; it is unavailable as a track insert.
+Select REVERB on one of the three shared send buses and raise track sends.
+Only one REVERB instance is supported; it is unavailable as a track insert.
 The normal effect controls set SIZE and DECAY. Select the bus on the additional
 FX parameter pages for predelay, tone, wet low/high cuts, damping, width,
 movement/rate/sync, optional wobble, Swell/rise and Hold. Wet filters/tone do not
@@ -43,7 +43,7 @@ control. It adds softened/asymmetric saturation with drive, output and tone.
 Every active effect slot has an independent modulation oscillator: shape,
 destination (OFF/MIX/RATE/CHAR/TONE), depth, rate and SYNC. When synced, RATE
 selects a division, including triplets and dotted values. The destination's
-meaning follows that effect: PLATE RATE controls size and CHAR controls decay.
+meaning follows that effect: REVERB RATE controls size and CHAR controls decay.
 
 The FX-page slot selector numbers 1–12 address tracks 1–4, three inserts each;
 13–15 address the three shared buses. Selecting the correct slot matters.
@@ -59,3 +59,9 @@ parameter format. Back up a full bank before flashing; older firmware cannot
 read new FBK8/TPLM saves. Heavy configurations can leave no room for the optional
 recording-undo snapshot; the UI reports this while recording/audio take priority. NIGHT applies once on upgrade, then your palette choice
 is retained. No flash operation is performed by the validation process.
+
+## RC3 Prophet browsing
+
+On-device additions 201–212 appear first, then INIT 0 and original programs
+1–200. Selecting Prophet defaults to the first addition; explicit Init still
+loads 0. Stored preset, native patch and favourite identities remain unchanged.

@@ -490,6 +490,10 @@ Browse Prophet additions 201–212 first, followed by INIT 0 and original 1–20
 new Prophet engine selection starts at 201, explicit Init remains 0. Stored IDs,
 patch bytes, projects and favorites are preserved. Development continues on
 INPUTSIGNWAVE-GEN (Git branch names cannot contain spaces); studio-tess-8 is
-retained as the prior development/archive reference. Deep sanitizer, routing,
-full-preview, bank compatibility, native budget and chip-emulator validation is
-being completed before packaging RC3.
+retained as the prior development/archive reference. RC3 is built and offline validated: local full suite 262 s, Linux full suite
+653 s, 349 unchanged golden renders, 2,401 concurrency combinations, zero UI
+layout findings, 32,768 added randomized ASan/UBSan audio/preview blocks and two
+6,000 ms chip-emulator scenarios. Native REVERB naming was verified in the
+actual binary. Flash spare 976 B; main audio arena remains 51,520 B. See
+[RC3 validation and limits](docs/PERFORMANCE10_RC3_VALIDATION.md). Hardware
+audition remains; no device was flashed.
