@@ -275,6 +275,24 @@ static const param_desc_t GP[G_COUNT] = {
 
 };
 
+/* Track REVERB entries are sends to this one shared tank. By: Inputsignwave.
+ * Keep effect/storage IDs and the three existing bus parameter groups intact. */
+#if !MELODEE_RETIRED_REFERENCE
+static uint32_t reverb_slot(void)
+{
+    for(uint32_t k=0;k<FX_SLOTS;k++)if(song.g[G_MFXTYPE+k*FX_PARAMS]==10)return k;
+    return FX_SLOTS;
+}
+static uint32_t reverb_bind(void)
+{
+    uint32_t k=reverb_slot();if(k<FX_SLOTS)return k;
+    for(k=0;k<FX_SLOTS;k++)if(!song.g[G_MFXTYPE+k*FX_PARAMS]){
+        for(uint32_t j=0;j<FX_PARAMS;j++)song.g[G_MFXTYPE+k*FX_PARAMS+j]=GP[G_MFXTYPE+j].def;
+        song.g[G_MFXTYPE+k*FX_PARAMS]=10;return k;
+    }
+    return FX_SLOTS;
+}
+#endif
 static const param_desc_t *global_desc(uint32_t id)
 {
     if(param_master_fx(id) && (id-G_MFXTYPE)%FX_PARAMS>=2u){
@@ -287,6 +305,11 @@ static const param_desc_t *global_desc(uint32_t id)
 static uint32_t scale_count(const track_t *t);          /* seq.c */
 static const param_desc_t *track_desc(const track_t *t, uint32_t id)
 {
+#if !MELODEE_RETIRED_REFERENCE
+    if(id>=P_FXMIX && id<=P_FX3CHAR && (id-P_FXTYPE)%FX_PARAMS==1u && t->p[id-1u]==10){
+        static const param_desc_t send=PD("SEND",F_PCT,0,127,0);return &send;
+    }
+#endif
 #if MELODEE_WAVETABLE
     if(t->eng_req==ENGI_WAVE_LAYERS){const param_desc_t *d=wl_param(id);if(d)return d;}
 #endif
@@ -816,6 +839,18 @@ static void sfx_page_put(uint32_t id,int32_t v)
 static const param_desc_t *page_desc(const page_t *pg, uint32_t slot, int16_t **valp)
 {
     uint32_t id = pg->id[slot];
+#if !MELODEE_RETIRED_REFERENCE
+    if(pg->scope==SC_TRACK && id>=P_FXMIX && id<=P_FX3CHAR){
+        uint32_t part=(id-P_FXTYPE)%FX_PARAMS,base=id-part;
+        if(TSEL->p[base]==10){
+            uint32_t k=reverb_slot();
+            if(part>=2u){
+                *valp=0;if(k==FX_SLOTS)return 0;
+                id=G_MFXTYPE+k*FX_PARAMS+part;*valp=&song.g[id];return global_desc(id);
+            }
+        }
+    }
+#endif
     if(pg->scope==SC_SFX)return sfx_page_desc(id,slot,valp);
     if(pg->scope==SC_P5 || pg->scope==SC_P5STORE){
         if(id==255u || (pg->scope==SC_P5 && (id>=88u || !P5_PANEL[id].label))){*valp=0;return 0;}

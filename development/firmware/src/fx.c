@@ -555,7 +555,7 @@ static __attribute__((noinline,section(".audio_text"))) int fx_active(const trac
 #endif
     for(uint32_t slot=0;slot<FX_SLOTS;slot++){
         uint32_t base=P_FXTYPE+slot*FX_PARAMS;
-        if((t->p[base] && t->p[base+1u] && (MELODEE_RETIRED_REFERENCE || (t->p[base]!=FX_ROOM && t->p[base]!=FX_REVERB))) || fx_state[ti*FX_SLOTS+slot].mix)return 1;
+        if((t->p[base] && t->p[base+1u] && (MELODEE_RETIRED_REFERENCE || (t->p[base]!=FX_ROOM && t->p[base]!=FX_REVERB && t->p[base]!=10))) || fx_state[ti*FX_SLOTS+slot].mix)return 1;
     }
     return 0;
 }
@@ -571,8 +571,8 @@ static void fx_slot_prepare(fx_plan_t *plan,uint32_t si,const int16_t *p,uint32_
         resource_release(RES_FX0+si); fx_zero(f); return;
     }
 #if !MELODEE_RETIRED_REFERENCE
-    /* A single shared tank; insert selections and duplicate shared slots
-     * bypass rather than allocate another reverb. */
+    /* Track entries feed the shared tank after the track's insert chain.
+     * Never allocate a second tank for a track marker or duplicate bus. */
     if(type==FX_PLATE && (si<NPART*FX_SLOTS || (fx_plate_owner!=255u && fx_plate_owner!=si))){
         resource_release(RES_FX0+si);fx_zero(f);return;
     }
@@ -736,12 +736,25 @@ static int32_t fx_bus_sum_l[CTL],fx_bus_sum_r[CTL];
 static uint8_t fx_bus_separate;
 static int32_t fx_bus_slot_mix[FX_SLOTS];
 static uint32_t fx_bus_n;
+/* Per-track REVERB MIX is a send. Existing explicit sends and duplicate track
+ * markers combine by maximum, so a route cannot feed the same tank twice.
+ * CHAIN feeds its full shared chain; SPLIT feeds only the reverb's bus. */
+static uint32_t fx_send_amount(const track_t *t,uint32_t bus)
+{
+    int32_t amount=t->p[P_FXSEND+bus];
+#if !MELODEE_RETIRED_REFERENCE
+    uint32_t k=reverb_slot();
+    if(k<FX_SLOTS && (!fx_bus_separate || k==bus))
+        for(uint32_t j=0;j<FX_SLOTS;j++)if(t->p[P_FXTYPE+j*FX_PARAMS]==10 && t->p[P_FXMIX+j*FX_PARAMS]>amount)amount=t->p[P_FXMIX+j*FX_PARAMS];
+#endif
+    return (uint32_t)clamp(amount,0,127);
+}
 static inline __attribute__((always_inline)) uint32_t fx_send_gain(const track_t *t)
 {
 #if defined(MELODEE_FX_PROFILE) && MELODEE_FX_PROFILE && defined(FM1_IRQ_TARGET)
     if(fx_profile_control>>30u && fx_profile_track((uint32_t)(t-trk)))return 65536u;
 #endif
-    return (uint32_t)(t->p[P_FXSEND]+(t->p[P_FXSEND]==127))*512u;
+    uint32_t amount=fx_send_amount(t,0);return (amount+(amount==127))*512u;
 }
 static int fx_bus_result,fx_bus_pending;
 #if MELODEE_AUDIO_PROFILE
@@ -792,6 +805,13 @@ static void fx_bus_kernel(void *unused)
 static int fx_bus_active(void)
 {
     uint32_t base=NPART*FX_SLOTS;
+#if !MELODEE_RETIRED_REFERENCE
+    /* Restored/user-preset track markers can acquire an empty shared slot.
+     * Never replace an occupied slot. CPU0 calls before preparing the worker. */
+    if(reverb_slot()==FX_SLOTS)for(uint32_t t=0;t<trk_n();t++)for(uint32_t k=0;k<FX_SLOTS;k++)
+        if(trk[t].p[P_FXTYPE+k*FX_PARAMS]==FX_PLATE){reverb_bind();goto reverb_bound;}
+reverb_bound:;
+#endif
 #if defined(MELODEE_FX_PROFILE) && MELODEE_FX_PROFILE && defined(FM1_IRQ_TARGET)
     if(fx_profile_control>>30u)return 1;
 #endif

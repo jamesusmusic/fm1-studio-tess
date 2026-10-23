@@ -26,8 +26,20 @@ percussion gate; individual FM6 presets retain their full melodic controls.
 
 ## Stereo plate and performance FX
 
-Select REVERB on one of the three shared send buses and raise track sends.
-Only one REVERB instance is supported; it is unavailable as a track insert.
+Select REVERB in any track FX slot, then raise its SEND amount. Each track has
+its own amount; the selected entries all feed one shared stereo tank after the
+track insert chain, level and pan. The track page says REV SHARED: SIZE and
+DECAY change that common tank for every sending track. Tone, filters, wobble,
+Swell, Hold and the reverb LFO are shared controls on the shared reverb pages.
+
+Selection reuses an existing shared REVERB or creates it in an empty shared
+slot. It never replaces an occupied shared effect: SHARED FX FULL means one
+shared slot must first be freed. In CHAIN mode the send passes through the
+shared chain; SPLIT sends directly to the reverb bus. An explicit send and a
+track REVERB entry use the higher amount, rather than doubling it. Multiple
+REVERB entries on the same track also use the highest amount. Setting the entry
+to OFF removes that entry's send; explicit sends and the common tail remain.
+The common tank stays available in SHARED; only one tank is allocated.
 The normal effect controls set SIZE and DECAY. Select the bus on the additional
 FX parameter pages for predelay, tone, wet low/high cuts, damping, width,
 movement/rate/sync, optional wobble, Swell/rise and Hold. Wet filters/tone do not

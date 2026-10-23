@@ -644,9 +644,15 @@ static void pv_fx(int32_t h)
     };
     _Static_assert(sizeof hint/sizeof hint[0]==FX_COUNT,"Every FX needs a preview hint");
     int32_t mix = p[1], cha = p[3], tone = master ? song.g[G_MFXTONE + slot] : TSEL->p[P_FXTONE + slot];
+#if !MELODEE_RETIRED_REFERENCE
+    if(!master && type==FX_PLATE){
+        uint32_t k=reverb_slot();
+        if(k<FX_SLOTS){cha=song.g[G_MFXCHAR+k*FX_PARAMS];failed=fx_state[NPART*FX_SLOTS+k].failed;}
+    }
+#endif
     int32_t ly = h - lf->h - 4, sy = ly - 9, low = (fx_has_tone((int32_t)type) && !failed ? sy - 6 : h - lf->h - 10) * 16;
     int32_t top = (lf->h + 10) * 16, cy = (top + low) / 32, py = cy * 16;
-    cv_free_text(12, 6, lf, hint[type], T_MID, T_PANEL, PV_PANEL_W - 24);
+    cv_free_text(12, 6, lf, !MELODEE_RETIRED_REFERENCE && !master && type==10?"Shared size / decay":hint[type], T_MID, T_PANEL, PV_PANEL_W - 24);
     for (int32_t x = 0; x < 208; x++) {
         int32_t ph = (int32_t)(sine_i((uint32_t)x * 0x06000000u) >> 10), y = cy * 16;
         if (type == FX_PHASER || type == FX_WIDTH || type == FX_CHORUS) y += ph * mix / 9;

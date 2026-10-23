@@ -9,6 +9,18 @@ application USB/editor/console identity and compatible host discovery; preserve
 upstream notices, protocol/storage/update identities and archived baselines.
 See [branding and validation](INPUTSIGNWAVE_BRANDING.md).
 
+## Performance 10 RC4 track reverb — 23 October 2026
+
+By: Inputsignwave
+
+User requested REVERB directly selectable on every track. Track entries now
+represent independent sends to the one shared tank, with common SIZE/DECAY
+accessible on the track page and a REV SHARED header. Reuse a configured tank
+or an empty shared slot; preserve occupied effects and CHAIN/SPLIT routing.
+Track sends are post-insert/level/pan/solo. Duplicate markers and explicit sends
+combine by maximum, avoiding double feeding. Saved identities/layout are retained.
+Validation and native package are in progress; RC3 remains the prior candidate.
+
 ## Performance 10 RC2 hardware fixes — 23 October 2026
 
 By: Inputsignwave

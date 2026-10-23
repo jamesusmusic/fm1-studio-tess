@@ -46,7 +46,7 @@
 #define MELODEE_FORK "(Inputsignwave)"       /* this fork: melodee(tess); the version below is upstream Melodee's */
 #endif
 #ifndef MELODEE_VERSION
-#define MELODEE_VERSION "v1.4.1-inputsignwave.10-rc3" /* combined Performance 10 candidate */
+#define MELODEE_VERSION "v1.4.1-inputsignwave.10-rc4" /* combined Performance 10 candidate */
 #endif
 #if MELODEE_OTA && !MELODEE_FLASH
 #error "MELODEE_OTA needs MELODEE_FLASH"
