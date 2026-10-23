@@ -1,3 +1,4 @@
+/* Inputsignwave navigation validation modifications — By: Inputsignwave. */
 /* SPDX-License-Identifier: GPL-3.0-only
  * Copyright (C) 2026 Kerem Kilic (Ellic Studio)
  * Portions Copyright (C) 2026 Leo Kuroshita (@kurogedelic), Hügelton Instruments */
@@ -1101,7 +1102,7 @@ static void setup(int s)
     }
     case S_STAGE_T2: song.ntrk = 2; go_home(); track_select(1); input_on(TSEL, 62, 100); break;
     case S_STAGE_T3: song.ntrk = 3; go_home(); trk[1].pattern_next = 2; song.rec = 4u; break;
-    case S_SHEET_STAGE: song.ntrk = 2; song.playing = 0; go_home(); page_sheet_open(); pop.sel = 5; break;
+    case S_SHEET_STAGE: song.ntrk = 2; song.playing = 0; go_home(); page_sheet_open(); pop.sel = 0; break;
     case S_CONFIRM_TRACK: song.ntrk = 3; song.playing = 0; go_home(); track_select(1); confirm_open(CF_DEL_TRACK, 1); break;
     /* .. MIXER with one, two (track 2 selected, its PAN turned), three (track 3 muted, track 1 armed); PATTERNS and SONG
      * with two; GLO with two (track 2 muted); NEW SONG's roles as they open without a template */
@@ -1591,14 +1592,17 @@ static void sweep_columns(void)
                 int16_t *vp;
                 int fm6 = PAGES[i].scope == SC_FM6 || PAGES[i].scope == SC_FMOP;   /* (a copy: written back) */
                 int p5 = PAGES[i].scope == SC_P5;
+                int sfx = PAGES[i].scope == SC_SFX;
                 p5_patch_t p5_before=*p5_patch_of(TSEL);
-                const param_desc_t *d = PAGES[i].scope == SC_GLOBAL || PAGES[i].scope == SC_TRACK || PAGES[i].scope == SC_ENGINE || fm6 || p5
+                const param_desc_t *d = PAGES[i].scope == SC_GLOBAL || PAGES[i].scope == SC_TRACK || PAGES[i].scope == SC_ENGINE || PAGES[i].scope==SC_WL || sfx || fm6 || p5
                                         ? page_desc(cur_page(), c, &vp) : 0;
                 int32_t v, v0;
                 if (!d || !d->label || d->label[0] == '-' || PAGES[i].graph == GR_MOD) continue;
                 v0 = *vp;
                 for (v = d->min; v <= d->max; v++) {
-                    if (fm6)
+                    if (sfx)
+                        sfx_page_put(PAGES[i].id[c],v);
+                    else if (fm6)
                         fm6_page_put(cur_page(), c, v);
                     else if (p5)
                         p5_edit_value(TSEL,PAGES[i].id[c],p5_panel_raw(TSEL,PAGES[i].id[c],v));
@@ -1611,7 +1615,9 @@ static void sweep_columns(void)
                     nsweep++;
                     if (v - d->min > 300 && v < d->max - 1) v = d->max - 1;      /* wide ranges: the ends */
                 }
-                if (fm6)
+                if (sfx)
+                    sfx_page_put(PAGES[i].id[c],v0);
+                else if (fm6)
                     fm6_page_put(cur_page(), c, v0);
                 else if (p5) {
                     *p5_patch_of(TSEL)=p5_before;
@@ -1989,6 +1995,26 @@ static void library_note_sweep(const char *out)
         if(p==0u)write_ppm(out,"NIGHT",names[scene]);
     }
 }
+/* By: Inputsignwave. Full previews/pickers must be swept separately from
+ * columns: RC1's column-only sweep missed new effects' NULL preview hints. */
+static void performance10_fx_sweep(const char *out)
+{
+#if !MELODEE_RETIRED_REFERENCE && MELODEE_WAVETABLE
+    for(uint32_t palette=0;palette<UI_PAL_ENTRIES;palette++)
+    for(uint32_t engine=ENGI_WAVETABLE;engine<=ENGI_WAVE_LAYERS;engine++)
+    for(uint32_t scene=0;scene<3u;scene++){
+        char title[80];state();pal(palette);host_preset(TSEL,engine,5);
+        song.playing=0;
+        if(scene==2u){song.g[G_MFXTYPE]=FX_PLATE;song.g[G_MFXMIX]=38;go_title("SEND FX 1");}
+        else {TSEL->p[P_FXTYPE]=FX_DRIVE;TSEL->p[P_FXMIX]=38;go_title(scene?"FX":"FX 1");}
+        if(scene==1u){fx_rack_row[0]=0;pick_touch(0);ui.hot_col=0;ui.hot_t=30;}
+        snprintf(title,sizeof title,"performance10_%s_%s",engine==ENGI_WAVETABLE?"original":"layers",scene==2u?"plate":scene?"drive_picker":"drive");
+        cur_name=title;draw(-1);lint();if(palette==UI_GRAY_INDEX)mono_check();
+        if(palette==0u)write_ppm(out,"NIGHT",title);
+    }
+    cur_name=0;
+#endif
+}
 #ifndef UI_RENDER_SHOW
 #define UI_RENDER_SHOW 3u
 #endif
@@ -2068,6 +2094,7 @@ int main(int argc, char **argv)
     sweep_columns();
     render_pixel = 0;
     library_note_sweep(out);
+    performance10_fx_sweep(out);
     designer_sweep(out);
     {   /* every FM6 chart (the lint above, fmp_check, runs on each), in MONO: gray */
         uint32_t a, e, c0 = fmp_charts;

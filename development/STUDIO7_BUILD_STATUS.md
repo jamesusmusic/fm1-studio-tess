@@ -6,6 +6,15 @@ This is the active expanded patch, based on the preserved Performance 6 snapshot
 The software validation record and remaining physical acceptance are documented
 in `STUDIO7_VALIDATION.md`. No device has been flashed by this work.
 
+## Device feedback and next priority
+
+20 October 2026: the user reports that the installed Performance 7 build is
+working perfectly. The next priority for 21 October is page/menu reorganisation
+(keeping beat and rhythm-morphing controls in SEQ, with conditional generator
+visibility; Sound Designer moves to EDIT and OUTPUT to GLO) and a complete
+page/function guide explaining their relationships. See the
+top of `ROADMAP.md`. The current firmware layout has not been changed.
+
 ## Implemented paths
 
 - Selectively adapted Tess v1.3.3 (`f0971d59ae5e30150d8f9f049b71d84373cfa34c`):

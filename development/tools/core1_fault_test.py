@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Inputsignwave branding and compatibility modifications — By: Inputsignwave.
 # SPDX-License-Identifier: GPL-3.0-only
 # Copyright (C) 2026 Kerem Kilic (Ellic Studio)
 """Inject CPU1 failures into a MELODEE_CORE1_TEST=1 build and check the FM-1 carries on with one core.
@@ -29,7 +30,7 @@ RC = {0: 'ok', 1: 'no worker (dual core off or already retired)', 2: 'job comple
 
 
 def find_port(name):
-    names = (name,) if name else ('Melodee', 'Felucca')   # (macOS may keep the old port name)
+    names = (name,) if name else ('Inputsignwave', 'Melodee', 'Felucca')   # (macOS may keep the old port name)
     return next((p for p in mido.get_input_names() if any(n in p for n in names)), None), \
         next((p for p in mido.get_output_names() if any(n in p for n in names)), None)
 
@@ -167,7 +168,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('modes', nargs='*', default=['misread', 'null', 'stall'],
                         choices=[*MODES, 'crash', 'reboot', 'power', 'count-only', 'retire-on-misread'])
-    parser.add_argument('--port', help='MIDI port name (default: Melodee or Felucca)')
+    parser.add_argument('--port', help='MIDI port name (default: Inputsignwave, Melodee or Felucca)')
     parser.add_argument('--settle', type=float, default=31, help='seconds after a reboot before injecting')
     parser.add_argument('--no-reboot', action='store_true', help='inject into the running session')
     args = parser.parse_args()

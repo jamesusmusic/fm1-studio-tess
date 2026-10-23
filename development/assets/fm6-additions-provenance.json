@@ -1,0 +1,208 @@
+{
+  "contributions": "By: Inputsignwave",
+  "count": 25,
+  "uncompressed_bytes": 3200,
+  "compressed_bytes": 2697,
+  "voices": [
+    {
+      "name": "Glide",
+      "source": "sources/Coffeeshopped-Eno/Brian-Eno-Yamaha-DX7-Patches/Glide.syx",
+      "sha256": "ceb69805843492a94c139e1d83d1c1e29d24d2213c6cffff779936312a461cf9",
+      "rights": "Audition only; free download, redistribution licence not stated.",
+      "packed_sha256": "81ceebe5de11cc3a3eeb841fcb70f7afe90345046f46c52813a4d19e751f9737",
+      "packed_fnv32": 3711027973
+    },
+    {
+      "name": "Kalimba 2",
+      "source": "sources/Coffeeshopped-Eno/Brian-Eno-Yamaha-DX7-Patches/Kalimba 2.syx",
+      "sha256": "e4fb6b48fd1857759fcf56bc10b633445e6ed494e714d516e84a2b2d19167e96",
+      "rights": "Audition only; free download, redistribution licence not stated.",
+      "packed_sha256": "7fab9db1d730b9bb2087d227b57d596f0cac404a6d3bd18f6ac0dacdd9872bff",
+      "packed_fnv32": 3559231951
+    },
+    {
+      "name": "Tamboura",
+      "source": "sources/Coffeeshopped-Eno/Brian-Eno-Yamaha-DX7-Patches/Tamboura.syx",
+      "sha256": "7943a9e9d1e2e9d8c913a48b831cc3920822d99f8aae9456503e6bd86176e130",
+      "rights": "Audition only; free download, redistribution licence not stated.",
+      "packed_sha256": "87ff3f40d9e02ce97e495d4c9e2ee63e24d5dcda8dc33d0dca0ec8353649225b",
+      "packed_fnv32": 1995084773
+    },
+    {
+      "name": "Violin 3",
+      "source": "sources/Coffeeshopped-Eno/Brian-Eno-Yamaha-DX7-Patches/Violin 3.syx",
+      "sha256": "c75fc5679c1147783b919901e14f9442dd65528c3577e1a5e1429fd0d08bcb80",
+      "rights": "Audition only; free download, redistribution licence not stated.",
+      "packed_sha256": "972a63039595354e0487a4a759e644e72ed481990f718de0957663d33454700c",
+      "packed_fnv32": 3032055733
+    },
+    {
+      "name": "808 SUB",
+      "source": "sources/zvenson__dxsloop/firmware/src/dx7_bank.h",
+      "sha256": "e20693b5a62ae4e436817e75f504c7c230ff4179fe95a74567c797b85b79577e",
+      "rights": "GPL-3.0-only; Sven Trogus",
+      "packed_sha256": "009bd274feeaf236556d6e4ffc0088a33aa61fd5f0a2be19ec26d0c3e73d8e36",
+      "packed_fnv32": 3895144477
+    },
+    {
+      "name": "SNARE DR.1",
+      "source": "sources/MiniDexed-referenced-Yamaha-banks/vrc104a.syx",
+      "sha256": "50d9028d0649126f279560a4d4dc9055693e7955b0d93277605f0fd1657af1c8",
+      "rights": "Audition only; original Yamaha/community voice rights not established by capture licence.",
+      "packed_sha256": "f96db72b2e0eba23ddbdb81d3b46929a171625a0b28c2ace7c6a93c1e273fb79",
+      "packed_fnv32": 3282965865
+    },
+    {
+      "name": "TOM-TOM  1",
+      "source": "sources/MiniDexed-referenced-Yamaha-banks/vrc104a.syx",
+      "sha256": "39ca5084eb282327894b3a119990bd9ea50a38291501a74a1247e3ab5adfa050",
+      "rights": "Audition only; original Yamaha/community voice rights not established by capture licence.",
+      "packed_sha256": "8a1c75fff7e97463d0ac15703b7524f84956e49e883dac8bc1c24b4dfbc58c03",
+      "packed_fnv32": 2691192640
+    },
+    {
+      "name": "BASS DR. 1",
+      "source": "sources/MiniDexed-referenced-Yamaha-banks/vrc104a.syx",
+      "sha256": "7d93d8ca2dd53de04130a4aee21dcfa5daa2d44fe295c74549be2ab2fcda3929",
+      "rights": "Audition only; original Yamaha/community voice rights not established by capture licence.",
+      "packed_sha256": "1ea8befc6b12c033fb95e3b9b1987c0392a5ce7a93ca91f2356ab81727cf4003",
+      "packed_fnv32": 279882475
+    },
+    {
+      "name": "HI-HAT",
+      "source": "sources/MiniDexed-referenced-Yamaha-banks/vrc104a.syx",
+      "sha256": "ec12516f6b45567848a2c919093cae50b606e8589d16e83ff7b627ec7a43a5af",
+      "rights": "Audition only; original Yamaha/community voice rights not established by capture licence.",
+      "packed_sha256": "772f8a21f7b116dff8e4692cf20a0a1ce1161a83d362f495f5188ddb251e6800",
+      "packed_fnv32": 3149034948
+    },
+    {
+      "name": "E. DRUMS 2",
+      "source": "sources/MiniDexed-referenced-Yamaha-banks/vrc104a.syx",
+      "sha256": "b1832b5863aed668fee5c630b961c49049ee3ff47557cd6295fa095564971b7a",
+      "rights": "Audition only; original Yamaha/community voice rights not established by capture licence.",
+      "packed_sha256": "32b9b290851ce8454583e76e8cbcafa77b7099c04e746b450843bf785c8dcf9b",
+      "packed_fnv32": 1584606910
+    },
+    {
+      "name": "HAND CLAP1",
+      "source": "sources/MiniDexed-referenced-Yamaha-banks/vrc104a.syx",
+      "sha256": "b17ad799c88815af40438bcebcb446bb461863ccab4b0b7021efead3391b898e",
+      "rights": "Audition only; original Yamaha/community voice rights not established by capture licence.",
+      "packed_sha256": "949561a0add95b226e64d213a05913aa57baa0fed687a672b79760d8cb2f5dbc",
+      "packed_fnv32": 1569382572
+    },
+    {
+      "name": "TRIANGLE 1",
+      "source": "sources/MiniDexed-referenced-Yamaha-banks/vrc104b.syx",
+      "sha256": "cfc8ffa63ab4e07cd7f57630b0cf1df1cb4997127c4648d3dea88d01af736860",
+      "rights": "Audition only; original Yamaha/community voice rights not established by capture licence.",
+      "packed_sha256": "7acec6640b32d65304d9326ed47e45708cb46e638b9b461d70c20fbd78741c04",
+      "packed_fnv32": 3143349974
+    },
+    {
+      "name": "GONG",
+      "source": "sources/MiniDexed-referenced-Yamaha-banks/vrc104b.syx",
+      "sha256": "5eda70aca06936fc4fff1daf01f48630801097635c1e305f1de70949f29328db",
+      "rights": "Audition only; original Yamaha/community voice rights not established by capture licence.",
+      "packed_sha256": "2a3f1521965a600eb800c6c241a628c094b49816dc9fe68828171203ca25798c",
+      "packed_fnv32": 3371540635
+    },
+    {
+      "name": "COW BELL 1",
+      "source": "sources/MiniDexed-referenced-Yamaha-banks/vrc104b.syx",
+      "sha256": "266c90876923d7f464d601714ce0cc36869a1202e3992fbf776f2d5fbb6db06b",
+      "rights": "Audition only; original Yamaha/community voice rights not established by capture licence.",
+      "packed_sha256": "9aefcb44da216cf3edaaa229dfd945130e0f028b8a55b8995c478b1bf43fd284",
+      "packed_fnv32": 3022206486
+    },
+    {
+      "name": "GLASSHARP1",
+      "source": "sources/MiniDexed-referenced-Yamaha-banks/vrc104b.syx",
+      "sha256": "26fa936010801b077e26daad435e648b0366157981c4dce1e9723f315ec11bd0",
+      "rights": "Audition only; original Yamaha/community voice rights not established by capture licence.",
+      "packed_sha256": "9b29faf581967f3e7faa195d90386daae409f2a7e7e39820179cbaeba3286c25",
+      "packed_fnv32": 1985115831
+    },
+    {
+      "name": "REV.CYMB 1",
+      "source": "sources/MiniDexed-referenced-Yamaha-banks/vrc104b.syx",
+      "sha256": "b40dc3b2a59a9ec2b0fc1f224c45b552e93a77111eb91a1d4a502d717fe0b590",
+      "rights": "Audition only; original Yamaha/community voice rights not established by capture licence.",
+      "packed_sha256": "9284b9432536dc04b312431e9795acb0480db277cddc0a41a635a41ffa515767",
+      "packed_fnv32": 1802216406
+    },
+    {
+      "name": "SYN.PERC.2",
+      "source": "sources/MiniDexed-referenced-Yamaha-banks/vrc104b.syx",
+      "sha256": "d5c0edd8d674ca188c6f9ce76e8017b787423a44e035db42d6c74e8996021eb4",
+      "rights": "Audition only; original Yamaha/community voice rights not established by capture licence.",
+      "packed_sha256": "796608d2f2d1b4446f08d716518293dd620c4ad93d2fd0094355b5c54084d88e",
+      "packed_fnv32": 3333987819
+    },
+    {
+      "name": "SYN. VOX 1",
+      "source": "sources/MiniDexed-referenced-Yamaha-banks/vrc106b.syx",
+      "sha256": "bb5ea83df6edbce93eb6f5fdaa2344f68243d1e76a7dd347e82c149d40a6b16d",
+      "rights": "Audition only; original Yamaha/community voice rights not established by capture licence.",
+      "packed_sha256": "92da3288aa516afb45565946cf81780058a8dfa223be428163697d382e70b15c",
+      "packed_fnv32": 3568988717
+    },
+    {
+      "name": "SYN.MARIM.",
+      "source": "sources/MiniDexed-referenced-Yamaha-banks/vrc106b.syx",
+      "sha256": "4cbbdd502bc347233df33a00d425e6291830a00bd5358afdc94c9def1fc186ee",
+      "rights": "Audition only; original Yamaha/community voice rights not established by capture licence.",
+      "packed_sha256": "84f6e5a30fde86cdefbcba2b78854336ad0b062fba0ee24b2d0a36c86fb11efa",
+      "packed_fnv32": 2221028112
+    },
+    {
+      "name": "SYN.CHIM.1",
+      "source": "sources/MiniDexed-referenced-Yamaha-banks/vrc106b.syx",
+      "sha256": "0fe8d1f513223cd4dce5b0d0bbcff6507050bb80293444cfe49ad78ba355e736",
+      "rights": "Audition only; original Yamaha/community voice rights not established by capture licence.",
+      "packed_sha256": "83539d4925f00094d5601f9e6d0948c494a95b5272ab8af70aa22209f08ebd7e",
+      "packed_fnv32": 969330408
+    },
+    {
+      "name": "SYN.S.DRUM",
+      "source": "sources/MiniDexed-referenced-Yamaha-banks/vrc106b.syx",
+      "sha256": "0f71372e7d7fb902eda26349b3ecc3a9844505228e3e22b10a225f9c8775c4ca",
+      "rights": "Audition only; original Yamaha/community voice rights not established by capture licence.",
+      "packed_sha256": "c5bda94197f5b38be711100b2516466b3e497da721c605d153dd1bf514c6a842",
+      "packed_fnv32": 607868996
+    },
+    {
+      "name": "<FM>alog 1",
+      "source": "sources/MiniDexed-referenced-Yamaha-banks/vrc107a.syx",
+      "sha256": "0d5624e3f7629b662bd975f902fc95d9f04a3bf515c62b233fadea3e36ab7ba1",
+      "rights": "Audition only; original Yamaha/community voice rights not established by capture licence.",
+      "packed_sha256": "7f7772d638d8b442ce9510fa58f14d4183e8018fe84815c730a480f430946861",
+      "packed_fnv32": 1363261121
+    },
+    {
+      "name": "<FM>alog 3",
+      "source": "sources/MiniDexed-referenced-Yamaha-banks/vrc107a.syx",
+      "sha256": "c247d4e6ffdc0be91f1fe34582b0e26974f1d66a84861de87536e8bace6e8a3a",
+      "rights": "Audition only; original Yamaha/community voice rights not established by capture licence.",
+      "packed_sha256": "53cc2ea92b56abad3f63063967e9a95b28339aee39e2d32625d9674a503db6a7",
+      "packed_fnv32": 2015630535
+    },
+    {
+      "name": "Lady   vox",
+      "source": "sources/MiniDexed-referenced-Yamaha-banks/vrc107a.syx",
+      "sha256": "6c316c04ba9f1c38843e901c8cdf567460dd871b0c0533d19e48d98472db329b",
+      "rights": "Audition only; original Yamaha/community voice rights not established by capture licence.",
+      "packed_sha256": "28253f9aaefcf097c033757e1a8a3247b8c10337136cd359f3789b6344b77117",
+      "packed_fnv32": 2441734417
+    },
+    {
+      "name": "Vocoda vox",
+      "source": "sources/MiniDexed-referenced-Yamaha-banks/vrc107a.syx",
+      "sha256": "577950d442bdf6b94156757e5e18d1855de48335c813cf13d86444f56ccc56dd",
+      "rights": "Audition only; original Yamaha/community voice rights not established by capture licence.",
+      "packed_sha256": "48e3ba10b16775aacb2123bf3da3e3daa3bd0e2e6b21fb6bfbdc85777146bd41",
+      "packed_fnv32": 679610497
+    }
+  ]
+}

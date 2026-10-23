@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Inputsignwave branding and compatibility modifications — By: Inputsignwave.
 # SPDX-License-Identifier: GPL-3.0-only
 # Copyright (C) 2026 Kerem Kilic (Ellic Studio)
 """Validate the actual preprocessed USB descriptors in every app configuration."""
@@ -17,6 +18,11 @@ def descriptors(audio, cdc):
         f"-DMELODEE_USB_AUDIO={audio}", f"-DMELODEE_CDC={cdc}",
         str(ROOT / "firmware/src/usb.c"),
     ], text=True)
+    product = re.search(r"STR2\[\]\s*=\s*\{(.*?)\};", source, re.S)[1]
+    values = [ord(x.strip()[1]) if x.strip().startswith("'") else int(x.strip(), 0)
+              for x in product.split(",") if x.strip()]
+    assert values[0] == len(values) and values[1] == 3
+    assert bytes(values[2:]).decode("utf-16-le") == "Inputsignwave"
     body = re.search(r"CFG_DESC\[.*?\]\s*=\s*\{(.*?)\};", source, re.S)[1]
     data = bytes(int(x.strip(), 0) for x in body.split(",") if x.strip())
     assert int.from_bytes(data[2:4], "little") == len(data)

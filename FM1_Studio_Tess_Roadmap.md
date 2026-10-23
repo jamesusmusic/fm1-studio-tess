@@ -1,4 +1,203 @@
-# Studio FM-1 roadmap
+# Inputsignwave FM-1 roadmap
+
+## Firmware name and attribution — 21 October 2026
+
+By: Inputsignwave
+
+The firmware is now named **Inputsignwave**. Add explicit on-device attribution,
+application USB/editor/console identity and compatible host discovery; preserve
+upstream notices, protocol/storage/update identities and archived baselines.
+See [branding and validation](development/INPUTSIGNWAVE_BRANDING.md).
+
+## Performance 9 removal baseline — built and offline validated
+
+By: Inputsignwave
+
+SID, CZ, SID drums, ROOM and REVERB are removed from the production DSP.
+Prophet, FM6, 808/909 and other FX remain. Flash recovered: **34,988 B**;
+audio-working SRAM recovered: **20,240 B** across disjoint banks. Main arena:
+**64,640 B**. No replacement engines or reverb are added yet. Production PCM,
+legacy storage/bypass, sanitizer and concurrency tests pass; the complete local
+suite passed in 210 s; Linux CI passed in 360 s. The exact-package emulator
+smoke and production UI checks also pass. No hardware was flashed.
+See [measurements and validation](development/docs/PERFORMANCE9_REMOVAL_REPORT.md).
+
+## Next update — engine choices and reverb auditions (21 October 2026)
+
+By: Inputsignwave
+
+The user reports that Inputsignwave Performance 8 Dev2 installs and works well
+on their FM-1. No audio fault is currently reported; this is feature development.
+
+- [x] Keep Prophet, FM6 and DRUM; implement the first wavetable prototype at fresh ID 21.
+  Original morphing/fold spectra, scan, tone, sub and tuning; 28,920 B flash headroom,
+  62,912 B main working arena, shared WT bank 12,384 B. See the Wave1 report.
+- [x] Review available FM-1 engine sources before finalizing Wave1 (22 October).
+  See FM1_ENGINE_RESEARCH_2026-10-22.md in development/docs for pinned references.
+  Keep this patch focused on WT; new donor engines require separate profiling.
+- [x] Finish Wave1 software validation and package the candidate (22 October):
+  full local suite 232 s; Linux host/web suite 534 s; native target and sanitizer
+  checks; exact-package and saved-WT emulator checks; source/licences and listening
+  samples bundled. Hardware CPU headroom is not inferred from these tools.
+- [ ] Listen and accept the WT prototype on hardware before final adoption.
+  Fold morphs precomputed bandwidth-limited spectra. A focused modal/resonator engine
+  follows the replacement reverb only if measured resources permit.
+- [x] **Confirmed: remove SID and CZ entirely from the next build**, including
+  SID drum kits and their shared SID synthesis code. Retain Prophet, FM6 and
+  the non-SID DRUM models. The user approved this on 21 October 2026.
+- [x] Preserve retired SID/CZ engine IDs and the SID drum-kit value; never reuse
+  or silently remap them. Old retired-engine tracks must remain silent, retain
+  their saved data and be identifiable as unavailable. Apply the same explicit
+  unavailable behaviour to old SID drum kits rather than substituting 808.
+- [x] Replace the default third track's SID sound with a deliberate FM6 default.
+  Remove SID/CZ from browsing, Sound Designer, editor capabilities and active
+  factory assets/code. Keep historical source/build archives and upstream credits.
+- [x] Validate old-project round trips, unavailable-engine handling, default
+  tracks, engine selection and retained-engine sound regressions. Compare target
+  flash, SRAM and audio-arena usage before allocating the savings to new work.
+- [x] **Confirmed: retire both ROOM and REVERB from the next build**, replacing
+  them entirely with our own reverb offering. Remove their old DSP and
+  selectable entries; reserve both stored FX IDs and retain saved parameters.
+  Legacy ROOM/REVERB slots must bypass transparently without allocating a tank,
+  muting the dry signal or silently selecting a replacement. Identify the
+  unavailable effects in the UI/editor. Give replacement algorithms new IDs.
+  Keep the installed Dev2 and archived host renders as comparison references.
+- [ ] Audition different reverbs as part of this update: compact plate, modulated
+  ambient space, tight room/chamber, and tape-coloured space. Compare against
+  archived ROOM and REVERB renders before selecting what ships. Tape character is a
+  processing option, not necessarily another reverb algorithm.
+- [ ] Produce matched host audio comparisons, then alternate target candidates
+  after memory/CPU gates pass. Start with one candidate on the shared send;
+  decide whether multiple types can coexist only after profiling.
+- [ ] Budget engine and FX changes together, including future repeats/stutter
+  buffers. Do not assume engine removal releases equivalent working RAM.
+
+See [the reverb audition plan](development/docs/REVERB_AUDITION_PLAN.md) for candidates, source references,
+resource constraints, code areas and acceptance checks. Research is complete
+for this shortlist; implementation, listening comparisons and profiling remain.
+
+## Top priority for 21 October 2026 — navigation and page guide
+
+By: Inputsignwave
+
+User feedback, 20 October: Performance 7 is installed and **working perfectly**
+in their testing. Treat it as the working baseline for the navigation work.
+This records positive device feedback without claiming that every formal
+endurance/acceptance scenario has been exercised.
+
+Tomorrow's first development work is page/menu organisation and a function
+reference, ahead of additional feature development.
+
+- [x] **First layout change: conditional generator pages.** Keep PATTERN MODE
+  always accessible; show beat/generator-specific parameters only for the mode
+  selected on the current track. Hide irrelevant generator pages from scrolling
+  and page maps, preserve their saved settings, and retain applicable shared
+  controls. See [the agreed visibility rule](development/docs/GENERATOR_VISIBILITY_DRAFT.md).
+- [x] Move the current **hold-OCT+ action sheets into the HOME menu**, as
+  requested: sound tools, track actions, pattern/selected-note actions, song
+  section/jam actions and shared-FX actions. **Create New Track** is the first
+  directly selectable item (renamed from Add track). Move **Sound Designer**
+  out of these actions into the **EDIT** menu. Preserve the target
+  context, selections, undo and existing action checks. Inventory OCT+ tap
+  actions separately so no functions disappear during remapping.
+  See [the editable HOME actions draft](development/docs/HOME_ACTIONS_DRAFT.md).
+- [x] **FM6 EDIT: map the physical ALGORITHM knob to FM algorithm selection
+  (1–32)** for the selected track, with immediate value/diagram and sound updates.
+  Preserve the rest of the patch and existing save behavior. The current encoder
+  selects tracks; revise that behavior in the FM6 editing context and document
+  track selection in the new map. See [control mapping decisions](development/docs/CONTROL_MAPPING_DRAFT.md).
+- [x] Move **OUTPUT from SEQ to GLO (Global), as the second page after MIXER**.
+  Keep MIDI output enable/channel
+  scoped to the selected track, show its target clearly, and retain existing
+  note-release and project-save behavior. This changes the page location, not
+  the scope of its settings.
+- [x] **Colour/aesthetic identity:** include a UI colour change in this update
+  as the first step toward our own Studio Tess visual identity. Review the
+  current palette/track/status swatches before choosing replacements; keep
+  contrast, selected/inactive states and track identities clear. See the
+  [current colour reference](development/docs/UI_COLOUR_REFERENCE.md). **LO-FI is the provisional palette choice** (21 October); use it as the starting point for menu mockups and the new visual identity.
+- [x] Inventory the current pages, controls and navigation paths, including the
+  new Performance 7 pages, and identify crowded or misplaced groups.
+- [x] **Layout correction, 21 October:** keep all existing sequencer pages in
+  **SEQ**, including beat development, rhythm MORPH/EVOLVE/FORM/TWEAK, meters,
+  phase, seeds, AWAKE/POLY, HARMONY and NOTE RANGE. Only OUTPUT leaves SEQ
+  for GLO. Sound Designer is the only function being moved into EDIT; do not
+  add a duplicate GENERATOR page there. Reduce SEQ scrolling through conditional
+  generator visibility instead of relocating its controls.
+- [x] Keep core sequencing, pattern/transport and recording controls easy to find;
+  group related generator, beat-development and editing controls coherently.
+  Preserve quick access during playback and the existing hardware navigation model.
+- [x] Create a page guide with a quick navigation map and a reference for every
+  page/function: where to find it, what it changes, scope (track/bank/project/global),
+  defaults/bypass, applicable modes/engines, and save/recall behavior.
+- [x] Explain relationships and precedence with examples: MODE/generator versus
+  the source grid; DIV versus meter/grouping/ratio; phase/drift/HOLD/ALIGN/reset;
+  FORM/EVOLVE/MORPH and seeds/conditions; anchors/density/fills/hats; harmony/pitch;
+  note length/release; capture destination and STEP replay. Link related pages
+  and make inactive or mode-dependent controls clear.
+- [x] Validate navigation through host tests/screenshots and full regression checks.
+  All 337 sound baselines remain unchanged. Complete Linux CI, sanitizers,
+  resource gates and exact-package emulator smoke checks passed.
+- [ ] Hardware acceptance on the FM-1: menu/track/mode changes, controls,
+  MIDI/USB, saved projects/palettes and long sessions. No automated flash.
+
+Performance 8 software validation is complete on `studio-tess-8`:
+[build/validation record](development/STUDIO8_VALIDATION.md) and
+[page/function guide](development/docs/STUDIO8_PAGE_GUIDE.md). CI run 39612840717 passed;
+local/full Linux suites completed in 165/298 s. The corrected page families,
+conditional pages, HOME actions, FM6 encoder and LO-FI default are included.
+The working Performance 7 package remains preserved for rollback.
+
+## Planned phase — character reverb and playable FX
+
+By: Inputsignwave
+
+Added 20 October; expanded 21 October 2026. The navigation build is installed
+and reported working. Reverb auditions now accompany the next engine update;
+keyboard performance FX remain a subsequent implementation stage.
+
+### Character reverb and stereo space
+
+- [ ] Research and audition a replacement for the retired ROOM and REVERB effects,
+  using the Walrus Audio stereo Slöer pedal as a loose creative reference for
+  atmosphere and playability. Develop an original design; choose specific
+  behaviours by listening and testing rather than assuming the pedal's internals.
+- [ ] Explore adjustable wobble/modulation, tape-like movement and coloration,
+  diffusion/texture, and stereo width/imaging. Separate useful performance
+  controls from deeper editing, with predictable neutral settings.
+- [ ] Compare candidate algorithms on short percussion, sustained chords, FM
+  transients and evolving textures. Evaluate tail smoothness, stereo motion,
+  mono compatibility and useful ranges at both subtle and extreme settings.
+- [ ] Measure CPU, delay-buffer memory and worst-case four-track/voice/FX load
+  before choosing an implementation. The current resident-audio build has tight
+  SRAM headroom; prototype bounded resource use before committing to features.
+- [ ] Preserve dry bypass, existing project/FX compatibility, stable gain and
+  clean parameter changes. Define tail handling for switching, bypass and STOP.
+
+### Keyboard-triggered performance FX
+
+- [ ] Add an explicit performance-FX keyboard mode for beat repeats, slices and
+  stutter, with a clear way to enter/leave it and see the active action.
+- [ ] Explore keys selecting repeat divisions, slice positions and stutter
+  gestures; define momentary press/release behaviour first, then evaluate latch
+  and quick variation controls. Choose mappings during UI design.
+- [ ] Decide which actions process buffered audio, which retrigger sequencer/MIDI
+  events, and whether both are useful. Document the difference: audio processing
+  alone does not create repeated notes at an external MIDI instrument.
+- [ ] Define track/bus targeting, buffer capture/freeze and return to normal
+  playback. Preserve the source pattern and distinguish temporary performance
+  gestures from destructive edits or recorded results.
+- [ ] Synchronise rhythmic gestures to internal/external clock and define how
+  they follow local meter, ratios and phase. Evaluate quantised starts/releases
+  and immediate response as explicit options.
+- [ ] Keep transitions click-controlled and output bounded; release reliably on
+  key-up, mode/track changes, STOP and clock loss where applicable. Ensure FX
+  keys cannot leave stuck MIDI notes or silently alter normal keyboard playing.
+- [ ] Define whether/how performances are captured into audio, sequencer events
+  or automation, according to the chosen implementation and available capacity.
+- [ ] Include FX signal flow, keyboard mappings, scope, timing, capture and
+  relationships with other controls in the page/function guide. Validate both
+  sound and navigation on the FM-1 before adopting the new FX build.
 
 ## Current execution — 20 October 2026
 
@@ -328,3 +527,19 @@ Compatibility: .5/.4 cannot read newly saved HMF2 projects. Preserve the full
 pre-install backup; rollback needs both prior firmware and that backup. MIDI
 note-off carries held duration; external instruments use their own release
 envelopes. The internal FADE is not sent as an external synth envelope command.
+## Official FM1 Open tools review — 21 October 2026
+
+By: Inputsignwave
+
+Reviewed official source/SDK commit `4c7496d`; all 65 manifest file hashes match.
+Useful reference areas: RGB565 dirty-band rendering, custom glyphs, audio/MIDI
+diagnostics, bounded I/O contracts and reproducible build guards. The workbench
+is a separate application preview; our chip emulator remains complementary.
+The public FX code is basic browser reverb/delay, not a ready-made character
+reverb or keyboard-stutter implementation.
+
+- [ ] Apply relevant findings during UI/resource profiling and later FX design.
+- [ ] Evaluate any binary-SDK/platform adoption separately, preserving our engines,
+  FBK7 atomic storage and working baseline. This does not change current priorities.
+
+See [the source-based assessment](development/docs/OFFICIAL_FM1_OPEN_REVIEW.md) for exact files, limits and proposed order. No firmware code or toolchain was changed.

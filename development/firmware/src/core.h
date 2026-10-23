@@ -1,3 +1,4 @@
+/* Engine/space retirement and compatibility — By: Inputsignwave. */
 /* SPDX-License-Identifier: GPL-3.0-only
  * Copyright (C) 2026 Kerem Kilic (Ellic Studio)
  * Portions Copyright (C) 2026 Leo Kuroshita (@kurogedelic), Hügelton Instruments */
@@ -45,19 +46,33 @@
 #define MELODEE_LEGACY_EXTRAS 0 /* reference tests only: retired TRIO, WHEEL and PHYS; PHASE, VOICE and NOISE (retired
                                  * 2026-10-10: the flash for the redesign; CZ-1 keeps PHASE's phase-distortion core) */
 #endif
+/* Retired DSP exists only for historical host comparisons. By: Inputsignwave. */
+#ifndef MELODEE_RETIRED_REFERENCE
+#define MELODEE_RETIRED_REFERENCE 0
+#endif
+#if defined(FM1_IRQ_TARGET) && MELODEE_RETIRED_REFERENCE
+#error Retired DSP reference mode is host-only
+#endif
+/* Original wavetable prototype — By: Inputsignwave. Historical fixtures stay unchanged. */
+#ifndef MELODEE_WAVETABLE
+#define MELODEE_WAVETABLE (!MELODEE_RETIRED_REFERENCE)
+#endif
+#define ENGI_WAVETABLE 21u /* 20 remains the native Prophet browsing namespace */
 #define MELODEE_PROPHET 1
 #define ENGI_FM6 12u
 #define ENGI_PROPHET 19u /* 16..18 reserved: historical preset namespaces */
 #define USER_GENERAL 16u
 #define USER_NATIVE_P5 20u
-#define NENGINES 20               /* 13 SLICE and 14 OBXF reserved; 15 native CZ-1 */
+#define ENGI_WAVE_LAYERS 22u
+#define ENGI_FMKIT 23u
+#define NENGINES 24               /* 13 SLICE and 14 OBXF reserved; 15 native CZ-1 */
 #define USER_NATIVE_FM 17u
 #define USER_NATIVE_CZ 18u
 #define USER_NONE 65535u
 #define ENGI_ANALOG 0u           /* retired in 1.2: never selectable (eng_ok), its stored sounds play silent */
 #define ENGI_DIGITAL 1u          /* retired: never selectable (eng_ok), its stored sounds play silent */
-#define NENG_SHOWN (NENGINES - 8u - !MELODEE_SLICE - 6u * !MELODEE_LEGACY_EXTRAS)   /* the engines one can pick: PRESETS, the EDIT
-                                                * layer, the editor, in the display order of engines.c ENGINE_ORDER */
+#define NENG_SHOWN (4u+1u*MELODEE_RETIRED_REFERENCE+6u*MELODEE_LEGACY_EXTRAS+MELODEE_SLICE+2u*MELODEE_WAVETABLE)
+
 #define ENGI_SLICE 13u           /* reserved without MELODEE_SLICE: never selectable (eng_ok) */
 #ifdef SMP_USER_SLOTS
 #undef SMP_USER_SLOTS
@@ -123,7 +138,7 @@ enum {                          /* per-track parameters */
 #define FX_STATE_COUNT (FX_CHAIN_COUNT*FX_SLOTS)
 #define FX_TONE_MAX 63
 static int param_fx_tone(uint32_t id) { return id>=P_FXTONE && id<=P_FX3TONE; }
-static int fx_has_tone(int32_t type) { return type>=6 && type<=8; }   /* fx.c FX_ECHO, FX_ROOM, FX_REVERB */
+static int fx_has_tone(int32_t type) { return type==6 || (!MELODEE_RETIRED_REFERENCE && type==11) || (MELODEE_RETIRED_REFERENCE && (type==7 || type==8)); }   /* fx.c FX_ECHO, FX_ROOM, FX_REVERB */
 static int param_fx(uint32_t id) { return (id>=P_FXTYPE && id<=P_FX3CHAR) || param_fx_tone(id); }
 /* TONE -63..63 -> the cut it sets (Hz), 0 = FULL (none but the effect's own floor, fx_floor_hz): below 0 a high cut,
  * 2640 Hz at -1 down to 120 Hz at -63; above 0 a low cut, 150 Hz at 1 up to 1280 Hz at 63 (squared: fine steps where
@@ -496,3 +511,5 @@ static inline void reset_intended(void)         /* a reset on purpose (UBOOT, an
 static volatile uint8_t track_solo;
 
 #include "performance.h"
+
+#include "sound_fx.h"

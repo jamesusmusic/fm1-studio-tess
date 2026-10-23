@@ -1,3 +1,4 @@
+/* Inputsignwave branding and compatibility modifications — By: Inputsignwave. */
 /* SPDX-License-Identifier: GPL-3.0-only
  * Copyright (C) 2026 Kerem Kilic (Ellic Studio)
  * Portions Copyright (C) 2026 Leo Kuroshita (@kurogedelic), Hügelton Instruments */
@@ -202,7 +203,7 @@ static const uint8_t STR1[] = {26, 3, 'E', 0, 'l', 0, 'l', 0, 'i', 0, 'c', 0, ' 
 static const uint8_t STR2[] = {30, 3, 'M', 0, 'e', 0, 'l', 0, 'o', 0, 'd', 0, 'e', 0, 'e', 0, ' ', 0, 'U', 0, 'p', 0,
                                'd', 0, 'a', 0, 't', 0, 'e', 0};
 #else
-static const uint8_t STR2[] = {16, 3, 'M', 0, 'e', 0, 'l', 0, 'o', 0, 'd', 0, 'e', 0, 'e', 0};
+static const uint8_t STR2[] = {28, 3, 'I', 0, 'n', 0, 'p', 0, 'u', 0, 't', 0, 's', 0, 'i', 0, 'g', 0, 'n', 0, 'w', 0, 'a', 0, 'v', 0, 'e', 0};
 #endif
 #if MELODEE_USB_AUDIO                                   /* audio uses the product name (STR2) */
 static uint8_t ua_cfg[sizeof CFG_DESC];                 /* the configuration as sent (usb_audio.c ua_cfg_build) */

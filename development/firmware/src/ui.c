@@ -1,3 +1,5 @@
+/* Engine/space retirement and compatibility — By: Inputsignwave. */
+/* Studio Tess 8 navigation modifications — By: Inputsignwave. */
 /* Studio Tess 7 integration and validation modifications — By: Inputsignwave.
  * Upstream authorship and licence notices below remain applicable. */
 /* SPDX-License-Identifier: GPL-3.0-only
@@ -239,9 +241,9 @@ static const char *const *native_titles(uint32_t fam)
     static const char *const CZ_LFO[] = {"CZ VIBRATO", 0};
     uint32_t e = TSEL->eng_req;
     if (fam == FAM_ENV)
-        return e == ENGI_PROPHET ? P5_ENV : e == ENGI_FM6 ? FM_ENV : e == ENGI_CZ ? CZ_ENV : 0;
+        return e == ENGI_PROPHET ? P5_ENV : e == ENGI_FM6 ? FM_ENV : MELODEE_RETIRED_REFERENCE && e == ENGI_CZ ? CZ_ENV : 0;
     if (fam == FAM_LFO)
-        return e == ENGI_PROPHET ? P5_LFO : e == ENGI_FM6 ? FM_LFO : e == ENGI_CZ ? CZ_LFO : 0;
+        return e == ENGI_PROPHET ? P5_LFO : e == ENGI_FM6 ? FM_LFO : MELODEE_RETIRED_REFERENCE && e == ENGI_CZ ? CZ_LFO : 0;
     return 0;
 }
 static int native_page(uint32_t i, uint32_t fam)       /* page i: one of fam's native pages (a prefix of its title) */
@@ -253,8 +255,29 @@ static int native_page(uint32_t i, uint32_t fam)       /* page i: one of fam's n
     return 0;
 }
 
+/* Shared musical pages follow the selected track's active generator. */
+static int generator_page(const page_t *pg)
+{
+    return pg->graph==GR_EVOLVE ||
+        pg->graph==GR_FORM || pg->graph==GR_TWEAK ||
+        (pg->graph>=GR_S7_METER && pg->graph<=GR_S7_POLY);
+}
 static int page_visible(uint32_t i)
 {
+    uint32_t graph=PAGES[i].graph, mode=tessera.mode[song.sel%TESSERA_TRACKS];
+    if(PAGES[i].scope==SC_SFX){
+        if(MELODEE_RETIRED_REFERENCE)return 0;
+        if(PAGES[i].id[0]<16u)return 1;
+        for(uint32_t slot=0;slot<FX_SLOTS;slot++)if(song.g[G_MFXTYPE+slot*FX_PARAMS]==10)return 1;
+        return 0;
+    }
+    if(PAGES[i].scope==SC_WL)return MELODEE_WAVETABLE && TSEL->eng_req==ENGI_WAVE_LAYERS;
+    if(generator_page(&PAGES[i])) {
+        if(!mode) return 0;
+        if(graph==GR_S7_AWAKE && mode!=TESS_ENG_AWAKE) return 0;
+        if(graph==GR_S7_POLY && mode!=TESS_ENG_POLY) return 0;
+        if(graph>=GR_S7_KIT && graph<=GR_S7_ANCHOR && mode!=TESS_ENG_KIT) return 0;
+    }
     if(PAGES[i].graph>=GR_FM_AMP && PAGES[i].graph<=GR_FM_PERF)return TSEL->eng_req==ENGI_FM6;
     if (PAGES[i].fam == FAM_FX && PAGES[i].graph != GR_FXRACK)   /* a slot's page (its MIX first): while it holds an
                                                                  * effect (the rack shows it either way) */
@@ -266,7 +289,8 @@ static int page_visible(uint32_t i)
         return motion_has_lanes(TSEL) || (!ui.home && ui.page == i);
     if (PAGES[i].fam == FAM_ENV && native_titles(FAM_ENV))   /* (the track's ADSR, ENV DEST: nothing there) */
         return 0;
-    if(PAGES[i].scope==SC_DRUM || PAGES[i].scope==SC_DRUMHIT)return drum_track(TSEL);
+    if(PAGES[i].scope==SC_DRUM)return TSEL->eng_req==ENGI_DRUM;
+    if(PAGES[i].scope==SC_DRUMHIT)return drum_track(TSEL);
     if (PAGES[i].scope == SC_TRACK && PAGES[i].id[0] >= P_LN0 && PAGES[i].id[0] <= P_LN7)
         return drum_track(TSEL);
     if(TSEL->eng_req==ENGI_CZ && PAGES[i].scope==SC_ENGINE && PAGES[i].fam==FAM_EDIT && (PAGES[i].id[0]==P_E0 || PAGES[i].id[0]==P_E4))return 0;
@@ -274,7 +298,7 @@ static int page_visible(uint32_t i)
         return TSEL->eng_req == 2u && eng_ok(2u) && TSEL->p[P_E7] == 1;
     if(PAGES[i].scope==SC_P5 || PAGES[i].scope==SC_P5STORE)return TSEL->eng_req==ENGI_PROPHET;
     if (PAGES[i].scope == SC_CZ1)
-        return TSEL->eng_req == ENGI_CZ;               /* CZ-1's tone: every panel value */
+        return MELODEE_RETIRED_REFERENCE && TSEL->eng_req == ENGI_CZ;               /* CZ-1's tone: every panel value */
     if (PAGES[i].scope == SC_FM6 || PAGES[i].scope == SC_FMOP)
         return TSEL->eng_req == ENGI_FM6;              /* FM6's patch, operators and functions */
 #if MELODEE_SLICE
@@ -369,6 +393,15 @@ static void page_entered(void)
         undo_seal();
     }
     ui.force = 1;
+}
+
+/* A track/mode change cannot leave knobs bound to a now-hidden page. */
+static void navigation_fix(void)
+{
+    if(ui.home || ui.menu || ui.designer_mode || page_visible(ui.page)) return;
+    uint32_t fam=cur_page()->fam;
+    ui.page=(uint8_t)page_first(fam);
+    page_entered();
 }
 
 static int step_on(const step_t *st) { return st->time == ST_NOTE && (st->n || st->hit); }
@@ -971,6 +1004,9 @@ static void apply_preset_to(track_t *t, uint32_t pi)
     if(t->eng_req==ENGI_PROPHET)p5_preset_loaded(t,pi);
     cz_factory_loaded(t);
     cz_track_accept(t);
+#if MELODEE_WAVETABLE
+    wl_preset_loaded(t,pi);
+#endif
     fm6_track_loaded(t);                              /* FM6: the preset's patch */
     load_end(t);
 }
@@ -1111,6 +1147,7 @@ static void track_select(uint32_t i)
     ui.bank = 0;
     sync_reload = 1;
     ui.force = 1;
+    navigation_fix();
 }
 
 static int slice_page_ok(void) { return 0; }
@@ -1125,6 +1162,7 @@ static uint32_t act_cols(void)                   /* the columns that are actions
     const page_t *pg = cur_page();
     if (ui.home)
         return 0;
+    if (pg->graph == GR_DESIGNER) return 1u;
     if (pg->graph == GR_SONG)
         return 1u;                               /* PLAY / STOP (also the PLAY button; TAKE JAM: REC held) */
     if (pg->graph == GR_SLICES)
@@ -1137,12 +1175,13 @@ static uint32_t act_cols(void)                   /* the columns that are actions
 /* the action OCT+ does: its column + 1, 0 = none picked yet */
 static uint32_t act_col(void)
 {
-    if (!ui.home && cur_page()->graph == GR_SONG) return 1u;
+    if (!ui.home && (cur_page()->graph == GR_SONG || cur_page()->graph == GR_DESIGNER)) return 1u;
     return ui.act;
 }
 
 static const char *act_name(uint32_t c)          /* column c's action (the footer hint) */
 {
+    if(cur_page()->graph==GR_DESIGNER) return "OPEN";
     if (cur_page()->graph == GR_SONG)
         return song.playing || chain_busy() ? "STOP" : "PLAY";
     if (cur_page()->graph == GR_SLICES)

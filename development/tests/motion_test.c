@@ -90,7 +90,8 @@ static int compact_project(void)
     }
     /* Standalone FUN22 excludes Studio state; the full FBKT bank above carries it. */
     memset(before.tess,0,sizeof before.tess);before.tess_valid=0;
-    memset(before.s7,0,sizeof before.s7);before.s7_valid=0;before.sum=proj_sum(&before);
+    memset(before.s7,0,sizeof before.s7);before.s7_valid=0;
+    memset(&before.sound_fx,0,sizeof before.sound_fx);before.sound_fx_valid=0;before.sum=proj_sum(&before);
     proj_fn_none(&before); proj_pack(&packed,&before);
     bad += check("FUN16 round trip preserves signed values/FM params/probability/motion", proj_import(&after, &packed, sizeof packed) &&
         !memcmp(&before, &after, sizeof before));

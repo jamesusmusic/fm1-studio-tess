@@ -90,7 +90,10 @@ cd "$(dirname "$0")/.."
 [ "$(uname -s)" = Darwin ] && export DYLD_FALLBACK_LIBRARY_PATH="${DYLD_FALLBACK_LIBRARY_PATH:-/opt/homebrew/lib:/usr/local/lib:/usr/lib}"
 OUT=build/host
 LOG=$OUT/log
-CC="${CC:-cc} -O1 -ffp-contract=off -Wall -Wno-unused-function"
+# Retired DSP fixtures remain available for archive regression only. The
+# production retirement suite below compiles with the default profile (0).
+REFERENCE_CC="${CC:-cc}"
+CC="${CC:-cc} -DMELODEE_RETIRED_REFERENCE=1 -O1 -ffp-contract=off -Wall -Wno-unused-function"
 FW="-w -Ibuild/gen -Ifirmware/src"
 P5=build/prophet5/Prophet-5+10-Factory-Programs-ReadMe1.03
 SOUND=${SOUND:-1}
@@ -102,6 +105,7 @@ if [ "$UI" = renders ]; then
     python3 -c "import PIL" 2>/dev/null || { echo "UI renders need Pillow (python3 -m pip install Pillow)" >&2; exit 1; }
 fi
 [ "$PARALLEL" -ge 1 ] 2>/dev/null || { echo "PARALLEL=n, n >= 1"; exit 2; }
+echo "Historical host suite: retired DSP reference enabled; production checks run separately."
 python3 tools/gen_scales.py --check || exit 1
 python3 tools/audio_contract.py --check || exit 1
 if [ "$UI" = renders ]; then
@@ -114,6 +118,7 @@ PIL=0; python3 -c "import PIL" 2>/dev/null && PIL=1
 mkdir -p "$OUT" "$LOG"
 rm -f "$LOG"/*
 start=$(date +%s)
+if [ "$UI" != renders ]; then CC="$REFERENCE_CC" bash tests/run_retirement_tests.sh || exit 1; fi
 
 # ------------------------------------------------------------------- jobs ---
 # job FN ARGS...: FN ARGS in the background once one of the PARALLEL slots is free (fd 3, a FIFO holding a line per
@@ -328,6 +333,7 @@ if core && [ $TABLES = 1 ]; then
     t "UI: sounds keep steps, undo, recording, MIDI overflow, pending saves, panel recovery, drum grid, song chain, MONO gray" \
         ui_test -DMELODEE_USB_AUDIO=1 $FW
     t "Prophet: all native tone knobs through the panel and sound engine" prophet_knob_test -O2 -DMELODEE_USB_AUDIO=1 $FW
+    t "Studio 8 navigation: generator visibility, HOME context and FM6 algorithm" studio8_navigation_test -O1 -DMELODEE_USB_AUDIO=1 $FW
     t "Sound designer: native recipes, dependencies, compare, discard and save" designer_test -O2 -DMELODEE_USB_AUDIO=1 $FW
     t "Sequencer: tied length/move/delete, eight-level undo/redo, MIDI step entry and playing-step recording" seq_edit_test \
         -DMELODEE_USB_AUDIO=1 $FW
@@ -362,6 +368,7 @@ if core && [ $TABLES = 1 ]; then
     t "Studio 7: bounded target integer division" studio7_math_test -O2 $FW
     t "Studio 7: frozen Performance 6 bank migration" studio7_upgrade_test -O2 $FW
     t "Studio 7: lossless inactive-bank step codec" studio7_step_test -O2 $FW
+    t "FBK8: fixed-capacity lossless step groups" sound_step_test -O2 $FW
     t "Studio 7: exact local timing, polymeter and phase" studio7_clock_test -O2 $FW
     t "Studio 7: coordinated kit invariants and anchors" studio7_kit_test -O2 $FW
     t "Studio 7: versioned state and malformed records" studio7_state_test -O2 $FW

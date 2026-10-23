@@ -1,20 +1,34 @@
-# FM-1 Studio Tess custom firmware
+# Inputsignwave — custom firmware for the M-VAVE FM-1
 
-**By: Inputsignwave** — Studio Tess custom features, integration, bug fixes and hardening. Original Melodee, Tess, Felucca and third-party credits remain applicable.
+**By: Inputsignwave**
 
-Development snapshot for the M-VAVE FM-1, combining Melodee synthesizers and sound design with Tess generative sequencing and studio additions.
+Inputsignwave is the name of our firmware, previously called Studio Tess. It
+combines Melodee synthesizers, Tess/Tessera generators and our original features,
+integration, fixes and hardening. All upstream and third-party copyright and
+licence notices remain intact; see [CREDITS.md](CREDITS.md).
 
-**Current baseline: v1.4.1-studio-tess.6 (Performance 6).** Dual core is primary; single core is diagnostic only. The user reports successful use and no current audio faults. Physical acceptance for subsequent builds remains separate from software validation.
+## Current development build
 
-## Performance 7 development candidate
+The `studio-tess-8` branch now contains the **Performance 9 Wave1 development
+prototype**, adding an original wavetable engine with six sounds, spectral fold
+morphing, scan, tone, sub and tuning. Prophet, FM6 and 808/909 remain; SID, CZ,
+SID kits, ROOM and REVERB are retired with saved IDs and data preserved.
+The replacement reverb is the next prototype stage. Wave1 passes the complete
+local and Linux suites, native resource checks and exact-package emulator smoke
+tests; physical acceptance remains pending.
 
-`studio-tess-7` adds GRIDS, BOUNCE, AWAKE, POLY, independent meters/ratios/phase
-and coordinated eight-lane KIT development while retaining the studio engines.
-See [implemented scope and compatibility](development/STUDIO7_BUILD_STATUS.md),
-[developer validation report](development/STUDIO7_VALIDATION.md) and
-[draft pull request](https://github.com/jamesusmusic/fm1-studio-tess/pull/1).
-The comparison/install baseline remains Performance 6; no hardware was flashed.
-FBK7 saves require a pre-update Performance 6 backup for rollback.
+- [Wave1 controls, code map, measurements and validation](development/docs/PERFORMANCE9_WAVETABLE_REPORT.md)
+- [Removal baseline and resource recovery](development/docs/PERFORMANCE9_REMOVAL_REPORT.md)
+- [Page/function guide](development/docs/STUDIO8_PAGE_GUIDE.md)
+- [Development source](development/)
+- [Roadmap](FM1_Studio_Tess_Roadmap.md)
+- [Current draft pull request](https://github.com/jamesusmusic/fm1-studio-tess/pull/2)
+
+The inherited Performance 8 layout keeps generator pages in SEQ, Sound Designer
+in EDIT, OUTPUT second in GLO and the provisional LO-FI palette. Its branded
+Dev2 is the user's working hardware baseline. Wave1 still needs listening and
+physical acceptance; no device is automatically flashed. Historical Performance 6
+source and the earlier handoff remain preserved.
 
 ## Developer handoff
 
@@ -22,7 +36,7 @@ FBK7 saves require a pre-update Performance 6 backup for rollback.
 - [Word handoff](Tess_Developer_Handoff.docx)
 - [Current studio roadmap](FM1_Studio_Tess_Roadmap.md)
 
-Give Claude Code the Markdown handoff together with this repository. Performance 6 source is preserved in `performance6/source/`; active Performance 7 source is in `development/`. Read the source folder's `AGENTS.md` and `BUILDING.md` before editing. Paths in the historical handoff are relative to `performance6/source/`.
+Give Claude Code the Markdown handoff together with this repository. Performance 6 source is preserved in `performance6/source/`; active Inputsignwave source is in `development/`. Read the source folder's `AGENTS.md` and `BUILDING.md` before editing. Paths in the historical handoff are relative to `performance6/source/`.
 
 ## Performance 6 snapshot
 

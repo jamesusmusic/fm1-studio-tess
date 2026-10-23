@@ -16,7 +16,7 @@ import os
 import re
 import sys
 
-FUNCS = ["phase_render", "sid_render", "cz_native_render", "cz_native_wave", "formant_render",
+FUNCS = ["wt_render", "phase_render", "sid_render", "cz_native_render", "cz_native_wave", "formant_render",
          "trio_render", "trio_pass", "wheel_render", "wheel_block",
          "phys_render", "drum_render", "noise_render", "fm6_render", "p5_samples", "p5_mod_samples", "px_modal_block", "px_modal_run", "px_memb_block",
          "px_string_excite", "px_string_run", "px_symp_run",
@@ -33,7 +33,7 @@ FUNCS = ["phase_render", "sid_render", "cz_native_render", "cz_native_wave", "fo
          "fx_chorus",                                      # full-rate integer stereo taps
          "mix_extra_sends", "fx_bus_kernel",                # optional independent sends and returns
          ]
-OPTIONAL = {}                   # built only with an option, not in BUDGET: absent, skipped; present, checked against these
+OPTIONAL = {"wt_render": 269}  # Original WT kernel measured from target 1cc9f8a; By: Inputsignwave.                   # built only with an option, not in BUDGET: absent, skipped; present, checked against these
 # The FM6 operator kernel may be extracted from its renderer. Keep the original
 # combined budget, so moving work into a helper cannot weaken the existing guard.
 EXTRACTED = {
@@ -198,7 +198,7 @@ def main():
         for kernel in kernels:
             if fns.get(kernel):
                 for key, value in cost(fns[kernel]).items(): res[parent][key] += value
-    retired = {"trio_render", "trio_pass", "wheel_render", "wheel_block", "phys_render",
+    retired = {"sid_render", "cz_native_render", "cz_native_wave", "fx_reverb", "trio_render", "trio_pass", "wheel_render", "wheel_block", "phys_render",
                "phase_render", "formant_render", "noise_render",
                "px_modal_block", "px_modal_run", "px_memb_block", "px_string_excite",
                "px_string_run", "px_symp_run"}

@@ -1,3 +1,4 @@
+/* Engine/space retirement and compatibility — By: Inputsignwave. */
 /* SPDX-License-Identifier: GPL-3.0-only
  * Copyright (C) 2026 Kerem Kilic (Ellic Studio) */
 /* Eight independent 16-tone banks. One main-loop cache; audio reads track copies.
@@ -73,6 +74,7 @@ static void cz_bank_import(uint32_t k,const uint8_t *raw,uint32_t len)
     for(uint32_t t=0;t<NTRK;t++)if(trk[t].eng_req==ENGI_CZ && (uint32_t)trk[t].p[P_E0]==k && trk[t].p[P_E1])cz_user_pick[t]=65535u;
 }
 
+#if MELODEE_RETIRED_REFERENCE
 static void cz_bank_poll(void)
 {
     for(uint32_t k=0;k<NTRK;k++){
@@ -85,3 +87,7 @@ static void cz_bank_poll(void)
         cz_user_pick[k]=(uint16_t)pick;
     }
 }
+
+#else
+static void cz_bank_poll(void) {}
+#endif

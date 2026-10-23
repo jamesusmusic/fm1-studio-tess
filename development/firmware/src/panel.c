@@ -1,3 +1,4 @@
+/* Studio Tess 8 navigation modifications — By: Inputsignwave. */
 /* SPDX-License-Identifier: GPL-3.0-only
  * Copyright (C) 2026 Kerem Kilic (Ellic Studio)
  * Portions Copyright (C) 2026 Leo Kuroshita (@kurogedelic), Hügelton Instruments */
@@ -95,7 +96,7 @@ static void settings_init(void)
 {
     if (settings.magic != SETTINGS_MAGIC || settings.palette >= NPALETTES) {
         settings.magic = SETTINGS_MAGIC;
-        settings.palette = UI_DEFAULT_INDEX;   /* NIGHT (default) */
+        settings.palette = UI_DEFAULT_INDEX;   /* provisional LO-FI default; saved palette IDs retain their choice */
         settings.lowcut = 0;
         settings.zoom = 0;                     /* large readout of the touched value: off */
     }

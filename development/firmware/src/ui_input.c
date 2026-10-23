@@ -1,3 +1,5 @@
+/* Engine/space retirement and compatibility — By: Inputsignwave. */
+/* Studio Tess 8 navigation modifications — By: Inputsignwave. */
 /* SPDX-License-Identifier: GPL-3.0-only
  * Copyright (C) 2026 Kerem Kilic (Ellic Studio)
  * Portions Copyright (C) 2026 Leo Kuroshita (@kurogedelic), Hügelton Instruments */
@@ -1015,6 +1017,7 @@ static void edit_param(uint32_t slot, int32_t steps)
         0)) {
         ui_message("STOP TO EDIT"); return;
     }
+    if(pg->graph==GR_DESIGNER){if(slot==0u && steps)designer_open();return;}
     if (pg->graph == GR_EVOLVE) {
         tessera_evolve_knob(slot, steps);
         ui.force = 1;
@@ -1108,6 +1111,17 @@ static void edit_param(uint32_t slot, int32_t steps)
     if (!d || !vp || d->max == d->min)
         return;
     v = enum_step(d, *vp, clamp(*vp + accel(EN_K1 + slot, steps, desc_range(d)), d->min, d->max));
+    if(!MELODEE_RETIRED_REFERENCE && d->names==N_FX && (v==FX_ROOM || v==FX_REVERB))
+        v=steps>0?FX_CHORUS:FX_ECHO;
+#if !MELODEE_RETIRED_REFERENCE
+    if(d->names==N_FX && v==FX_PLATE){
+        if(pg->scope!=SC_GLOBAL)v=steps>0?FX_DRIVE:FX_CHORUS;
+        else for(uint32_t k=0;k<FX_SLOTS;k++)if(song.g+G_MFXTYPE+k*FX_PARAMS!=vp && song.g[G_MFXTYPE+k*FX_PARAMS]==FX_PLATE){
+            ui_message("PLATE IN USE");v=steps>0?FX_DRIVE:FX_CHORUS;break;
+        }
+    }
+#endif
+    if(!MELODEE_RETIRED_REFERENCE && d->names==N_DRUM_KIT && v==DK_SID)v=DK_909;
     *vp = (int16_t)v;
     if(pg->scope==SC_P5){
         uint8_t old[MO_NATIVE_N];uint32_t f=motion_guard();
@@ -1127,6 +1141,7 @@ static void edit_param(uint32_t slot, int32_t steps)
         motion_unguard(f);
         return;
     }
+    if(pg->scope==SC_SFX){uint32_t guard=motion_guard();sfx_page_put(pg->id[slot],v);motion_unguard(guard);return;}
     if (pg->scope == SC_FM6 || pg->scope == SC_FMOP) {   /* (a copy of FM6's value: written back there) */
         uint8_t old[MO_NATIVE_N];
         uint32_t f = motion_guard();
@@ -1191,6 +1206,7 @@ static int cz_compare_swap(uint32_t tr)
  * are dropped once done. Flash writes only while stopped; over the user's data: the dialog */
 static void act_do(void)
 {
+    if(cur_page()->graph==GR_DESIGNER){designer_open();return;}
     uint32_t c = act_col(), id, k = (uint32_t)song.g[G_SLOT] - 1u;
     if (!c--)
         return;
@@ -1841,6 +1857,7 @@ static void page_knob(uint32_t k, int32_t s)
         page_over = 0;
     } else {
         edit_param(k, s);
+        navigation_fix();
         pg = cur_page();
         if (!(features_page(pg->graph) || pg->graph == GR_EVOLVE || pg->graph == GR_FORM || pg->graph == GR_TWEAK ||   /* Tessera's own pages: no picker */
               (song.sel < TESSERA_TRACKS && pg->graph == GR_STEPS && (k == 0u || tessera.mode[song.sel] != TESS_ENG_OFF))))
@@ -2436,6 +2453,7 @@ static void ui_input(void)
         seq_midi_events(0);                             /* (MIDI enters steps on SEQ > STEP only) */
     }
 
+    navigation_fix();
     s = panel_enc(EN_PRESET);
     if (s) step_edit_combo();
     if (s && !ui.home && cur_page()->graph == GR_SCALE_PICKER) {
@@ -2455,9 +2473,17 @@ static void ui_input(void)
         fm6_opsel = (uint8_t)clamp((int32_t)fm6_opsel + (s > 0 ? 1 : -1), 0, 5);
         ui.force = 1;
     }
-    if ((s = panel_enc(EN_ALGO)) != 0) {           /* ALGORITHM: the selected track, on every page */
+    if ((s = panel_enc(EN_ALGO)) != 0) {           /* FM6 EDIT: algorithm; elsewhere: track selection */
         step_edit_combo();
-        track_select((uint32_t)clamp((int32_t)song.sel + (s > 0 ? 1 : -1), 0, (int32_t)trk_n() - 1));
+        if(!ui.home && cur_page()->fam==FAM_EDIT && TSEL->eng_req==ENGI_FM6 &&
+           !generator_page(cur_page()) && cur_page()->graph!=GR_DESIGNER) {
+            uint8_t old[MO_NATIVE_N];uint32_t f=motion_guard();
+            motion_native_peek(TSEL,old);
+            for(uint32_t i=0;i<NPAGES;i++)if(PAGES[i].scope==SC_FM6 && PAGES[i].id[0]==FP_ALG){
+                fm6_page_put(&PAGES[i],0,clamp((int32_t)fm6_patch[song.sel][FP_ALG]+clamp(s,-128,128),0,31));break;
+            }
+            native_motion(old);motion_unguard(f);ui.force=1;
+        } else track_select((uint32_t)clamp((int32_t)song.sel + (s > 0 ? 1 : -1), 0, (int32_t)trk_n() - 1));
     }
     if (!glo_select_layer && (s = panel_enc(EN_SELECT)) != 0) { /* SELECT: pages; with SEQ / a step key / ENV / SCL: below */
         step_edit_combo();

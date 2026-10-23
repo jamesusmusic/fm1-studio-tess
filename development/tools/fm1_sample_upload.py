@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Inputsignwave branding and compatibility modifications — By: Inputsignwave.
 # SPDX-License-Identifier: GPL-3.0-only
 # Copyright (C) 2026 Kerem Kilic (Ellic Studio)
 # Portions Copyright (C) 2026 Leo Kuroshita (@kurogedelic), Hügelton Instruments
@@ -44,10 +45,10 @@ class Link:
         except ImportError:
             sys.exit("needs mido: pip install mido python-rtmidi")
         self.mido = mido
-        outs = [n for n in mido.get_output_names() if re.search("melodee|felucca", n, re.I)]
-        ins = [n for n in mido.get_input_names() if re.search("melodee|felucca", n, re.I)]
+        outs = [n for n in mido.get_output_names() if re.search("inputsignwave|melodee|felucca", n, re.I)]
+        ins = [n for n in mido.get_input_names() if re.search("inputsignwave|melodee|felucca", n, re.I)]
         if not outs or not ins:
-            sys.exit("no MIDI port named Melodee: connect the FM-1 (running Melodee) by USB")
+            sys.exit("no supported MIDI port: connect the FM-1 running Inputsignwave by USB")
         self.o = mido.open_output(outs[0])
         self.i = mido.open_input(ins[0])
         for _ in range(3):                          # the first frame after opening the port can be lost

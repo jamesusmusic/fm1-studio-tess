@@ -1,3 +1,4 @@
+/* Inputsignwave USB identity validation — By: Inputsignwave. */
 /* SPDX-License-Identifier: GPL-3.0-only
  * Copyright (C) 2026 Kerem Kilic (Ellic Studio) */
 /* Exercise the production endpoint driver with a minimal indexed-SIE model.
@@ -144,7 +145,7 @@ static void controls(void)
     assert(ep0_command == 0x60);
     /* The shared function and control interface use the Melodee product name. */
     setup(0x80, 6, 0x0302, 0x0409, 255);
-    assert(ep_cnt[0] == 16 && ep0buf[1] == 3 && !memcmp(ep0buf + 2, "M\0e\0l\0o\0d\0e\0e\0", 14));
+    assert(ep_cnt[0] == 28 && ep0buf[1] == 3 && !memcmp(ep0buf + 2, "I\0n\0p\0u\0t\0s\0i\0g\0n\0w\0a\0v\0e\0", 26));
     setup(0x80, 6, 0x0303, 0x0409, 255);
     assert(ep0_command == 0x60);             /* retired split-device names */
     setup(0x80, 6, 0x0304, 0x0409, 255);

@@ -258,7 +258,7 @@ int main(void)
     {   /* All inactive banks are validated before replacing the runtime. */
         step_t keep = trk[0].step[0];
         project_capture(&proj_scratch); bank_pack(got, &proj_scratch, 1);
-        got[BANK_EXTRA_OFF + 3u] |= 0xF0; bank_checksum(got);
+        uint32_t invalid=112u;for(uint32_t bit=0;bit<129u;bit++)wire_bits_put(got+BANK_EXTRA_OFF,&invalid,1u,1u); bank_checksum(got);
         st_save(OBJ_BANK0, got, sizeof got);
         project_load(0);
         bad += check("damaged inactive-bank chord is refused with runtime unchanged", !strcmp(ui.msg,"OLD FORMAT") &&

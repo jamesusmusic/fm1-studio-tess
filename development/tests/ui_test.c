@@ -616,7 +616,7 @@ static int test_midi(void)
         bad += check("MIDI accepts a fresh note after overflow recovery", mn_get(0, 61) == 1u && gated_notes(&trk[0]));
     }
     {
-        const page_t *pg = &PAGES[page_first(FAM_GLO) + 1u];
+        const page_t *pg = &PAGES[page_titled("SYSTEM")];
         int16_t *vp;
         const param_desc_t *d = page_desc(pg, 2, &vp);
         char v[8];
@@ -625,7 +625,7 @@ static int test_midi(void)
         bad += check("GLO > SYSTEM K3: ROUT CH1-4 / SEL", str_eq(pg->title, "SYSTEM") && vp == &song.g[G_ROUTE] && str_eq(v, "SEL"));
         param_format(d, 4, v, &u);
         bad += check("GLO > SYSTEM K3: all four ranges exposed", d->max == 4 && str_eq(v, "13-16"));
-        pg=&PAGES[page_first(FAM_GLO)];d=page_desc(pg,1,&vp);
+        pg=&PAGES[page_titled("GLOBAL")];d=page_desc(pg,1,&vp);
         bad+=check("GLO > GLOBAL K2: device shared BUDGET",d && str_eq(d->label,"BUDGET") && vp==&settings_budget && pg->id[1]==G_BUDGET);
     }
     return bad;
@@ -903,7 +903,7 @@ static int test_track_count(void)
                  midi_track(0) == &trk[0]);
     hold(B_OCTUP);
     bad += check("Stage: OCT+ held: its sheet, Add track (T2) and Remove track (-) at its foot", pop.on == POP_SHEET &&
-                 pop.rows == SHEET_STAGE && str_eq(pop.rows[pop.n - 2u].label, "Add track") &&
+                 pop.rows == SHEET_STAGE && str_eq(pop.rows[0].label, "Create new track") &&
                  str_eq(pop.rows[pop.n - 1u].label, "Remove track"));
     sheet_do("Remove track");
     bad += check("  Remove track with one: refused (ONLY ONE TRACK), no question", trk_n() == 1u && !ui.confirm &&
@@ -912,7 +912,7 @@ static int test_track_count(void)
     one_note(&trk[1], 7, 50);
     go_home(); frame();
     hold(B_OCTUP);
-    sheet_do("Add track");
+    sheet_do("Create new track");
     bad += check("Add track: T2 in use, selected, the browser open on it", trk_n() == 2u && song.sel == 1 && !ui.home &&
                  cur_page()->graph == GR_BROWSE && msg_is("TRACK 2 ADDED"));
     bad += check("  its place's power-on sound, the mix's defaults, every pattern empty", trk[1].eng_req == TRK_DEF[1][0] &&
@@ -921,7 +921,7 @@ static int test_track_count(void)
     bad += check("  OCT-: back to Stage, the sound kept", ui.home && trk[1].eng_req == TRK_DEF[1][0]);
     for (n = 0; n < 4u; n++) {
         hold(B_OCTUP);
-        sheet_do("Add track");
+        sheet_do("Create new track");
         press(B_OCTDN);
     }
     bad += check("  four at most (TRACKS FULL)", trk_n() == NTRK && msg_is("TRACKS FULL"));
@@ -1660,11 +1660,11 @@ static int test_display_preferences(void)
         int steps_ok = settings.palette == 2;
         for (uint32_t k = 3; k < NPALETTES; k++) { turn(EN_K1, 1); steps_ok &= settings.palette == k; }
         bad += check("COLOR KNOB 1 steps on through SUNSET .. LO-FI, then wraps to NIGHT",
-                     steps_ok && (turn(EN_K1, 1), settings.palette == UI_DEFAULT_INDEX));
+                     steps_ok && (turn(EN_K1, 1), settings.palette == 0));
     }
     press(B_OCTDN);
     bad += check("OCT- leaves display preferences without changing musical state",
-                 !ui.menu && settings.palette == UI_DEFAULT_INDEX && !memcmp(sounds, trk, sizeof sounds));
+                 !ui.menu && settings.palette == 0 && !memcmp(sounds, trk, sizeof sounds));
     return bad;
 }
 
@@ -1681,9 +1681,9 @@ static int test_information(void)
     press(B_OCTUP);
     ui_draw();
     bad += check("ABOUT opens one document with scrollable license text and credits", ui.menu == 2 && !ui.menu_scroll && menu_scroll_max() > MENU_DOC_H);
-    for (y = MENU_HEAD + 66; y < MENU_HEAD + 140; y++)  /* (the QR at the right, by the version) */
+    for (y = MENU_HEAD + 86; y < MENU_HEAD + 160; y++)  /* (the QR at the right, by the version) */
         for (x = 158; x < 232; x++)
-            if (x < 166 || x >= 224 || y < MENU_HEAD + 74 || y >= MENU_HEAD + 132)
+            if (x < 166 || x >= 224 || y < MENU_HEAD + 94 || y >= MENU_HEAD + 152)
                 quiet &= host_screen[y * 240 + x] == swap16(UI_QR_LIGHT);
     bad += check("ABOUT QR keeps its complete white quiet zone", quiet);
     memcpy(header, host_screen, sizeof header);
@@ -2679,10 +2679,11 @@ static int test_product_ux(void)
     int16_t len = TSEL->p[P_SLEN], send = TSEL->p[P_RESERVED36];
     turn(EN_K3, 1);
     bad += check("MIXER K3 is inert, never changes sequence length", TSEL->p[P_SLEN] == len && TSEL->p[P_RESERVED36] == send);
-    press(B_GLO); ok = cur_page()->fam == FAM_GLO && str_eq(cur_page()->title, "GLOBAL");
+    press(B_GLO); ok = cur_page()->fam == FAM_GLO && str_eq(cur_page()->title, "OUTPUT");
+    press(B_GLO); ok &= str_eq(cur_page()->title, "GLOBAL");
     press(B_GLO); ok &= str_eq(cur_page()->title, "SYSTEM");
     press(B_GLO); ok &= cur_page()->graph == GR_TRK;
-    bad += check("GLO cycles MIXER > GLOBAL > SYSTEM > MIXER", ok);
+    bad += check("GLO cycles MIXER > OUTPUT > GLOBAL > SYSTEM > MIXER", ok);
     go_home(); hold(B_SEQ);
     bad += check("long SEQ goes directly to PATTERNS (the song under it) with no tap on release", cur_page()->graph == GR_PATGRID);
     turn(EN_SELECT, 1);
@@ -3163,7 +3164,7 @@ static int test_cz1_pages(void)
         "C2 PIT R1-4", "C2 PIT R5-8", "C2 PIT L1-4", "C2 PIT L5-8", "C2 PIT POINT",
         "C2 WAV R1-4", "C2 WAV R5-8", "C2 WAV L1-4", "C2 WAV L5-8", "C2 WAV POINT",
         "C2 AMP R1-4", "C2 AMP R5-8", "C2 AMP L1-4", "C2 AMP L5-8", "C2 AMP POINT",
-        "VOICE", "CZ TOOLS"};
+        "VOICE", "DESIGNER", "CZ TOOLS"};
     uint8_t p[LCZ_PACKED], q[LCZ_PACKED], raw[CZ_BYTES], before[CZ_BYTES];
     uint32_t tr, id, v, i, ok = 1, sane = 1, kept = 1;
     int bad = 0;
@@ -3309,9 +3310,9 @@ static int test_cz1_factory(void)
 
 static int test_edit_cycle(void)
 {
-    static const char *const CYC_A[] = {"EDIT 1", "EDIT 2", "VOICE", "EDIT 1"};   /* (VOICE: VOICE 1-3's list) */
+    static const char *const CYC_A[] = {"EDIT 1", "EDIT 2", "VOICE", "DESIGNER", "EDIT 1"};   /* (VOICE: VOICE 1-3's list) */
     static const char *const CYC_F[] = {"EDIT 1", "EDIT 2", "STORE", "ALGO", "FREQ", "OUT", "EG RATE", "EG LVL", "SCALE",
-                                        "CURVE", "PITCH EG", "PITCH LV", "FM LFO", "FM BEND", "VOICE", "FM AMP", "FM TONE", "FM AMP MODE", "EDIT 1"};
+                                        "CURVE", "PITCH EG", "PITCH LV", "FM LFO", "FM BEND", "VOICE", "DESIGNER", "FM AMP", "FM TONE", "FM AMP MODE", "EDIT 1"};
     static const char *const CYC_D[] = {"EDIT 1", "EDIT 2", "OP1 ENV", "OP2 ENV", "OP3 ENV", "OP4 ENV",
                                         "OP LEVEL", "VOICE", "EDIT 1"};
     int bad = 0, ok;
@@ -3463,9 +3464,9 @@ static int test_tempo_select(void)
     turn(EN_SELECT, 1);
     ok = song.g[G_BPM] == 120 && str_eq(cur_page()->title, "SYSTEM");
     turn(EN_SELECT, 1);
-    ok &= str_eq(cur_page()->title, "GLOBAL");
+    ok &= str_eq(cur_page()->title, "OUTPUT");
     turn(EN_SELECT, -1);
-    bad += check("SELECT on GLO: GLOBAL -> SYSTEM -> GLOBAL (wraps), back the other way; the BPM untouched",
+    bad += check("SELECT on GLO: GLOBAL -> SYSTEM -> OUTPUT (wraps), back the other way; the BPM untouched",
                  ok && str_eq(cur_page()->title, "SYSTEM") && song.g[G_BPM] == 120);
     go_title("NOTES");
     cursor_set(4);
@@ -3815,7 +3816,7 @@ static void host_slot_make(uint32_t k)                /* USR k + 1: 2 s at 22.05
 }
 static int test_slices(void)
 {
-    static const char *const CYC_S[] = {"EDIT 1", "EDIT 2", "SLICES", "VOICE", "EDIT 1"};
+    static const char *const CYC_S[] = {"EDIT 1", "EDIT 2", "SLICES", "VOICE", "DESIGNER", "EDIT 1"};
     int bad = 0, ok;
     uint32_t n, j, p0, k, note;
     ui_power_on();
@@ -5033,7 +5034,7 @@ static int test_prophet_pages(void)
     ui_power_on();set_engine_of(TSEL,ENGI_PROPHET);int bad=0,visible=0;
     bad+=check("selecting Prophet starts on its first factory program",!TSEL->user&&TSEL->preset==1u&&!memcmp(p5_patch_of(TSEL),p5_fac(0),sizeof(p5_patch_t)));
     uint32_t count,slot,source=preset_all_at(200u,&slot);
-    bad+=check("all 201 Prophet factory entries lead the browser",preset_all_pos(&count)==1u&&ENGINES[ENGI_PROPHET]->npresets==201u&&source==ENGI_PROPHET&&slot==200u);
+    bad+=check("all Prophet factory entries lead the browser",preset_all_pos(&count)==1u&&ENGINES[ENGI_PROPHET]->npresets==P5_FACTORY_N+1u&&source==ENGI_PROPHET&&slot==200u);
     int factory=ENGINES[ENGI_PROPHET]->npresets==P5_FACTORY_N+1u;
     for(uint32_t k=1;k<=P5_FACTORY_N;k++){
         apply_preset_to(TSEL,k);char name[21];p5_patch_name(name,p5_fac(k-1u));

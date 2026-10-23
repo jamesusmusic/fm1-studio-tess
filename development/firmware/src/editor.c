@@ -1,6 +1,8 @@
+/* Inputsignwave branding and compatibility modifications — By: Inputsignwave. */
 /* SPDX-License-Identifier: GPL-3.0-only
  * Copyright (C) 2026 Kerem Kilic (Ellic Studio)
  * Portions Copyright (C) 2026 Leo Kuroshita (@kurogedelic), Hügelton Instruments */
+#include "firmware_identity.h"
 /* Editor protocol: SysEx for the web editor (web/EDITOR_PROTOCOL.md; v2 = user presets + live sync,
  * v3 = four tracks: the v1 / v2 commands act on the selected track, cmds 27-30 reach any track;
  * v4 = TRACK_PARAM (31) and the TRACK_CHANGED push (32), enabled by WATCH bit 1).
@@ -305,6 +307,7 @@ static int ed_args_ok(uint32_t cmd, const uint8_t *a, uint32_t n)
     case ED_GET: case ED_DESC: case ED_PRESET: case ED_PROJECT: case ED_UP_LIST:
     case ED_TRACK_PARAM:
         return n == 2u || (cmd == ED_TRACK_PARAM && n == 4u) || (cmd == ED_PRESET && n == 3u);
+    case 101: return n==0u || n==SFX_BYTES;
     case ED_SET:
         return n == 4u;
     case ED_STEP_GET: case ED_NAMES: case ED_SMP_BEGIN: case ED_SMP_ERASE:
@@ -350,6 +353,14 @@ static void ed_handle(const uint8_t *f, uint32_t n)   /* f: the bytes between F0
     if (ed_library_handle(cmd,a,na)) { ed_send(); return; }
     if (ed_native_handle(cmd, a, na)) { ed_send(); return; }
     switch (cmd) {
+    case 101: {
+        uint32_t rc=0;
+        if(na){sound_fx_t candidate;memcpy(&candidate,a,SFX_BYTES);
+            if(!sfx_valid(&candidate))rc=1;
+            else {uint32_t guard=motion_guard();sound_fx=candidate;motion_unguard(guard);}}
+        ed_b(1);ed_b(rc);const uint8_t *raw=(const uint8_t *)&sound_fx;
+        for(uint32_t i=0;i<SFX_BYTES;i++)ed_b(raw[i]);break;
+    }
     case 100: {
 #ifdef FM1_IRQ_TARGET
         if(na){ed_b(1);break;}
@@ -626,7 +637,7 @@ static void ed_handle(const uint8_t *f, uint32_t n)   /* f: the bytes between F0
         break;
     }
     case ED_INFO:
-        ed_str("MELODEE " MELODEE_VERSION, 24);
+        ed_str(FIRMWARE_NAME " " MELODEE_VERSION, 24);
         ed_b(NENGINES);
         ed_b(P_COUNT);
         ed_b(G_COUNT);

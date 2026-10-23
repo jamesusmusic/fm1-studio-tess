@@ -1,8 +1,10 @@
 # CLAUDE.md
 
-melodee-tess: a fork of Melodee (FM-1 alternative firmware, GPL-3.0) where the Tessera
-generators (Turing, Euclid, Markov, Morph; `firmware/src/tessera.c`, `tessera.h`) were built.
-It becomes the Tessera firmware, a hard fork. Plan, phases and tasks: `ROADMAP.md`.
+Inputsignwave is our FM-1 custom firmware, previously called Studio Tess. It
+retains upstream Melodee synth engines and Tess/Tessera generators alongside
+our contributions. Credit custom work exactly as `By: Inputsignwave`, retain
+upstream notices, and consult CREDITS.md and INPUTSIGNWAVE_BRANDING.md.
+Plans and status: ROADMAP.md. Historical archives retain their original names.
 
 ## Start and end of each session
 

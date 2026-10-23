@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Studio Tess default palette — By: Inputsignwave.
 # SPDX-License-Identifier: GPL-3.0-only
 # Copyright (C) 2026 Kerem Kilic (Ellic Studio)
 # Portions Copyright (C) 2026 Leo Kuroshita (@kurogedelic), Hügelton Instruments
@@ -6,7 +7,7 @@
 
   gen_ui_palettes.py OUT.h [--report]
 
-Melodee's palettes: NIGHT (the default: warm ink), DAY (light) and CONTRAST (black and white). A palette is BG
+Inputsignwave palettes: NIGHT is the default; all existing palette IDs remain selectable. A palette is BG
 (background), SURF (surface: cards, dialogs, menu rows), TEXT, ACCENT (the one active thing: hot knob, cursor,
 playhead) and four track colours: the selected track's is THEME (values, curves, gauges, selection), so the screen
 takes the colour of the track ALGORITHM picks (src/gfx.c palette_track). The firmware derives the rest with fixed
@@ -229,7 +230,7 @@ def main():
                "static const ui_pal_t UI_PALETTES[] = {"]
         out += [row(p) for p in PALETTES]
         out += ["#ifdef UI_TEST_PALETTE", row(TEST_GRAY), "#endif", "};",
-                f"#define UI_NPALETTES {len(PALETTES)}u", "#define UI_DEFAULT_INDEX 0u",
+                f"#define UI_NPALETTES {len(PALETTES)}u", f"#define UI_DEFAULT_INDEX {names.index('NIGHT')}u",
                 f"#define UI_GRAY_INDEX {len(PALETTES)}u      /* (UI_TEST_PALETTE only) */",
                 f"#define UI_PAL_TAG {PAL_TAG}u          /* stored id = UI_PAL_TAG + index */"]
         out += [f"#define UI_{k}_PCT {v}" for k, v in PCT.items()] + [f"#define UI_RAISE_PCT {RAISE_PCT}   /* SURF -> TEXT */"]

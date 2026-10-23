@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Inputsignwave branding and compatibility modifications — By: Inputsignwave.
 # SPDX-License-Identifier: GPL-3.0-only
 # Copyright (C) 2026 Kerem Kilic (Ellic Studio)
 """Read USB audio counters over MIDI without changing the sound or settings."""
@@ -58,7 +59,7 @@ def snapshot(incoming, outgoing, window=False, voices=False, cores=False, memory
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--port', default='Melodee')
+    parser.add_argument('--port', default='Inputsignwave')
     parser.add_argument('--seconds', type=float, default=0)
     parser.add_argument('--interval', type=float, default=5)
     parser.add_argument('--window', action='store_true',

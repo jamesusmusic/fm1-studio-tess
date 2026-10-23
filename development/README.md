@@ -1,6 +1,22 @@
-# Studio Melodee + Tess — integration candidate
+# Inputsignwave — FM-1 firmware
 
-Based on Melodee v1.3.5 and Rastapopolix/melodee-tess branch merge-upstream-1.3.1. Adds Tessera generative sequencing and rhythm morphing. This is a development candidate; see STUDIO_INTEGRATION.md for validation status.
+By: Inputsignwave
+
+Our firmware was previously named Studio Tess. Performance 8 retains Melodee's
+synth engines, Tess/Tessera generators and our features, hardening and corrected
+navigation. About and application USB names are Inputsignwave, with explicit
+custom attribution and preserved upstream credits. See [branding](INPUTSIGNWAVE_BRANDING.md),
+[page guide](docs/STUDIO8_PAGE_GUIDE.md) and [roadmap](ROADMAP.md).
+
+Build: `MELODEE_RAM_AUDIO=1 ./build.sh --release 1.4.1-inputsignwave.8-dev2`.
+Public package: `inputsignwave-1.4.1-performance8-dev2.fwsc`.
+Internal MELODEE build switches, legacy build filenames, update-loader names,
+protocol IDs and storage formats remain compatible.
+
+The upstream README below is retained for provenance and technical reference;
+its release links and historic product names describe upstream Melodee.
+
+---
 
 # Melodee
 

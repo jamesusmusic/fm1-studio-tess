@@ -1,3 +1,4 @@
+/* Retired-engine import guard — By: Inputsignwave. */
 /* SPDX-License-Identifier: GPL-3.0-only
  * Copyright (C) 2026 Kerem Kilic (Ellic Studio) */
 /* Incoming dumps retain their native names and bytes until the player chooses
@@ -32,6 +33,7 @@ static void sysex_import_name(char *nm)
 }
 static int sysex_stage(uint32_t e, const uint8_t *raw, uint32_t count, uint32_t size)
 {
+    if(!MELODEE_RETIRED_REFERENCE && (e==3u || e==ENGI_CZ)){ui_message("ENGINE UNAVAILABLE");return 0;}
     if(!count || (count*size>sizeof sx_import.raw && !(e==ENGI_FM6&&count==32u&&size==FM6_PACKED)))return 0;
     if (sx_import.count || ui.confirm || ui.name_active || ui.new_active || ui.layer || ui.ly || designer_on()) { ui_message("FINISH CURRENT IMPORT"); return 0; }
     if(count*size>sizeof sx_import.raw){sx_import.data=raw;fm6_rx_ready=2;}

@@ -1,3 +1,4 @@
+/* Inputsignwave navigation validation modifications — By: Inputsignwave. */
 /* SPDX-License-Identifier: GPL-3.0-only
  * Copyright (C) 2026 Kerem Kilic (Ellic Studio) */
 /* Drive real panel input and native setters, render the resulting recipes. */
@@ -249,10 +250,10 @@ static void save_tests(void)
     project_save(0);
     TSEL->p[P_RESERVED35]=7;project_load(0);
     failures+=check("external project load ends design without restoring over the new project",!designer_on() && !motion_design_pause);
-    ui_power_on();ui.menu=1;ui.menu_sel=MI_DESIGNER;menu_input(2);
-    failures+=check("designer is reachable from device menu",designer_on() && !ui.menu);
-    press(B_OCTUP);ui.menu=1;ui.menu_sel=MI_DESIGNER;menu_input(2);
-    failures+=check("the menu's SOUND DESIGNER over an open design goes back to it",designer_on() && !ui.menu && ui.designer_mode==DS_SHAPE);
+    ui_power_on();ui.home=0;ui.page=page_titled("DESIGNER");act_do();
+    failures+=check("designer is reachable from EDIT",designer_on() && !ui.menu);
+    press(B_OCTUP);ui.home=0;ui.page=page_titled("DESIGNER");act_do();
+    failures+=check("the EDIT designer launcher returns to an open design",designer_on() && !ui.menu && ui.designer_mode==DS_SHAPE);
     designer_close(1);
 }
 static void motion_tests(void)

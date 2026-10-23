@@ -1,3 +1,4 @@
+/* Engine/space retirement and compatibility — By: Inputsignwave. */
 /* SPDX-License-Identifier: GPL-3.0-only
  * Copyright (C) 2026 Kerem Kilic (Ellic Studio)
  * Portions Copyright (C) 2026 Leo Kuroshita (@kurogedelic), Hügelton Instruments */
@@ -8,16 +9,23 @@
 #if MELODEE_PROPHET
 #include "eng_prophet_test.c"
 #endif
+#if MELODEE_RETIRED_REFERENCE
 #include "eng_phase.c"
 #include "eng_cz.c"
 #include "eng_sid.c"
+#else
+#include "retired_audio.c"
+#endif
 #include "eng_formant.c"
 #include "eng_trio.c"
 #include "eng_wheel.c"
 #include "eng_phys.c"           /* PHYS: DaisySP physical models (phys_dsp.c, MIT) */
 #include "eng_drum.c"           /* DRUM: synthesized 808 circuits (drum_808.c), the 909, a C64's SID (drum_sid.c) */
 #include "eng_noise.c"
+#include "eng_wavetable.c"
+#include "eng_wavetable_layers.c"
 #include "eng_fm6.c"            /* FM6: 6-operator FM rendered as Dexed renders it (fm6_core.c) */
+#include "eng_fmkit.c"
 #if MELODEE_SLICE
 #include "eng_slice.c"
 #else
@@ -41,6 +49,44 @@ static const engine_t ENG_RETIRED = {         /* 13 without MELODEE_SLICE: reser
 /* Each track owns only its selected engine's working state. Simple engines
  * use voice_t alone. State is released after the old engine's switch fade. */
 #include "resources.c"
+#if MELODEE_WAVETABLE
+/* Only the audio owner allocates/copies; every track reads the same immutable bank. */
+static int wt_prepare(void)
+{
+    if(resource[RES_WAVETABLE].size==sizeof(WT_FLASH)){
+        wt_bank=(const wt_bank_t *)resource[RES_WAVETABLE].ptr;return 1;
+    }
+    void *p=resource_get(RES_WAVETABLE,sizeof(WT_FLASH));
+    wt_bank=(const wt_bank_t *)p;
+    if(p)memcpy(p,&WT_FLASH,sizeof(WT_FLASH));
+    return p!=0;
+}
+static void wt_cache_sweep(void)
+{
+    uint32_t old=0,layers=0;
+    for(uint32_t t=0;t<NPART;t++)for(uint32_t v=0;v<NVOICE;v++)if(trk[t].v[v].active){
+        old|=trk[t].engine==ENGI_WAVETABLE;layers|=trk[t].engine==ENGI_WAVE_LAYERS;
+    }
+    for(uint32_t t=0;t<NPART;t++)layers|=trk[t].engine==ENGI_WAVE_LAYERS;
+    if(!old){resource_release(RES_WAVETABLE);wt_bank=0;}
+    if(!layers){resource_release(RES_WAVE_LAYERS);wl_bank=0;wl_prepared=0;}
+}
+#endif
+#if MELODEE_WAVETABLE
+static wl_part_t *wl_part(const track_t *t)
+{ return resource_get(RES_ENGINE0+(uint32_t)(t-trk),sizeof(wl_part_t)); }
+static int wl_prepare(const track_t *t)
+{
+ void *p=resource_get(RES_WAVE_LAYERS,sizeof(WL_FLASH));wl_bank=(const wl_bank_t *)p;
+ if(!p)return 0;
+ if(!wl_prepared){memcpy(p,&WL_FLASH,sizeof(WL_FLASH));wl_prepared=1;}
+ return wl_part(t)!=0;
+}
+#endif
+#if !MELODEE_RETIRED_REFERENCE
+static fmk_part_t *fmk_part(const track_t *t)
+{ return resource_get(RES_ENGINE0+(uint32_t)(t-trk),sizeof(fmk_part_t)); }
+#endif
 static uint32_t eng_state_size(uint32_t e)
 {
     switch (e) {
@@ -54,13 +100,21 @@ static uint32_t eng_state_size(uint32_t e)
     case ENGI_PHYS: return sizeof(phys_slot_t) * PHYS_POLY;
     case 7: return sizeof(drw_part_t);
 #endif
+#if MELODEE_RETIRED_REFERENCE
 #if MELODEE_LEGACY_EXTRAS
     case 2:                                         /* (PHASE: CZ-1's core) */
 #endif
     case ENGI_CZ: return sizeof(cz_part_t);
     case 3: return sizeof(sid_part_t);              /* SID (eng_sid.c) */
+#endif
     case ENGI_DRUM: return sizeof(drum909_part_t);
     case ENGI_FM6: return sizeof(fm6_part_t);
+#if !MELODEE_RETIRED_REFERENCE
+    case ENGI_FMKIT: return sizeof(fmk_part_t);
+#endif
+#if MELODEE_WAVETABLE
+    case ENGI_WAVE_LAYERS: return sizeof(wl_part_t);
+#endif
 #if MELODEE_SLICE
     case ENGI_SLICE: return sizeof(slc_rb_t);
 #endif
@@ -71,20 +125,37 @@ static void eng_state_clear(uint32_t part)
 {
     if (part < NPART) resource_release(RES_ENGINE0 + part);
 }
-static void eng_state_reset(void) { for (uint32_t k = 0; k < NPART; k++) eng_state_clear(k); }
+static void eng_state_reset(void) {
+    for(uint32_t k=0;k<NPART;k++)eng_state_clear(k);
+#if MELODEE_WAVETABLE
+    resource_release(RES_WAVETABLE);wt_bank=0;
+    resource_release(RES_WAVE_LAYERS);wl_bank=0;wl_prepared=0;
+#endif
+}
 static int eng_state_prepare(const track_t *t)
 {
+#if MELODEE_WAVETABLE
+    if(t->engine==ENGI_WAVETABLE)return wt_prepare();
+    if(t->engine==ENGI_WAVE_LAYERS)return wl_prepare(t);
+#endif
     uint32_t size = t->engine==ENGI_DRUM?drum_bytes(t):eng_state_size(t->engine);
-    return !size || resource_get(RES_ENGINE0 + (uint32_t)(t - trk), size) != 0;
+    if(!size){resource_release(RES_ENGINE0+(uint32_t)(t-trk));return 1;}
+    return resource_get(RES_ENGINE0 + (uint32_t)(t - trk), size) != 0;
 }
 static phys_slot_t *phys_slots(uint32_t part) { return resource_get(RES_ENGINE0 + part % NPART, sizeof(phys_slot_t) * PHYS_POLY); }
 static drum909_part_t *drum909_part(uint32_t part) { return resource_get(RES_ENGINE0 + part % NPART, sizeof(drum909_part_t)); }
 static drum_lane_t *drum_kit_part(uint32_t part) { return resource_get(RES_ENGINE0 + part % NPART, sizeof(drum_lane_t) * DV_NLANE); }
+#if MELODEE_RETIRED_REFERENCE
 static dsk_part_t *dsk_part(uint32_t part) { return resource_get(RES_ENGINE0 + part % NPART, sizeof(dsk_part_t)); }
+#endif
 static drw_part_t *drw_of(const track_t *t) { return resource_get(RES_ENGINE0 + (uint32_t)(t - trk), sizeof(drw_part_t)); }
 static fm6_part_t *fm6_part(uint32_t part) { return resource_get(RES_ENGINE0 + part % NPART, sizeof(fm6_part_t)); }
+#if MELODEE_RETIRED_REFERENCE
 static cz_part_t *cz_part(uint32_t part) { return resource_get(RES_ENGINE0 + part % NPART, sizeof(cz_part_t)); }
+#endif
+#if MELODEE_RETIRED_REFERENCE
 static sid_part_t *sid_part(uint32_t part) { return resource_get(RES_ENGINE0 + part % NPART, sizeof(sid_part_t)); }
+#endif
 #if MELODEE_PROPHET
 static p5_part_t *p5_part(uint32_t part) { return resource_get(RES_ENGINE0 + part % NPART, sizeof(p5_part_t)); }
 #endif
@@ -144,6 +215,18 @@ static const engine_t *const ENGINES[NENGINES] = {
     &ENG_CZ,                     /* 15: native Casio CZ-1 */
     &ENG_RETIRED, &ENG_RETIRED, &ENG_RETIRED, /* 16..18 reserved */
     &ENG_P5_TEST,                /* 19: Prophet (ANALOG's ID 0 stays reserved) */
+    &ENG_RETIRED,                /* 20: native Prophet browsing namespace, never a sound engine */
+#if MELODEE_WAVETABLE
+    &ENG_WAVETABLE,              /* 21: original wavetable/fold engine — By: Inputsignwave */
+    &ENG_WAVE_LAYERS,            /* 22: independent new sound namespace */
+#else
+    &ENG_RETIRED, &ENG_RETIRED,
+#endif
+#if !MELODEE_RETIRED_REFERENCE
+    &ENG_FMKIT,
+#else
+    &ENG_RETIRED,
+#endif
 };
 
 /* a track's engine number as an index (the audio paths: a compare, cheaper than % NENGINES; a bad number: 0) */
@@ -173,16 +256,27 @@ static const uint8_t ENGINE_ORDER[NENG_SHOWN] = {
     ENGI_PROPHET,                /* Prophet replaces ANALOG in new-sound browsing */
     12,                          /* FM6 */
 #if MELODEE_LEGACY_EXTRAS
-    2, ENGI_CZ, 3, 5,             /* PHASE CZ-1 SID VOICE */
+    2, 5,
+#if MELODEE_RETIRED_REFERENCE
+    ENGI_CZ, 3,
+#endif
     6, 7, 9,
     11,                          /* NOISE */
 #else
-    ENGI_CZ, 3,                   /* CZ-1 SID */
+#if MELODEE_RETIRED_REFERENCE
+    ENGI_CZ, 3,                   /* historical host reference only */
+#endif
 #endif
 #if MELODEE_SLICE
     13,                          /* SLICE */
 #endif
+#if MELODEE_WAVETABLE
+    ENGI_WAVETABLE, ENGI_WAVE_LAYERS,
+#endif
     10,                          /* DRUM */
+#if !MELODEE_RETIRED_REFERENCE
+    ENGI_FMKIT,
+#endif
 };
 
 /* Retired synth records (ANALOG and DIGITAL since 2.0 too) retain their stored identity and render silence.
@@ -192,13 +286,13 @@ static int eng_extra_retired(uint32_t e)
 #if !MELODEE_PROPHET_PROTOTYPE
     if (e == ENGI_ANALOG) return 1;
 #endif
-    return e == ENGI_DIGITAL || (!MELODEE_LEGACY_EXTRAS && (e == 2u || e == 5u || e == 6u || e == 7u || e == 9u || e == 11u));
+    return (!MELODEE_RETIRED_REFERENCE && (e == 3u || e == ENGI_CZ)) || e == ENGI_DIGITAL || (!MELODEE_LEGACY_EXTRAS && (e == 2u || e == 5u || e == 6u || e == 7u || e == 9u || e == 11u));
 }
 /* the engines one can pick, in ENGINE_ORDER: eng_ok(e), the n-th of them
  * eng_vis(n), e's place among them eng_rank(e), the next / previous one eng_step(e, dir) (wraps) */
 static int eng_ok(uint32_t e)
 {
-    return e < NENGINES && !(e >= 16u && e <= 18u) && !eng_extra_retired(e) && e != 4u && e != 8u && e != 14u && (MELODEE_SLICE || e != ENGI_SLICE);
+    return e < NENGINES && e!=20u && (!MELODEE_RETIRED_REFERENCE || e!=ENGI_FMKIT) && (MELODEE_WAVETABLE || (e!=ENGI_WAVETABLE && e!=ENGI_WAVE_LAYERS)) && !(e >= 16u && e <= 18u) && !eng_extra_retired(e) && e != 4u && e != 8u && e != 14u && (MELODEE_SLICE || e != ENGI_SLICE);
 }
 static uint32_t eng_sound_idx(uint32_t e)
 {
@@ -220,5 +314,5 @@ static uint32_t eng_step(uint32_t e, int32_t dir)
 }
 
 /* the parts at power-on (engine, preset; the steps empty): bass, pad, lead, drums */
-static const uint8_t TRK_DEF[NPART][2] = {{ENGI_PROPHET, 4}, {ENGI_FM6, 4}, {3, 0}, {ENGI_DRUM, 0}}; /* PROPHET FUNK
+static const uint8_t TRK_DEF[NPART][2] = {{ENGI_PROPHET, 4}, {ENGI_FM6, 4}, {MELODEE_RETIRED_REFERENCE ? 3u : ENGI_FM6, 0}, {ENGI_DRUM, 0}}; /* PROPHET FUNK
                                                     * BASS II (was ANALOG ACID), FM6 PAD (was DIGITAL PAD), SID INIT SID, DRUM KIT */

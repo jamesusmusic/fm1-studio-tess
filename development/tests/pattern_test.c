@@ -71,7 +71,8 @@ static int all_banks_persist(void)
     uint8_t raw[BANK_STORE_SIZE]; project_capture(&proj_scratch); bank_pack(raw,&proj_scratch,1);
     raw[BANK_ACTIVE_OFF] = 8; bank_checksum(raw);
     bad += check("invalid bank IDs are rejected even with a valid checksum", !bank_valid(raw,sizeof raw));
-    bank_pack(raw,&proj_scratch,1); raw[BANK_EXTRA_OFF+3] |= 0xF0; bank_checksum(raw);
+    bank_pack(raw,&proj_scratch,1);
+    uint32_t invalid=112u; for(uint32_t bit=0;bit<129u;bit++)wire_bits_put(raw+BANK_EXTRA_OFF,&invalid,1u,1u); bank_checksum(raw);
     bad += check("malformed inactive-bank chord is rejected before publication", !bank_valid(raw,sizeof raw) && trk[0].step[0].n == 4);
     return bad;
 }

@@ -140,6 +140,9 @@ static void host_preset_values(track_t *t, uint32_t e, uint32_t pi, const preset
     t->p[P_VOICE] = p->mono ? V_LEGATO : V_POLY;
     cz_factory_loaded(t);
     if(e==ENGI_PROPHET){uint32_t k=(uint32_t)(t-trk)%NTRK;p5_ready[k]=1;p5_preset_loaded(t,pi);}   /* (its program, as ui.c) */
+#if MELODEE_WAVETABLE
+    wl_preset_loaded(t,pi);
+#endif
     fm6_track_loaded(t);                          /* FM6: the preset's patch (ui.c apply_preset_to) */
 }
 static void host_preset_req(track_t *t, uint32_t e, uint32_t pi)
@@ -168,7 +171,7 @@ static void host_power_on_sound(track_t *t, uint32_t k) { host_preset(t, TRK_DEF
 
 /* the plain synth a test plays when the engine is not what it tests (ANALOG's place until 2.0 retired it): CZ-1,
  * on the generic voice path (NPOLY voices, no cap of its own) as ANALOG was */
-#define HOST_SYNTH ENGI_CZ
+#define HOST_SYNTH (MELODEE_RETIRED_REFERENCE ? ENGI_CZ : ENGI_FM6)
 
 /* Explicit legacy fixture: hidden from factory browsing, still used by saved GM projects. */
 static void host_808_kit(track_t *t)

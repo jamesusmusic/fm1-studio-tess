@@ -20,11 +20,12 @@ static const char *const S7_ROLE_NAME[]={"KICK","SNARE","CH","OH","PERC 1","PERC
 static const char *const S7_RESET_NAME[]={"PLAY","BANK","FORM","KEEP"};
 static const char *const S7_REF_NAME[]={"LOCAL","MASTER","SECTION","PATTERN"};
 static const char *studio7_ui_label(uint32_t graph,uint32_t slot)
-{return S7_CONTROLS[graph-GR_S7_METER].label[slot];}
+{return graph==GR_S7_SEED && slot==3u && tessera.mode[song.sel]!=TESS_ENG_GRIDS ? "" : S7_CONTROLS[graph-GR_S7_METER].label[slot];}
 static const char *studio7_ui_help(uint32_t graph)
 {return S7_CONTROLS[graph-GR_S7_METER].help;}
 static void studio7_ui_value(uint32_t graph,uint32_t slot,char out[16])
 {
+    if(graph==GR_S7_SEED && slot==3u && tessera.mode[song.sel]!=TESS_ENG_GRIDS){out[0]=0;return;}
     s7_track_t *s=&studio7_track[song.sel];s7_meter_t *m=&s->meter;s7_kit_t *k=&s->kit;
     int32_t v=0;const char *text=0;
     switch(graph){
@@ -86,7 +87,7 @@ static void studio7_ui_knob(uint32_t graph,uint32_t slot,int32_t delta)
         if(slot==0){s->seeded=(uint8_t)clamp((int32_t)s->seeded+dir,0,1);studio7_restart(tr);}
         if(slot==1){s->seed=(uint16_t)clamp((int32_t)s->seed+d,1,128);s->seeded=1;if(tessera.mode[tr]==TESS_ENG_AWAKE)gen_awake_fill(&s->awake,s->seed);if(tessera.mode[tr]==TESS_ENG_POLY)gen_poly_fill(&s->poly,s->seed);if(tessera.mode[tr]==TESS_ENG_EUCLID)tessera.euclid[tr].pitch_seed=(uint8_t)s->seed;studio7_restart(tr);}
         if(slot==2)studio7_roll(tr);
-        if(slot==3)s->grids.chaos=(uint8_t)clamp((int32_t)s->grids.chaos+d,0,100);break;
+        if(slot==3 && tessera.mode[tr]==TESS_ENG_GRIDS)s->grids.chaos=(uint8_t)clamp((int32_t)s->grids.chaos+d,0,100);break;
     case GR_S7_KIT:
         if(slot==0){if(!drum_track(TSEL)){fm1_irq_on();ui_message("SELECT DRUM ENGINE");return;}tessera_kill(TSEL);k->enabled=(uint8_t)clamp((int32_t)k->enabled+dir,0,1);if(tessera.mode[tr]<TESS_ENG_GRIDS)s->seeded=1;tessera.mode[tr]=TESS_ENG_KIT;}
         if(slot==1){studio7_drum_stop(tr);k->source=(uint8_t)clamp((int32_t)k->source+d,0,7);}

@@ -1,3 +1,4 @@
+/* Engine/space retirement and compatibility — By: Inputsignwave. */
 /* SPDX-License-Identifier: GPL-3.0-only
  * Copyright (C) 2026 Kerem Kilic (Ellic Studio) */
 /* Three stereo inserts per track, four sections per side per filter slot.
@@ -8,7 +9,11 @@
 #define FX_RATE (FS/4u)
 #define FX_REV_DIV 8u
 #define FX_REV_LOOP_SHIFT 4                      /* the reverb's round trip low cut: ~55 Hz at FS/8 */
-enum { FX_OFF, FX_PHASER, FX_WIDTH, FX_FORMANT, FX_TAPE, FX_SPIT, FX_ECHO, FX_ROOM, FX_REVERB, FX_CHORUS, FX_COUNT };
+enum { FX_OFF, FX_PHASER, FX_WIDTH, FX_FORMANT, FX_TAPE, FX_SPIT, FX_ECHO, FX_ROOM, FX_REVERB, FX_CHORUS,
+#if !MELODEE_RETIRED_REFERENCE
+FX_PLATE, FX_DRIVE,
+#endif
+FX_COUNT };
 typedef struct { float b0,b1,b2,a1,a2,z1,z2; } fx_bq_t;
 typedef struct {
     fx_bq_t q[2][4];
@@ -16,16 +21,26 @@ typedef struct {
     float hw[2][4][8];
 #endif
     uint32_t phase, age, epoch, pos;
+#if !MELODEE_RETIRED_REFERENCE
+    uint32_t mod_phase;
+#endif
     int32_t rng, random, mix;
     int16_t rate, character;
     uint8_t type, mono, decim, failed;
     int32_t echo, damp[4];
+#if MELODEE_RETIRED_REFERENCE
     uint16_t comb[4];
     uint16_t rev_pos[8], rev_span[8], rev_ap[8];
-    int32_t rev_damp[8], rev_gain[8], rev_input, rev_input2, rev_l, rev_r, rev_prev_l, rev_prev_r;
-    int32_t rev_bass[8];
+#endif
+    int32_t rev_l, rev_r, rev_prev_l, rev_prev_r;
+    int32_t rev_damp[8]; /* filter resampling histories are shared */
     int16_t rev_rate, rev_char;
+#if MELODEE_RETIRED_REFERENCE
+    int32_t rev_gain[8], rev_input, rev_input2, rev_bass[8];
     float rev_dc;
+#else
+    int32_t rev_bass[2];
+#endif
 } fx_state_t;
 static fx_state_t fx_state[FX_STATE_COUNT];
 static volatile uint32_t fx_epoch;
@@ -258,9 +273,11 @@ static __attribute__((noinline,section(".dsp_text"))) void fx_time(fx_state_t *r
     static const uint16_t len[4]={149,211,263,293};
     int32_t mix=f->mix;uint32_t delay=110u+(uint32_t)f->rate*31u;
     int32_t feedback=f->type==FX_ECHO?f->character*220:12000+f->character*120;
+#if MELODEE_RETIRED_REFERENCE
     if(f->type==FX_ROOM && (!f->rev_span[0] || f->rev_rate!=f->rate)){
         f->rev_rate=f->rate;for(uint32_t k=0;k<4u;k++)f->rev_span[k]=(uint16_t)((uint32_t)len[k]*(64u+(uint32_t)f->rate)/191u);
     }
+#endif
     for(uint32_t i=0;i<n;i++){
         int32_t mono=fx_div_pow2(fx_left[i]+fx_right[i],1);
         if(!f->decim){
@@ -271,7 +288,9 @@ static __attribute__((noinline,section(".dsp_text"))) void fx_time(fx_state_t *r
                                                  * not fed back; leaky, so silence stays exact) */
                 mem[f->pos]=(int16_t)clamp(mono+fx_div_pow2((f->echo-f->damp[0])*feedback,15),-32767,32767);
                 f->pos=(f->pos+1u)&4095u;
-            }else{
+            }
+#if MELODEE_RETIRED_REFERENCE
+            else{
                 int32_t sum=0;uint32_t off=0;
                 for(uint32_t k=0;k<4u;k++){
                     uint32_t span=f->rev_span[k];
@@ -283,9 +302,10 @@ static __attribute__((noinline,section(".dsp_text"))) void fx_time(fx_state_t *r
                 }
                 f->echo=fx_div_pow2(sum,1);
             }
+#endif
         }
         f->decim=(f->decim+1u)&3u;
-        fx_return(target,0,f->mono,i,f->echo,f->type==FX_ROOM?f->damp[1]+f->damp[3]:f->echo,&mix);
+        fx_return(target,0,f->mono,i,f->echo,MELODEE_RETIRED_REFERENCE && f->type==FX_ROOM?f->damp[1]+f->damp[3]:f->echo,&mix);
     }
     f->mix=mix;
 }
@@ -315,6 +335,7 @@ static __attribute__((noinline,section(".audio_text"))) void fx_chorus(fx_state_
     }
     f->pos=pos;f->rev_l=l;f->rev_r=r;f->mix=mix;
 }
+#if MELODEE_RETIRED_REFERENCE
 /* Eight-line orthogonal feedback tank, preceded by four input diffusers and
  * followed by two allpasses per output. Runs at FS/8 with input low-pass and
  * interpolated wet output. 1900 int16 samples fit one 4 KiB allocation.
@@ -427,6 +448,7 @@ static __attribute__((noinline,section(".dsp_text"))) void fx_reverb(fx_state_t 
     }
     f->mix=mix;f->decim=(uint8_t)phase;f->rev_input=a;f->rev_input2=b;f->echo=previous;f->damp[0]=difference;f->damp[1]=low;
 }
+#endif
 /* The filter inserts use a quarter-rate triangular decimator and pole,
  * independently per stereo side. Their Reverb histories are idle.
  * At most ceil(CTL/4) wet samples are staged; the dry audio stays at FS. */
@@ -478,6 +500,7 @@ static __attribute__((noinline,section(".dsp_text"))) void fx_up(fx_state_t *f,u
     }
     f->decim=(uint8_t)phase;f->mix=mix;
 }
+#include "fx_perform.c"
 static __attribute__((noinline,section(".dsp_text"))) void fx_copy(fx_state_t *f,uint32_t n)
 {
     uint32_t mono=f->type<=FX_ECHO && f->type!=FX_WIDTH;
@@ -532,18 +555,28 @@ static __attribute__((noinline,section(".audio_text"))) int fx_active(const trac
 #endif
     for(uint32_t slot=0;slot<FX_SLOTS;slot++){
         uint32_t base=P_FXTYPE+slot*FX_PARAMS;
-        if((t->p[base] && t->p[base+1u]) || fx_state[ti*FX_SLOTS+slot].mix)return 1;
+        if((t->p[base] && t->p[base+1u] && (MELODEE_RETIRED_REFERENCE || (t->p[base]!=FX_ROOM && t->p[base]!=FX_REVERB))) || fx_state[ti*FX_SLOTS+slot].mix)return 1;
     }
     return 0;
 }
 typedef struct {fx_state_t *f;int16_t *mem;int32_t target;uint8_t active;} fx_plan_t;
 /* CPU0 owns allocation, releases and control snapshots. A worker receives
  * only fixed handles, preventing a retired worker from interrupting the arena. */
-static void fx_slot_prepare(fx_plan_t *plan,uint32_t si,const int16_t *p)
+static void fx_slot_prepare(fx_plan_t *plan,uint32_t si,const int16_t *p,uint32_t n)
 {
     plan->active=0;
     uint32_t type=(uint32_t)clamp(p[0],0,FX_COUNT-1);
     fx_state_t *f=&fx_state[si];
+    if(!MELODEE_RETIRED_REFERENCE && (type==FX_ROOM || type==FX_REVERB)) {
+        resource_release(RES_FX0+si); fx_zero(f); return;
+    }
+#if !MELODEE_RETIRED_REFERENCE
+    /* A single shared tank; insert selections and duplicate shared slots
+     * bypass rather than allocate another reverb. */
+    if(type==FX_PLATE && (si<NPART*FX_SLOTS || (fx_plate_owner!=255u && fx_plate_owner!=si))){
+        resource_release(RES_FX0+si);fx_zero(f);return;
+    }
+#endif
     int32_t amount=clamp(p[1],0,127);
     int32_t target=type?(amount+(amount==127))*256:0;
 #if defined(MELODEE_FX_PROFILE) && MELODEE_FX_PROFILE && defined(FM1_IRQ_TARGET)
@@ -555,16 +588,36 @@ static void fx_slot_prepare(fx_plan_t *plan,uint32_t si,const int16_t *p)
     if(f->type && type && f->type!=type && f->mix)target=0;
     if(!target && !f->mix){
         if(f->type || resource[RES_FX0+si].size){resource[RES_FX0+si].size=0;fx_zero(f);}
+#if !MELODEE_RETIRED_REFERENCE
+        if(fx_plate_owner==si){fx_plate_owner=255;fx_plate.ready=0;}
+#endif
         return;
     }
     if(f->epoch!=fx_epoch || (type && f->type!=type && !f->mix)){
         resource[RES_FX0+si].size=0;fx_zero(f);
+#if !MELODEE_RETIRED_REFERENCE
+        if(fx_plate_owner==si){fx_plate_owner=255;fx_plate.ready=0;}
+#endif
         f->epoch=fx_epoch;f->type=(uint8_t)type;f->rng=(int32_t)(0x73a9825du+si*997u);
     }
     f->rate=(int16_t)clamp(p[2],0,127);f->character=(int16_t)clamp(p[3],0,127);
+#if !MELODEE_RETIRED_REFERENCE
+    uint32_t destination=0;int32_t modulation=fx_mod_value(f,si,n,&destination);
+    if(destination==1u){int32_t a=clamp(amount+modulation,0,127);if(target)target=(a+(a==127))*256;}
+    if(destination==2u)f->rate=(int16_t)clamp(f->rate+modulation,0,127);
+    if(destination==3u)f->character=(int16_t)clamp(f->character+modulation,0,127);
+    if(f->type==FX_PLATE)f->q[0][3].b2=(float)(destination==4u?modulation:0);
+    if(f->type==FX_DRIVE){
+        int32_t tone=si/FX_SLOTS==NPART?song.g[G_MFXTONE+si%FX_SLOTS]:trk[si/FX_SLOTS].p[P_FXTONE+si%FX_SLOTS];
+        f->q[0][3].b1=(float)clamp(tone+(destination==4u?modulation:0),-63,63);
+    }
+#endif
     if(fx_has_tone(f->type)){   /* the low cut (section 0: the floor, TONE above 0 higher), TONE below 0 the high cut (1) */
         uint32_t slot=si%FX_SLOTS,master=si/FX_SLOTS==NPART,div=f->type==FX_REVERB?FX_REV_DIV:4u;
         int32_t tone=clamp(master?song.g[G_MFXTONE+slot]:trk[si/FX_SLOTS].p[P_FXTONE+slot],-FX_TONE_MAX,FX_TONE_MAX);
+        #if !MELODEE_RETIRED_REFERENCE
+        if(destination==4u)tone=clamp(tone+modulation,-FX_TONE_MAX,FX_TONE_MAX);
+        #endif
         for(uint32_t k=0;k<2u;k++){   /* (a2: the cutoff now, Hz; 0 off) */
             int32_t hz=k?(tone<0?fx_tone_hz(tone):0):fx_low_cut_hz(f->type,tone);
             fx_bq_t *q=&f->q[0][k];
@@ -578,12 +631,25 @@ static void fx_slot_prepare(fx_plan_t *plan,uint32_t si,const int16_t *p)
     if(profiling){f->rate=(fx_profile_control>>12u)&127u;f->character=(fx_profile_control>>19u)&127u;}
 #endif
     int16_t *mem=0;
-    if(f->type>=FX_ECHO){
-        uint32_t bytes=f->type==FX_CHORUS?FX_CHORUS_BYTES:f->type==FX_ROOM?2048u:f->type==FX_REVERB?FX_REVERB_BYTES:8192u;
+    if(f->type>=FX_ECHO
+#if !MELODEE_RETIRED_REFERENCE
+        && f->type!=FX_DRIVE
+#endif
+    ){
+        uint32_t bytes=f->type==FX_CHORUS?FX_CHORUS_BYTES:f->type==FX_ROOM?2048u:f->type==FX_REVERB?4096u:8192u;
+#if !MELODEE_RETIRED_REFERENCE
+        if(f->type==FX_PLATE)bytes=PLATE_SAMPLES*2u;
+#endif
         if(!f->failed && !resource[RES_FX0+si].size){
             void *(*volatile allocate)(uint32_t,uint32_t)=fx_memory;mem=allocate(RES_FX0+si,bytes);if(!mem)f->failed=1;
         }else if(resource[RES_FX0+si].size)mem=resource[RES_FX0+si].ptr;
         if(!mem){f->mix=0;return;}
+#if !MELODEE_RETIRED_REFERENCE
+        if(f->type==FX_PLATE){
+            if(fx_plate_owner!=si || !fx_plate.ready){plate_init(&fx_plate,mem,PLATE_SAMPLES);fx_plate_owner=(uint8_t)si;}
+            fx_plate_set(f);
+        }
+#endif
     }
     plan->f=f;plan->mem=mem;plan->target=target;plan->active=1;
 }
@@ -592,6 +658,11 @@ static __attribute__((noinline,section(".audio_text"))) int fx_slot_run(const fx
     if(!plan->active)return 0;
     fx_state_t *f=plan->f;int16_t *mem=plan->mem;int32_t target=plan->target;
     void (*volatile copy)(fx_state_t *,uint32_t)=fx_copy;copy(f,n);
+#if !MELODEE_RETIRED_REFERENCE
+    if(f->type==FX_PLATE){void (*volatile run)(fx_state_t *,int16_t *,uint32_t,int32_t)=fx_plate_run;run(f,mem,n,target);}
+    else if(f->type==FX_DRIVE){void (*volatile run)(fx_state_t *,uint32_t,int32_t)=fx_drive_run;run(f,n,target);}
+    else
+#endif
     if(f->type==FX_CHORUS){
         if(!n)return 1;
         if(!f->age){f->rev_l=f->rev_r=256*65536;f->age=1;}
@@ -599,13 +670,17 @@ static __attribute__((noinline,section(".audio_text"))) int fx_slot_run(const fx
         int32_t depth=f->character*2,delay=256*65536+fx_sine(f->phase)*depth;
         int32_t step[2]={(delay-f->rev_l)/(int32_t)n,(512*65536-delay-f->rev_r)/(int32_t)n};
         void (*volatile run)(fx_state_t *,int16_t *,uint32_t,const int32_t *,int32_t)=fx_chorus;run(f,mem,n,step,target);
-    }else if(f->type==FX_REVERB){
+    }
+#if MELODEE_RETIRED_REFERENCE
+    else if(f->type==FX_REVERB){
         /* Design the slow drift beside the other block-rate coefficients,
          * keeping sine lookup calls outside the small SRAM sample kernel. */
         int32_t drift[8];for(uint32_t k=0;k<8u;k++)drift[k]=fx_sine(f->phase*(k+1u)+k*0x23456789u)*f->character/1024;
         f->phase+=n*11380u;void (*volatile setup)(fx_state_t *)=fx_reverb_setup;setup(f);
         void (*volatile run)(fx_state_t *,int16_t *,uint32_t,const int32_t *,int32_t)=fx_reverb;run(f,mem,n,drift,target);
-    }else if(f->type>=FX_ECHO){void (*volatile run)(fx_state_t *,int16_t *,uint32_t,int32_t)=fx_time;run(f,mem,n,target);}
+    }
+#endif
+    else if(f->type>=FX_ECHO){void (*volatile run)(fx_state_t *,int16_t *,uint32_t,int32_t)=fx_time;run(f,mem,n,target);}
     else {
         if(f->type==FX_TAPE){void (*volatile design)(fx_state_t *,uint32_t)=fx_tape_design;design(f,n);}
         else {if(!fx_hw_status){void (*volatile probe)(void)=fx_probe;probe();}void (*volatile design)(fx_state_t *,uint32_t)=fx_design;design(f,n);}
@@ -623,7 +698,7 @@ static __attribute__((noinline,section(".audio_text"))) int fx_slot_run(const fx
 }
 static __attribute__((noinline,section(".audio_text"))) int fx_slot_values(uint32_t si,const int16_t *p,uint32_t n)
 {
-    fx_plan_t plan;void (*volatile prepare)(fx_plan_t *,uint32_t,const int16_t *)=fx_slot_prepare;prepare(&plan,si,p);
+    fx_plan_t plan;void (*volatile prepare)(fx_plan_t *,uint32_t,const int16_t *,uint32_t)=fx_slot_prepare;prepare(&plan,si,p,n);
     int (*volatile run)(const fx_plan_t *,uint32_t)=fx_slot_run;return run(&plan,n);
 }
 static __attribute__((noinline,section(".audio_text"))) int fx_process_impl(track_t *t,int32_t *b,uint32_t n)
@@ -722,6 +797,9 @@ static int fx_bus_active(void)
 #endif
     for(uint32_t slot=0;slot<FX_SLOTS;slot++)if((song.g[G_MFXTYPE+slot*FX_PARAMS] && song.g[G_MFXMIX+slot*FX_PARAMS]) || fx_state[base+slot].mix)return 1;
     for(uint32_t slot=0;slot<FX_SLOTS;slot++)if(fx_state[base+slot].type || resource[RES_FX0+base+slot].size){resource[RES_FX0+base+slot].size=0;fx_zero(&fx_state[base+slot]);}
+#if !MELODEE_RETIRED_REFERENCE
+    if(fx_plate_owner>=NPART*FX_SLOTS && fx_plate_owner<SFX_SLOTS && !resource[RES_FX0+fx_plate_owner].size){fx_plate_owner=255;fx_plate.ready=0;}
+#endif
     return 0;
 }
 static void fx_bus_start(uint32_t n)
@@ -735,7 +813,7 @@ static void fx_bus_start(uint32_t n)
 #if defined(MELODEE_FX_PROFILE) && MELODEE_FX_PROFILE && defined(FM1_IRQ_TARGET)
     uint32_t start=fm1_ticks();
 #endif
-    for(uint32_t slot=0;slot<FX_SLOTS;slot++)fx_slot_prepare(&fx_bus_plan[slot],NPART*FX_SLOTS+slot,song.g+G_MFXTYPE+slot*FX_PARAMS);
+    for(uint32_t slot=0;slot<FX_SLOTS;slot++)fx_slot_prepare(&fx_bus_plan[slot],NPART*FX_SLOTS+slot,song.g+G_MFXTYPE+slot*FX_PARAMS,n);
     for(uint32_t slot=0;slot<FX_SLOTS;slot++)if(fx_bus_plan[slot].active && fx_bus_plan[slot].target){
         int32_t amount=clamp(song.g[G_FXRETURN],0,127);fx_bus_target=(amount+(amount==127))*256;break;
     }

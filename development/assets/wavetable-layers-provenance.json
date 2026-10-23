@@ -1,0 +1,111 @@
+{
+  "contributions": "By: Inputsignwave",
+  "surge_commit": "a30341be00484d3de6b65869998100ccc6db6945",
+  "akwf_commit": "8de90bf94376670947369e69de0af6b9fbd19286",
+  "banks": [
+    {
+      "name": "Vowel Glass",
+      "source": "sources/surge-synthesizer__surge/resources/data/wavetables/Generated/Formants.wt",
+      "audition_sha256": "3421e95601f86e9b254da30fe092af75c93c80121838548ce390d43929268eba",
+      "precision": "signed PCM8",
+      "frames": 6,
+      "mip_samples": [
+        65,
+        33,
+        17,
+        2
+      ]
+    },
+    {
+      "name": "Metallic PM",
+      "source": "sources/surge-synthesizer__surge/resources/data/wavetables/Generated/PM Comp.wt",
+      "audition_sha256": "2bb01a7ade3ac33bbdab4e967fec45a9b8176f7e2a94ee0d0d1ca325ab84a675",
+      "precision": "signed PCM8",
+      "frames": 6,
+      "mip_samples": [
+        65,
+        33,
+        17,
+        2
+      ]
+    },
+    {
+      "name": "Hollow Motion",
+      "source": "sources/surge-synthesizer__surge/resources/data/wavetables/Generated/Flangy.wt",
+      "audition_sha256": "a1c3dc35e5847db4167d610362d4a12bffe64295c5031ab8dbf748437edc09b7",
+      "precision": "signed PCM8",
+      "frames": 6,
+      "mip_samples": [
+        65,
+        33,
+        17,
+        2
+      ]
+    },
+    {
+      "name": "Prime Spectrum",
+      "source": "sources/surge-synthesizer__surge/resources/data/wavetables/Generated/Primes.wt",
+      "audition_sha256": "41308d26465da5aa2886505dbd1297e2642ca7946a38f7a60dc9ef26742ab9e1",
+      "precision": "signed PCM8",
+      "frames": 6,
+      "mip_samples": [
+        65,
+        33,
+        17,
+        2
+      ]
+    },
+    {
+      "name": "Rippling Digital",
+      "source": "sources/surge-synthesizer__surge/resources/data/wavetables/Generated/Ripple.wt",
+      "audition_sha256": "db6692923f736ddeaa2b85f6c53e6376076047724a5f8ddbf7c32715f9eb812d",
+      "precision": "signed PCM8",
+      "frames": 6,
+      "mip_samples": [
+        65,
+        33,
+        17,
+        2
+      ]
+    },
+    {
+      "name": "Phase Prism",
+      "source": "sources/surge-synthesizer__surge/resources/data/wavetables/Generated/Phasey 2.wt",
+      "audition_sha256": "59bbe2ba5e0293af99026f20e7050d56bd13f25617af5b7a298ed306b1f22555",
+      "precision": "signed PCM8",
+      "frames": 6,
+      "mip_samples": [
+        65,
+        33,
+        17,
+        2
+      ]
+    },
+    {
+      "name": "Organic Voice",
+      "source": "sources/KristofferKarlAxelEkstrand__AKWF-FREE/AKWF/AKWF_hvoice",
+      "audition_sha256": "a5a43b2421ec2954cf44977bc6d46a9a755ee8f05aba0f8972db3f598aab8254",
+      "precision": "signed PCM8",
+      "frames": 6,
+      "mip_samples": [
+        65,
+        33,
+        17,
+        2
+      ]
+    },
+    {
+      "name": "FM Spectral Morph",
+      "source": "sources/KristofferKarlAxelEkstrand__AKWF-FREE/AKWF/AKWF_fmsynth",
+      "audition_sha256": "fe695b1ec9fbfa17943b4b71cd409c340b07af3c8e9a55b3aeb7415722b9fc9e",
+      "precision": "signed PCM8",
+      "frames": 6,
+      "mip_samples": [
+        65,
+        33,
+        17,
+        2
+      ]
+    }
+  ]
+}

@@ -1,3 +1,4 @@
+/* Production removal-profile FX benchmarks — By: Inputsignwave. */
 /* SPDX-License-Identifier: GPL-3.0-only
  * Copyright (C) 2026 Kerem Kilic (Ellic Studio) */
 /* Complete insert matrix; host instruction counts are not FM-1 CPU percentages. */
@@ -45,7 +46,12 @@ static double run(const char *kind,const uint8_t modes[3],int tracks,int setting
 int main(int argc,char **argv){
     int full=argc>1;puts("kind,slot1,slot2,slot3,tracks,extreme,host_instructions_per_frame,host_ns_per_frame,allocated_bytes");
     for(int setting=0;setting<2;setting++)for(int tracks=1;tracks<=4;tracks+=3)for(int type=0;type<FX_COUNT;type++){
-        uint8_t modes[3]={type,0,0};double cost=run("single",modes,tracks,setting,0,2048);
+        if(!MELODEE_RETIRED_REFERENCE && (type==FX_ROOM || type==FX_REVERB))continue;
+        uint8_t modes[3]={type,0,0};
+#if !MELODEE_RETIRED_REFERENCE
+        if(type==FX_PLATE){run("shared-plate",modes,tracks,setting,2,2048);run("separate-plate",modes,tracks,setting,3,2048);continue;}
+#endif
+        double cost=run("single",modes,tracks,setting,0,2048);
         /* Apple instruction counters are deterministic; leave 20% headroom
          * above the measured ~112 instructions per stereo sample frame.
          * Other hosts return zero rather than a target CPU estimate. */
@@ -54,7 +60,8 @@ int main(int argc,char **argv){
         if(type){modes[1]=modes[2]=type;run("triple",modes,tracks,setting,0,2048);run("mixer-triple",modes,tracks,setting,1,2048);run("send-triple",modes,tracks,setting,2,2048);run("separate-send-triple",modes,tracks,setting,3,2048);}
     }
     if(full)for(int a=1;a<FX_COUNT;a++)for(int b=1;b<FX_COUNT;b++)for(int c=1;c<FX_COUNT;c++)for(int setting=0;setting<2;setting++){
+        if(!MELODEE_RETIRED_REFERENCE && (a==FX_ROOM || a==FX_REVERB || a==10u || b==FX_ROOM || b==FX_REVERB || b==10u || c==FX_ROOM || c==FX_REVERB || c==10u))continue;
         uint8_t modes[3]={a,b,c};run("matrix",modes,4,setting,0,256);
     }
-    fprintf(stderr,"FX performance: all effects, three-slot/four-track chains, mixer and %u-row matrix passed (%u)\n",full?2u*(FX_COUNT-1u)*(FX_COUNT-1u)*(FX_COUNT-1u):0u,checksum);return 0;
+    fprintf(stderr,"FX performance: all effects, three-slot/four-track chains, mixer and %u-row matrix passed (%u)\n",full?2u*(FX_COUNT-1u-3u*!MELODEE_RETIRED_REFERENCE)*(FX_COUNT-1u-3u*!MELODEE_RETIRED_REFERENCE)*(FX_COUNT-1u-3u*!MELODEE_RETIRED_REFERENCE):0u,checksum);return 0;
 }

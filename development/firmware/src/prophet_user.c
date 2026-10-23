@@ -27,16 +27,27 @@ static int p5_user_get(uint32_t slot,p5_patch_t *patch)
 {
     if(!native_used(ENGI_PROPHET,slot))return 2;memcpy(patch,native_raw(ENGI_PROPHET,slot),sizeof *patch);return 0;
 }
+/* Additional factory stars — By: Inputsignwave. GRAIN bytes 4..11 were
+ * unused; retain GRAIN bits 0..11, WT bytes 12..15 and FX mapping 16..31. */
+_Static_assert(P5_FACTORY_N < 240u,"extended Prophet favorite capacity");
 static int p5_favorite_has(uint32_t slot,int factory)
 {
     if(!factory)return up_favorite(slot);
+    if(slot>=208u){const uint8_t *x=favorites.factory[8];return slot<=P5_FACTORY_N && x[4]=='P' && x[5]=='5' && x[6]=='X' && x[7]==1u && ((x[8u+(slot-208u)/8u]>>((slot-208u)%8u))&1u);}
     const uint8_t *row=favorites.factory[0];
     return slot<=P5_FACTORY_N && row[28]=='P' && row[29]=='5' && row[30]=='F' && row[31]==1u && (row[2u+slot/8u]>>(slot%8u)&1u);
 }
 static int p5_favorite_set(uint32_t slot,int on,int factory)
 {
     if(!factory)return up_favorite_set(slot,on);
-    uint8_t *row=favorites.factory[0];if(slot>P5_FACTORY_N || p5_favorite_has(slot,1)==!!on)return 0;
+    if(slot>P5_FACTORY_N || p5_favorite_has(slot,1)==!!on)return 0;
+    if(slot>=208u){
+        uint8_t *x=favorites.factory[8];
+        if(x[4]!='P'||x[5]!='5'||x[6]!='X'||x[7]!=1u){memset(x+8,0,4);x[4]='P';x[5]='5';x[6]='X';x[7]=1;}
+        uint8_t *b=x+8u+(slot-208u)/8u,m=(uint8_t)(1u<<((slot-208u)%8u));
+        if(on)*b|=m;else *b&=(uint8_t)~m;return 1;
+    }
+    uint8_t *row=favorites.factory[0];
     if(row[28]!='P'||row[29]!='5'||row[30]!='F'||row[31]!=1u){memset(row+2,0,26u);row[28]='P';row[29]='5';row[30]='F';row[31]=1u;}
     if(on)row[2u+slot/8u]|=(uint8_t)(1u<<(slot%8u));else row[2u+slot/8u]&=(uint8_t)~(1u<<(slot%8u));return 1;
 }

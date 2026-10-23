@@ -1,3 +1,4 @@
+/* Studio Tess 8 navigation modifications — By: Inputsignwave. */
 /* Studio Tess 7 integration and validation modifications — By: Inputsignwave.
  * Upstream authorship and licence notices below remain applicable. */
 /* SPDX-License-Identifier: GPL-3.0-only
@@ -174,8 +175,8 @@ static void head_chip_text(char *b)
     } else if (pg->graph == GR_FMEG) {                  /* FM6's EG RATE / LVL: "OP3 EG" */
         str_cpy(b, "OP1 EG", 16);
         b[2] = (char)('1' + fm6_opsel % 6u);
-    } else if (pg->fam == FAM_FX && pg->graph == GR_NONE) {   /* an FX slot: its effect ("ECHO") */
-        str_cpy(b, N_FX[clamp((pg->scope == SC_GLOBAL ? song.g : TSEL->p)[pg->id[0] - 1u], 0, FX_COUNT - 1)], 16);
+    } else if (pg->fam == FAM_FX && pg->graph == GR_NONE && pg->scope!=SC_SFX) {   /* an FX slot: its effect ("ECHO") */
+        str_cpy(b, N_FX[enum_orig(&TP[P_FXTYPE],clamp((pg->scope == SC_GLOBAL ? song.g : TSEL->p)[pg->id[0] - 1u], 0, FX_COUNT - 1))], 16);
     } else if (pg->scope != SC_ENGINE && sec_on()) {   /* an engine in sections: the page's name in its section */
         sec_chip(ui.page, b, 16);
     } else {
@@ -679,6 +680,11 @@ static void draw_columns(void)
         return;
     }
 #endif
+    if(cur_page()->graph==GR_DESIGNER) {
+        draw_column(0,"OPEN","TURN","",VAL(0u),-1,ICON_AUTO);
+        for(c=1;c<4;c++)draw_column(c,"","","",T_DIM,-1,ICON_NONE);
+        return;
+    }
     if (features_page(cur_page()->graph)) {
         uint32_t graph = cur_page()->graph;
         const harm_track_t *h = &harm_track[song.sel];
@@ -1027,7 +1033,7 @@ static void draw_columns(void)
             /* Rows have room for enum names that the compact parameter formatter abbreviates. */
             if (d->fmt == F_ENUM && (col_style == CS_CAPTURE ||
                 (d->names == N_FX && (*vp == FX_REVERB || *vp == FX_CHORUS))))
-                str_cpy(val, d->names[clamp(*vp, d->min, d->max)], sizeof val);
+                str_cpy(val, d->names[enum_orig(d,clamp(*vp, d->min, d->max))], sizeof val);
         }
         draw_column(c, d->label, val, unit, (cur_page()->scope == SC_CZ1 &&   /* CZ-1: no effect on the tone as it is */
                     !cz_ed_active(cz_patch[song.sel % NTRK].raw, cur_page()->id[c])) ||
@@ -1262,11 +1268,7 @@ static int own_screen(void)                             /* a page drawn whole by
 /* the page (or Stage): its own screen, the redesign's, else its cards, panel and footer */
 static void draw_page(void)
 {
-    if (!ui.home && !page_visible(ui.page)) {          /* an OP page (DIGITAL's, retired): EDIT 1; an FX slot
-                                                         * emptied (the editor): its rack */
-        ui.page = (uint8_t)page_first(cur_page()->fam == FAM_FX ? FAM_FX : FAM_EDIT);
-        page_entered();
-    }
+    navigation_fix();
     cursor_fix();
     if (designer_screen()) {                            /* the sound designer's START, FEATURES (ui_designer.c) */
         designer_draw();

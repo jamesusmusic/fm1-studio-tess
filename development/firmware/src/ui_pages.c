@@ -178,7 +178,7 @@ static void pv_rack_rows(void)
             b[0] = (char)((sh ? 'A' : '1') + k);
             b[1] = 0;
             cv_text_on(10, ty_y(12, TY_TX), TY_TX, b, sel ? k2 : T_MID, bg);
-            menu_words(nm, on ? N_FX[clamp(fx[k * FX_PARAMS], 0, FX_COUNT - 1)] : "--", sizeof nm);
+            menu_words(nm, on ? N_FX[enum_orig(&TP[P_FXTYPE],clamp(fx[k * FX_PARAMS], 0, FX_COUNT - 1))] : "--", sizeof nm);
             cv_free_text(30, ty_y(12, TY_TX), TY_TX, nm, sel ? k1 : wc, bg, vx - 30);
         } else if (sh) {                                /* RETURN: every track's */
             for (j = 0; j < 4u; j++)
@@ -204,7 +204,7 @@ static void pv_rack_rows(void)
                         x += 13;
                     }
                 }
-                menu_words(nm, N_FX[clamp(bus[j * FX_PARAMS], 0, FX_COUNT - 1)], sizeof nm);
+                menu_words(nm, N_FX[enum_orig(&TP[P_FXTYPE],clamp(bus[j * FX_PARAMS], 0, FX_COUNT - 1))], sizeof nm);
                 x = cv_free_text(x, ty_y(13, TY_LB), TY_LB, nm, T_MID, bg, vx - x) + 8;
             }
             if (!n)
@@ -594,6 +594,7 @@ static uint32_t pv_pic(int32_t *cut, int32_t *res)
     uint32_t e = TSEL->eng_req % NENGINES, c;
     *cut = -1;
     *res = 0;
+    if(pg->scope==SC_SFX)return 0u;
     if(pg->fam==FAM_FX)return 9u;
     if (pg->graph == GR_ARP || pg->graph == GR_STEPS)
         return pg->graph == GR_ARP ? 5u : 6u;
@@ -632,7 +633,16 @@ static void pv_fx(int32_t h)
     uint32_t master = pg->scope == SC_GLOBAL, slot = (pg->id[0] - (master ? G_MFXMIX : P_FXMIX)) / FX_PARAMS;
     const int16_t *p = (master ? song.g : TSEL->p) + pg->id[0] - 1u;   /* TYPE MIX RATE CHAR */
     uint32_t type = (uint32_t)clamp(p[0], 0, FX_COUNT - 1), failed = fx_state[(master ? NPART : song.sel % NPART) * FX_SLOTS + slot].failed;
-    static const char *const hint[FX_COUNT]={"Dry signal","Moving notches","All-pass L / dry R","Random vowels","Phase / crossover jitter","Jumping resonance","Short lo-fi echoes","Small lo-fi space","Diffused stereo reverb","Stereo pitch shimmer"};
+    /* By: Inputsignwave. Keep every FX preview populated; a missing hint
+     * reaches text_fit as NULL when the full panel redraws during playback. */
+    static const char *const hint[]={"Dry signal","Moving notches","All-pass L / dry R","Random vowels","Phase / crossover jitter","Jumping resonance","Short lo-fi echoes",
+        MELODEE_RETIRED_REFERENCE?"Small lo-fi space":"Dry signal",
+        MELODEE_RETIRED_REFERENCE?"Diffused stereo reverb":"Dry signal","Stereo pitch shimmer"
+#if !MELODEE_RETIRED_REFERENCE
+        ,"Stereo plate","Warm saturation"
+#endif
+    };
+    _Static_assert(sizeof hint/sizeof hint[0]==FX_COUNT,"Every FX needs a preview hint");
     int32_t mix = p[1], cha = p[3], tone = master ? song.g[G_MFXTONE + slot] : TSEL->p[P_FXTONE + slot];
     int32_t ly = h - lf->h - 4, sy = ly - 9, low = (fx_has_tone((int32_t)type) && !failed ? sy - 6 : h - lf->h - 10) * 16;
     int32_t top = (lf->h + 10) * 16, cy = (top + low) / 32, py = cy * 16;

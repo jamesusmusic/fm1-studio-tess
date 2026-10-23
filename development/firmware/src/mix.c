@@ -1,3 +1,4 @@
+/* Wavetable integration — By: Inputsignwave. */
 /* SPDX-License-Identifier: GPL-3.0-only
  * Copyright (C) 2026 Kerem Kilic (Ellic Studio)
  * Portions Copyright (C) 2026 Leo Kuroshita (@kurogedelic), Hügelton Instruments */
@@ -266,6 +267,9 @@ static __attribute__((noinline)) void mix_block(int32_t *out,uint32_t n)
     if(track_capture_on)memset(track_capture,0,n*NTRK*sizeof *track_capture);
 #endif
     memset(mix_l,0,n*sizeof *mix_l);memset(mix_r,0,n*sizeof *mix_r);
+#if MELODEE_WAVETABLE
+    wt_cache_sweep(); /* the previous block has joined all workers */
+#endif
     AP_START(events_start);events_block(n);AP_END(AP_EVENTS,events_start);
     fx_bus_select();fx_send_on=(uint8_t)fx_bus_active();if(fx_send_on){memset(fx_send_l,0,n*sizeof *fx_send_l);memset(fx_send_r,0,n*sizeof *fx_send_r);
         if(fx_bus_separate){memset(fx_send_extra_l,0,sizeof fx_send_extra_l);memset(fx_send_extra_r,0,sizeof fx_send_extra_r);}}

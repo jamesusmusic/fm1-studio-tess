@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Inputsignwave branding and compatibility modifications — By: Inputsignwave.
 # SPDX-License-Identifier: GPL-3.0-only
 # Copyright (C) 2026 Kerem Kilic (Ellic Studio)
 """Measure fixed voices on all 1296 ordered engine assignments. Creates no backups.
@@ -184,8 +185,8 @@ def run(d,categories,voices,variant,seconds,fixed):
 def usb_streams(path,format='int16'):
     import sounddevice as sd
     devices=sd.query_devices()
-    inp=next(i for i,d in enumerate(devices) if d['name'] in ('Melodee', 'Melodee In') and d['max_input_channels'] > 0)
-    out=next(i for i,d in enumerate(devices) if d['name'] in ('Melodee', 'Melodee Out') and d['max_output_channels'] >= 2)
+    inp=next(i for i,d in enumerate(devices) if d['name'] in ('Inputsignwave', 'Inputsignwave In', 'Melodee', 'Melodee In') and d['max_input_channels'] > 0)
+    out=next(i for i,d in enumerate(devices) if d['name'] in ('Inputsignwave', 'Inputsignwave Out', 'Melodee', 'Melodee Out') and d['max_output_channels'] >= 2)
     channels=min(2,devices[inp]['max_input_channels']);statuses=[]
     with wave.open(str(path),'wb') as wav:
         wav.setnchannels(channels);wav.setsampwidth(2 if format=='int16' else 3);wav.setframerate(44100)
@@ -244,7 +245,7 @@ def restore_settings(d,directory):
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument('--port',default='Melodee');p.add_argument('--backup',type=Path,required=True)
+    p.add_argument('--port',default='Inputsignwave');p.add_argument('--backup',type=Path,required=True)
     p.add_argument('--output',type=Path,required=True);p.add_argument('--seconds',type=float,default=.16)
     p.add_argument('--voices',type=int,default=2);p.add_argument('--assignment',help='four category digits, 0..5')
     p.add_argument('--normal-admission',action='store_true');p.add_argument('--calibrate',action='store_true');p.add_argument('--seed',type=Path);

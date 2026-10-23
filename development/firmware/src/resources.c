@@ -1,3 +1,4 @@
+/* Engine/space retirement and compatibility — By: Inputsignwave. */
 /* SPDX-License-Identifier: GPL-3.0-only
  * Copyright (C) 2026 Kerem Kilic (Ellic Studio) */
 /* Bounded audio working-memory arena. Only the audio owner (or boot/host
@@ -7,7 +8,11 @@
  * code/data/retained-state boundary. Small banks first preserve the large
  * contiguous POOL bank for engine state and note history. */
 enum { RES_ENGINE0, RES_NOTE_HISTORY = RES_ENGINE0 + NPART, RES_FX0,
-       RES_RECORD_UNDO = RES_FX0 + FX_STATE_COUNT, RES_COUNT };
+       RES_RECORD_UNDO = RES_FX0 + FX_STATE_COUNT,
+#if MELODEE_WAVETABLE
+       RES_WAVETABLE, RES_WAVE_LAYERS,
+#endif
+       RES_COUNT };
 static uint8_t recording_undo_lost;
 static uint8_t recording_undo_active, recording_undo_skip;
 static struct { void *ptr; uint32_t size; } resource[RES_COUNT];
@@ -25,9 +30,10 @@ extern uint8_t _resource_cache_start[], _resource_cache_end[];
 #endif
 #define RESOURCE_MAIN_CAPACITY ((uint32_t)((uintptr_t)_resource_end - (uintptr_t)_resource_start))
 #else
-static uint32_t resource_host[40960];
-static uint32_t resource_host_low[5120], resource_host_data[512], resource_host_retained[1024];
-static uint32_t resource_host_cache[7168], resource_host_cache_enabled;
+static _Alignas(uintptr_t) uint32_t resource_host[40960];
+static _Alignas(uintptr_t) uint32_t resource_host_low[5120], resource_host_data[512], resource_host_retained[1024];
+static _Alignas(uintptr_t) uint32_t resource_host_cache[7168];
+static uint32_t resource_host_cache_enabled;
 #define RESOURCE_CACHE_AVAILABLE resource_host_cache_enabled
 #define _resource_cache_start ((uint8_t *)resource_host_cache)
 #define _resource_cache_end ((uint8_t *)(resource_host_cache + 7168))
@@ -69,11 +75,14 @@ static void resource_release(uint32_t id) { resource[id].size = 0; }
 static __attribute__((noinline)) void *resource_allocate(uint32_t id, uint32_t bytes)
 {
     if (bytes > RESOURCE_CAPACITY) { resource_failures++; return 0; }
+    /* Pointer-bearing host state needs 8-byte alignment; target pointers are
+     * 4 bytes, preserving the target arena layout. By: Inputsignwave. */
+    const uintptr_t alignment=sizeof(uintptr_t);
     uint32_t size = (bytes + 3u) & ~3u;
     if (!size) { resource_release(id); return 0; }
     for (uint32_t bank = 0; bank < RESOURCE_BANKS; bank++) {
         if (bank == RESOURCE_CACHE_BANK && !RESOURCE_CACHE_AVAILABLE) continue;
-        uintptr_t at = (uintptr_t)resource_banks[bank].start;
+        uintptr_t at = ((uintptr_t)resource_banks[bank].start+alignment-1u)&~(alignment-1u);
         uintptr_t limit = (uintptr_t)resource_banks[bank].end;
         /* Each collision advances past a live block; at most RES_COUNT passes.
          * Integer addresses permit distinct host arrays and disjoint SRAM banks. */
@@ -95,7 +104,7 @@ static __attribute__((noinline)) void *resource_allocate(uint32_t id, uint32_t b
                 if (used > resource_peak) resource_peak = used;
                 return p;
             }
-            at = next;
+            at = (next+alignment-1u)&~(alignment-1u);
         }
     }
     resource_failures++;
