@@ -4,18 +4,23 @@ By: Inputsignwave
 
 ## Current checkpoint
 
-The live USB implementation is now present for WAVE LAYERS, pending the native
-candidate's validation and hardware audition. See
+The live USB candidate for WAVE LAYERS is built and validated on the native
+toolchain, macOS/Linux host suites and chip emulator, and is ready for hardware
+audition. See
 [Performance 11 USB MPE testing](PERFORMANCE11_MPE_TESTING.md) for the exact
 route, mappings, setup and limitations. The older `experiments/mpe/` files remain
 the independently tested design prototype; production uses `firmware/src/midi_mpe.c`
 and `mpe_controls.h`. Direct Bluetooth and full expression recording remain planned.
 
-The original 24–32 KiB allowance was a planning reserve, not a measured feature
-size. Measure the actual first voice implementation in the recovered space
-before making further cuts to satisfy an arbitrary allowance.
+The original 24–32 KiB allowance was a planning reserve. The measured first
+implementation adds 2,628 bytes and leaves 10,580 bytes of app flash; no further
+feature cuts were needed. See [validation and resource measurements](PERFORMANCE11_MPE_VALIDATION.md).
 
 ## Live input first
+
+The following is the broader architecture checklist. The testing guide defines
+the first candidate: one dedicated USB lower zone, WAVE LAYERS and raw live input.
+Routing non-zone USB channels to ordinary tracks is a later extension.
 
 1. Add explicit source + lower-zone + destination-track routing. Preserve normal
    USB/TRS channel routing while MPE is off and on all channels outside the zone.

@@ -544,4 +544,4 @@ audition remains; no device was flashed.
 
 ### Live USB MPE candidate — By: Inputsignwave
 
-WAVE LAYERS lower-zone RISE input, fixed per-track routing, independent bend/pressure/slide and safe release ownership are implemented for Performance 11 MPE Dev1 validation. See `docs/PERFORMANCE11_MPE_TESTING.md`. Native measurements and hardware acceptance remain candidate gates; FM6/Prophet expression, full MPE capture and direct BLE are later milestones.
+WAVE LAYERS lower-zone RISE input, fixed per-track routing, independent bend/pressure/slide and safe release ownership are built and offline validated for Performance 11 MPE Dev1: local full suite 353 s, Linux full suite 768 s, sanitizer/concurrent PCM checks and exact-package chip emulation pass. App flash spare is 10,580 B; main audio arena 50,784 B. See `docs/PERFORMANCE11_MPE_TESTING.md` and `docs/PERFORMANCE11_MPE_VALIDATION.md`. Hardware acceptance is next; FM6/Prophet expression, full MPE capture and direct BLE are later milestones.
