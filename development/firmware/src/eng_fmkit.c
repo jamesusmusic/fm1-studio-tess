@@ -6,13 +6,13 @@
 #if !MELODEE_RETIRED_REFERENCE
 #define FMK_POLY 8u
 typedef struct { fm6_voice_t voice;uint8_t patch[FP_SIZE+1u];uint32_t age;uint8_t lane; } fmk_voice_t;
-typedef struct { fmk_voice_t v[NVOICE]; } fmk_part_t;
+typedef struct { fmk_voice_t v[FMK_POLY]; } fmk_part_t;
 static fmk_part_t *fmk_part(const track_t *t);
 static void fmk_note_on(track_t *t,voice_t *v)
 {
  fmk_part_t *p=fmk_part(t);fmk_voice_t *hit=&p->v[v-t->v];
  fm6_voice_t *s=&hit->voice;uint32_t lane=drum_lane(v->note);
- if(lane==DV_HATC)for(uint32_t i=0;i<NVOICE;i++)
+ if(lane==DV_HATC)for(uint32_t i=0;i<FMK_POLY;i++)
   if(t->v[i].active && &t->v[i]!=v && p->v[i].lane==DV_HATO)t->v[i].stage=4;
  uint8_t packed[FM6_PACKED];fm6_factory((uint32_t)clamp(t->p[P_E0+lane],0,FM6_NFAC-1u),packed);
  fm6_unpack(packed,hit->patch);hit->lane=(uint8_t)lane;hit->age=0;
@@ -62,8 +62,8 @@ static void fmk_render(track_t *t,voice_t *v,int32_t *out,uint32_t n,const vmod_
 static uint32_t fmk_alloc(track_t *t,uint32_t note)
 {
  fmk_part_t *p=fmk_part(t);uint32_t lane=drum_lane(note),oldest=0;
- for(uint32_t i=0;i<NVOICE;i++)if(t->v[i].active && p->v[i].lane==lane)return i;
- for(uint32_t i=0;i<NVOICE;i++){
+ for(uint32_t i=0;i<FMK_POLY;i++)if(t->v[i].active && p->v[i].lane==lane)return i;
+ for(uint32_t i=0;i<FMK_POLY;i++){
   if(!t->v[i].active || t->v[i].stage==4u)return i;
   if(t->v[i].age<t->v[oldest].age)oldest=i;
  }
@@ -72,7 +72,7 @@ static uint32_t fmk_alloc(track_t *t,uint32_t note)
 static const preset_t FMK_PRESETS[]={
  {"FM ELECTRONIC",{31,29,34,32,39,30,33,37},{0,45,127,35},0,0},
  {"FM METAL KIT",{31,44,34,32,39,36,40,35},{0,45,127,35},0,0},
- {"FM TUNED KIT",{1,11,6,12,19,21,23,5},{0,45,127,35},0,0},
+ {"FM TUNED KIT",{1,11,6,12,19,21,23,7},{0,45,127,35},0,0},
 };
 static const engine_t ENG_FMKIT={
  .name="FM DRUM KIT",.page_title={"FM LANES 1-4","FM LANES 5-8"},

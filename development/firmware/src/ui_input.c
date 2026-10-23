@@ -1113,6 +1113,14 @@ static void edit_param(uint32_t slot, int32_t steps)
     v = enum_step(d, *vp, clamp(*vp + accel(EN_K1 + slot, steps, desc_range(d)), d->min, d->max));
     if(!MELODEE_RETIRED_REFERENCE && d->names==N_FX && (v==FX_ROOM || v==FX_REVERB))
         v=steps>0?FX_CHORUS:FX_ECHO;
+#if !MELODEE_RETIRED_REFERENCE
+    if(d->names==N_FX && v==FX_PLATE){
+        if(pg->scope!=SC_GLOBAL)v=steps>0?FX_DRIVE:FX_CHORUS;
+        else for(uint32_t k=0;k<FX_SLOTS;k++)if(song.g+G_MFXTYPE+k*FX_PARAMS!=vp && song.g[G_MFXTYPE+k*FX_PARAMS]==FX_PLATE){
+            ui_message("PLATE IN USE");v=steps>0?FX_DRIVE:FX_CHORUS;break;
+        }
+    }
+#endif
     if(!MELODEE_RETIRED_REFERENCE && d->names==N_DRUM_KIT && v==DK_SID)v=DK_909;
     *vp = (int16_t)v;
     if(pg->scope==SC_P5){

@@ -32,9 +32,9 @@ static void fx_plate_set(fx_state_t *f)
  const uint8_t *p=sound_fx.plate;
  plate_params a={0};
  a.feedback=12000+f->character*19129/127;
- a.damping=512+(127-p[4])*23000/127;
+ a.damping=32700-p[4]*32000/127;
  a.tone=clamp(((int32_t)p[1]-64)+(int32_t)f->q[0][3].b2,-64,63)*256;
- a.lowcut=1+p[2]*p[2]*6000/16129;
+ a.lowcut=1+p[2]*p[2]*14000/16129;
  a.highcut=256+p[3]*p[3]*32444/16129;
  a.width=p[5]*32768/127;a.depth=p[6]*PLATE_SCALE(24)*256/127;
  a.increment=fx_perform_increment(p[8]?p[8]-1u:p[7],p[8]!=0u,4u);

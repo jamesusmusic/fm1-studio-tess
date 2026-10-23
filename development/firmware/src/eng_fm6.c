@@ -180,12 +180,31 @@ static void fm6_rom_patch(const fm6_rom_t *r, uint8_t *v)   /* a Melodee factory
     fm6_sanitize(v);
 }
 
+#if !MELODEE_RETIRED_REFERENCE
+static int fm6_added_unpack(uint32_t slot,uint8_t *out)
+{
+ if(slot>=FM6_ADDED_COUNT)return 0;
+ uint32_t at=FM6_ADDED_OFFSET[slot],end=FM6_ADDED_OFFSET[slot+1u],n=0;
+ if(end>sizeof FM6_ADDED_DATA || at>end)return 0;
+ while(at<end && n<FM6_PACKED){
+  uint32_t token=FM6_ADDED_DATA[at++],count=(token&127u)+(token&128u?3u:1u);
+  if(count>FM6_PACKED-n)return 0;
+  if(token&128u){
+   if(at>=end)return 0;uint32_t distance=FM6_ADDED_DATA[at++];if(!distance || distance>n)return 0;
+   for(uint32_t i=0;i<count;i++)out[n+i]=out[n+i-distance];
+  }
+  else {if(count>end-at)return 0;memcpy(out+n,FM6_ADDED_DATA+at,count);at+=count;}
+  n+=count;
+ }
+ return n==FM6_PACKED && at==end;
+}
+#endif
 /* factory patch k (F1..F24) as a packed record */
 static void fm6_factory(uint32_t k, uint8_t *pk)
 {
     uint8_t v[FP_SIZE + 1u];
 #if !MELODEE_RETIRED_REFERENCE
-    if(k>=FM6_ORIGINAL_FAC && k<FM6_NFAC){memcpy(pk,FM6_ADDED[k-FM6_ORIGINAL_FAC],FM6_PACKED);return;}
+    if(k>=FM6_ORIGINAL_FAC && k<FM6_NFAC){if(!fm6_added_unpack(k-FM6_ORIGINAL_FAC,pk))memcpy(pk,FM6_INIT,FM6_PACKED);return;}
 #endif
     if (k < FM6_NFACTORY) {
         memcpy(pk, FM6_FACTORY[k], FM6_PACKED);

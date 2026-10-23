@@ -8,6 +8,8 @@
 #define __attribute__(x)
 #define NENGINES 22u
 #define ENGI_WAVETABLE 21u
+#define ENGI_WAVE_LAYERS 22u
+#define ENGI_FMKIT 23u
 #define MELODEE_WAVETABLE 0 /* Standalone settings fixture, historical engine profile. */
 #define USER_GENERAL 16u
 #define USER_NATIVE_P5 20u

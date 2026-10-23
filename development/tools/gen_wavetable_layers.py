@@ -14,7 +14,7 @@ def main():
            ' * Banks 0..5: Surge Synth Team, GPL-3.0 (Surge generated wavetables).',
            ' * Banks 6..7: Adventure Kid / Kristoffer Karl Axel Ekstrand, CC0.',
            ' * Sources pinned in assets/wavetable-layers-provenance.json. */',
-           '#pragma once', '#define WL_FRAMES 6u', '#define WL_ROW_BYTES 124u',
+           '#pragma once', '#define WL_FRAMES 6u', '#define WL_ROW_BYTES 117u',
            'typedef int8_t wl_bank_t[8][WL_FRAMES][WL_ROW_BYTES];', 'static const wl_bank_t WL_FLASH={']
     sources=[]
     for bank in selections:
@@ -30,11 +30,11 @@ def main():
                 spec=spectrum.copy(); spec[harm+1:]=0
                 y=np.fft.irfft(spec,n=128)[::128//n]
                 q=np.clip(np.rint(y/256),-127,127).astype(int).tolist()
-                data.extend(q+[q[0]])
-            assert len(data)==124
+                data.extend([q[0],q[2]] if n==8 else q+[q[0]])
+            assert len(data)==117
             lines.append('{'+','.join(map(str,data))+'},')
         lines.append('},')
-        sources.append(dict(name=bank['name'],source=bank['source'],audition_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),precision='signed PCM8',frames=6,mip_samples=[65,33,17,9]))
+        sources.append(dict(name=bank['name'],source=bank['source'],audition_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),precision='signed PCM8',frames=6,mip_samples=[65,33,17,2]))
     lines.append('};');a.output.write_text('\n'.join(lines)+'\n')
     manifest=a.output.parents[2]/'assets'/'wavetable-layers-provenance.json'
     manifest.write_text(json.dumps(dict(contributions='By: Inputsignwave',surge_commit='a30341be00484d3de6b65869998100ccc6db6945',akwf_commit='8de90bf94376670947369e69de0af6b9fbd19286',banks=sources),indent=2)+'\n')

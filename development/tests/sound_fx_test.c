@@ -45,4 +45,11 @@ static void audio_contract(void)
  sound_fx.slot[0][2]=127;fx_slot_prepare(&plan,0,p,CTL);assert(fx_state[0].mod_phase!=phase);
  puts("FX: versioned state/project/template and old TPLL migration; one shared stereo plate, duplicate/insert refusal, allocation release, bounded drive and neutral/active independent LFO passed");
 }
-int main(void){state_contract();audio_contract();return 0;}
+static void night_contract(void)
+{
+ reset();memset(favorites.factory[13]+25,0,4);settings.palette=7;settings_save();settings_poll();
+ persist_boot();assert(settings.palette==0);
+ settings.palette=7;settings_save();settings_poll();persist_boot();assert(settings.palette==7);
+ puts("NIGHT: first-upgrade migration preserves subsequent user palette choice");
+}
+int main(void){state_contract();audio_contract();night_contract();return 0;}

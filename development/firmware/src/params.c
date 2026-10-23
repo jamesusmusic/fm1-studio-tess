@@ -781,9 +781,9 @@ static const param_desc_t SFX_UI[]={
 };
 static const param_desc_t SFX_PLATE_UI[]={
  {"PRE",F_PCT,0,127,25,0,0},{"TONE",F_OFS,0,127,64,0,0},
- {"LO",F_PCT,0,127,6,0,0},{"HI",F_PCT,0,127,112,0,0},
- {"DAMP",F_PCT,0,127,80,0,0},{"WIDE",F_PCT,0,127,127,0,0},
- {"MOVE",F_PCT,0,127,24,0,0},{"RATE",F_LFOHZ,0,127,24,0,0},
+ {"LO",F_PCT,0,127,42,0,0},{"HI",F_PCT,0,127,127,0,0},
+ {"DAMP",F_PCT,0,127,4,0,0},{"WIDE",F_PCT,0,127,127,0,0},
+ {"MOVE",F_PCT,0,127,48,0,0},{"RATE",F_LFOHZ,0,127,37,0,0},
  {"SYNC",F_ENUM,0,10,0,N_LSYNC,0},{"WOBL",F_PCT,0,127,0,0,0},
  {"SWEL",F_ONOFF,0,1,0,0,0},{"RISE",F_TIME,0,127,60,0,0},
  {"HOLD",F_ONOFF,0,1,0,0,0}

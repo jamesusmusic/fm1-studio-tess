@@ -1213,6 +1213,15 @@ static void persist_boot(void)                    /* before settings_init / pane
             p.panel = PANEL_DEFAULT;
             for (uint32_t k = 0; k < 4u; k++) p.ext.glo[k] = GP[GLO_KEPT[k]].def;
         }
+#if !MELODEE_RETIRED_REFERENCE
+        /* The requested NIGHT return is a one-time owned-settings migration.
+         * Subsequent palette choices remain the user's; no other preference
+         * or historical SLICE star (low 128 bits) is reset. */
+        uint8_t *night=p.favorites.factory[13];
+        if(night[25]!='N'||night[26]!='I'||night[27]!='T'||night[28]!=10u){
+            p.palette=palette_to_stored(0);night[25]='N';night[26]='I';night[27]='T';night[28]=10;
+        }
+#endif
         settings_import(&p, sizeof p);            /* replaces retained RAM too, before USB enumeration */
         panel_init(); settings_init();
         for (uint32_t k = 0; k < 4u; k++) {

@@ -22,9 +22,30 @@ static uint64_t sound(uint32_t preset,int layer,int attack,int cut)
  for(uint32_t j=0;j<NVOICE;j++)assert(!t->v[j].active);
  return energy;
 }
+static void corners(void)
+{
+ setup(0);track_t *t=&trk[0];voice_t *v=&t->v[0];assert(wl_prepare(t));
+ vmod_t m={0};m.amp0=m.amp1=32767;m.shape=64*256;
+ for(uint32_t note=0;note<128;note++)for(uint32_t corner=0;corner<64;corner++){
+  for(uint32_t i=0;i<P_COUNT;i++){
+   const param_desc_t *d=param_desc_of(ENGI_WAVE_LAYERS,i);
+   if(i>=P_E0 || (i>=P_FM1_ATK&&i<=P_FM4_LEVEL) || (i>=P_LN0&&i<=P_LN7))t->p[i]=(corner&(1u<<(i%6u)))?d->max:d->min;
+  }
+  t->p[P_FM1_LEVEL]=t->p[P_FM2_LEVEL]=127;t->p[P_FM3_SUS]=t->p[P_FM3_REL]=48;
+  v->gate=1;v->vel=127;v->env=v->env_out=0;wl_note_on(t,v);m.pitch16=note*16;
+  for(uint32_t block=0;block<4;block++){
+   int32_t out[CTL+2]={0};out[0]=out[CTL+1]=123456789;
+   wl_block(t);wl_render(t,v,out+1,CTL,&m);
+   assert(out[0]==123456789&&out[CTL+1]==123456789);
+   for(uint32_t i=1;i<=CTL;i++)assert(abs(out[i])<=65536);
+  }
+ }
+ puts("layers: 8192 pitch/control corners, both active layers, output guards and bounded interpolation passed");
+}
 int main(void)
 {
- assert(eng_ok(ENGI_WAVE_LAYERS)&&sizeof WL_FLASH==5952);
+ corners();
+ assert(eng_ok(ENGI_WAVE_LAYERS)&&sizeof WL_FLASH==5616);
  uint64_t previous[8];
  for(uint32_t p=0;p<8;p++){
   previous[p]=sound(p,0,0,127);assert(previous[p]>10000);

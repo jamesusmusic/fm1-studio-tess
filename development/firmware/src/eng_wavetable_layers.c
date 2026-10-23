@@ -14,7 +14,7 @@ typedef struct {
     uint16_t fade;
     uint8_t stage, bank, previous, ready;
 } wl_layer_t;
-typedef struct { wl_layer_t layer[NVOICE][2]; uint32_t morph; } wl_part_t;
+typedef struct { wl_layer_t layer[WL_POLY][2]; uint32_t morph; } wl_part_t;
 static wl_part_t *wl_part(const track_t *t); /* CPU0-managed engine handle */
 static uint32_t div_samples(uint32_t div);
 static const uint8_t WL_PARAM[2][15]={
@@ -67,21 +67,25 @@ static void wl_note_on(track_t *t,voice_t *v)
 static int wl_done(track_t *t,voice_t *v)
 {
  wl_layer_t *l=wl_part(t)->layer[v-t->v];
- return !v->gate && l[0].envelope<2048 && l[1].envelope<2048;
+ return !v->gate && (l[0].envelope<2048 || (!t->p[P_FM1_LEVEL]&&!l[0].gain)) &&
+        (l[1].envelope<2048 || (!t->p[P_FM2_LEVEL]&&!l[1].gain));
 }
 static int32_t wl_point(uint32_t bank,uint32_t frame,uint32_t band,uint32_t phase)
 {
  static const uint8_t offset[4]={0,65,98,115},shift[4]={26,27,28,29};
  const int8_t *p=(*wl_bank)[bank][frame]+offset[band];
+ if(band==3u)return clamp((sine_i(phase)*p[1]+sine_i(phase+0x40000000u)*p[0])>>7,-32512,32512);
  uint32_t i=phase>>shift[band],f=(phase>>(shift[band]-15u))&32767u;
  return (int32_t)p[i]*256+(((int32_t)p[i+1u]-p[i])*(int32_t)f>>7);
 }
+static int32_t wl_lerp(int32_t a,int32_t b,uint32_t f)
+{ return a+(((b-a)*(int32_t)(f>>1))>>15); }
 static int32_t wl_frame(uint32_t bank,uint32_t band,uint32_t phase,int32_t position)
 {
  uint32_t f=(uint32_t)clamp(position,0,127*65536)*(WL_FRAMES-1u)/127u;
  uint32_t row=f>>16,blend=f&65535u;
  if(row>=WL_FRAMES-1u){row=WL_FRAMES-2u;blend=65536;}
- return wt_lerp(wl_point(bank,row,band,phase),wl_point(bank,row+1u,band,phase),blend);
+ return wl_lerp(wl_point(bank,row,band,phase),wl_point(bank,row+1u,band,phase),blend);
 }
 static int32_t wl_sample(wl_layer_t *l,uint32_t inc,int32_t position)
 {
@@ -92,10 +96,10 @@ static int32_t wl_sample(wl_layer_t *l,uint32_t inc,int32_t position)
   if(inc<high){if(inc>low)bf=(inc-low)/((high-low)>>16);break;}
  }
  int32_t x=wl_frame(l->bank,band,l->phase,position);
- if(band<3u && bf)x=wt_lerp(x,wl_frame(l->bank,band+1u,l->phase,position),bf);
+ if(band<3u && bf)x=wl_lerp(x,wl_frame(l->bank,band+1u,l->phase,position),bf);
  if(l->fade<32768u){
   int32_t old=wl_frame(l->previous,band,l->phase,position);
-  if(band<3u && bf)old=wt_lerp(old,wl_frame(l->previous,band+1u,l->phase,position),bf);
+  if(band<3u && bf)old=wl_lerp(old,wl_frame(l->previous,band+1u,l->phase,position),bf);
   x=old+((x-old)*(int32_t)l->fade>>15);l->fade+=256;
  }
  l->phase+=inc;return x;
@@ -128,6 +132,7 @@ static __attribute__((noinline)) void wl_render(track_t *t,voice_t *v,int32_t *o
   int32_t scan=sine_i(l->scan)*clamp(t->p[ids[10]],0,127)/32768;
   int32_t position=clamp(t->p[P_E1+k*2u],0,127),endpoint=clamp(t->p[ids[12]],0,127);
   position+=(endpoint-position)*morph/127;
+  position+=(m->shape-64*256)/256;
   /* A separate slow position rise uses the same endpoint; amplitude ADSR
    * remains independent. Zero rise/depth does not move the initial position. */
   int32_t rise=clamp(t->p[ids[11]],0,127);
@@ -159,6 +164,7 @@ static __attribute__((noinline)) void wl_render(track_t *t,voice_t *v,int32_t *o
   l->position=ptarget;l->cutoff=coef;l->gain=gain;
  }
 }
+static const char *const WL_NAMES[]={"VOWL","METL","HLLO","PRIM","RIPL","PHAS","VOX","FM"};
 static const preset_t WL_PRESETS[]={
  {"VOWEL GLASS",{0,30,6,60,48,45,20,2},{45,60,110,70},0,0},
  {"METALLIC PM",{1,20,7,65,50,65,28,0},{0,65,70,60},0,0},
@@ -179,9 +185,9 @@ static void wl_preset_loaded(track_t *t,uint32_t preset)
 }
 static const engine_t ENG_WAVE_LAYERS={
  .name="WAVE LAYERS",.page_title={"TABLES A/B","BLEND MORPH"},
- .edit={{"ABNK",F_INT,0,7,0,0,0},{"APOS",F_PCT,0,127,0,0,0},
-        {"BBNK",F_INT,0,7,1,0,0},{"BPOS",F_PCT,0,127,0,0,0},
-        {"A/B",F_PCT,0,127,0,0,0},{"MORPH",F_PCT,0,127,0,0,0},
+ .edit={{"ABNK",F_ENUM,0,7,0,WL_NAMES,0},{"APOS",F_PCT,0,127,0,0,0},
+        {"BBNK",F_ENUM,0,7,1,WL_NAMES,0},{"BPOS",F_PCT,0,127,0,0,0},
+        {"A/B",F_PCT,0,127,0,0,0},{"MRPH",F_PCT,0,127,0,0,0},
         {"RATE",F_LFOHZ,0,127,24,0,0},{"SYNC",F_INT,0,10,0,0,0}},
  .presets=WL_PRESETS,.npresets=NELEM(WL_PRESETS),.poly=WL_POLY,
  .note_on=wl_note_on,.render=wl_render,.block=wl_block,.ownenv=1,.done=wl_done,

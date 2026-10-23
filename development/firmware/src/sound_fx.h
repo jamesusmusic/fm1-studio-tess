@@ -8,8 +8,8 @@
 #define SFX_WIRE_BYTES 61u
 typedef struct { uint8_t slot[SFX_SLOTS][3],plate[20]; } sound_fx_t;
 _Static_assert(sizeof(sound_fx_t)==SFX_BYTES,"flat seven-bit FX state");
-static const sound_fx_t SFX_DEFAULT={.plate={25,64,6,112,80,127,24,24,0,0,0,60,0}};
-static sound_fx_t sound_fx={.plate={25,64,6,112,80,127,24,24,0,0,0,60,0}};
+static const sound_fx_t SFX_DEFAULT={.plate={25,64,42,127,4,127,48,37,0,0,0,60,0}};
+static sound_fx_t sound_fx={.plate={25,64,42,127,4,127,48,37,0,0,0,60,0}};
 static int sfx_valid(const sound_fx_t *s)
 {
  const uint8_t *p=(const uint8_t *)s;for(uint32_t i=0;i<SFX_BYTES;i++)if(p[i]>127u)return 0;
