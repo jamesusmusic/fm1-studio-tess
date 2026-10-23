@@ -3,6 +3,16 @@
  * Reuses upstream dual-core test harness with its original notices intact. */
 #define MELODEE_DUAL_CORE_TEST_NO_MAIN
 #include "dual_core_test.c"
+/* Cooperative exit avoids pthread_cancel/ASan alternate-stack teardown on
+ * Linux. Every audio job still uses the real mailbox poll/kernel/join path. */
+static _Atomic uint32_t mpe_worker_stop;
+static void *mpe_worker_thread(void *unused)
+{
+ (void)unused;uint32_t done=AW_LOAD(&audio_worker.complete);
+ AW_STORE(&audio_worker.ready,1u);
+ while(!atomic_load(&mpe_worker_stop))audio_worker_poll(&done);
+ return 0;
+}
 static void queue(uint32_t st,uint32_t a,uint32_t b)
 { assert(midi_enqueue((st>>4)|st<<8|a<<16|b<<24,1)); }
 static void run(int parallel)
@@ -46,7 +56,7 @@ static void run(int parallel)
 }
 int main(void)
 {
- pthread_t thread;assert(!pthread_create(&thread,0,worker_thread,0));while(!AW_LOAD(&audio_worker.ready))sched_yield();
- run(0);run(1);assert(audio_worker.jobs);assert(!pthread_cancel(thread));assert(!pthread_join(thread,0));
+ pthread_t thread;assert(!pthread_create(&thread,0,mpe_worker_thread,0));while(!AW_LOAD(&audio_worker.ready))sched_yield();
+ run(0);run(1);assert(audio_worker.jobs);atomic_store(&mpe_worker_stop,1u);assert(!pthread_join(thread,0));
  puts("MPE dual-core: 256 blocks bit-identical serial/concurrent stereo PCM with 4 live tracks, plate, warm drive, dense independent expression, sustain/channel reuse/steals; all jobs joined");return 0;
 }
