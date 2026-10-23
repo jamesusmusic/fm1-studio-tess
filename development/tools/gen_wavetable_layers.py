@@ -14,8 +14,8 @@ def main():
            ' * Banks 0..5: Surge Synth Team, GPL-3.0 (Surge generated wavetables).',
            ' * Banks 6..7: Adventure Kid / Kristoffer Karl Axel Ekstrand, CC0.',
            ' * Sources pinned in assets/wavetable-layers-provenance.json. */',
-           '#pragma once', '#define WL_FRAMES 8u', '#define WL_ROW_BYTES 124u',
-           'typedef int8_t wl_bank_t[8][8][WL_ROW_BYTES];', 'static const wl_bank_t WL_FLASH={']
+           '#pragma once', '#define WL_FRAMES 6u', '#define WL_ROW_BYTES 124u',
+           'typedef int8_t wl_bank_t[8][WL_FRAMES][WL_ROW_BYTES];', 'static const wl_bank_t WL_FLASH={']
     sources=[]
     for bank in selections:
         path=a.auditions/bank['table']
@@ -23,7 +23,7 @@ def main():
             assert f.getsampwidth()==2 and f.getnchannels()==1
             x=np.frombuffer(f.readframes(f.getnframes()),dtype='<i2').astype(float).reshape(16,128)
         lines.append('{ /* '+bank['name']+' */')
-        for at in np.linspace(0,15,8):
+        for at in np.linspace(0,15,6):
             lo=int(at); hi=min(15,lo+1); row=x[lo]*(1-(at-lo))+x[hi]*(at-lo)
             spectrum=np.fft.rfft(row-row.mean()); data=[]
             for n,harm in [(64,15),(32,7),(16,3),(8,1)]:
@@ -34,7 +34,7 @@ def main():
             assert len(data)==124
             lines.append('{'+','.join(map(str,data))+'},')
         lines.append('},')
-        sources.append(dict(name=bank['name'],source=bank['source'],audition_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),precision='signed PCM8',frames=8,mip_samples=[65,33,17,9]))
+        sources.append(dict(name=bank['name'],source=bank['source'],audition_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),precision='signed PCM8',frames=6,mip_samples=[65,33,17,9]))
     lines.append('};');a.output.write_text('\n'.join(lines)+'\n')
     manifest=a.output.parents[2]/'assets'/'wavetable-layers-provenance.json'
     manifest.write_text(json.dumps(dict(contributions='By: Inputsignwave',surge_commit='a30341be00484d3de6b65869998100ccc6db6945',akwf_commit='8de90bf94376670947369e69de0af6b9fbd19286',banks=sources),indent=2)+'\n')

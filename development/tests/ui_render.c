@@ -1592,14 +1592,17 @@ static void sweep_columns(void)
                 int16_t *vp;
                 int fm6 = PAGES[i].scope == SC_FM6 || PAGES[i].scope == SC_FMOP;   /* (a copy: written back) */
                 int p5 = PAGES[i].scope == SC_P5;
+                int sfx = PAGES[i].scope == SC_SFX;
                 p5_patch_t p5_before=*p5_patch_of(TSEL);
-                const param_desc_t *d = PAGES[i].scope == SC_GLOBAL || PAGES[i].scope == SC_TRACK || PAGES[i].scope == SC_ENGINE || fm6 || p5
+                const param_desc_t *d = PAGES[i].scope == SC_GLOBAL || PAGES[i].scope == SC_TRACK || PAGES[i].scope == SC_ENGINE || PAGES[i].scope==SC_WL || sfx || fm6 || p5
                                         ? page_desc(cur_page(), c, &vp) : 0;
                 int32_t v, v0;
                 if (!d || !d->label || d->label[0] == '-' || PAGES[i].graph == GR_MOD) continue;
                 v0 = *vp;
                 for (v = d->min; v <= d->max; v++) {
-                    if (fm6)
+                    if (sfx)
+                        sfx_page_put(PAGES[i].id[c],v);
+                    else if (fm6)
                         fm6_page_put(cur_page(), c, v);
                     else if (p5)
                         p5_edit_value(TSEL,PAGES[i].id[c],p5_panel_raw(TSEL,PAGES[i].id[c],v));
@@ -1612,7 +1615,9 @@ static void sweep_columns(void)
                     nsweep++;
                     if (v - d->min > 300 && v < d->max - 1) v = d->max - 1;      /* wide ranges: the ends */
                 }
-                if (fm6)
+                if (sfx)
+                    sfx_page_put(PAGES[i].id[c],v0);
+                else if (fm6)
                     fm6_page_put(cur_page(), c, v0);
                 else if (p5) {
                     *p5_patch_of(TSEL)=p5_before;

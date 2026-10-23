@@ -774,19 +774,19 @@ static uint8_t sfx_ui_slot;
 static int16_t sfx_ui_cell[4];
 static const param_desc_t SFX_UI[]={
  {"SLOT",F_INT,1,15,1,0,0},
- {"SHAPE",F_ENUM,0,3,0,(const char *const []){"SIN","TRI","SAW","SQR"},0},
+ {"WAVE",F_ENUM,0,3,0,(const char *const []){"SIN","TRI","SAW","SQR"},0},
  {"DEST",F_ENUM,0,4,0,(const char *const []){"OFF","MIX","RATE","CHAR","TONE"},0},
- {"DEPTH",F_PCT,0,127,0,0,0},{"SYNC",F_ONOFF,0,1,0,0,0},
+ {"AMT",F_PCT,0,127,0,0,0},{"SYNC",F_ONOFF,0,1,0,0,0},
  {"RATE",F_LFOHZ,0,127,24,0,0}
 };
 static const param_desc_t SFX_PLATE_UI[]={
- {"PREDELAY",F_PCT,0,127,25,0,0},{"TONE",F_OFS,0,127,64,0,0},
- {"LOW CUT",F_PCT,0,127,6,0,0},{"HIGH CUT",F_PCT,0,127,112,0,0},
- {"DAMP",F_PCT,0,127,80,0,0},{"WIDTH",F_PCT,0,127,127,0,0},
- {"MOVEMENT",F_PCT,0,127,24,0,0},{"RATE",F_LFOHZ,0,127,24,0,0},
- {"SYNC",F_ENUM,0,10,0,N_LSYNC,0},{"WOBBLE",F_PCT,0,127,0,0,0},
- {"SWELL",F_ONOFF,0,1,0,0,0},{"RISE",F_TIME,0,127,60,0,0},
- {"INFINITE",F_ONOFF,0,1,0,0,0}
+ {"PRE",F_PCT,0,127,25,0,0},{"TONE",F_OFS,0,127,64,0,0},
+ {"LO",F_PCT,0,127,6,0,0},{"HI",F_PCT,0,127,112,0,0},
+ {"DAMP",F_PCT,0,127,80,0,0},{"WIDE",F_PCT,0,127,127,0,0},
+ {"MOVE",F_PCT,0,127,24,0,0},{"RATE",F_LFOHZ,0,127,24,0,0},
+ {"SYNC",F_ENUM,0,10,0,N_LSYNC,0},{"WOBL",F_PCT,0,127,0,0,0},
+ {"SWEL",F_ONOFF,0,1,0,0,0},{"RISE",F_TIME,0,127,60,0,0},
+ {"HOLD",F_ONOFF,0,1,0,0,0}
 };
 static const param_desc_t *sfx_page_desc(uint32_t id,uint32_t slot,int16_t **value)
 {

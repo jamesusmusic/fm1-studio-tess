@@ -58,8 +58,21 @@ static int wt_favorite(uint32_t preset)
     const uint8_t *p=favorites.factory[8];
     return preset<6u && p[12]=='W' && p[13]=='T' && p[14]==1u && ((p[15]>>preset)&1u);
 }
+/* New factory identities use tagged, formerly unused high SLICE bytes.
+ * Keep all historical engine/native stars and other tagged regions intact. */
+static int sound10_favorite_index(uint32_t engine,uint32_t preset)
+{
+ if(engine==ENGI_WAVE_LAYERS && MELODEE_WAVETABLE && preset<9u)return (int)preset;
+ if(engine==ENGI_FMKIT && !MELODEE_RETIRED_REFERENCE && preset<3u)return 9+(int)preset;
+ if(engine==ENGI_FM6 && !MELODEE_RETIRED_REFERENCE && preset>=25u && preset<50u)return 12+(int)preset-25;
+ return -1;
+}
+static int sound10_favorite_tag(const uint8_t *p)
+{ return p[16]=='I' && p[17]=='S' && p[18]=='W' && p[19]==10u; }
 static int favorite_has(uint32_t engine, uint32_t preset)
 {
+    int at=sound10_favorite_index(engine,preset);
+    if(at>=0){const uint8_t *p=favorites.factory[13];return sound10_favorite_tag(p) && ((p[20u+(uint32_t)at/8u]>>(at%8))&1u);}
     if(engine==ENGI_WAVETABLE)return MELODEE_WAVETABLE && wt_favorite(preset);
     if(engine==ENGI_PROPHET)return p5_favorite_has(preset,1);
     if(engine==USER_NATIVE_P5 || engine==USER_NATIVE_FM || engine==USER_NATIVE_CZ)engine=USER_GENERAL;
@@ -70,6 +83,14 @@ static int favorite_has(uint32_t engine, uint32_t preset)
 }
 static int favorite_set(uint32_t engine, uint32_t preset, int on)
 {
+    int at=sound10_favorite_index(engine,preset);
+    if(at>=0){
+        if(favorite_has(engine,preset)==!!on)return 0;
+        uint8_t *p=favorites.factory[13];
+        if(!sound10_favorite_tag(p)){p[16]='I';p[17]='S';p[18]='W';p[19]=10;memset(p+20u,0,5u);}
+        uint8_t *byte=p+20u+(uint32_t)at/8u,mask=(uint8_t)(1u<<(at%8));
+        *byte=on?(uint8_t)(*byte|mask):(uint8_t)(*byte&~mask);return 1;
+    }
     if(engine==ENGI_WAVETABLE){
         if(!MELODEE_WAVETABLE || preset>=6u || wt_favorite(preset)==!!on)return 0;
         uint8_t *p=favorites.factory[8];

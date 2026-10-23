@@ -24,7 +24,10 @@ adds SFX1 controls in the unchanged atomic allocation. TPLM migrates older templ
 
 Target compile, combined budgets, complete regression, editor and exact-package
 emulator checks are **in progress**. This is not a release/acceptance claim.
-Standalone plate sanitizers pass, including exact tail-energy preservation during
+The first combined link exceeded flash by 644 B; curate six frames per new
+family (5,952 B instead of 7,936 B) while retaining all eight families and the old
+engine. New FX pages have explicit renderer handling; FM kits use the established
+GM lane order and per-lane voice reuse. Standalone plate sanitizers pass, including exact tail-energy preservation during
 30 s closed-input Hold. Targeted FM-kit overlap/release and FX persistence/template
 migration tests pass. Further hardening continues before packaging.
 

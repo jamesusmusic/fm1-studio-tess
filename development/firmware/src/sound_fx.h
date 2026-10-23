@@ -13,7 +13,7 @@ static sound_fx_t sound_fx={.plate={25,64,6,112,80,127,24,24,0,0,0,60,0}};
 static int sfx_valid(const sound_fx_t *s)
 {
  const uint8_t *p=(const uint8_t *)s;for(uint32_t i=0;i<SFX_BYTES;i++)if(p[i]>127u)return 0;
- for(uint32_t i=0;i<SFX_SLOTS;i++)if(((s->slot[i][0]>>2)&7u)>4u)return 0;
+ for(uint32_t i=0;i<SFX_SLOTS;i++)if((s->slot[i][0]&64u) || ((s->slot[i][0]>>2)&7u)>4u)return 0;
  if(s->plate[8]>10u || s->plate[10]>1u || s->plate[12]>1u)return 0;
  for(uint32_t i=13;i<20;i++)if(s->plate[i])return 0;
  return 1;

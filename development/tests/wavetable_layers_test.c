@@ -24,7 +24,7 @@ static uint64_t sound(uint32_t preset,int layer,int attack,int cut)
 }
 int main(void)
 {
- assert(eng_ok(ENGI_WAVE_LAYERS)&&sizeof WL_FLASH==7936);
+ assert(eng_ok(ENGI_WAVE_LAYERS)&&sizeof WL_FLASH==5952);
  uint64_t previous[8];
  for(uint32_t p=0;p<8;p++){
   previous[p]=sound(p,0,0,127);assert(previous[p]>10000);

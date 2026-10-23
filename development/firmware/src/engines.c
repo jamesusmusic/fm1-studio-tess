@@ -67,6 +67,7 @@ static void wt_cache_sweep(void)
     for(uint32_t t=0;t<NPART;t++)for(uint32_t v=0;v<NVOICE;v++)if(trk[t].v[v].active){
         old|=trk[t].engine==ENGI_WAVETABLE;layers|=trk[t].engine==ENGI_WAVE_LAYERS;
     }
+    for(uint32_t t=0;t<NPART;t++)layers|=trk[t].engine==ENGI_WAVE_LAYERS;
     if(!old){resource_release(RES_WAVETABLE);wt_bank=0;}
     if(!layers){resource_release(RES_WAVE_LAYERS);wl_bank=0;wl_prepared=0;}
 }

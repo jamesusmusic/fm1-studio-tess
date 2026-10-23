@@ -59,19 +59,29 @@ static void fmk_render(track_t *t,voice_t *v,int32_t *out,uint32_t n,const vmod_
  int32_t pcm[CTL];const fm6_batch_t job={s,gain,n,VOICE_FS};
  fm6_batch_kernel(&job,pcm);for(uint32_t i=0;i<n;i++)out[i]+=pcm[i];
 }
+static uint32_t fmk_alloc(track_t *t,uint32_t note)
+{
+ fmk_part_t *p=fmk_part(t);uint32_t lane=drum_lane(note),oldest=0;
+ for(uint32_t i=0;i<NVOICE;i++)if(t->v[i].active && p->v[i].lane==lane)return i;
+ for(uint32_t i=0;i<NVOICE;i++){
+  if(!t->v[i].active || t->v[i].stage==4u)return i;
+  if(t->v[i].age<t->v[oldest].age)oldest=i;
+ }
+ return oldest;
+}
 static const preset_t FMK_PRESETS[]={
- {"FM ELECTRONIC",{31,29,30,33,34,37,32,39},{0,45,127,35},0,0},
- {"FM METAL KIT",{31,44,36,40,35,37,32,39},{0,45,127,35},0,0},
+ {"FM ELECTRONIC",{31,29,34,32,39,30,33,37},{0,45,127,35},0,0},
+ {"FM METAL KIT",{31,44,34,32,39,36,40,35},{0,45,127,35},0,0},
  {"FM TUNED KIT",{1,11,6,12,19,21,23,5},{0,45,127,35},0,0},
 };
 static const engine_t ENG_FMKIT={
  .name="FM DRUM KIT",.page_title={"FM LANES 1-4","FM LANES 5-8"},
- .edit={{"KICK",F_INT,0,48,31,0,0},{"SNARE",F_INT,0,48,29,0,0},
- {"TOM",F_INT,0,48,30,0,0},{"PERC",F_INT,0,48,33,0,0},
- {"CLAP",F_INT,0,48,34,0,0},{"BELL",F_INT,0,48,37,0,0},
- {"C HAT",F_INT,0,48,32,0,0},{"O HAT",F_INT,0,48,39,0,0}},
+ .edit={{"KICK",F_INT,0,48,31,0,0},{"SNAR",F_INT,0,48,29,0,0},
+ {"CLAP",F_INT,0,48,34,0,0},{"CHAT",F_INT,0,48,32,0,0},
+ {"OHAT",F_INT,0,48,39,0,0},{"TOM",F_INT,0,48,30,0,0},
+ {"RIM",F_INT,0,48,33,0,0},{"BELL",F_INT,0,48,37,0,0}},
  .presets=FMK_PRESETS,.npresets=NELEM(FMK_PRESETS),.poly=FMK_POLY,.oneshot=1,
- .note_on=fmk_note_on,.render=fmk_render,.keys=drum_keys,.ownenv=1,.done=fmk_done,
- .knob={P_LN0,P_LN1,P_LN6,P_LN7}
+ .alloc=fmk_alloc,.note_on=fmk_note_on,.render=fmk_render,.keys=drum_keys,.ownenv=1,.done=fmk_done,
+ .knob={P_LN0,P_LN1,P_LN3,P_LN4}
 };
 #endif

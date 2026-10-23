@@ -10,7 +10,7 @@ static const wl_bank_t *wl_bank;
 static uint8_t wl_prepared;
 typedef struct {
     uint32_t phase, scan, age;
-    int32_t envelope, low, low2, position, cutoff;
+    int32_t envelope, low, low2, position, cutoff, gain;
     uint16_t fade;
     uint8_t stage, bank, previous, ready;
 } wl_layer_t;
@@ -23,22 +23,22 @@ static const uint8_t WL_PARAM[2][15]={
 };
 /* Names/ranges are scoped to ID 22; they do not reinterpret any old engine. */
 static const param_desc_t WL_ED[20]={
- {"B ATK",F_TIME,0,127,0,0,0},{"B DEC",F_TIME,0,127,55,0,0},
- {"B SUS",F_PCT,0,127,100,0,0},{"B REL",F_TIME,0,127,60,0,0},
- {"A LEVEL",F_PCT,0,127,127,0,0},{"A CUT",F_PCT,0,127,110,0,0},
- {"A RES",F_PCT,0,100,0,0,0},{"A ENV",F_OFS,0,127,64,0,0},
- {"B CUT",F_PCT,0,127,110,0,0},{"B LEVEL",F_PCT,0,127,0,0,0},
- {"B RES",F_PCT,0,100,0,0,0},{"B ENV",F_OFS,0,127,64,0,0},
- {"A TUNE",F_OFS,0,96,48,0,"st"},{"B TUNE",F_OFS,0,96,48,0,"st"},
- {"B FINE",F_OFS,0,100,50,0,"ct"},{"A RATE",F_LFOHZ,0,127,24,0,0},
- {"A SCAN",F_PCT,0,127,0,0,0},{"B RATE",F_LFOHZ,0,127,30,0,0},
- {"B SCAN",F_PCT,0,127,0,0,0},{"RETRIG",F_ONOFF,0,1,0,0,0}
+ {"BATK",F_TIME,0,127,0,0,0},{"BDEC",F_TIME,0,127,55,0,0},
+ {"BSUS",F_PCT,0,127,100,0,0},{"BREL",F_TIME,0,127,60,0,0},
+ {"ALVL",F_PCT,0,127,127,0,0},{"ACUT",F_PCT,0,127,110,0,0},
+ {"ARES",F_PCT,0,100,0,0,0},{"AENV",F_OFS,0,127,64,0,0},
+ {"BCUT",F_PCT,0,127,110,0,0},{"BLVL",F_PCT,0,127,0,0,0},
+ {"BRES",F_PCT,0,100,0,0,0},{"BENV",F_OFS,0,127,64,0,0},
+ {"ATUN",F_OFS,0,96,48,0,"st"},{"BTUN",F_OFS,0,96,48,0,"st"},
+ {"FINE",F_OFS,0,100,50,0,"ct"},{"RATE",F_LFOHZ,0,127,24,0,0},
+ {"SCAN",F_PCT,0,127,0,0,0},{"RATE",F_LFOHZ,0,127,30,0,0},
+ {"SCAN",F_PCT,0,127,0,0,0},{"TRIG",F_ONOFF,0,1,0,0,0}
 };
 static const param_desc_t WL_SCAN_ED[8]={
- {"A RISE",F_TIME,0,127,0,0,0},{"B RISE",F_TIME,0,127,0,0,0},
- {"A END",F_PCT,0,127,100,0,0},{"B END",F_PCT,0,127,20,0,0},
- {"A END CUT",F_PCT,0,127,127,0,0},{"B END CUT",F_PCT,0,127,80,0,0},
- {"A SYNC",F_INT,0,10,0,0,0},{"B SYNC",F_INT,0,10,0,0,0}
+ {"RISE",F_TIME,0,127,0,0,0},{"RISE",F_TIME,0,127,0,0,0},
+ {"AEND",F_PCT,0,127,100,0,0},{"BEND",F_PCT,0,127,20,0,0},
+ {"ACUT",F_PCT,0,127,127,0,0},{"BCUT",F_PCT,0,127,80,0,0},
+ {"SYNC",F_INT,0,10,0,0,0},{"SYNC",F_INT,0,10,0,0,0}
 };
 static const param_desc_t *wl_param(uint32_t id)
 {
@@ -78,9 +78,9 @@ static int32_t wl_point(uint32_t bank,uint32_t frame,uint32_t band,uint32_t phas
 }
 static int32_t wl_frame(uint32_t bank,uint32_t band,uint32_t phase,int32_t position)
 {
- uint32_t f=(uint32_t)clamp(position,0,127*65536)*7u/127u;
+ uint32_t f=(uint32_t)clamp(position,0,127*65536)*(WL_FRAMES-1u)/127u;
  uint32_t row=f>>16,blend=f&65535u;
- if(row>=7u){row=6;blend=65536;}
+ if(row>=WL_FRAMES-1u){row=WL_FRAMES-2u;blend=65536;}
  return wt_lerp(wl_point(bank,row,band,phase),wl_point(bank,row+1u,band,phase),blend);
 }
 static int32_t wl_sample(wl_layer_t *l,uint32_t inc,int32_t position)
@@ -113,6 +113,7 @@ static __attribute__((noinline)) void wl_render(track_t *t,voice_t *v,int32_t *o
  for(uint32_t k=0;k<2u;k++){
   wl_layer_t *l=&layers[k];const uint8_t *ids=WL_PARAM[k];
   int32_t level=clamp(t->p[ids[4]],0,127),start=l->envelope;
+  int cold=!l->ready;
   uint32_t bank=(uint32_t)clamp(t->p[P_E0+k*2u],0,7);
   if(!l->ready){l->bank=l->previous=(uint8_t)bank;l->fade=32768;l->ready=1;}
   else if(l->bank!=bank && l->fade==32768u){l->previous=l->bank;l->bank=(uint8_t)bank;l->fade=0;}
@@ -133,7 +134,7 @@ static __attribute__((noinline)) void wl_render(track_t *t,voice_t *v,int32_t *o
   if(rise){uint32_t duration=FS/20u+(uint32_t)rise*rise*FS/1024u;
    uint32_t age=l->age<duration?l->age:duration;position+=(endpoint-position)*(int32_t)(age*127u/duration)/127;}
   int32_t ptarget=clamp(position+scan,0,127)*65536,pstep=(ptarget-l->position)/(int32_t)n;
-  if(!l->age || l->age==n){l->position=ptarget;pstep=0;}
+  if(cold){l->position=ptarget;pstep=0;}
   int32_t cut=clamp(t->p[ids[5]],0,127);
   cut+=(clamp(t->p[ids[13]],0,127)-cut)*morph/127;
   cut+=((t->p[ids[7]]-64)*(l->envelope>>16))/256+m->cutoff/256;
@@ -143,17 +144,19 @@ static __attribute__((noinline)) void wl_render(track_t *t,voice_t *v,int32_t *o
   if(inc>0x7fffffffu)inc=0x7fffffffu;
   int32_t resonance=clamp(t->p[ids[6]],0,100)*160;
   int32_t gain=level*(k?blend:127-blend)*v->vel/127;
+  int32_t current_gain=l->gain,gain_step=(gain-current_gain)/(int32_t)n;
+  if(!gain && !current_gain){l->position=ptarget;l->cutoff=coef;l->phase+=inc*n;continue;}
   for(uint32_t i=0;i<n;i++){
-   start+=estep;l->position+=pstep;l->cutoff+=cstep;
+   start+=estep;current_gain+=gain_step;l->position+=pstep;l->cutoff+=cstep;
    int32_t x=wl_sample(l,inc,l->position);
    /* Two stable bounded poles; resonance feeds only the bounded difference. */
    x-=((l->low2-l->low)*resonance)>>15;
    l->low+=((clamp(x,-32768,32767)-l->low)*l->cutoff)>>15;
    l->low2+=((l->low-l->low2)*l->cutoff)>>15;
-   int32_t y=mulq15(l->low2,start>>9);y=y*gain/16129;
+   int32_t y=mulq15(l->low2,start>>9);y=y*current_gain/16129;
    out[i]+=voice_amp(y,m,i);
   }
-  l->position=ptarget;l->cutoff=coef;
+  l->position=ptarget;l->cutoff=coef;l->gain=gain;
  }
 }
 static const preset_t WL_PRESETS[]={
@@ -176,8 +179,8 @@ static void wl_preset_loaded(track_t *t,uint32_t preset)
 }
 static const engine_t ENG_WAVE_LAYERS={
  .name="WAVE LAYERS",.page_title={"TABLES A/B","BLEND MORPH"},
- .edit={{"A BANK",F_INT,0,7,0,0,0},{"A POS",F_PCT,0,127,0,0,0},
-        {"B BANK",F_INT,0,7,1,0,0},{"B POS",F_PCT,0,127,0,0,0},
+ .edit={{"ABNK",F_INT,0,7,0,0,0},{"APOS",F_PCT,0,127,0,0,0},
+        {"BBNK",F_INT,0,7,1,0,0},{"BPOS",F_PCT,0,127,0,0,0},
         {"A/B",F_PCT,0,127,0,0,0},{"MORPH",F_PCT,0,127,0,0,0},
         {"RATE",F_LFOHZ,0,127,24,0,0},{"SYNC",F_INT,0,10,0,0,0}},
  .presets=WL_PRESETS,.npresets=NELEM(WL_PRESETS),.poly=WL_POLY,

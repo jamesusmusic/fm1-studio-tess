@@ -594,6 +594,7 @@ static uint32_t pv_pic(int32_t *cut, int32_t *res)
     uint32_t e = TSEL->eng_req % NENGINES, c;
     *cut = -1;
     *res = 0;
+    if(pg->scope==SC_SFX)return 0u;
     if(pg->fam==FAM_FX)return 9u;
     if (pg->graph == GR_ARP || pg->graph == GR_STEPS)
         return pg->graph == GR_ARP ? 5u : 6u;

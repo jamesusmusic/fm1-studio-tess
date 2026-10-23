@@ -797,6 +797,9 @@ static int fx_bus_active(void)
 #endif
     for(uint32_t slot=0;slot<FX_SLOTS;slot++)if((song.g[G_MFXTYPE+slot*FX_PARAMS] && song.g[G_MFXMIX+slot*FX_PARAMS]) || fx_state[base+slot].mix)return 1;
     for(uint32_t slot=0;slot<FX_SLOTS;slot++)if(fx_state[base+slot].type || resource[RES_FX0+base+slot].size){resource[RES_FX0+base+slot].size=0;fx_zero(&fx_state[base+slot]);}
+#if !MELODEE_RETIRED_REFERENCE
+    if(fx_plate_owner>=NPART*FX_SLOTS && fx_plate_owner<SFX_SLOTS && !resource[RES_FX0+fx_plate_owner].size){fx_plate_owner=255;fx_plate.ready=0;}
+#endif
     return 0;
 }
 static void fx_bus_start(uint32_t n)
