@@ -23,7 +23,16 @@ arena grows to 53,184 B. Its local full suite passed in 313 s. Space2 also
 stores the original wavetable as exact deduplicated half rows, reconstructing
 all 6,192 signed samples in the existing shared bank. Every decoded sample is
 compared with the unchanged raw oracle; allocation sizes and renderers remain
-unchanged. Final native size and full regression results pending.
+unchanged. Space2 recovers **12,936 B total**, leaving **13,208 B** free application flash;
+main audio arena is 53,120 B. Full local checks (324 s), Linux native/full
+checks (730 s), exact linked-asset comparisons and 6,000 ms chip emulation pass.
+See [measured recovery report](docs/PERFORMANCE11_SPACE_REPORT.md).
+The separate lower-zone MPE controller-state prototype passes ASan/UBSan,
+including 100,000 malformed/mixed messages; host state is 130 B per source.
+It is not linked into firmware. Next: source/channel/generation-aware voice
+bindings and per-voice pitch/pressure/slide on WAVE LAYERS; then FM6/Prophet
+and separately measured BLE Central transport. See the
+[MPE implementation plan](docs/SEABOARD_MPE_PLAN.md).
 RC4 remains the hardware-validated install baseline. The 24–32 KiB MPE space
 allowance is a planning target, not a measured implementation requirement.
 Direct BLE Central needs its own platform/link measurement; it is not enabled.
