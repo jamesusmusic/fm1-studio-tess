@@ -1027,7 +1027,7 @@ static void engine_load_of(track_t *t, uint32_t ei, uint32_t pi)
     load_end(t);
 }
 /* the engine's defaults and its first preset (PROPHET: Sequential's first factory program, not INIT) */
-static void set_engine_of(track_t *t, uint32_t ei) { engine_load_of(t, ei, ei % NENGINES == ENGI_PROPHET ? 1u : 0u); }
+static void set_engine_of(track_t *t, uint32_t ei) { engine_load_of(t, ei, ei % NENGINES == ENGI_PROPHET ? (MELODEE_RETIRED_REFERENCE?1u:201u) : 0u); }
 
 /* the engine's own starting point, nothing changed: its INIT preset (Prophet, CZ-1, SID, FM6: "INIT .."), else
  * its first (DRUM: the 808 kit) */
@@ -1060,7 +1060,7 @@ static void track_defaults(track_t *t)
 /* switch engine (its INIT sound: one starts a sound from there, the browser's next turn its presets) and say so */
 static void select_engine(uint32_t e)
 {
-    sound_init_of(TSEL, e);
+    if(!MELODEE_RETIRED_REFERENCE && e==ENGI_PROPHET)set_engine_of(TSEL,e);else sound_init_of(TSEL, e);
     ui_say("ENGINE ", ENGINES[TSEL->eng_req]->name);
     ui.force = 1;
 }

@@ -639,7 +639,7 @@ static void pv_fx(int32_t h)
         MELODEE_RETIRED_REFERENCE?"Small lo-fi space":"Dry signal",
         MELODEE_RETIRED_REFERENCE?"Diffused stereo reverb":"Dry signal","Stereo pitch shimmer"
 #if !MELODEE_RETIRED_REFERENCE
-        ,"Stereo plate","Warm saturation"
+        ,"Stereo reverb","Warm saturation"
 #endif
     };
     _Static_assert(sizeof hint/sizeof hint[0]==FX_COUNT,"Every FX needs a preview hint");

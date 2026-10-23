@@ -279,7 +279,8 @@ static uint32_t list_scan(uint32_t m, uint32_t ws, uint32_t wk, uint32_t n, uint
         for (seg = 0; seg < LSEG_USER; seg++) {
             uint32_t len = lseg_len(seg), slot = seg & 1u, init;
             src = lseg_src(seg);
-            init = slot || !len ? 0u : preset_init(src);   /* (an engine's INIT first: FM6's comes after F24) */
+            /* By: Inputsignwave. Browse new Prophet additions first; stored IDs stay canonical. */
+            init = slot || !len ? 0u : !MELODEE_RETIRED_REFERENCE && src==ENGI_PROPHET ? 201u : preset_init(src);   /* (an engine's INIT first: FM6's comes after F24) */
             for (i = 0; i < len; i++) {
                 k = (i + init) % len;
                 if (slot && (!up_used(k) || up_engine(k)!=eng_vis(seg/2u)))

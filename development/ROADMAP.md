@@ -480,3 +480,16 @@ reverb or keyboard-stutter implementation.
   FBK7 atomic storage and working baseline. This does not change current priorities.
 
 See [the source-based assessment](docs/OFFICIAL_FM1_OPEN_REVIEW.md) for exact files, limits and proposed order. No firmware code or toolchain was changed.
+
+## Performance 10 RC3 — Reverb naming and custom Prophet order
+
+By: Inputsignwave
+
+Display the new ID-10 plate as REVERB; retired IDs 7/8 remain hidden dry aliases.
+Browse Prophet additions 201–212 first, followed by INIT 0 and original 1–200;
+new Prophet engine selection starts at 201, explicit Init remains 0. Stored IDs,
+patch bytes, projects and favorites are preserved. Development continues on
+INPUTSIGNWAVE-GEN (Git branch names cannot contain spaces); studio-tess-8 is
+retained as the prior development/archive reference. Deep sanitizer, routing,
+full-preview, bank compatibility, native budget and chip-emulator validation is
+being completed before packaging RC3.

@@ -1032,7 +1032,7 @@ static void draw_columns(void)
             param_format(d, *vp, val, &unit);
             /* Rows have room for enum names that the compact parameter formatter abbreviates. */
             if (d->fmt == F_ENUM && (col_style == CS_CAPTURE ||
-                (d->names == N_FX && (*vp == FX_REVERB || *vp == FX_CHORUS))))
+                (d->names == N_FX && (*vp == FX_REVERB || *vp == FX_CHORUS || (!MELODEE_RETIRED_REFERENCE && *vp == 10)))))
                 str_cpy(val, d->names[enum_orig(d,clamp(*vp, d->min, d->max))], sizeof val);
         }
         draw_column(c, d->label, val, unit, (cur_page()->scope == SC_CZ1 &&   /* CZ-1: no effect on the tone as it is */

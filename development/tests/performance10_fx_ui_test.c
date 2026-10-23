@@ -4,7 +4,10 @@
 #define UI_TEST_NO_MAIN 1
 #include "ui_test.c"
 #include <assert.h>
-int main(void)
+#ifndef PERFORMANCE10_FX_UI_MAIN
+#define PERFORMANCE10_FX_UI_MAIN main
+#endif
+int PERFORMANCE10_FX_UI_MAIN(void)
 {
  ui_power_on();host_preset(TSEL,ENGI_WAVE_LAYERS,5);
  /* Rendering the full preview, not just columns, reproduces the RC1 null hint. */

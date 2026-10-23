@@ -16,7 +16,7 @@ static const char *const N_LTRIG[] = {"NOTE", "FREE"};
 static const char *const N_LPOL[] = {"BI", "UNI"};
 static const char *const N_FX[] = {"OFF", "PHASER", "WIDTH", "FORMANT", "TAPE", "SPIT", "ECHO", MELODEE_RETIRED_REFERENCE ? "ROOM" : "", MELODEE_RETIRED_REFERENCE ? "REVERB" : "", "CHORUS"
 #if !MELODEE_RETIRED_REFERENCE
-, "PLATE", "DRIVE"
+, "REVERB", "DRIVE"
 #endif
 };
 static const char *const N_ONOFF[] = {"OFF", "ON"};
