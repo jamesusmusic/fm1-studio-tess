@@ -10,7 +10,11 @@ static isw_mpe_controls mpe;
 static uint8_t mpe_route;
 static uint32_t mpe_resets;
 static void mpe_release(voice_t *v)
-{ v->mpe_key=0;v->gate=0;v->stage=v->active?3:0; }
+{
+    v->mpe_key=0;
+    /* A late note-off must not revive a voice already fading for admission. */
+    if(v->gate){v->gate=0;v->stage=v->active?3:0;}
+}
 static void mpe_forget(uint32_t track)
 {
     for(uint32_t i=0;i<NVOICE;i++)if(trk[track].v[i].mpe_ch)mpe_release(&trk[track].v[i]);

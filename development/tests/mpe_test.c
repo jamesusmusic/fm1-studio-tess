@@ -52,6 +52,9 @@ static void lifecycle(void)
  queued(0x91,66,100,1);usb.resets++;events_block(CTL);assert(!member(1,66,1));
  queued(0x91,67,100,1);song.g[G_ROUTE]=0;events_block(CTL);assert(!member(1,67,1));
  setup();queued(0x91,60,100,1);panic_req|=1;events_block(CTL);assert(!member(1,60,1));
+ queued(0x91,61,100,1);voice_t *victim=member(1,61,1);assert(victim);
+ voice_capacity_kill(victim);assert(victim->stage==4);queued(0x81,61,0,1);
+ assert(victim->stage==4&&!victim->mpe_key);
  queued(0x91,62,100,1);midi_in_overflow=1;events_block(CTL);assert(!member(1,62,1));
  puts("MPE: sustain, repeated note, RPN zone/range, controllers reset, USB suspend/reset, route change, panic and overflow passed");
 }
