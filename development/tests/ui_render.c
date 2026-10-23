@@ -2002,13 +2002,16 @@ static void performance10_fx_sweep(const char *out)
 #if !MELODEE_RETIRED_REFERENCE && MELODEE_WAVETABLE
     for(uint32_t palette=0;palette<UI_PAL_ENTRIES;palette++)
     for(uint32_t engine=ENGI_WAVETABLE;engine<=ENGI_WAVE_LAYERS;engine++)
-    for(uint32_t scene=0;scene<3u;scene++){
+    for(uint32_t scene=0;scene<5u;scene++){
         char title[80];state();pal(palette);host_preset(TSEL,engine,5);
         song.playing=0;
         if(scene==2u){song.g[G_MFXTYPE]=FX_PLATE;song.g[G_MFXMIX]=38;go_title("SEND FX 1");}
         else {TSEL->p[P_FXTYPE]=FX_DRIVE;TSEL->p[P_FXMIX]=38;go_title(scene?"FX":"FX 1");}
+        if(scene>=3u){TSEL->p[P_FXTYPE]=FX_PLATE;TSEL->p[P_FXMIX]=38;
+            if(scene==3u)reverb_bind();else song.g[G_MFXTYPE]=song.g[G_MFX2TYPE]=song.g[G_MFX3TYPE]=FX_DRIVE;
+            go_title("FX 1");}
         if(scene==1u){fx_rack_row[0]=0;pick_touch(0);ui.hot_col=0;ui.hot_t=30;}
-        snprintf(title,sizeof title,"performance10_%s_%s",engine==ENGI_WAVETABLE?"original":"layers",scene==2u?"plate":scene?"drive_picker":"drive");
+        snprintf(title,sizeof title,"performance10_%s_%s",engine==ENGI_WAVETABLE?"original":"layers",scene==4u?"reverb_no_bus":scene==3u?"reverb_track":scene==2u?"plate":scene?"drive_picker":"drive");
         cur_name=title;draw(-1);lint();if(palette==UI_GRAY_INDEX)mono_check();
         if(palette==0u)write_ppm(out,"NIGHT",title);
     }

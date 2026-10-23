@@ -573,7 +573,8 @@ static void fx_slot_prepare(fx_plan_t *plan,uint32_t si,const int16_t *p,uint32_
 #if !MELODEE_RETIRED_REFERENCE
     /* Track entries feed the shared tank after the track's insert chain.
      * Never allocate a second tank for a track marker or duplicate bus. */
-    if(type==FX_PLATE && (si<NPART*FX_SLOTS || (fx_plate_owner!=255u && fx_plate_owner!=si))){
+    if(type==FX_PLATE && si<NPART*FX_SLOTS)type=FX_OFF;
+    if(type==FX_PLATE && fx_plate_owner!=255u && fx_plate_owner!=si){
         resource_release(RES_FX0+si);fx_zero(f);return;
     }
 #endif

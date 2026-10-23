@@ -45,6 +45,16 @@ static void controls(void)
 }
 static void routing(void)
 {
+ /* Replacing a sounding insert keeps its normal wet-to-dry fade. The track
+  * marker itself never runs a second reverb processor. */
+ ui_power_on();int16_t p[4]={FX_DRIVE,100,50,70};fx_plan_t plan;
+ fx_slot_prepare(&plan,0,p,CTL);assert(plan.active);
+ for(uint32_t b=0;b<12;b++){memset(fx_left,0,sizeof fx_left);memset(fx_right,0,sizeof fx_right);fx_slot_run(&plan,CTL);}
+ int32_t before=fx_state[0].mix;assert(before>0);p[0]=FX_PLATE;
+ fx_slot_prepare(&plan,0,p,CTL);assert(plan.active && !plan.target && fx_state[0].mix==before);
+ fx_slot_run(&plan,CTL);assert(fx_state[0].mix<before && !resource[RES_FX0].size);
+ for(uint32_t b=0;b<20;b++){fx_slot_prepare(&plan,0,p,CTL);fx_slot_run(&plan,CTL);}
+ assert(!fx_state[0].mix && !plan.active);
  ui_power_on();song.ntrk=NTRK;
  for(uint32_t t=0;t<NTRK;t++){select_track_reverb(t,0);trk[t].p[P_FXMIX]=20+20*t;}
  for(uint32_t mode=0;mode<2;mode++)for(uint32_t bus=0;bus<FX_SLOTS;bus++){
