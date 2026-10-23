@@ -866,6 +866,7 @@ static const param_desc_t *page_desc(const page_t *pg, uint32_t slot, int16_t **
     }
     if (pg->scope == SC_CZ1) {                           /* a copy of the tone's panel value (cz_ed_put writes it) */
         *valp = 0;
+        if(!MELODEE_RETIRED_REFERENCE)return 0; /* retired production editor */
         if (id == 0xFFu || TSEL->eng_req != ENGI_CZ)
             return 0;
         if (pg->graph == GR_CZTOOLS) {

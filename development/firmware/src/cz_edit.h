@@ -38,6 +38,20 @@ static const param_desc_t CZ_PD[LCZ_NP]={
 static const param_desc_t CZ_ACTIONS[4]={{"NAME",F_INT,0,0,0,0,0},{"1 > 2",F_INT,0,0,0,0,0},
                                          {"2 > 1",F_INT,0,0,0,0,0},{"COMP",F_INT,0,0,0,0,0}};
 
+#if !MELODEE_RETIRED_REFERENCE
+/* Retired CZ editing is not a production feature. By: Inputsignwave.
+ * Keep raw patch storage/validation in retired_audio.c and the bank codecs;
+ * these UI entry points refuse edits without touching archived patch bytes. */
+static int16_t cz_ed_cell[4];
+static void cz_ed_decode(uint8_t *p,const uint8_t *d)
+{ (void)d;memset(p,0,LCZ_PACKED); }
+static int cz_ed_active(const uint8_t *d,uint32_t id)
+{ (void)d;(void)id;return 0; }
+static const param_desc_t *cz_ed_desc(uint32_t tr,uint32_t id,uint32_t slot,int16_t **valp)
+{ (void)tr;(void)id;(void)slot;*valp=0;return 0; }
+static int cz_ed_put(uint32_t tr,uint32_t id,uint32_t v,uint8_t *raw)
+{ (void)tr;(void)id;(void)v;(void)raw;return 0; }
+#else
 /* Casio bytes -> panel values (the inverse of lcz_sx_encode), clamped to the
  * panel's ranges. SUS follows the first marked point before END, as the
  * renderer does; END's own level shows 0 (the CZ ignores it). */
@@ -137,4 +151,5 @@ static int cz_ed_put(uint32_t tr,uint32_t id,uint32_t v,uint8_t *raw)
     }
     return cz_patch_valid(raw) && memcmp(raw,cz_patch[tr].raw,128u);
 }
+#endif /* historical reference editor */
 #endif

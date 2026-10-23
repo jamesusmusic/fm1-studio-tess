@@ -9,6 +9,20 @@ application USB/editor/console identity and compatible host discovery; preserve
 upstream notices, protocol/storage/update identities and archived baselines.
 See [branding and validation](INPUTSIGNWAVE_BRANDING.md).
 
+## Performance 11 space/MPE groundwork — 23 October 2026
+
+By: Inputsignwave
+
+Begin with compatibility-preserving flash recovery before live MPE. Space1
+removes retired CZ on-device editor conversion/descriptor reachability from
+the production build; raw CZ patch storage, bank/project codecs and historical
+reference editor remain. No retained sound, preset, font, reverb or UI feature
+is intentionally removed. The new production test verifies edit refusal and
+byte-exact project/template recall. Native size and full regressions pending.
+RC4 remains the hardware-validated install baseline. The 24–32 KiB MPE space
+allowance is a planning target, not a measured implementation requirement.
+Direct BLE Central needs its own platform/link measurement; it is not enabled.
+
 ## Performance 10 RC4 track reverb — 23 October 2026
 
 By: Inputsignwave
