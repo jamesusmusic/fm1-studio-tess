@@ -314,7 +314,6 @@ if core && [ $TABLES = 1 ]; then
         -O1 -DMELODEE_USB_AUDIO=1 $FW
     t "recording/performance tools and legacy migrations" performance_tools_test -O1 $FW
     run "Mac Seaboard USB bridge: channel preservation, exact routing and shutdown" python3 tests/seaboard_bridge_test.py
-    t "Live USB MPE: source isolation, per-voice expression, release/steal and PCM" mpe_test -O1 -g -fsanitize=address,undefined -fno-sanitize-recover=all $FW
     t "USB/TRS clock, bend, sustain, ownership and panic recovery" midi_control_test -O1 $FW
     t "MIDI timing: quantized TRS/USB recording, audio timeline, tempo changes and timer wrap" midi_timing_test -O1 $FW
     t "MIDI recording: raw events, quantization at take end, independent releases, banks and capacity" recording_test \

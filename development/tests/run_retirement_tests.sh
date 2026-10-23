@@ -43,3 +43,7 @@ for unit in wavetable_layers fmkit sound_fx performance10_midi performance10_fx_
 done
 $cc_task -O2 -g -fsanitize=address,undefined -fno-sanitize-recover=all -DPLATE_RATE=11025 tests/plate_test.c firmware/src/plate.c -o build/removal/plate
 build/removal/plate
+
+# Live MPE snapshots must match under a real concurrent audio worker.
+$cc_task $flags -g -pthread -fsanitize=address,undefined -fno-sanitize-recover=all tests/mpe_dual_test.c -lm -o build/removal/mpe_dual
+UBSAN_OPTIONS=halt_on_error=1 ASAN_OPTIONS=detect_leaks=0 build/removal/mpe_dual

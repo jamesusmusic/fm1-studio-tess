@@ -375,8 +375,8 @@ async function editorMock() {
     const rd = E.parse[E.CMD.DESC](await rq(E.req.desc(1, 14)));
     const r1 = E.parse[E.CMD.SET](await rq(E.req.set(1, 14, 5)));
     const r0 = E.parse[E.CMD.SET](await rq(E.req.set(1, 14, 0)));
-    ok(rd.label === "ROUT" && rd.def === 0 && eq(rd.names, ["CH1-4", "SEL", "CH5-8", "CH9-12", "CH13-16"]) && r1.value === 4 && r0.value === 0 && info.gcount === 45,
-      "editor: MIDI IN routing (ROUT four-channel ranges / SEL, global id 14)");
+    ok(rd.label === "ROUT" && rd.def === 0 && eq(rd.names, ["CH1-4", "SEL", "CH5-8", "CH9-12", "CH13-16", "MPE T1", "MPE T2", "MPE T3", "MPE T4"]) && r1.value === 5 && r0.value === 0 && info.gcount === 45,
+      "editor: MIDI IN routing (ROUT ranges / SEL / fixed-track MPE, global id 14)");
   }
   {
     const d=E.parse[E.CMD.DESC](await rq(E.req.desc(1,41)));

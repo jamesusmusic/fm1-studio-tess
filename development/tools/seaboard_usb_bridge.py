@@ -51,7 +51,10 @@ def main():
         try:
             with mido.open_input(src, callback=lambda msg: forward(msg, output)):
                 while True:
-                    time.sleep(0.1)
+                    time.sleep(1)
+                    if src not in mido.get_input_names():
+                        print("RISE input disconnected; releasing the USB zone.", flush=True)
+                        break
         except KeyboardInterrupt:
             pass
         finally:

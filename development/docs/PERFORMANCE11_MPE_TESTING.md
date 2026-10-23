@@ -53,7 +53,7 @@ restore an ordinary route. Direct RISE-to-FM-1 Bluetooth is separate work.
    [Dashboard manual](https://roli.com/us/manuals/dashboard) and
    [lower-zone setup](https://support.roli.com/en/support/solutions/articles/36000024602-mainstage-using-the-seaboard-rise-grand-with-mainstage).
 4. On FM-1 choose track 1, engine **WAVE LAYERS** and an evolving preset such
-   as VOWEL GLASS. In **GLOBAL → SYSTEM → ROUT** choose **MPE T1**.
+   as VOWEL GLASS. In **GLOBAL → SYSTEM → ROUT** choose **MPE T1** (the compact card reads `MPE1`).
    The shared header shows `MPE T1` while this route is selected. T2–T4 pin
    other destinations if wanted. Ordinary `CH1-4`/`SEL` restores normal MIDI.
    Start with REC off, transport stopped and a moderate output level.
@@ -83,7 +83,9 @@ controller and stereo renderer, with ASan/UBSan. It covers equal pitches, member
 and manager bends, pre-note controls, pressure/slide, note-off velocity, sustain,
 repeated notes, channel reuse, steals, USB/TRS isolation, RPN zone/range, route
 transition, incompatible engines, resets, panic, overflow and 12,000 mixed
-queued events. Separate PCM cases verify audible control response. The legacy
+queued events. Separate PCM cases verify audible control response. `mpe_dual_test.c` compares
+256 blocks of serial/concurrent stereo PCM with four live tracks, the plate,
+warm drive, dense independent expression, sustain/channel reuse and steals. The legacy
 controller/ownership cases run again after MPE. The bridge has offline routing,
 ambiguity and shutdown tests. Full production and historical-reference suites
 retain their existing golden hashes and budgets.

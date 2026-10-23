@@ -371,7 +371,7 @@ grid lives in the steps themselves, so every engine has it:
   44.1 kHz stereo; bcdDevice 3.11); the MIDI port and this protocol are unchanged, and both
   work while the computer records.
 - **Global ids.** `G_ROUTE` (id 14, label "ROUT", GLO > SYSTEM) was a placeholder ("--", range 0..0);
-  it is the MIDI IN routing: 0 "CH1-4", 1 "SEL", 2 "CH5-8", 3 "CH9-12", 4 "CH13-16".
+  it is the MIDI IN routing: 0 "CH1-4", 1 "SEL", 2 "CH5-8", 3 "CH9-12", 4 "CH13-16". Inputsignwave appends 5–8 "MPE T1"–"MPE T4" for a USB lower zone pinned to WAVE LAYERS on that track; TRS remains CH1–4.
   Each range maps only its four channels to tracks 1..4 in order; other channels and tracks not in use
   are ignored. SEL receives every channel on the selected track. DRUM redirects its channel to the
   first DRUM track only within the selected range (or in SEL); without a DRUM track, normal routing applies.
