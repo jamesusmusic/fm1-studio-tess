@@ -55,5 +55,6 @@ bank/template versions load with neutral extension settings. Standalone legacy
 FUN22 exports retain their historical scope and do not carry the new extension.
 User presets preserve engine-layer/kit parameters through the existing common
 parameter format. Back up a full bank before flashing; older firmware cannot
-read new FBK8/TPLM saves. NIGHT applies once on upgrade, then your palette choice
+read new FBK8/TPLM saves. Heavy configurations can leave no room for the optional
+recording-undo snapshot; the UI reports this while recording/audio take priority. NIGHT applies once on upgrade, then your palette choice
 is retained. No flash operation is performed by the validation process.

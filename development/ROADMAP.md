@@ -22,14 +22,23 @@ plate with size, separate tone/cuts, movement, wobble, Swell and lossless Hold;
 warm drive and independent per-slot LFO settings. FBK8 saves 168 B losslessly and
 adds SFX1 controls in the unchanged atomic allocation. TPLM migrates older templates.
 
-Target compile, combined budgets, complete regression, editor and exact-package
-emulator checks are **in progress**. This is not a release/acceptance claim.
-The first combined link exceeded flash by 644 B; curate six frames per new
-family (5,616 B instead of 7,936 B) while retaining all eight families and the old
-engine. New FX pages have explicit renderer handling; FM kits use the established
-GM lane order and per-lane voice reuse. Standalone plate sanitizers pass, including exact tail-energy preservation during
-30 s closed-input Hold. Targeted FM-kit overlap/release and FX persistence/template
-migration tests pass. The full registered local regression suite passed in 225 seconds, including 2,401 engine combinations and zero UI lint findings. Final compact-state native linking and exact-package checks are being regenerated before delivery.
+Complete combined RC1 target build and offline checks are finished. Exact native
+source: `7a74b612485b335a94203bff6a28207178be4feb`. Application body 572,352 /
+573,440 B (1,088 B spare); main audio arena 51,520 B, excluding disjoint tails.
+The final full local suite passed in 238 s: 349 unchanged golden renders, zero
+health/routing/CPU failures, 2,401 production concurrency combinations and zero
+UI lint findings. Linux CI also passed native compile, sanitizers and the full suite (431 s).
+Exact-package boot and a combined song emulator test pass.
+See [final validation and limits](docs/PERFORMANCE10_FINAL_VALIDATION_2026-10-23.md).
+
+Next acceptance work is physical FM-1 audition/timing: note edges and rich WT
+presets, mixed polyphony with plate/drive/modulation, long Hold/Swell changes,
+record/reload and control feel. New feature growth now requires flash optimization;
+only 1,088 B remains. Optional record undo is deliberately lower priority than
+sound/recording and can be unavailable under heavy allocations. Physical CPU
+percent, stack high-water and deadline margins are not inferred from host tests.
+The later roadmap entries below remain the backlog; this candidate does not
+silently incorporate additional unapproved engine or Pro-800 conversions.
 
 ## Performance 9 removal baseline — built and offline validated
 

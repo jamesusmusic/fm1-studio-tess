@@ -2,9 +2,10 @@
 
 By: Inputsignwave
 
-23 October 2026. Complete feature source is implemented. Final native link,
-exact-package emulator and delivery measurements are being regenerated for the
-hardened candidate; this document is not a physical-hardware acceptance claim.
+23 October 2026. **The complete combined RC1 firmware has been built and offline
+validated.** This is a hardware-audition candidate, not a physical-hardware
+acceptance claim. Final native source is `7a74b612485b335a94203bff6a28207178be4feb`.
+See the [exact final validation report](PERFORMANCE10_FINAL_VALIDATION_2026-10-23.md).
 
 ## Included
 
@@ -41,27 +42,29 @@ the 65-byte validated sound-FX state atomically. New favorites use tagged unused
 settings bytes rather than overwriting native stars. Save a full backup before
 upgrading: old firmware cannot read new FBK8/TPLM saves.
 
-## Validation
+## Validation and delivery
 
-The complete registered local suite passed in 225 seconds before the final
-memory reductions. It includes unchanged historical PCM goldens, 2,401 ordered
-production engine combinations with serial/concurrent PCM parity, storage and
-older-template migration, editor/web and UI sweeps (zero lint findings).
-New sanitizer tests cover 8,192 wavetable pitch/control cases, independent layer
-ADSRs/filters, exact approved FM6 unpacking, kit overlap/chokes and engine changes,
-FX state/project/template persistence, shared plate/drive/LFO routing, MIDI control
-round trips and recorded drum note ownership. Plate stress tests cover bounded
-feedback, Swell and exact stored-tail energy for 30 seconds of closed-input Hold.
+The complete registered local suite passed against the final native artifacts in
+**238 seconds**: 349 unchanged golden renders, no health/routing/voice/crash
+failures and no CPU budget failures. The production matrix covers 2,401 ordered
+engine combinations with serial/concurrent PCM parity. New signal, storage,
+MIDI/recording, UI and sanitizer contracts pass. UI sweep has zero lint findings. Linux CI also passed target compile, sanitizers
+and the full registered suite (431 seconds).
 
-The preceding combined native snapshot linked with 744 bytes of application flash
-headroom. Final source additionally compacts FM6 voices and the highest WT band,
-and caps per-track state arrays to their actual polyphony: 356 bytes for WAVE
-LAYERS and 4,544 bytes for FM kits on the host ABI. These are working allocations,
-not total firmware RAM or physical CPU measurements. The final delivery report
-will record the actual target link and exact-package checks.
+Exact application body: **572,352 / 573,440 bytes**, leaving **1,088 bytes**.
+Main audio working arena: **51,520 bytes**. Other disjoint banks: 2,656 + 4,260 +
+784 bytes, excluding optional cache. These are arena capacities, not free RAM.
 
-The preceding exact native app emulator ran 1,800 emulated ms, produced 63,872
-stereo frames without clipping and displayed 64 LCD frames. Eight unsupported
-MMIO addresses remain an emulator limitation; it does not establish physical
-CPU load, timing margin or analog output quality. Hardware audition remains
-necessary after offline validation. No FM-1 has been flashed by this build task.
+The final `.fwsc` passed package checks and direct emulator boot. A combined
+synthetic song using its exact application ran 1,800 emulated ms, produced
+63,872 stereo frames with no clipping and a correct NIGHT display. Eight known
+unsupported MMIO addresses remain. Emulator CPU diagnostics are not physical
+CPU load or deadline evidence. Hardware listening/timing acceptance remains.
+Optional recording undo can be unavailable in heavy allocations; audio and
+recording take priority and the UI reports this. See the report for measured
+capacity cases, limitations, source identity and checksums.
+
+Local delivery folder: `Inputsignwave_Performance10_RC1_2026-10-23`, beside the
+repository. It contains the flashable firmware, source snapshot, controls, added
+sounds, installation instructions, provenance, licenses and validation evidence.
+No device has been flashed by this task. Pro-800 conversions remain separate.
