@@ -23,10 +23,10 @@ static void parity(void)
 {
     const uint32_t engines[]={ENGI_PROPHET,ENGI_FM6,ENGI_DRUM};
     for(uint32_t k=0;k<3;k++){
-        uint32_t e=engines[k],np=e==ENGI_DRUM?2u:ENGINES[e]->npresets;
+        uint32_t e=engines[k],np=e==ENGI_DRUM?2u:e==ENGI_FM6?25u:ENGINES[e]->npresets;
         for(uint32_t pi=0;pi<np;pi++)printf("preset %u %u %016llx\n",e,pi,(unsigned long long)pcm_hash(e,pi,0));
     }
-    for(uint32_t fx=0;fx<FX_COUNT;fx++)if(fx!=FX_ROOM && fx!=FX_REVERB)
+    for(uint32_t fx=0;fx<10u;fx++)if(fx!=FX_ROOM && fx!=FX_REVERB)
         printf("fx %u %016llx\n",fx,(unsigned long long)pcm_hash(ENGI_FM6,4,fx));
 }
 static void legacy(void)
@@ -68,7 +68,7 @@ static void bypass(void)
         int32_t b[CTL],before[CTL];for(uint32_t i=0;i<CTL;i++)b[i]=before[i]=(int32_t)i*123-1700;
         for(uint32_t j=0;j<4;j++){
             assert(!fx_process(t,b,CTL));assert(!memcmp(b,before,sizeof b));
-            fx_plan_t plan;fx_slot_prepare(&plan,NPART*FX_SLOTS,t->p+P_FXTYPE);
+            fx_plan_t plan;fx_slot_prepare(&plan,NPART*FX_SLOTS,t->p+P_FXTYPE,CTL);
             assert(!plan.active && !resource[RES_FX0+NPART*FX_SLOTS].size);
         }
     }
@@ -99,8 +99,13 @@ int main(int argc,char **argv)
 {
     if(argc>1){parity();return 0;}
     assert(!MELODEE_RETIRED_REFERENCE);
-    assert(NENG_SHOWN==3u+MELODEE_WAVETABLE && !eng_ok(3) && !eng_ok(ENGI_CZ));
-    for(uint32_t k=0;k<NENG_SHOWN;k++)assert(eng_vis(k)==(k==0?ENGI_PROPHET:k==1?ENGI_FM6:MELODEE_WAVETABLE && k==2?ENGI_WAVETABLE:ENGI_DRUM));
+    assert(NENG_SHOWN==4u+2u*MELODEE_WAVETABLE && !eng_ok(3) && !eng_ok(ENGI_CZ));
+    const uint8_t expected[]={ENGI_PROPHET,ENGI_FM6,
+#if MELODEE_WAVETABLE
+        ENGI_WAVETABLE,ENGI_WAVE_LAYERS,
+#endif
+        ENGI_DRUM,ENGI_FMKIT};
+    for(uint32_t k=0;k<NENG_SHOWN;k++)assert(eng_vis(k)==expected[k]);
     assert(!eng_state_size(3) && !eng_state_size(ENGI_CZ));
     assert(ENG_DRUM.npresets==2 && TRK_DEF[2][0]==ENGI_FM6);
     legacy();bypass();stress();

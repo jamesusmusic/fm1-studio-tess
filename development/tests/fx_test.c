@@ -136,7 +136,7 @@ static void separate_sends(void)
         song.g[G_MFXTYPE+slot*FX_PARAMS]=slot==1?FX_OFF:FX_PHASER;
         int32_t *l=slot?fx_send_extra_l[slot-1]:fx_send_l,*r=slot?fx_send_extra_r[slot-1]:fx_send_r;
         for(uint32_t i=0;i<CTL;i++){l[i]=(int32_t)(i*97+slot*303);r[i]=-(int32_t)(i*53+slot*197);}
-        fx_slot_prepare(&fx_bus_plan[slot],NPART*FX_SLOTS+slot,song.g+G_MFXTYPE+slot*FX_PARAMS);
+        fx_slot_prepare(&fx_bus_plan[slot],NPART*FX_SLOTS+slot,song.g+G_MFXTYPE+slot*FX_PARAMS,CTL);
         before[slot]=fx_state[NPART*FX_SLOTS+slot];
         if(!fx_bus_plan[slot].active)continue;
         memcpy(fx_left,l,sizeof fx_left);memcpy(fx_right,r,sizeof fx_right);assert(fx_slot_run(&fx_bus_plan[slot],CTL));
@@ -469,7 +469,7 @@ static void tone_test(void)
         for(uint32_t block=0;block<600;block++){
             int16_t thin_side=(int16_t)(block<100?0:block<200?thin:block<300?FX_TONE_MAX:block<400?1:0);
             trk[0].p[P_FXTONE]=sweep==0?thin_side:sweep==1?(int16_t)-thin_side:(int16_t)(block<100?-FX_TONE_MAX:block<300?FX_TONE_MAX:block<400?-1:0);
-            fx_slot_prepare(&plan,0,p);assert(plan.active);
+            fx_slot_prepare(&plan,0,p,CTL);assert(plan.active);
             for(uint32_t i=0;i<CTL;i++){
                 int32_t y=fx_tone_input(plan.f,8000,1.0f/(0.010f*rate));
                 assert(abs(y-previous)<200 && abs(y)<=9000);previous=y;
@@ -484,7 +484,7 @@ static void tone_test(void)
         int16_t *p=ti==NPART?song.g:trk[ti].p,v=(int16_t)((ti+slot)&1u?1+ti*3+slot:-(int)(1+ti*3+slot));
         uint32_t base=(ti==NPART?G_MFXTYPE:P_FXTYPE)+slot*FX_PARAMS,tone=(ti==NPART?G_MFXTONE:P_FXTONE)+slot;
         p[base]=FX_ECHO;p[base+1]=127;p[tone]=v;
-        fx_slot_prepare(&plan,ti*FX_SLOTS+slot,p+base);
+        fx_slot_prepare(&plan,ti*FX_SLOTS+slot,p+base,CTL);
         assert(plan.active && plan.f->q[0][0].a2==(float)fx_low_cut_hz(FX_ECHO,v) && plan.f->q[0][1].a2==(v<0?(float)fx_tone_hz(v):0.0f));
     }
     project_t q;project_store_t wire;project_capture(&q);assert(proj_pack(&wire,&q) && proj_import(&proj_scratch,&wire,sizeof wire));

@@ -14,7 +14,11 @@ static const char *const N_DIV[] = {"1/4", "1/8", "1/16", "1/32", "8T", "16T", "
 static const char *const N_RECQ[] = {"OFF", "1/4", "1/8", "1/16", "1/32", "8T", "16T", "1/2", "1/1", "2BAR", "4BAR"};
 static const char *const N_LTRIG[] = {"NOTE", "FREE"};
 static const char *const N_LPOL[] = {"BI", "UNI"};
-static const char *const N_FX[] = {"OFF", "PHASER", "WIDTH", "FORMANT", "TAPE", "SPIT", "ECHO", MELODEE_RETIRED_REFERENCE ? "ROOM" : "ROOM GONE", MELODEE_RETIRED_REFERENCE ? "REVERB" : "REV GONE", "CHORUS"};
+static const char *const N_FX[] = {"OFF", "PHASER", "WIDTH", "FORMANT", "TAPE", "SPIT", "ECHO", MELODEE_RETIRED_REFERENCE ? "ROOM" : "ROOM GONE", MELODEE_RETIRED_REFERENCE ? "REVERB" : "REV GONE", "CHORUS"
+#if !MELODEE_RETIRED_REFERENCE
+, "PLATE", "WARM DRIVE"
+#endif
+};
 static const char *const N_ONOFF[] = {"OFF", "ON"};
 static const char *const N_QUANT[] = {"OFF", "SNAP", "WHITE", "ALL", "MPC"};   /* Q_OFF .. Q_MPC (seq.c kb_map, midi_map) */
 /* chord keys (chord.c): OFF, the diatonic triad / seventh of the track's ROOT and SCALE on the key, fixed shapes */
@@ -52,7 +56,7 @@ static const char *const N_MSRC[] = {"OFF", "LFO", "ENV", "VEL", "KEY", "RAND", 
 static const char *const N_MDST[] = {"OFF", "PITCH", "CUT", "SHP", "AMP", "PAN", "", "", "", "", "RATE",
                                      "VIB", "E1", "E2", "E3", "E4", "E5", "E6", "E7", "E8", "DEPTH"};
 static const char *const N_ENGNAME[] = {"-", "-", MELODEE_LEGACY_EXTRAS ? "PHASE" : "-", MELODEE_RETIRED_REFERENCE ? "SID" : "SID GONE", "-", MELODEE_LEGACY_EXTRAS ? "VOICE" : "-", MELODEE_LEGACY_EXTRAS ? "TRIO" : "-", MELODEE_LEGACY_EXTRAS ? "WHEEL" : "-", "-", MELODEE_LEGACY_EXTRAS ? "PHYS" : "-",
-                                             "DRUM", MELODEE_LEGACY_EXTRAS ? "NOISE" : "-", "FM6", MELODEE_SLICE ? "SLICE" : "-", "-", MELODEE_RETIRED_REFERENCE ? "CZ-1" : "CZ GONE", "-", "-", "-", "PROPHET", "-", MELODEE_WAVETABLE ? "WAVETABLE" : "-"};
+                                             "DRUM", MELODEE_LEGACY_EXTRAS ? "NOISE" : "-", "FM6", MELODEE_SLICE ? "SLICE" : "-", "-", MELODEE_RETIRED_REFERENCE ? "CZ-1" : "CZ GONE", "-", "-", "-", "PROPHET", "-", MELODEE_WAVETABLE ? "WAVETABLE" : "-", MELODEE_WAVETABLE ? "WAVE LAYERS" : "-", MELODEE_RETIRED_REFERENCE ? "-" : "FM DRUM KIT"};
 
 #define PD(l, f, mn, mx, df) {l, f, mn, mx, df, 0, 0}
 #define PE(l, n, df) {l, F_ENUM, 0, (int16_t)(sizeof(n) / sizeof(n[0]) - 1), df, n, 0}
@@ -274,22 +278,26 @@ static const param_desc_t GP[G_COUNT] = {
 static const param_desc_t *global_desc(uint32_t id)
 {
     if(param_master_fx(id) && (id-G_MFXTYPE)%FX_PARAMS>=2u){
-        static param_desc_t d;static const char *const character[]={"CHAR","DEPTH","DEPTH","FOCUS","JITTER","BITE","REPEAT","DECAY","DEPTH","DEPTH"};
+        static param_desc_t d;static const char *const character[]={"CHAR","DEPTH","DEPTH","FOCUS","JITTER","BITE","REPEAT","DECAY","DEPTH","DEPTH","DECAY","OUTPUT"};
         uint32_t base=G_MFXTYPE+(id-G_MFXTYPE)/FX_PARAMS*FX_PARAMS,type=(uint32_t)clamp(song.g[base],0,NELEM(N_FX)-1);d=GP[id];
-        if(id-base==3u)d.label=character[type];else if(type>=6u && type<=8u){d.label=type==6u?"TIME":"SIZE";d.fmt=F_PCT;}return &d;
+        if(id-base==3u)d.label=character[type];else if(type>=6u && type<=8u){d.label=type==6u?"TIME":"SIZE";d.fmt=F_PCT;}if(type==10u && id-base==2u){d.label="SIZE";d.fmt=F_PCT;}if(type==11u && id-base==2u){d.label="DRIVE";d.fmt=F_PCT;}return &d;
     }
     return &GP[id];
 }
 static uint32_t scale_count(const track_t *t);          /* seq.c */
 static const param_desc_t *track_desc(const track_t *t, uint32_t id)
 {
+#if MELODEE_WAVETABLE
+    if(t->eng_req==ENGI_WAVE_LAYERS){const param_desc_t *d=wl_param(id);if(d)return d;}
+#endif
     if (param_fx(id) && !param_fx_tone(id) && ((id-P_FXTYPE)%FX_PARAMS)>=2u) {
         static param_desc_t fx_desc;
-        static const char *const character[] = {"CHAR", "DEPTH", "DEPTH", "FOCUS", "JITTER", "BITE", "REPEAT", "DECAY", "DEPTH", "DEPTH"};
+        static const char *const character[] = {"CHAR", "DEPTH", "DEPTH", "FOCUS", "JITTER", "BITE", "REPEAT", "DECAY", "DEPTH", "DEPTH", "DECAY", "OUTPUT"};
         uint32_t base=P_FXTYPE+(id-P_FXTYPE)/FX_PARAMS*FX_PARAMS;
         fx_desc=TP[id];uint32_t type=(uint32_t)clamp(t->p[base],0,NELEM(N_FX)-1);
         if(id-base==3u)fx_desc.label=character[type];
         else if(type>=6u && type<=8u){fx_desc.label=type==6u?"TIME":"SIZE";fx_desc.fmt=F_PCT;}
+        if(type==10u && id-base==2u){fx_desc.label="SIZE";fx_desc.fmt=F_PCT;}if(type==11u && id-base==2u){fx_desc.label="DRIVE";fx_desc.fmt=F_PCT;}
         return &fx_desc;
     }
     if (t->eng_req == 2u && id >= P_FM1_ATK && id <= P_FM4_LEVEL)
@@ -312,6 +320,9 @@ static const param_desc_t *track_desc(const track_t *t, uint32_t id)
  * only; range and default are the same): what the editor protocol, user presets and projects use */
 static const param_desc_t *param_desc_of(uint32_t e, uint32_t id)
 {
+#if MELODEE_WAVETABLE
+    if(e==ENGI_WAVE_LAYERS){const param_desc_t *d=wl_param(id);if(d)return d;}
+#endif
     if (e == 2u && id >= P_FM1_ATK && id <= P_FM4_LEVEL)
         return &CZ_ED[id - P_FM1_ATK];
     return id >= P_E0 ? &ENGINES[e]->edit[id - P_E0] : &TP[id];
@@ -480,7 +491,7 @@ static void param_format(const param_desc_t *d, int32_t v, char *val, const char
 enum { FAM_HOME, FAM_ENV, FAM_LFO, FAM_SCL, FAM_EDIT, FAM_GLO, FAM_SAVE, FAM_ARP, FAM_SEQ, FAM_TRK,
        FAM_FX, FAM_COUNT };
 enum { SC_TRACK, SC_GLOBAL, SC_ENGINE, SC_STEP, SC_TRK,   /* SC_TRK: the TRACKS page (ui_input.c tracks_edit) */
-       SC_FM6, SC_FMOP, SC_CZ, SC_CZ1, SC_P5, SC_P5STORE, SC_DRUM, SC_DRUMHIT };                         /* FM6: its patch, functions; operator fm6_opsel;
+       SC_FM6, SC_FMOP, SC_CZ, SC_CZ1, SC_P5, SC_P5STORE, SC_DRUM, SC_DRUMHIT, SC_WL, SC_SFX };                         /* FM6: its patch, functions; operator fm6_opsel;
                                                                   * CZ1: a native CZ-1 tone (cz_edit.h) */
 enum { GR_NONE, GR_ADSR, GR_LFO, GR_STEPS, GR_ARP, GR_SCALE, GR_ROLL, GR_BROWSE, GR_SLOTS, GR_USER, GR_TRK,
        GR_MOD, GR_PATS, GR_SONG, GR_MOTION, GR_CHORD, GR_SLICES,
@@ -635,6 +646,19 @@ static const page_t PAGES[] = {
     {"SONG KEY", FAM_SEQ, SC_GLOBAL, GR_SONG_KEY, {255,255,255,255}},
     {"MOTION", FAM_SEQ, SC_TRACK, GR_MOTION, {0xFF, 0xFF, 0xFF, 0xFF}},
     {"DRUM HIT",FAM_SEQ,SC_DRUMHIT,GR_DRUMHIT,{0,1,2,3}},
+    {"FX MOD",FAM_FX,SC_SFX,GR_NONE,{0,1,2,3}},
+    {"FX MOD CLOCK",FAM_FX,SC_SFX,GR_NONE,{0,4,5,255}},
+    {"PLATE TONE",FAM_FX,SC_SFX,GR_NONE,{16,17,18,19}},
+    {"PLATE SPACE",FAM_FX,SC_SFX,GR_NONE,{20,21,22,23}},
+    {"PLATE MOTION",FAM_FX,SC_SFX,GR_NONE,{24,25,26,27}},
+    {"PLATE HOLD",FAM_FX,SC_SFX,GR_NONE,{28,255,255,255}},
+    {"LAYER B ENV",FAM_ENV,SC_WL,GR_ADSR,{P_FM1_ATK,P_FM1_DEC,P_FM1_SUS,P_FM1_REL}},
+    {"LAYER LEVELS",FAM_EDIT,SC_WL,GR_NONE,{P_FM1_LEVEL,P_FM2_LEVEL,P_FM3_SUS,P_FM3_REL}},
+    {"A FILTER",FAM_EDIT,SC_WL,GR_NONE,{P_FM2_ATK,P_FM2_DEC,P_FM2_SUS,P_LN4}},
+    {"B FILTER",FAM_EDIT,SC_WL,GR_NONE,{P_FM2_REL,P_FM3_ATK,P_FM3_DEC,P_LN5}},
+    {"A SCAN",FAM_EDIT,SC_WL,GR_NONE,{P_FM4_ATK,P_FM4_DEC,P_LN0,P_LN6}},
+    {"B SCAN",FAM_EDIT,SC_WL,GR_NONE,{P_FM4_SUS,P_FM4_REL,P_LN1,P_LN7}},
+    {"MORPH TARGETS",FAM_EDIT,SC_WL,GR_NONE,{P_LN2,P_LN3,P_FM3_LEVEL,P_FM4_LEVEL}},
 };
 #define NPAGES (sizeof(PAGES) / sizeof(PAGES[0]))
 static uint8_t mod_ui_slot;      /* the MOD page: the matrix slot (0..3) KNOB 2..4 edit */
@@ -744,9 +768,54 @@ static const param_desc_t *fx_rack_desc(const page_t *pg, uint32_t slot, int16_t
     }
     return track_desc(TSEL, id);
 }
+/* Performance FX use their own versioned IDs; no ordinary ID is renumbered. */
+static const char *const N_SFX_DIV[]={"4BAR","2BAR","1/1","1/2","1/4","1/8","8T","1/16","16T","1/32","1/4D","1/8D","1/16D"};
+static uint8_t sfx_ui_slot;
+static int16_t sfx_ui_cell[4];
+static const param_desc_t SFX_UI[]={
+ {"SLOT",F_INT,1,15,1,0,0},
+ {"SHAPE",F_ENUM,0,3,0,(const char *const []){"SIN","TRI","SAW","SQR"},0},
+ {"DEST",F_ENUM,0,4,0,(const char *const []){"OFF","MIX","RATE","CHAR","TONE"},0},
+ {"DEPTH",F_PCT,0,127,0,0,0},{"SYNC",F_ONOFF,0,1,0,0,0},
+ {"RATE",F_LFOHZ,0,127,24,0,0}
+};
+static const param_desc_t SFX_PLATE_UI[]={
+ {"PREDELAY",F_PCT,0,127,25,0,0},{"TONE",F_OFS,0,127,64,0,0},
+ {"LOW CUT",F_PCT,0,127,6,0,0},{"HIGH CUT",F_PCT,0,127,112,0,0},
+ {"DAMP",F_PCT,0,127,80,0,0},{"WIDTH",F_PCT,0,127,127,0,0},
+ {"MOVEMENT",F_PCT,0,127,24,0,0},{"RATE",F_LFOHZ,0,127,24,0,0},
+ {"SYNC",F_ENUM,0,10,0,N_LSYNC,0},{"WOBBLE",F_PCT,0,127,0,0,0},
+ {"SWELL",F_ONOFF,0,1,0,0,0},{"RISE",F_TIME,0,127,60,0,0},
+ {"INFINITE",F_ONOFF,0,1,0,0,0}
+};
+static const param_desc_t *sfx_page_desc(uint32_t id,uint32_t slot,int16_t **value)
+{
+ uint8_t *p=sound_fx.slot[sfx_ui_slot];const param_desc_t *d=0;int32_t v=0;
+ if(id<6u){
+  d=&SFX_UI[id];
+  switch(id){case 0:v=sfx_ui_slot+1u;break;case 1:v=p[0]&3u;break;
+   case 2:v=(p[0]>>2)&7u;break;case 3:v=p[2];break;case 4:v=!!(p[0]&32u);break;case 5:v=p[1];break;}
+  if(id==5u && (p[0]&32u)){static param_desc_t division;division=(param_desc_t){"DIV",F_ENUM,0,12,0,N_SFX_DIV,0};d=&division;v=p[1]%13u;}
+ }else if(id>=16u && id<29u){d=&SFX_PLATE_UI[id-16u];v=sound_fx.plate[id-16u];}
+ if(!d){*value=0;return 0;}sfx_ui_cell[slot]=v;*value=&sfx_ui_cell[slot];return d;
+}
+static void sfx_page_put(uint32_t id,int32_t v)
+{
+ uint8_t *p=sound_fx.slot[sfx_ui_slot];
+ switch(id){
+ case 0:sfx_ui_slot=(uint8_t)clamp(v-1,0,14);break;
+ case 1:p[0]=(uint8_t)((p[0]&~3u)|((uint32_t)v&3u));break;
+ case 2:p[0]=(uint8_t)((p[0]&~28u)|((uint32_t)v<<2));break;
+ case 3:p[2]=(uint8_t)v;break;
+ case 4:p[0]=(uint8_t)((p[0]&~32u)|(v?32u:0u));if(v)p[1]%=13u;break;
+ case 5:p[1]=(uint8_t)v;break;
+ default:if(id>=16u && id<29u)sound_fx.plate[id-16u]=(uint8_t)v;break;
+ }
+}
 static const param_desc_t *page_desc(const page_t *pg, uint32_t slot, int16_t **valp)
 {
     uint32_t id = pg->id[slot];
+    if(pg->scope==SC_SFX)return sfx_page_desc(id,slot,valp);
     if(pg->scope==SC_P5 || pg->scope==SC_P5STORE){
         if(id==255u || (pg->scope==SC_P5 && (id>=88u || !P5_PANEL[id].label))){*valp=0;return 0;}
         p5_cell[slot&3u]=pg->scope==SC_P5STORE?(slot?0:p5_store_slot):p5_patch_of(TSEL)->raw[id]+(id==P5_BEND?1:0);

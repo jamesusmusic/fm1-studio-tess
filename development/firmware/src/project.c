@@ -60,6 +60,7 @@ typedef struct {
     uint16_t user[NTRK];                    /* shared slot + 1; sound remains embedded independently */
     uint8_t tess[TESS_FULL_BYTES], tess_valid; /* custom state, serialized only in the full bank extension */
     uint8_t s7[S7_STATE_BYTES], s7_valid; /* Studio 7 bank extension; By: Inputsignwave */
+    sound_fx_t sound_fx;uint8_t sound_fx_valid;
     uint32_t sum;
 } __attribute__((may_alias)) project_t;
 /* The four formerly reserved runtime bytes keep Prophet user-slot origins.
@@ -136,7 +137,8 @@ static int proj_ok(const project_t *q)
         q->sel >= NTRK || q->parts > NPART || q->phys > PROJ_PHYS ||
         !chain_valid(&q->chain) || !motion_valid(&q->motion) ||
         (q->tess_valid && !tess_full_valid(q->tess, TESS_FULL_BYTES)) ||
-        (q->s7_valid && !s7_state_decode(0,q->s7,S7_STATE_BYTES))) return 0;
+        (q->s7_valid && !s7_state_decode(0,q->s7,S7_STATE_BYTES)) ||
+        (q->sound_fx_valid && !sfx_valid(&q->sound_fx))) return 0;
     for (uint32_t k = 0; k < NTRK; k++) if (q->t[k].engine >= NENGINES || q->pattern[k] >= NPAT || !drum_patch_valid(&q->drum[k]) || !p5_patch_valid(&q->p5[k])) return 0;
     for (uint32_t i = 0; i < RECORD_MAX; i++) if (!recording_valid(&q->recording[i])) return 0;
     return 1;
@@ -371,7 +373,8 @@ static int proj_unpack(project_t *q, const uint8_t *b)
     proj_motion_ids(&q->motion, np);
     if (!chain_valid(&q->chain) || !motion_valid(&q->motion) ||
         (q->tess_valid && !tess_full_valid(q->tess, TESS_FULL_BYTES)) ||
-        (q->s7_valid && !s7_state_decode(0,q->s7,S7_STATE_BYTES))) return 0;
+        (q->s7_valid && !s7_state_decode(0,q->s7,S7_STATE_BYTES)) ||
+        (q->sound_fx_valid && !sfx_valid(&q->sound_fx))) return 0;
     for (t = 0; t < NTRK; t++)
         for (i = 0; i < FM6_PACKED; i++)
             q->fm6[t][i] = b[end + t * FM6_PACKED + i] & 0x7Fu;
@@ -567,6 +570,7 @@ static void project_capture(project_t *p)
     tess_full_pack(p->tess); p->tess_valid = 1;
     for(uint32_t k=0;k<NTRK;k++)studio7_track[k].mode=tessera.mode[k];
     p->s7_valid=(uint8_t)s7_state_encode(p->s7,S7_STATE_BYTES,studio7_track);
+    p->sound_fx=sound_fx;p->sound_fx_valid=1;
     p->sum = proj_sum(p);
 }
 
@@ -767,6 +771,7 @@ static int project_restore_runtime(const project_t *input)
             }
         }
     }
+    sound_fx=p->sound_fx_valid?p->sound_fx:SFX_DEFAULT;
     tessera_reset();
     if (p->tess_valid) tess_full_unpack(p->tess, TESS_FULL_BYTES);
     if (p->s7_valid){s7_state_decode(studio7_track,p->s7,S7_STATE_BYTES);for(uint32_t k=0;k<NTRK;k++)tessera.mode[k]=studio7_track[k].mode;}
@@ -821,7 +826,7 @@ static void project_load(uint32_t slot)
  * from it (every pattern empty, LEN / DIV / SWG / GATE their defaults, no name, SLOT on a free slot), and power-on
  * loads it when BOOT is OFF or its slot empty. No flash sector is free: it follows the settings in their record
  * (set_rec, its size and magic last). P_COUNT, G_COUNT or FM6_PACKED changing changes it (the assert): convert. */
-#define TMPL_MAGIC 0x4C4C5054u                    /* "TPLL": one TONE per FX slot; TPLK (two cuts) and earlier convert */
+#define TMPL_MAGIC 0x4D4C5054u                    /* "TPLL": one TONE per FX slot; TPLK (two cuts) and earlier convert */
 typedef struct {
     int16_t g[PROJ_GLOBALS];
     uint8_t sel, ntrk;                            /* (G_COUNT odd: the tracks start on a word); ntrk: the tracks in
@@ -834,6 +839,7 @@ typedef struct {
     drum_patch_t drum[NTRK];
     uint8_t master[20];                           /* the shared FX: 12 slot values, RETURN, MODE, the TONEs + 64,
                                                    * 3 zero (TPLK: the low cuts, the high cuts) */
+    uint8_t sound_fx[64]; /* SFX1 and three checked padding bytes */
     uint32_t size, magic;                         /* last: the record's end */
 } tmpl_t;
 typedef struct {
@@ -858,7 +864,7 @@ typedef struct {
     drum_patch_t drum[NTRK];
     uint32_t size, magic;                         /* last: the record's end */
 } tmpl_fx_legacy_t;
-_Static_assert(sizeof(tmpl_t) == 2u * PROJ_GLOBALS + 2u + NTRK * (2u + 2u * P_COUNT) + NTRK * (FM6_PACKED + FM6_NFN) + PROJ_CZ_BYTES + PROJ_P5_BYTES + NTRK*sizeof(drum_patch_t) + 20u + 8u,
+_Static_assert(sizeof(tmpl_t) == 2u * PROJ_GLOBALS + 2u + NTRK * (2u + 2u * P_COUNT) + NTRK * (FM6_PACKED + FM6_NFN) + PROJ_CZ_BYTES + PROJ_P5_BYTES + NTRK*sizeof(drum_patch_t) + 20u + 64u + 8u,
                "template layout (P_COUNT, G_COUNT, FM6_PACKED: a conversion)");
 static struct { persist_t p; tmpl_t t; } set_rec __attribute__((section(".pool")));   /* the settings record */
 #define tmpl set_rec.t                                /* the template lives where the settings record stages it */
@@ -873,20 +879,26 @@ static int template_used(void) { return tmpl.magic == TMPL_MAGIC && tmpl.size ==
 /* a stored template (len bytes, as tmpl_t is laid out) is today's: its size and magic, valid tones */
 static uint32_t tmpl_param_count(uint32_t len)   /* (TPLJ, TPLI: a 16-byte master; TPLH none) */
 {
+    if(len==sizeof(tmpl_t))return P_COUNT;
+    len+=64u;
     return len==sizeof(tmpl_t)?P_COUNT:len==sizeof(tmpl_t)+NTRK*2u*(PROJ_CUT_NP-P_COUNT)?PROJ_CUT_NP:
            len==sizeof(tmpl_t)-NTRK*2u*(P_COUNT-119u)-4u?119u:len==sizeof(tmpl_t)-NTRK*2u*(P_COUNT-117u)-4u?117u:
-           len==sizeof(tmpl_t)-NTRK*2u*(P_COUNT-116u)-20u?116u:len==sizeof(tmpl_fx_single_t)?108u:len==sizeof(tmpl_fx_legacy_t)?104u:0u;
+           len==sizeof(tmpl_t)-NTRK*2u*(P_COUNT-116u)-20u?116u:len==sizeof(tmpl_fx_single_t)+64u?108u:len==sizeof(tmpl_fx_legacy_t)+64u?104u:0u;
 }
 static uint32_t tmpl_blob_schema(const uint8_t *b,uint32_t len)
 {
     uint32_t np=tmpl_param_count(len),size,magic;if(!np)return 0;
     memcpy(&size,b+len-8u,4);memcpy(&magic,b+len-4u,4);
-    return size==len && magic==(np==P_COUNT?TMPL_MAGIC:np==PROJ_CUT_NP?0x4B4C5054u:np==119u?0x4A4C5054u:np==117u?0x494C5054u:np==116u?0x484C5054u:np==108u?0x474C5054u:0x464C5054u) ? np : 0u;
+    return size==len && magic==(np==P_COUNT?(len==sizeof(tmpl_t)?TMPL_MAGIC:0x4C4C5054u):np==PROJ_CUT_NP?0x4B4C5054u:np==119u?0x4A4C5054u:np==117u?0x494C5054u:np==116u?0x484C5054u:np==108u?0x474C5054u:0x464C5054u) ? np : 0u;
 }
 static int tmpl_blob_valid(const uint8_t *b,uint32_t len)
 {
     uint32_t np=tmpl_blob_schema(b,len);
     if(!np || b[2u*PROJ_GLOBALS]>=NTRK)return 0;
+    if(len==sizeof(tmpl_t)){
+        const uint8_t *fx=b+__builtin_offsetof(tmpl_t,sound_fx);
+        if(!sfx_decode(0,fx) || fx[61] || fx[62] || fx[63])return 0;
+    }
     int32_t delta=(int32_t)(NTRK*2u)*((int32_t)P_COUNT-(int32_t)np);   /* (TPLK: more parameters, below 0) */
     for(uint32_t k=0;k<NTRK;k++){
         if(b[2u*PROJ_GLOBALS+2u+k*(2u+2u*np)]>=NENGINES)return 0;
@@ -922,6 +934,8 @@ static int tmpl_take(const uint8_t *b,uint32_t len)
     tmpl.master[13]=np>=119u?b[off+native+13u]:0;
     for(uint32_t i=0;i<FX_SLOTS;i++)
         tmpl.master[14u+i]=np==P_COUNT?b[off+native+14u+i]:(uint8_t)(64+(np==PROJ_CUT_NP?proj_tone_of_cuts(b[off+native+14u+i],b[off+native+17u+i]):0));
+    if(len==sizeof(tmpl_t))memcpy(tmpl.sound_fx,b+__builtin_offsetof(tmpl_t,sound_fx),64u);
+    else sfx_encode(tmpl.sound_fx,&SFX_DEFAULT);
     tmpl.magic=TMPL_MAGIC;tmpl.size=sizeof tmpl;
     for(uint32_t k=0;k<NTRK;k++)if(!fm6_fn_ok(tmpl.fm6_fn[k]))memcpy(tmpl.fm6_fn[k],FM6_FNDEF,FM6_NFN);
     return 1;
@@ -983,6 +997,7 @@ static void template_save(void)
         fm6_pack(fm6_patch[k], tmpl.fm6[k]);
         memcpy(tmpl.fm6_fn[k], fm6_fn[k], FM6_NFN);
     }
+    sfx_encode(tmpl.sound_fx,&sound_fx);
     tmpl.size = sizeof tmpl;
     tmpl.magic = TMPL_MAGIC;
     tmpl_dirty = 1;
@@ -1042,6 +1057,7 @@ static void template_load(void)
         memcpy(p->fm6_fn[k], tmpl.fm6_fn[k], FM6_NFN);
     }
     p->fm6_fn_ok = 1;
+    p->sound_fx_valid=(uint8_t)sfx_decode(&p->sound_fx,tmpl.sound_fx);
     p->sum = proj_sum(p);
     if (project_restore_runtime(p))
         return;

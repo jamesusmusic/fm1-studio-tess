@@ -77,3 +77,20 @@ Emilie Gillet**, under the MIT licence. Its original notice is preserved in
 `plate.c` and `LICENSE-Mutable.txt`. Fixed-point C/rate/memory adaptation, additional
 tone and wet filter controls, bounded state, tests and audition packaging are
 **By: Inputsignwave**. This prototype is not yet included in production firmware.
+
+## Performance 10 combined sound additions
+
+Integration, dual-layer engine, lossless FBK8 packing, FM kit per-hit state,
+performance controls, warm drive and additional hardening — **By: Inputsignwave**.
+The richer wave banks derive from Surge Synth Team generated tables (GPL-3.0,
+commit a30341be00484d3de6b65869998100ccc6db6945) and Adventure Kid / Kristoffer Karl
+Axel Ekstrand AKWF-FREE (CC0, commit 8de90bf94376670947369e69de0af6b9fbd19286).
+Exact bank provenance is in `development/assets/wavetable-layers-provenance.json`.
+
+The production plate adapts Emilie Gillet's MIT Rings topology; its full original
+notice is retained in `development/firmware/src/plate.c` and the release licence
+copy. FM6 voice data attribution and individual source/rights records are in
+`development/assets/fm6-additions-provenance.json`; our integration credit does not
+claim authorship of Yamaha/community voices or grant rights absent from those
+sources. 808 SUB retains Sven Trogus's GPL-3.0-only attribution. Pro-800 packs
+are separate and are not included.

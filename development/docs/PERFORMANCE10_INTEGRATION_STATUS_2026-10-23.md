@@ -59,6 +59,13 @@ full bank group counts and invalid-input atomicity. It avoids the RLE worst-case
 problem but is **not integrated** into any production save path. The versioned
 sound schema, old-layout migration and complete persistence coverage remain.
 
+The native-app emulator smoke runs to 1,800 emulated ms, produces 44 LCD frames
+and 70,912 stereo audio frames (peak 4,858, no clipping). Eight MMIO addresses
+remain unsupported, as in earlier runs. The first smoke container used a temporary
+development identity; the local package was subsequently corrected to the release
+identity FM-1_91041. This is an app smoke test, not final package acceptance or
+hardware CPU evidence. No full-feature firmware was delivered or device flashed.
+
 ## Still required before the full build can be delivered
 
 - Versioned sound-state representation with defined worst-case capacity and

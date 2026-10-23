@@ -35,3 +35,11 @@ mkdir -p build/wavetable-ui/ppm
 build/removal/ui_render build/wavetable-ui
 $cc_task $flags tests/wavetable_emulator_fixture.c -lm -o build/removal/emulator_fixture
 build/removal/emulator_fixture build/removal/wavetable-fixture.nor
+
+# Combined Performance 10 additions have their own signal/lifetime fixtures.
+for unit in wavetable_layers fmkit sound_fx; do
+    $cc_task $flags -g -fsanitize=address,undefined -fno-sanitize-recover=all tests/${unit}_test.c -lm -o build/removal/${unit}
+    UBSAN_OPTIONS=halt_on_error=1 ASAN_OPTIONS=detect_leaks=0 build/removal/${unit}
+done
+$cc_task -O2 -g -fsanitize=address,undefined -fno-sanitize-recover=all -DPLATE_RATE=11025 tests/plate_test.c firmware/src/plate.c -o build/removal/plate
+build/removal/plate

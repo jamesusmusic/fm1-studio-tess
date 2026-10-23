@@ -265,6 +265,13 @@ static int generator_page(const page_t *pg)
 static int page_visible(uint32_t i)
 {
     uint32_t graph=PAGES[i].graph, mode=tessera.mode[song.sel%TESSERA_TRACKS];
+    if(PAGES[i].scope==SC_SFX){
+        if(MELODEE_RETIRED_REFERENCE)return 0;
+        if(PAGES[i].id[0]<16u)return 1;
+        for(uint32_t slot=0;slot<FX_SLOTS;slot++)if(song.g[G_MFXTYPE+slot*FX_PARAMS]==10)return 1;
+        return 0;
+    }
+    if(PAGES[i].scope==SC_WL)return MELODEE_WAVETABLE && TSEL->eng_req==ENGI_WAVE_LAYERS;
     if(generator_page(&PAGES[i])) {
         if(!mode) return 0;
         if(graph==GR_S7_AWAKE && mode!=TESS_ENG_AWAKE) return 0;
@@ -282,7 +289,8 @@ static int page_visible(uint32_t i)
         return motion_has_lanes(TSEL) || (!ui.home && ui.page == i);
     if (PAGES[i].fam == FAM_ENV && native_titles(FAM_ENV))   /* (the track's ADSR, ENV DEST: nothing there) */
         return 0;
-    if(PAGES[i].scope==SC_DRUM || PAGES[i].scope==SC_DRUMHIT)return drum_track(TSEL);
+    if(PAGES[i].scope==SC_DRUM)return TSEL->eng_req==ENGI_DRUM;
+    if(PAGES[i].scope==SC_DRUMHIT)return drum_track(TSEL);
     if (PAGES[i].scope == SC_TRACK && PAGES[i].id[0] >= P_LN0 && PAGES[i].id[0] <= P_LN7)
         return drum_track(TSEL);
     if(TSEL->eng_req==ENGI_CZ && PAGES[i].scope==SC_ENGINE && PAGES[i].fam==FAM_EDIT && (PAGES[i].id[0]==P_E0 || PAGES[i].id[0]==P_E4))return 0;
@@ -996,6 +1004,9 @@ static void apply_preset_to(track_t *t, uint32_t pi)
     if(t->eng_req==ENGI_PROPHET)p5_preset_loaded(t,pi);
     cz_factory_loaded(t);
     cz_track_accept(t);
+#if MELODEE_WAVETABLE
+    wl_preset_loaded(t,pi);
+#endif
     fm6_track_loaded(t);                              /* FM6: the preset's patch */
     load_end(t);
 }

@@ -42,7 +42,14 @@ typedef struct {
 #include "eng_fm6_rom.h"         /* FM6_ROM[FM6_NROM]: F9.. */
 
 #define ENGI_FM6 12u             /* engines.c ENGINES[] (append-only) */
-#define FM6_NFAC (FM6_NFACTORY + FM6_NROM)        /* F1..F24: the factory patches */
+#define FM6_ORIGINAL_FAC (FM6_NFACTORY + FM6_NROM)
+#if !MELODEE_RETIRED_REFERENCE
+#include "fm6_added_bank.h"
+#define FM6_NADDED FM6_ADDED_COUNT
+#else
+#define FM6_NADDED 0u
+#endif
+#define FM6_NFAC (FM6_ORIGINAL_FAC + FM6_NADDED)        /* F1..F24: the factory patches */
 #define FM6_PACKED 128u
 #define FM6_ON_ALL 0x3Fu
 
@@ -177,6 +184,9 @@ static void fm6_rom_patch(const fm6_rom_t *r, uint8_t *v)   /* a Melodee factory
 static void fm6_factory(uint32_t k, uint8_t *pk)
 {
     uint8_t v[FP_SIZE + 1u];
+#if !MELODEE_RETIRED_REFERENCE
+    if(k>=FM6_ORIGINAL_FAC && k<FM6_NFAC){memcpy(pk,FM6_ADDED[k-FM6_ORIGINAL_FAC],FM6_PACKED);return;}
+#endif
     if (k < FM6_NFACTORY) {
         memcpy(pk, FM6_FACTORY[k], FM6_PACKED);
         return;
@@ -228,9 +238,9 @@ static void fm6_track_loaded(const track_t *t)
     uint32_t tr = (uint32_t)(t - trk);
     if (tr < NTRK && t->eng_req == ENGI_FM6) {
         uint8_t pk[FM6_PACKED], v[FP_SIZE + 1u];
-        if (t->preset < FM6_NFAC)
-            fm6_factory(t->preset, pk);
-        fm6_unpack(t->preset < FM6_NFAC ? pk : FM6_INIT, v);   /* (past F24: INIT VOICE) */
+        if(t->preset!=FM6_ORIGINAL_FAC && t->preset<FM6_NFAC+1u)
+            fm6_factory(t->preset>FM6_ORIGINAL_FAC?t->preset-1u:t->preset,pk);
+        fm6_unpack(t->preset!=FM6_ORIGINAL_FAC && t->preset<FM6_NFAC+1u ? pk : FM6_INIT, v);   /* (past F24: INIT VOICE) */
         fm6_put_patch(tr, v, 1);
     }
 }
@@ -1153,6 +1163,9 @@ static const preset_t FM6_PRESETS[] = {
     FM6_PR("TUBULAR", 0),
     FM6_PR("INIT VOICE", 0),          /* the DX7's init voice, dry (after F24: the stores keep the
                                                          * factory's numbers) */
+#if !MELODEE_RETIRED_REFERENCE
+    FM6_ADDED_PRESETS
+#endif
 };
 #undef FM6_PR
 _Static_assert(FM6_NROM == 16u, "FM6: the presets name F9..F24");

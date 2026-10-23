@@ -801,7 +801,14 @@ static __attribute__((noinline)) uint32_t track_render_audio(track_t *t, int32_t
             AP_START(env_start);
             /* FM6 owns its release lifetime. The generic ADSR must not retire it
              * first; stage 4 remains the bounded emergency fade for every engine. */
-            env = e==&ENG_FM6 && v->stage!=4u ? 32767 : env_tick(t, v);
+            env = (e==&ENG_FM6
+#if MELODEE_WAVETABLE
+                || e==&ENG_WAVE_LAYERS
+#endif
+#if !MELODEE_RETIRED_REFERENCE
+                || e==&ENG_FMKIT
+#endif
+                ) && v->stage!=4u ? 32767 : env_tick(t, v);
             if (e->ownenv && v->active) {               /* the engine's envelopes (FM6): they end the voice */
                 if (e->done(t, v)) {                    /* its last block, faded out (the engine's state goes on */
                     v->active = v->gate = 0;            /* one more block, as Dexed's) */

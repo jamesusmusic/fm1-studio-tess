@@ -1133,6 +1133,7 @@ static void edit_param(uint32_t slot, int32_t steps)
         motion_unguard(f);
         return;
     }
+    if(pg->scope==SC_SFX){uint32_t guard=motion_guard();sfx_page_put(pg->id[slot],v);motion_unguard(guard);return;}
     if (pg->scope == SC_FM6 || pg->scope == SC_FMOP) {   /* (a copy of FM6's value: written back there) */
         uint8_t old[MO_NATIVE_N];
         uint32_t f = motion_guard();

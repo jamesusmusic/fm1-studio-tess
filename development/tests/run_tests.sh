@@ -368,6 +368,7 @@ if core && [ $TABLES = 1 ]; then
     t "Studio 7: bounded target integer division" studio7_math_test -O2 $FW
     t "Studio 7: frozen Performance 6 bank migration" studio7_upgrade_test -O2 $FW
     t "Studio 7: lossless inactive-bank step codec" studio7_step_test -O2 $FW
+    t "FBK8: fixed-capacity lossless step groups" sound_step_test -O2 $FW
     t "Studio 7: exact local timing, polymeter and phase" studio7_clock_test -O2 $FW
     t "Studio 7: coordinated kit invariants and anchors" studio7_kit_test -O2 $FW
     t "Studio 7: versioned state and malformed records" studio7_state_test -O2 $FW

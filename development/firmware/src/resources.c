@@ -10,7 +10,7 @@
 enum { RES_ENGINE0, RES_NOTE_HISTORY = RES_ENGINE0 + NPART, RES_FX0,
        RES_RECORD_UNDO = RES_FX0 + FX_STATE_COUNT,
 #if MELODEE_WAVETABLE
-       RES_WAVETABLE,
+       RES_WAVETABLE, RES_WAVE_LAYERS,
 #endif
        RES_COUNT };
 static uint8_t recording_undo_lost;

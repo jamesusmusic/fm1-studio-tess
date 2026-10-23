@@ -2122,7 +2122,7 @@ function makeMockDevice(opt = {}) {
     {name:"PROPHET",titles:["FILTER/TUNE","PW/MIX"],edit:[D("CUT",F.INT,-63,63,0),D("RES",F.INT,-63,63,0),D("TUNA",F.SEMI,-24,24,0),D("TUNB",F.SEMI,-24,24,0),D("PWA",F.INT,-63,63,0),D("PWB",F.INT,-63,63,0),D("MIXA",F.INT,-63,63,0),D("MIXB",F.INT,-63,63,0)],presets:[P("INIT PROPHET",Array(8).fill(0),[0,0,127,0],0),   // + Sequential's 200 v1.03 programs
       ...P5_FACTORY.map((b)=>P(P5.name(b),Array(8).fill(0),[0,0,127,0],0))]});
   /* Match appended reserved IDs in historical mock tables. By: Inputsignwave. */
-  ENG.push(...Array.from({length:2},()=>({name:"-",titles:["-","-"],edit:Array(8).fill(NONE),presets:[]})));
+  ENG.push(...Array.from({length:4},()=>({name:"-",titles:["-","-"],edit:Array(8).fill(NONE),presets:[]})));
   const FM6_E = ENG.findIndex((e) => e.name === "FM6"), FM6_BANK = 0;
   /* the mock's demo sequences (the device powers on empty; it has no pattern library): absolute notes, 0 rest;
      flags 1 accent, 2 slide, 4 tie (holds the previous note). ACID, BEAT */
@@ -2812,7 +2812,7 @@ function aliasOf(names, i) { const k = names ? names.indexOf(names[i]) : -1; ret
    the list does not know (another firmware) follows in index order */
 /* Wavetable ordering and unavailable-engine filtering — By: Inputsignwave. */
 const ENGINE_ORDER = ["PROPHET", "ANALOG", "FM6", "DIGITAL", "PHASE", "CZ-1", "SID", "VOICE", "NOISE",
-  "WAVETABLE", "DRUM"];
+  "WAVETABLE", "WAVE LAYERS", "DRUM", "FM DRUM KIT"];
 function engineOrder(names) {
   const rank = (n) => { const k = ENGINE_ORDER.indexOf(n); return k < 0 ? ENGINE_ORDER.length : k; };
   return (names || []).map((n, i) => i).filter((i) => !["-","SAMPLE","GRAIN","SLICE","OBXF","SID GONE","CZ GONE"].includes(names[i])&&!(names.includes("PROPHET")&&names[i]==="ANALOG"))

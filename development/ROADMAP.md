@@ -13,21 +13,20 @@ See [branding and validation](INPUTSIGNWAVE_BRANDING.md).
 
 By: Inputsignwave
 
-Implementation started: 12 approved Prophet sounds appended after the unchanged
-200-program bank, browser/editor additions, safe extension of favorite bits and
-NIGHT as the initial palette. The Wave2 WT note-edge fix is retained. Targeted UI
-and preset persistence checks pass. This is an integration foundation, **not the
-finished combined build**. Measured bank payload is 27,904 B with only 36 B free;
-the project reserved gap is zero. Expanded synth/FX state needs a compatible
-versioned representation across project/template/preset/undo/editor. A standalone
-lossless codec prototype preserves bytes and rejects bad/capacity-exceeding data,
-but is not sufficient for worst-case capacity and is not production storage.
-Full local suite passes in 182 s. Native target compile passes: app body
-546,468 B, flash spare 26,972 B; main arena unchanged at 62,848 B. These are
-foundation figures, not the combined feature budget. A second fixed-size step
-codec guarantees 168 B saving and passes sanitizer/state-preservation checks,
-but production migration and the new sound schema are not integrated.
-See [current changes, constraint and remaining work](docs/PERFORMANCE10_INTEGRATION_STATUS_2026-10-23.md).
+Combined candidate source is implemented for validation: NIGHT and the 12
+additional Prophet patches; a new ID-22 dual-layer engine alongside unchanged
+ID-21 sounds; eight compact spectral bank families, independent layer ADSRs,
+filters/scans and clocked blending/morph; 25 appended FM6 voices with INIT retained
+at index 24; ID-23 FM drum kits with immutable per-hit patches; shared Rings-derived
+plate with size, separate tone/cuts, movement, wobble, Swell and lossless Hold;
+warm drive and independent per-slot LFO settings. FBK8 saves 168 B losslessly and
+adds SFX1 controls in the unchanged atomic allocation. TPLM migrates older templates.
+
+Target compile, combined budgets, complete regression, editor and exact-package
+emulator checks are **in progress**. This is not a release/acceptance claim.
+Standalone plate sanitizers pass, including exact tail-energy preservation during
+30 s closed-input Hold. Targeted FM-kit overlap/release and FX persistence/template
+migration tests pass. Further hardening continues before packaging.
 
 ## Performance 9 removal baseline — built and offline validated
 

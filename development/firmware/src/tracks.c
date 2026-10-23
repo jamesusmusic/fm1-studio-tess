@@ -8,7 +8,7 @@
  * all that is theirs (the sound and its patches, the eight patterns, their column of the song, motion, takes) and the
  * last place is left empty. A removal goes as a project load does: the project packed as SAVE packs it (proj_wire_u),
  * its tracks moved there, loaded back. Included by project.c */
-#define TRK_BANK_BYTES ((NPAT - 1u) * NSTEP * STUDIO7_STEP_BITS / 8u)  /* a track's banks but the active one, packed */
+#define TRK_BANK_BYTES ((NPAT - 1u) * NSTEP / 4u * S10_GROUP_BITS / 8u)  /* a track's banks but the active one, packed */
 
 static void track_say(uint32_t k, const char *what)     /* "TRACK 2 REMOVED" */
 {
@@ -99,10 +99,11 @@ static int track_remove(uint32_t k)
             bank_tag_put(raw, BANK_CHAIN_OFF, r*NTRK+j, bank_chain_get(raw,r,j+1u));
     }
     raw[BANK_ACTIVE_OFF + last] = 0;
-    for (i = 0; i < (NPAT - 1u) * NSTEP; i++) {
+    for (i = 0; i < (NPAT - 1u) * NSTEP; i+=4u) {
         step_t e = {{0}, 0, ST_REST};
-        uint8_t wire[8];uint32_t bit=i*STUDIO7_STEP_BITS;
-        bank_step_pack(wire,&e);s7_step_pack(raw+BANK_EXTRA_OFF+last*TRK_BANK_BYTES,&bit,wire);
+        uint8_t wire[4][8];uint32_t bit=i/4u*S10_GROUP_BITS;
+        for(uint32_t j=0;j<4u;j++)bank_step_pack(wire[j],&e);
+        s10_steps_pack(raw+BANK_EXTRA_OFF+last*TRK_BANK_BYTES,TRK_BANK_BYTES*8u,&bit,wire);
     }
     for (i=0;i<NPAT;i++) { int16_t time[4];for(j=0;j<4u;j++)time[j]=TP[P_SLEN+j].def;bank_timing_put(raw,last,i,time); }
     for (r = 0; r < CHAIN_ROWS; r++) {
@@ -112,6 +113,11 @@ static int track_remove(uint32_t k)
     }
     if (p->fm6_fn_ok)
         memcpy(raw + BANK_FN_OFF + 4u, p->fm6_fn, sizeof p->fm6_fn);
+    if(p->sound_fx_valid){
+        for(j=k;j<last;j++)memcpy(p->sound_fx.slot+j*FX_SLOTS,p->sound_fx.slot+(j+1u)*FX_SLOTS,FX_SLOTS*3u);
+        memset(p->sound_fx.slot+last*FX_SLOTS,0,FX_SLOTS*3u);
+        sfx_encode(raw+BANK_SFX_OFF,&p->sound_fx);
+    }
     p->parts = (uint8_t)(n - 1u);
     p->sel = (uint8_t)(k + 1u < n ? k : k - 1u);        /* the track now in its place, else the one before */
     if (!proj_pack((project_store_t *)(raw + 8u), p))
@@ -145,6 +151,7 @@ fail:
 static void track_blank(uint32_t k)
 {
     track_t *t = &trk[k % NTRK];
+    memset(sound_fx.slot+(k%NTRK)*FX_SLOTS,0,FX_SLOTS*3u);
     fm1_irq_off();features_reset_track(k % NTRK);fm1_irq_on();
     uint32_t b, i, r;
     undo_depth++;                                       /* (its sound loads take no undo levels) */

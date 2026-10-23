@@ -23,7 +23,9 @@
 #include "eng_drum.c"           /* DRUM: synthesized 808 circuits (drum_808.c), the 909, a C64's SID (drum_sid.c) */
 #include "eng_noise.c"
 #include "eng_wavetable.c"
+#include "eng_wavetable_layers.c"
 #include "eng_fm6.c"            /* FM6: 6-operator FM rendered as Dexed renders it (fm6_core.c) */
+#include "eng_fmkit.c"
 #if MELODEE_SLICE
 #include "eng_slice.c"
 #else
@@ -61,10 +63,28 @@ static int wt_prepare(void)
 }
 static void wt_cache_sweep(void)
 {
-    for(uint32_t t=0;t<NPART;t++)if(trk[t].engine==ENGI_WAVETABLE)
-        for(uint32_t v=0;v<NVOICE;v++)if(trk[t].v[v].active)return;
-    resource_release(RES_WAVETABLE);wt_bank=0;
+    uint32_t old=0,layers=0;
+    for(uint32_t t=0;t<NPART;t++)for(uint32_t v=0;v<NVOICE;v++)if(trk[t].v[v].active){
+        old|=trk[t].engine==ENGI_WAVETABLE;layers|=trk[t].engine==ENGI_WAVE_LAYERS;
+    }
+    if(!old){resource_release(RES_WAVETABLE);wt_bank=0;}
+    if(!layers){resource_release(RES_WAVE_LAYERS);wl_bank=0;wl_prepared=0;}
 }
+#endif
+#if MELODEE_WAVETABLE
+static wl_part_t *wl_part(const track_t *t)
+{ return resource_get(RES_ENGINE0+(uint32_t)(t-trk),sizeof(wl_part_t)); }
+static int wl_prepare(const track_t *t)
+{
+ void *p=resource_get(RES_WAVE_LAYERS,sizeof(WL_FLASH));wl_bank=(const wl_bank_t *)p;
+ if(!p)return 0;
+ if(!wl_prepared){memcpy(p,&WL_FLASH,sizeof(WL_FLASH));wl_prepared=1;}
+ return wl_part(t)!=0;
+}
+#endif
+#if !MELODEE_RETIRED_REFERENCE
+static fmk_part_t *fmk_part(const track_t *t)
+{ return resource_get(RES_ENGINE0+(uint32_t)(t-trk),sizeof(fmk_part_t)); }
 #endif
 static uint32_t eng_state_size(uint32_t e)
 {
@@ -88,6 +108,12 @@ static uint32_t eng_state_size(uint32_t e)
 #endif
     case ENGI_DRUM: return sizeof(drum909_part_t);
     case ENGI_FM6: return sizeof(fm6_part_t);
+#if !MELODEE_RETIRED_REFERENCE
+    case ENGI_FMKIT: return sizeof(fmk_part_t);
+#endif
+#if MELODEE_WAVETABLE
+    case ENGI_WAVE_LAYERS: return sizeof(wl_part_t);
+#endif
 #if MELODEE_SLICE
     case ENGI_SLICE: return sizeof(slc_rb_t);
 #endif
@@ -102,12 +128,14 @@ static void eng_state_reset(void) {
     for(uint32_t k=0;k<NPART;k++)eng_state_clear(k);
 #if MELODEE_WAVETABLE
     resource_release(RES_WAVETABLE);wt_bank=0;
+    resource_release(RES_WAVE_LAYERS);wl_bank=0;wl_prepared=0;
 #endif
 }
 static int eng_state_prepare(const track_t *t)
 {
 #if MELODEE_WAVETABLE
     if(t->engine==ENGI_WAVETABLE)return wt_prepare();
+    if(t->engine==ENGI_WAVE_LAYERS)return wl_prepare(t);
 #endif
     uint32_t size = t->engine==ENGI_DRUM?drum_bytes(t):eng_state_size(t->engine);
     if(!size){resource_release(RES_ENGINE0+(uint32_t)(t-trk));return 1;}
@@ -189,6 +217,12 @@ static const engine_t *const ENGINES[NENGINES] = {
     &ENG_RETIRED,                /* 20: native Prophet browsing namespace, never a sound engine */
 #if MELODEE_WAVETABLE
     &ENG_WAVETABLE,              /* 21: original wavetable/fold engine — By: Inputsignwave */
+    &ENG_WAVE_LAYERS,            /* 22: independent new sound namespace */
+#else
+    &ENG_RETIRED, &ENG_RETIRED,
+#endif
+#if !MELODEE_RETIRED_REFERENCE
+    &ENG_FMKIT,
 #else
     &ENG_RETIRED,
 #endif
@@ -236,9 +270,12 @@ static const uint8_t ENGINE_ORDER[NENG_SHOWN] = {
     13,                          /* SLICE */
 #endif
 #if MELODEE_WAVETABLE
-    ENGI_WAVETABLE,
+    ENGI_WAVETABLE, ENGI_WAVE_LAYERS,
 #endif
     10,                          /* DRUM */
+#if !MELODEE_RETIRED_REFERENCE
+    ENGI_FMKIT,
+#endif
 };
 
 /* Retired synth records (ANALOG and DIGITAL since 2.0 too) retain their stored identity and render silence.
@@ -254,7 +291,7 @@ static int eng_extra_retired(uint32_t e)
  * eng_vis(n), e's place among them eng_rank(e), the next / previous one eng_step(e, dir) (wraps) */
 static int eng_ok(uint32_t e)
 {
-    return e < NENGINES && e!=20u && (MELODEE_WAVETABLE || e!=ENGI_WAVETABLE) && !(e >= 16u && e <= 18u) && !eng_extra_retired(e) && e != 4u && e != 8u && e != 14u && (MELODEE_SLICE || e != ENGI_SLICE);
+    return e < NENGINES && e!=20u && (!MELODEE_RETIRED_REFERENCE || e!=ENGI_FMKIT) && (MELODEE_WAVETABLE || (e!=ENGI_WAVETABLE && e!=ENGI_WAVE_LAYERS)) && !(e >= 16u && e <= 18u) && !eng_extra_retired(e) && e != 4u && e != 8u && e != 14u && (MELODEE_SLICE || e != ENGI_SLICE);
 }
 static uint32_t eng_sound_idx(uint32_t e)
 {
