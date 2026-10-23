@@ -19,7 +19,11 @@ accessible on the track page and a REV SHARED header. Reuse a configured tank
 or an empty shared slot; preserve occupied effects and CHAIN/SPLIT routing.
 Track sends are post-insert/level/pan/solo. Duplicate markers and explicit sends
 combine by maximum, avoiding double feeding. Saved identities/layout are retained.
-Validation and native package are in progress; RC3 remains the prior candidate.
+RC4 native build, Linux full suite (666 s), corrected local full suite (305 s),
+ASan/UBSan routing/ownership tests, all-palette UI lint and a 6,000 ms chip
+emulator run passed. The package is ready for device audition, with 272 B flash
+spare and a 51,232 B main audio arena.
+See [RC4 validation](docs/PERFORMANCE10_RC4_VALIDATION.md).
 
 ## Performance 10 RC2 hardware fixes — 23 October 2026
 
