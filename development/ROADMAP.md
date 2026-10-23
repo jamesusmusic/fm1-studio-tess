@@ -26,8 +26,13 @@ mapping; old loaded IDs remain dry bypass and display OFF. The warm drive label
 is DRIVE to use the normal picker font, and its output knob is OUT without
 clipping. New tests render complete preview panels during note playback, rather
 than only sweeping columns; original WT and WAVE LAYERS get full Drive/Plate and
-picker sweeps in every palette. RC2 target build, regression and emulator checks
-are in progress. RC1 should be superseded by this corrected candidate.
+picker sweeps in every palette. RC2 native build and full offline validation are complete: local suite 247 s,
+Linux suite 426 s, unchanged 349 golden renders, zero layout lint, sanitizer
+reproduction/fix and native-binary hint-table verification. The install package
+passes checks; its app boots and plays Phase Prism + Drive in the emulator.
+Flash spare 1,008 B; main audio arena unchanged at 51,520 B. RC1 should be
+superseded by RC2. Hardware re-test of the reported sequence remains. See
+[RC2 fixes and validation](docs/PERFORMANCE10_RC2_HARDWARE_FIXES.md).
 
 ## Performance 10 integration — 23 October 2026
 

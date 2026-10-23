@@ -38,7 +38,8 @@ sustains the captured tail; release Hold to resume normal input and decay.
 Movement and wobble have neutral zero settings. This is the auditioned
 Rings-derived plate adapted for FM-1, not a model of a commercial pedal.
 
-WARM DRIVE adds softened/asymmetric saturation with drive, output and tone.
+The warm drive effect is labelled DRIVE on screen (RC2); OUT is its output
+control. It adds softened/asymmetric saturation with drive, output and tone.
 Every active effect slot has an independent modulation oscillator: shape,
 destination (OFF/MIX/RATE/CHAR/TONE), depth, rate and SYNC. When synced, RATE
 selects a division, including triplets and dotted values. The destination's
