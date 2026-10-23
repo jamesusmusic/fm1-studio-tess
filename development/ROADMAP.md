@@ -541,3 +541,7 @@ layout findings, 32,768 added randomized ASan/UBSan audio/preview blocks and two
 actual binary. Flash spare 976 B; main audio arena remains 51,520 B. See
 [RC3 validation and limits](docs/PERFORMANCE10_RC3_VALIDATION.md). Hardware
 audition remains; no device was flashed.
+
+### Live USB MPE candidate — By: Inputsignwave
+
+WAVE LAYERS lower-zone RISE input, fixed per-track routing, independent bend/pressure/slide and safe release ownership are implemented for Performance 11 MPE Dev1 validation. See `docs/PERFORMANCE11_MPE_TESTING.md`. Native measurements and hardware acceptance remain candidate gates; FM6/Prophet expression, full MPE capture and direct BLE are later milestones.

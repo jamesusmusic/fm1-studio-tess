@@ -223,6 +223,9 @@ static int drum_from_phys(uint32_t engine, int16_t *e)
 enum { V_POLY, V_MONO, V_LEGATO, V_UNISON };   /* P_VOICE */
 enum { Q_OFF, Q_SNAP, Q_WHITE, Q_ALL, Q_MPC };  /* P_QUANT (seq.c kb_map, midi_map); 1 = SNAP, the former ON */
 typedef struct {
+    /* Live USB MPE ownership/snapshots — By: Inputsignwave. Never persisted. */
+    int32_t mpe_bend, mpe_current; /* Q8 semitones; release tails freeze target */
+    uint8_t mpe_ch, mpe_key, mpe_pressure, mpe_slide, mpe_lift;
     uint8_t side; /* stereo spread side, retained while sounding */
     uint8_t note, vel, gate, active;
     uint8_t stage;               /* env: 0 off, 1 attack, 2 decay/sustain, 3 release */

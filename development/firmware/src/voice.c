@@ -1,3 +1,4 @@
+/* Per-voice USB MPE allocation and expression — By: Inputsignwave. */
 /* Engine/space retirement and compatibility — By: Inputsignwave. */
 /* SPDX-License-Identifier: GPL-3.0-only
  * Copyright (C) 2026 Kerem Kilic (Ellic Studio)
@@ -264,7 +265,7 @@ static voice_t *voice_reuse(track_t *t, voice_t *v)
  * held one, never the lowest held note (the bass). A free voice needs room in the
  * shared budget: when the voice to give up is one of this part's, it is restarted
  * in place instead. */
-static voice_t *voice_alloc(track_t *t, uint32_t note)
+static voice_t *voice_alloc(track_t *t, uint32_t note, int independent)
 {
     const engine_t *e = ENGINES[t->engine];
     uint32_t i, np = trk_nvoice(t), best = np, low = np, nfree = 0;
@@ -281,7 +282,7 @@ static voice_t *voice_alloc(track_t *t, uint32_t note)
             return voice_reuse(t, v);
     }
     for (i = 0; i < np; i++) {
-        if (t->v[i].active && t->v[i].note == note)
+        if (!independent && !t->v[i].mpe_ch && t->v[i].active && t->v[i].note == note)
             return voice_reuse(t, &t->v[i]);
         nfree += !t->v[i].active;
     }
@@ -371,6 +372,8 @@ static void voice_start(track_t *t, voice_t *v, uint32_t note, uint32_t vel, int
     uint32_t keep = e->keep;
     capacity_steals+=(uint32_t)(sounding && (v->note!=note || !v->gate));
     voice_was = (uint8_t)(!v->active ? 0u : v->gate ? 2u : 1u);
+    v->mpe_ch = v->mpe_key = v->mpe_pressure = v->mpe_slide = v->mpe_lift = 0;
+    v->mpe_bend = v->mpe_current = 0;
     v->note = (uint8_t)note;
     v->vel = (uint8_t)vel;
     v->gate = 1;
@@ -513,7 +516,7 @@ static void trk_note_on_work(track_t *t, uint32_t note, uint32_t vel)
         t->lfo_fade = 0;
     }
     if (mode == V_POLY) {
-        AP_START(alloc_start);voice_t *v = voice_alloc(t, note);AP_END(AP_ALLOC,alloc_start);
+        AP_START(alloc_start);voice_t *v = voice_alloc(t, note, 0);AP_END(AP_ALLOC,alloc_start);
         if (!trk_chord(t) || !any)
             t->nmono = 0;                               /* no stale mono stack after a mode change */
         if (trk_chord(t))
@@ -581,7 +584,7 @@ static void trk_note_off(track_t *t, uint32_t note)
     }
     /* a fallback above already has its new pitch; a C64 chord (v[0]) ends with its last key, whichever note sounds */
     for (i = 0; i < NVOICE; i++)
-        if (t->v[i].gate && (chord && !i ? !t->nmono && (held || t->v[0].note == note) : t->v[i].note == note)) {
+        if (!t->v[i].mpe_ch && t->v[i].gate && (chord && !i ? !t->nmono && (held || t->v[0].note == note) : t->v[i].note == note)) {
             t->v[i].gate = 0;
             t->v[i].stage = 3;
         }
@@ -834,6 +837,7 @@ static __attribute__((noinline)) uint32_t track_render_audio(track_t *t, int32_t
                 m.amp1 = m.amp1 * (int32_t)(t->xf - 1u) / (int32_t)XF_BLOCKS;
             if(performance[ti].fade || (e==&ENG_FM6 && performance[ti].amp))
                 m.amp1 = mulq15(m.amp1, performance_gain(t,v,e==&ENG_FM6));
+            if(v->mpe_ch)m.amp1=mulq15(m.amp1,16384+(int32_t)v->mpe_pressure*129);
             m.amp0 = v->env_out;
             v->env_out = m.amp1;
             AP_END(AP_ENVELOPE,env_start);
@@ -847,10 +851,17 @@ static __attribute__((noinline)) uint32_t track_render_audio(track_t *t, int32_t
         }
         if (!env && !m.amp0 && v->stage == 2 && !e->sampled)
             continue;                                   /* held at a silent sustain (SUS 0): nothing to render */
-        pitch = v->pitch_cur + tune + bend16 + ((lfo * p[P_LD_PIT] * 3) >> 15) + ((m.envq15 * p[P_ED_PIT] * 3) >> 15);
+        int32_t vbend16=bend16,vbendfine=bend_fine;
+        if(v->mpe_ch){
+            int32_t d=v->mpe_bend-v->mpe_current;
+            v->mpe_current+=d/4+(d && d/4==0?(d>0?1:-1):0);
+            vbend16=v->mpe_current>=0?v->mpe_current/16:-((-v->mpe_current+15)/16);
+            vbendfine=(v->mpe_current-vbend16*16)*2367/2560;
+        }
+        pitch = v->pitch_cur + tune + vbend16 + ((lfo * p[P_LD_PIT] * 3) >> 15) + ((m.envq15 * p[P_ED_PIT] * 3) >> 15);
         m.pitch16 = clamp(pitch, 0, 2047);
         m.inc = tuned_pitch_inc(m.pitch16);
-        m.fine = v->fine + v->scale_fine + tune_fine + bend_fine;
+        m.fine = v->fine + v->scale_fine + tune_fine + vbendfine;
         if (m.fine)             /* residual below 1/16 semitone */
             m.inc += (uint32_t)((int32_t)(m.inc >> 12) * m.fine);
         m.cutoff = ((lfo * p[P_LD_FLT]) >> 7) + ((m.envq15 * p[P_ED_FLT]) >> 7);
@@ -864,6 +875,10 @@ static __attribute__((noinline)) uint32_t track_render_audio(track_t *t, int32_t
         if(e==&ENG_P5_TEST)m.envq15=p5_env_source(t,v);
         if (mod.on){
             AP_START(mod_start);mod_voice(t,v,&m,m.fine);AP_END(AP_MODULATION,mod_start);
+        }
+        if(v->mpe_ch){
+            m.shape+=((int32_t)v->mpe_slide-64)*128;
+            m.cutoff+=((int32_t)v->mpe_slide-64)*128+(int32_t)v->mpe_pressure*48;
         }
         /* 1/16 st and 1/4096 -> Q24 octaves: the voice's own offset (the matrix's pitch too), without TUNE and bend */
         m.plog = (m.pitch16 - tune - bend16 - (int32_t)v->note * 16) * 87381 + (m.fine - tune_fine - bend_fine) * 5909;

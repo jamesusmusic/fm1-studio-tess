@@ -1133,6 +1133,7 @@ static void seq_tick(track_t *t, uint32_t n)
 static track_t *midi_track(uint32_t ch)
 {
     uint32_t k, route = (uint32_t)song.g[G_ROUTE];
+    if(route>=5u)route=0; /* TRS keeps CH1-4; USB zone is intercepted below. */
     uint32_t first = route > 1u ? (route - 1u) * 4u : 0u;
     if (route != 1u && (ch < first || ch - first >= 4u))
         return 0;
@@ -1146,6 +1147,7 @@ static track_t *midi_track(uint32_t ch)
     return ch - first < trk_n() ? &trk[ch - first] : 0;
 }
 
+#include "midi_mpe.c"
 #include "midi_control.c"
 #include "midi_clock.c"
 
@@ -1211,6 +1213,7 @@ static void events_block(uint32_t n)
         }
         transport_req = 0;
     }
+    mpe_poll();
     pr = panic_req;
     panic_req = 0;
     if (midi_in_overflow) {                            /* a lost note-off must never leave a held note */
@@ -1287,7 +1290,9 @@ static void events_block(uint32_t n)
         } else {
             if (clock_mode && song.playing)
                 seq_advance(midi_clock_advance(time));
-            midi_event(st, ch, d1, d2);
+            if(!mpe_event(source,st,ch,d1,d2)){
+                midi_event(st, ch, d1, d2);midi_source_note(source,st,ch,d1,d2);
+            }
         }
     }
     if(song.playing)resource_release(RES_NOTE_HISTORY);

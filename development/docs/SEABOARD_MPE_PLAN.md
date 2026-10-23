@@ -4,10 +4,12 @@ By: Inputsignwave
 
 ## Current checkpoint
 
-RC4 remains the hardware-tested baseline. The Space2 candidate reclaims flash
-without removing an active engine, sound, preset, font or reverb feature. The
-controller-state experiment in `experiments/mpe/` is independently tested and
-not linked into firmware. Neither live MPE nor Bluetooth is enabled yet.
+The live USB implementation is now present for WAVE LAYERS, pending the native
+candidate's validation and hardware audition. See
+[Performance 11 USB MPE testing](PERFORMANCE11_MPE_TESTING.md) for the exact
+route, mappings, setup and limitations. The older `experiments/mpe/` files remain
+the independently tested design prototype; production uses `firmware/src/midi_mpe.c`
+and `mpe_controls.h`. Direct Bluetooth and full expression recording remain planned.
 
 The original 24–32 KiB allowance was a planning reserve, not a measured feature
 size. Measure the actual first voice implementation in the recovered space

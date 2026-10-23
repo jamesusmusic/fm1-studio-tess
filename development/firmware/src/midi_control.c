@@ -15,6 +15,8 @@ typedef struct {
     uint8_t rpn_msb, rpn_lsb;
 } midi_channel_t;
 static midi_channel_t midi_ch[16];
+/* USB notes admitted before switching to MPE must not lose their note-offs. */
+static uint8_t midi_usb_owned[16][16];
 /* A note's owner, a nibble per note (two notes a byte): bits 0..2 track + 1, bit 3 key released, held by its
  * channel's pedal. mn_get / mn_set speak the byte form: track + 1, MIDI_PEDAL_NOTE */
 static uint8_t midi_sel_on[16][64];
@@ -92,6 +94,7 @@ static int midi_local_held(const track_t *t, uint32_t note)
 
 static void midi_release(uint32_t ch, uint32_t note)
 {
+    midi_usb_owned[ch][note>>3]&=(uint8_t)~(1u<<(note&7u));
     uint32_t id = mn_get(ch, note) & 0x7Fu;
     mn_set(ch, note, 0);
     if (id) {
@@ -197,14 +200,17 @@ static void midi_pedal_up(uint32_t ch)
 static void __attribute__((noinline)) midi_forget_track(uint32_t track)
 {
     uint32_t ch, note;
+    mpe_forget(track);
     memset(live_held[track], 0, sizeof live_held[track]);
     step_midi_edge(track, 0, 2, 0, 0);          /* one UI release for the whole track */
     for (ch = 0; ch < 16u; ch++) {
         if (!(midi_ch[ch].targets & (1u << track)))
             continue;
         for (note = 0; note < 128u; note++)
-            if ((mn_get(ch, note) & 0x7Fu) == track + 1u)
+            if ((mn_get(ch, note) & 0x7Fu) == track + 1u){
                 mn_set(ch, note, 0);
+                midi_usb_owned[ch][note>>3]&=(uint8_t)~(1u<<(note&7u));
+            }
         midi_ch[ch].targets &= (uint8_t)~(1u << track);
         midi_ch[ch].owned[track] = 0;
     }
@@ -333,6 +339,19 @@ static void midi_control(uint32_t ch, uint32_t cc, uint32_t value)
 }
 
 /* Keep the occasional controller/panic dispatch outside the hot rendering loop. */
+static void mpe_legacy_flush(void)
+{
+    for(uint32_t ch=0;ch<16;ch++)for(uint32_t note=0;note<128;note++)
+        if(midi_usb_owned[ch][note>>3] & (1u<<(note&7u)))midi_release(ch,note);
+    memset(midi_usb_owned,0,sizeof midi_usb_owned);
+}
+static void midi_source_note(uint32_t source,uint32_t st,uint32_t ch,uint32_t note,uint32_t vel)
+{
+    if(st==0x90u && vel){
+        uint8_t *p=&midi_usb_owned[ch][note>>3];uint8_t bit=(uint8_t)(1u<<(note&7u));
+        *p&=(uint8_t)~bit;if(source==1u && mn_get(ch,note))*p|=bit;
+    }
+}
 static void __attribute__((noinline)) midi_event(uint32_t st, uint32_t ch, uint32_t d1, uint32_t d2)
 {
     track_t *t = midi_track(ch);

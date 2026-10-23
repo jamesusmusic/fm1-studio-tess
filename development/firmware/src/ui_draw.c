@@ -242,6 +242,8 @@ static void draw_head(void)
     uint32_t sig, moved = 0;
     int16_t bpm = song.g[G_BPM];                        /* (read once: what is noted is what is drawn) */
     head_chip_text(chip);
+    /* Ongoing live input routing in the shared header — By: Inputsignwave. */
+    if(song.g[G_ROUTE]>=5 && song.g[G_ROUTE]<=8)str_cpy(chip,N_ROUTE[song.g[G_ROUTE]],sizeof chip);
     sig = (uint32_t)seq_erase_active(TSEL) * 8191u + (uint32_t)song.playing * 3u + song.rec * 5u + song.rec_wait * 65537u + (uint32_t)(song.octave + 8) * 11u +
           song.sel * 13131u + (msg ? str_hash(7u, ui.msg_t ? ui.msg : layer_head()) : str_hash(5u, chip)) +
           (ui.bpm_t != 0) * 31u + low * 7777u + (chain.running ? (chain.row + 1u) * 104729u : 0u) + ux.gen * 977u +
