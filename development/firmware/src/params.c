@@ -14,9 +14,9 @@ static const char *const N_DIV[] = {"1/4", "1/8", "1/16", "1/32", "8T", "16T", "
 static const char *const N_RECQ[] = {"OFF", "1/4", "1/8", "1/16", "1/32", "8T", "16T", "1/2", "1/1", "2BAR", "4BAR"};
 static const char *const N_LTRIG[] = {"NOTE", "FREE"};
 static const char *const N_LPOL[] = {"BI", "UNI"};
-static const char *const N_FX[] = {"OFF", "PHASER", "WIDTH", "FORMANT", "TAPE", "SPIT", "ECHO", MELODEE_RETIRED_REFERENCE ? "ROOM" : "ROOM GONE", MELODEE_RETIRED_REFERENCE ? "REVERB" : "REV GONE", "CHORUS"
+static const char *const N_FX[] = {"OFF", "PHASER", "WIDTH", "FORMANT", "TAPE", "SPIT", "ECHO", MELODEE_RETIRED_REFERENCE ? "ROOM" : "", MELODEE_RETIRED_REFERENCE ? "REVERB" : "", "CHORUS"
 #if !MELODEE_RETIRED_REFERENCE
-, "PLATE", "WARM DRIVE"
+, "PLATE", "DRIVE"
 #endif
 };
 static const char *const N_ONOFF[] = {"OFF", "ON"};
@@ -278,7 +278,7 @@ static const param_desc_t GP[G_COUNT] = {
 static const param_desc_t *global_desc(uint32_t id)
 {
     if(param_master_fx(id) && (id-G_MFXTYPE)%FX_PARAMS>=2u){
-        static param_desc_t d;static const char *const character[]={"CHAR","DEPTH","DEPTH","FOCUS","JITTER","BITE","REPEAT","DECAY","DEPTH","DEPTH","DECAY","OUTPUT"};
+        static param_desc_t d;static const char *const character[]={"CHAR","DEPTH","DEPTH","FOCUS","JITTER","BITE","REPEAT","DECAY","DEPTH","DEPTH","DECAY","OUT"};
         uint32_t base=G_MFXTYPE+(id-G_MFXTYPE)/FX_PARAMS*FX_PARAMS,type=(uint32_t)clamp(song.g[base],0,NELEM(N_FX)-1);d=GP[id];
         if(id-base==3u)d.label=character[type];else if(type>=6u && type<=8u){d.label=type==6u?"TIME":"SIZE";d.fmt=F_PCT;}if(type==10u && id-base==2u){d.label="SIZE";d.fmt=F_PCT;}if(type==11u && id-base==2u){d.label="DRIVE";d.fmt=F_PCT;}return &d;
     }
@@ -292,7 +292,7 @@ static const param_desc_t *track_desc(const track_t *t, uint32_t id)
 #endif
     if (param_fx(id) && !param_fx_tone(id) && ((id-P_FXTYPE)%FX_PARAMS)>=2u) {
         static param_desc_t fx_desc;
-        static const char *const character[] = {"CHAR", "DEPTH", "DEPTH", "FOCUS", "JITTER", "BITE", "REPEAT", "DECAY", "DEPTH", "DEPTH", "DECAY", "OUTPUT"};
+        static const char *const character[] = {"CHAR", "DEPTH", "DEPTH", "FOCUS", "JITTER", "BITE", "REPEAT", "DECAY", "DEPTH", "DEPTH", "DECAY", "OUT"};
         uint32_t base=P_FXTYPE+(id-P_FXTYPE)/FX_PARAMS*FX_PARAMS;
         fx_desc=TP[id];uint32_t type=(uint32_t)clamp(t->p[base],0,NELEM(N_FX)-1);
         if(id-base==3u)fx_desc.label=character[type];
@@ -430,6 +430,7 @@ static void param_format(const param_desc_t *d, int32_t v, char *val, const char
         *unit = "st";
         break;
     case F_ENUM:
+        if(d->names==N_FX)v=enum_orig(d,clamp(v,d->min,d->max));
         if (d->names == N_ROUTE) {
             v = clamp(v, d->min, d->max);
             /* The panel's compact card fits "13-16"; editor/picker names retain the CH prefix. */

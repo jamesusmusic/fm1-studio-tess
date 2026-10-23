@@ -176,7 +176,7 @@ static void head_chip_text(char *b)
         str_cpy(b, "OP1 EG", 16);
         b[2] = (char)('1' + fm6_opsel % 6u);
     } else if (pg->fam == FAM_FX && pg->graph == GR_NONE && pg->scope!=SC_SFX) {   /* an FX slot: its effect ("ECHO") */
-        str_cpy(b, N_FX[clamp((pg->scope == SC_GLOBAL ? song.g : TSEL->p)[pg->id[0] - 1u], 0, FX_COUNT - 1)], 16);
+        str_cpy(b, N_FX[enum_orig(&TP[P_FXTYPE],clamp((pg->scope == SC_GLOBAL ? song.g : TSEL->p)[pg->id[0] - 1u], 0, FX_COUNT - 1))], 16);
     } else if (pg->scope != SC_ENGINE && sec_on()) {   /* an engine in sections: the page's name in its section */
         sec_chip(ui.page, b, 16);
     } else {

@@ -1995,6 +1995,26 @@ static void library_note_sweep(const char *out)
         if(p==0u)write_ppm(out,"NIGHT",names[scene]);
     }
 }
+/* By: Inputsignwave. Full previews/pickers must be swept separately from
+ * columns: RC1's column-only sweep missed new effects' NULL preview hints. */
+static void performance10_fx_sweep(const char *out)
+{
+#if !MELODEE_RETIRED_REFERENCE && MELODEE_WAVETABLE
+    for(uint32_t palette=0;palette<UI_PAL_ENTRIES;palette++)
+    for(uint32_t engine=ENGI_WAVETABLE;engine<=ENGI_WAVE_LAYERS;engine++)
+    for(uint32_t scene=0;scene<3u;scene++){
+        char title[80];state();pal(palette);host_preset(TSEL,engine,5);
+        song.playing=0;
+        if(scene==2u){song.g[G_MFXTYPE]=FX_PLATE;song.g[G_MFXMIX]=38;go_title("SEND FX 1");}
+        else {TSEL->p[P_FXTYPE]=FX_DRIVE;TSEL->p[P_FXMIX]=38;go_title(scene?"FX":"FX 1");}
+        if(scene==1u){fx_rack_row[0]=0;pick_touch(0);ui.hot_col=0;ui.hot_t=30;}
+        snprintf(title,sizeof title,"performance10_%s_%s",engine==ENGI_WAVETABLE?"original":"layers",scene==2u?"plate":scene?"drive_picker":"drive");
+        cur_name=title;draw(-1);lint();if(palette==UI_GRAY_INDEX)mono_check();
+        if(palette==0u)write_ppm(out,"NIGHT",title);
+    }
+    cur_name=0;
+#endif
+}
 #ifndef UI_RENDER_SHOW
 #define UI_RENDER_SHOW 3u
 #endif
@@ -2074,6 +2094,7 @@ int main(int argc, char **argv)
     sweep_columns();
     render_pixel = 0;
     library_note_sweep(out);
+    performance10_fx_sweep(out);
     designer_sweep(out);
     {   /* every FM6 chart (the lint above, fmp_check, runs on each), in MONO: gray */
         uint32_t a, e, c0 = fmp_charts;

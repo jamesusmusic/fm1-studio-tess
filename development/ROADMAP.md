@@ -9,6 +9,26 @@ application USB/editor/console identity and compatible host discovery; preserve
 upstream notices, protocol/storage/update identities and archived baselines.
 See [branding and validation](INPUTSIGNWAVE_BRANDING.md).
 
+## Performance 10 RC2 hardware fixes — 23 October 2026
+
+By: Inputsignwave
+
+RC1 hardware testing found a repeatable red-screen fault while playing WAVE
+LAYERS / Phase Prism with Warm Drive at about 30% mix. Fault vector 1, PC
+`020233A0`, EMU `00000000`, DBG `00000010`, return `0202375E` map to
+`text_fit` called by `cv_free_text`. A new sanitizer test reproduces a null hint:
+the FX preview table had 12 entries allocated but only ten initialized strings.
+Both Drive and Plate were affected. RC2 populates all hints and asserts table
+coverage at compile time. DSP and saved effect IDs are unchanged.
+
+Retired Room/Reverb entries are now empty aliases omitted by the shared picker
+mapping; old loaded IDs remain dry bypass and display OFF. The warm drive label
+is DRIVE to use the normal picker font, and its output knob is OUT without
+clipping. New tests render complete preview panels during note playback, rather
+than only sweeping columns; original WT and WAVE LAYERS get full Drive/Plate and
+picker sweeps in every palette. RC2 target build, regression and emulator checks
+are in progress. RC1 should be superseded by this corrected candidate.
+
 ## Performance 10 integration — 23 October 2026
 
 By: Inputsignwave
