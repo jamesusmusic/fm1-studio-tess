@@ -1,4 +1,4 @@
-name: Inputsignwave Performance 10 validation
+name: Inputsignwave development validation
 on:
   push:
     branches: [INPUTSIGNWAVE-GEN]
@@ -47,11 +47,11 @@ jobs:
         with:
           path: .build-deps
           key: studio7-jieli-sdk-d179b448-v3
-      - name: Compile Inputsignwave Performance 10 combined candidate
+      - name: Compile Inputsignwave development candidate
         run: |
-          ./build.sh --release 1.4.1-inputsignwave.11-space1
-          cp build/melodee-1.4.1-inputsignwave.11-space1.fwsc build/melodee.fwsc
-          cp build/melodee.fwsc build/inputsignwave-1.4.1-performance11-space1.fwsc
+          ./build.sh --release 1.4.1-inputsignwave.11-space2
+          cp build/melodee-1.4.1-inputsignwave.11-space2.fwsc build/melodee.fwsc
+          cp build/melodee.fwsc build/inputsignwave-1.4.1-performance11-space2.fwsc
       - uses: actions/upload-artifact@v4
         with:
           name: studio8-target-${{ github.sha }}
@@ -94,7 +94,7 @@ jobs:
             development/build/*.map
             development/build/*.elf
             development/build/*audio*.json
-            development/build/melodee-1.4.1-inputsignwave.11-space1.fwsc
+            development/build/melodee-1.4.1-inputsignwave.11-space2.fwsc
             development/build/melodee-app.bin
             development/build/melodee.bin
             development/build/release-*/SHA256SUMS

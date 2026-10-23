@@ -50,15 +50,21 @@ static const engine_t ENG_RETIRED = {         /* 13 without MELODEE_SLICE: reser
  * use voice_t alone. State is released after the old engine's switch fade. */
 #include "resources.c"
 #if MELODEE_WAVETABLE
-/* Only the audio owner allocates/copies; every track reads the same immutable bank. */
+/* Only the audio owner prepares the shared bank. By: Inputsignwave.
+ * Exact half rows save flash; renderers still read the original full PCM bank. */
 static int wt_prepare(void)
 {
-    if(resource[RES_WAVETABLE].size==sizeof(WT_FLASH)){
+    if(resource[RES_WAVETABLE].size==sizeof(wt_bank_t)){
         wt_bank=(const wt_bank_t *)resource[RES_WAVETABLE].ptr;return 1;
     }
-    void *p=resource_get(RES_WAVETABLE,sizeof(WT_FLASH));
+    int16_t *p=resource_get(RES_WAVETABLE,sizeof(wt_bank_t));
     wt_bank=(const wt_bank_t *)p;
-    if(p)memcpy(p,&WT_FLASH,sizeof(WT_FLASH));
+    if(p)for(uint32_t r=0;r<WT_FRAMES*WT_FOLDS*WT_BANDS;r++){
+        int16_t *row=p+r*(WT_SAMPLES+1u);
+        memcpy(row,WT_HALF+WT_ROW_AT[r],(WT_SAMPLES/2u+1u)*sizeof *row);
+        for(uint32_t i=WT_SAMPLES/2u+1u;i<WT_SAMPLES;i++)row[i]=(int16_t)-row[WT_SAMPLES-i];
+        row[WT_SAMPLES]=row[0];
+    }
     return p!=0;
 }
 static void wt_cache_sweep(void)

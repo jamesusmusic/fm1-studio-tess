@@ -18,7 +18,12 @@ removes retired CZ on-device editor conversion/descriptor reachability from
 the production build; raw CZ patch storage, bank/project codecs and historical
 reference editor remain. No retained sound, preset, font, reverb or UI feature
 is intentionally removed. The new production test verifies edit refusal and
-byte-exact project/template recall. Native size and full regressions pending.
+byte-exact project/template recall. Space1 native measurement recovers 6,580 B flash (6,852 B spare); main audio
+arena grows to 53,184 B. Its local full suite passed in 313 s. Space2 also
+stores the original wavetable as exact deduplicated half rows, reconstructing
+all 6,192 signed samples in the existing shared bank. Every decoded sample is
+compared with the unchanged raw oracle; allocation sizes and renderers remain
+unchanged. Final native size and full regression results pending.
 RC4 remains the hardware-validated install baseline. The 24–32 KiB MPE space
 allowance is a planning target, not a measured implementation requirement.
 Direct BLE Central needs its own platform/link measurement; it is not enabled.

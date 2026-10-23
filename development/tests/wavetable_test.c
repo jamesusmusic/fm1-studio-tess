@@ -18,6 +18,7 @@ static void bank_tests(void)
     assert(sizeof WT_FLASH==12384u && eng_ok(21) && !eng_ok(20));
     assert(ENGINE_ORDER[2]==21 && ENG_WAVETABLE.npresets==6);
     assert(wt_prepare());const void *shared=wt_bank;
+    assert(!memcmp(wt_bank,&WT_FLASH,sizeof WT_FLASH)); /* every reconstructed sample */
     for(uint32_t p=0;p<4;p++){
         host_preset(&trk[p],ENGI_WAVETABLE,p);
         assert(eng_state_prepare(&trk[p]) && wt_bank==shared && !resource[RES_ENGINE0+p].size);

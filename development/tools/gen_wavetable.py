@@ -42,15 +42,33 @@ def generate():
          'static const uint8_t WT_HARMONICS[WT_BANDS]={15,7,3,1};',
          'typedef int16_t wt_bank_t[WT_FRAMES][WT_FOLDS][WT_BANDS][WT_SAMPLES+1u];',
          'static const wt_bank_t WT_FLASH={']
+    quantized=[]
     for frame in waves:
         out.append('    {')
         for fold in frame:
             out.append('        {')
             for row in fold:
                 q=[round(x/peak*14000) for x in row];q.append(q[0])
+                quantized.append(q)
                 out.append('            {'+','.join(map(str,q))+'},')
             out.append('        },')
         out.append('    },')
+    out+=['};','']
+    # Lossless storage: retain the original table above as a host-test oracle.
+    # Production references only the deduplicated first 65 samples per row.
+    packed=[];offsets=[];known={}
+    for q in quantized:
+        half=tuple(q[:65])
+        restored=list(half)+[-half[SAMPLES-i] for i in range(65,SAMPLES)]+[half[0]]
+        if restored!=q:raise ValueError('bank is not exactly odd-symmetric')
+        if half not in known:
+            known[half]=len(packed);packed.extend(half)
+        offsets.append(known[half])
+    assert len(offsets)==48 and max(offsets)<65536
+    out+=['/* Exact half-row encoding; full bank reconstructed in existing shared RAM. */',
+          'static const uint16_t WT_ROW_AT[48]={'+','.join(map(str,offsets))+'};',
+          'static const int16_t WT_HALF['+str(len(packed))+']={']
+    for at in range(0,len(packed),16):out.append('    '+','.join(map(str,packed[at:at+16]))+',')
     out+=['};','']
     return '\n'.join(out)
 
