@@ -2023,6 +2023,19 @@ static void ui_confirm_accept(void)
 }
 
 #include "ui_designer_input.c"
+/* Track selection stays a focus change: normal ownership/release routing is
+ * handled by track_select. Expose the overview immediately. By: Inputsignwave. */
+static void home_track_pick(int32_t delta)
+{
+    uint32_t old = song.sel;
+    track_select((uint32_t)clamp((int32_t)song.sel + delta, 0, (int32_t)trk_n() - 1));
+    if (song.sel != old && ui.home && ui.home_pg == HOME_TRACKS) {
+        stage.knob_ms = 0;
+        stage.out = stage.drop = 0;
+        ui.force = 1;
+    }
+}
+
 static void ui_input(void)
 {
     uint32_t pressed = fm1_input_edges(0), notes = fm1_input_note_edges(), now = fm1_ticks(), id, b, k;
@@ -2289,10 +2302,19 @@ static void ui_input(void)
         open_family(FAM_SEQ);
     }
     if (home == BT_TAP && ui.home && !pop.on) {         /* HOME acts on release (a hold opens the menu); on HOME: its */
-        ui.home_pg = (uint8_t)!ui.home_pg;              /* other page (ui_view.c) */
+        ui.home_pg = (uint8_t)((ui.home_pg + 1u) % HOME_PAGES);
+        /* A HOME tap must expose the requested view immediately, even during
+         * a sound-knob gesture. By: Inputsignwave. */
+        stage.knob_ms = 0;
+        stage.out = stage.drop = 0;
         ui.force = 1;
     } else if (home == BT_TAP) {
         go_home();                                      /* (to the page it was on) */
+#if !MELODEE_RETIRED_REFERENCE
+        ui.home_pg = HOME_TRACKS;                       /* one press from an edit page exposes every track */
+        stage.knob_ms = 0;
+        stage.out = stage.drop = 0;
+#endif
     }
     cursor_fix();                                       /* LEN may have changed (knob, editor, load) */
     if (step_page() && live_rec_sel() && !ui.step_mods) { /* armed: follow recording
@@ -2484,7 +2506,10 @@ static void ui_input(void)
                 fm6_page_put(&PAGES[i],0,clamp((int32_t)fm6_patch[song.sel][FP_ALG]+clamp(s,-128,128),0,31));break;
             }
             native_motion(old);motion_unguard(f);ui.force=1;
-        } else track_select((uint32_t)clamp((int32_t)song.sel + (s > 0 ? 1 : -1), 0, (int32_t)trk_n() - 1));
+        } else {
+            int32_t delta = !MELODEE_RETIRED_REFERENCE && ui.home ? clamp(s, -(int32_t)NTRK, NTRK) : (s > 0 ? 1 : -1);
+            home_track_pick(delta);
+        }
     }
     if (!glo_select_layer && (s = panel_enc(EN_SELECT)) != 0) { /* SELECT: pages; with SEQ / a step key / ENV / SCL: below */
         step_edit_combo();
@@ -2498,7 +2523,9 @@ static void ui_input(void)
         } else if (!ui.home) {                          /* the section's pages (BPM: SEQ > TEMPO; the notes, the hits:
                                                          * KNOB 1) */
             page_scroll(s);
-        } else {                                        /* HOME: what the menu's HOME SELECT says */
+        } else if (ui.home_pg == HOME_TRACKS) {         /* track overview: SELECT is a direct track picker */
+            home_track_pick(clamp(s, -(int32_t)NTRK, NTRK));
+        } else {                                        /* other HOME views: the saved HOME SELECT assignment */
             select_turn(home_select(), s);
         }
     }

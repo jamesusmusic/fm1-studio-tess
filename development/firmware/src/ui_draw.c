@@ -165,9 +165,12 @@ static void head_chip_text(char *b)
         b[5] = (char)('1' + ui.ptc_src % NPAT);
         b[10] = (char)('1' + ui.ptc_dst % NPAT);
     } else if (ui.home) {                               /* Stage: the engine (a kit: its name, "909 KIT") */
-        if (browse_pending()) { uint32_t kk, s = browse_shown(&kk); e = src_engine(s, kk); }
-        if (ENGINES[eng_idx(e)] == &ENG_DRUM && !browse_pending()) sound_name(TSEL, b);
-        else str_cpy(b, ENGINES[eng_idx(e)]->name, 16);
+        if (ui.home_pg == HOME_TRACKS) str_cpy(b,"TRACKS",16);
+        else {
+            if (browse_pending()) { uint32_t kk, s = browse_shown(&kk); e = src_engine(s, kk); }
+            if (ENGINES[eng_idx(e)] == &ENG_DRUM && !browse_pending()) sound_name(TSEL, b);
+            else str_cpy(b, ENGINES[eng_idx(e)]->name, 16);
+        }
     } else if (sec_map_on()) {                          /* the map: the engine */
         str_cpy(b, ENGINES[e]->name, 16);
     } else if (pg->graph == GR_ROLL && grid_on()) {     /* the drum grid */
@@ -307,10 +310,10 @@ static void draw_head(void)
         }
         if (!ui.home) {                                 /* a page: where it is in its family */
             head_pages(x + 6, 236 - cw - (low ? 22 : 0));
-        } else if (x + 6 + 28 <= 236 - cw - (low ? 22 : 0) - 6) {   /* HOME: its two pages (Stage, the chord view),
+        } else if (x + 6 + (HOME_PAGES == 3u ? 46 : 28) <= 236 - cw - (low ? 22 : 0) - 6) {   /* HOME pages,
                                                                    * where there is room */
             uint32_t i;
-            for (i = 0, x += 6; i < 2u; i++) {
+            for (i = 0, x += 6; i < HOME_PAGES; i++) {
                 int32_t w = i == ui.home_pg ? 16 : 6;
                 cv_rrect(x, H_HEAD / 2 - 3, w, 6, 3, i == ui.home_pg ? T_THEME : T_LINE, T_BG);
                 x += w + 6;
@@ -1304,7 +1307,7 @@ static void draw_page(void)
         melodee_dbg.stage = 4;
         draw_columns();
         melodee_dbg.stage = 5;
-        if (ui.home && ui.home_pg)                      /* HOME's second page (ui_view.c) */
+        if (ui.home && ui.home_pg == HOME_CHORDS)        /* HOME chord view (ui_view.c) */
             view_draw();
         else if (ui.home)                               /* Stage: its panel and the lanes (ui_stage.c), no footer */
             stage_draw();

@@ -46,7 +46,7 @@
 #define MELODEE_FORK "(Inputsignwave)"       /* this fork: melodee(tess); the version below is upstream Melodee's */
 #endif
 #ifndef MELODEE_VERSION
-#define MELODEE_VERSION "v1.4.1-inputsignwave.12-cassette-dev2" /* cassette UI development candidate — By: Inputsignwave */
+#define MELODEE_VERSION "v1.4.1-inputsignwave.12-cassette-dev3" /* cassette UI development candidate — By: Inputsignwave */
 #endif
 #if MELODEE_OTA && !MELODEE_FLASH
 #error "MELODEE_OTA needs MELODEE_FLASH"

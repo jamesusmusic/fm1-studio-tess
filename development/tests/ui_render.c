@@ -1074,7 +1074,7 @@ static void setup(int s)
      * nothing played yet; a knob turning (the knobs over the wheel's top); C/E (an inversion) */
     case S_VIEW: case S_VIEW_LETGO: case S_VIEW_NOTE: case S_VIEW_EMPTY: case S_VIEW_KNOBS: case S_VIEW_SLASH: {
         uint32_t k;
-        song.ntrk = 3; go_home(); ui.home_pg = 1;
+        song.ntrk = 3; go_home(); ui.home_pg = HOME_CHORDS;
         memset(&view, 0, sizeof view);
         for (k = 0; k < NTRK; k++) trk[k].engine = trk[k].eng_req;
         trk[0].peak = 9000; trk[1].peak = 4000; trk[2].peak = 300;
@@ -1350,7 +1350,7 @@ static void setup(int s)
     case S_HOME_SEL_MOD: go_home(); HOME_SELECT = HS_MOD; select_turn(home_select(), 64); HOME_SELECT = 0; glo_select_set(0); break;
     case S_HOME_SEL_CHORD:
         song.ntrk = 1; go_home(); HOME_SELECT = HS_CHORD; TSEL->p[P_CHRD] = 5; select_turn(home_select(), 1); HOME_SELECT = 0; break;
-    case S_HOME_SEL_LEVEL: go_home(); ui.home_pg = 1; memset(&view, 0, sizeof view); HOME_SELECT = HS_LEVEL; select_turn(home_select(), -3); HOME_SELECT = 0; break;
+    case S_HOME_SEL_LEVEL: go_home(); ui.home_pg = HOME_CHORDS; memset(&view, 0, sizeof view); HOME_SELECT = HS_LEVEL; select_turn(home_select(), -3); HOME_SELECT = 0; break;
     /* SEQ + a white key held: its dialog over Stage (pattern 3 of track 1); one track armed, its row's red border */
     case S_PAT_DIALOG: song.playing = 0; go_home(); ui.pat_dlg = 2; ui.confirm = CF_PAT_KEY; ui.confirm_trk = 0; break;
     case S_STAGE_T1_REC: song.ntrk = 1; song.sel = 0; demo_pat16(&trk[0], DEMO_ACID); song.rec = 1u; go_home(); break;
@@ -2069,6 +2069,19 @@ int main(int argc, char **argv)
             for (k = 0; k < UI_RENDER_SHOW; k++)    /* (the suite: NIGHT DAY CONTRAST; -DUI_RENDER_SHOW=8 all) */
                 if (!strcmp(UI_PALETTES[p].name, SHOW[k])) write_ppm(out, SHOW[k], S_NAME[s]);
         }
+#if !MELODEE_RETIRED_REFERENCE
+    /* Restored HOME overview and retained chord view, 1..4 tracks/both fonts.
+     * Exercise their actual production dispatch, not just drawing helpers. By: Inputsignwave. */
+    for(uint32_t font=0;font<2;font++)for(uint32_t count=1;count<=NTRK;count++){
+        char title[64],file[64];render_pixel=(int)font;
+        setup(S_HOME);song.ntrk=(uint8_t)count;pal(0);
+        stage.knob_ms=0;stage.out=stage.drop=0;ui.home_pg=HOME_TRACKS;
+        snprintf(title,sizeof title,"HOME TRACKS %u font %u",count,font);cur_name=title;
+        draw(-1);lint();snprintf(file,sizeof file,"tracks_%u_font_%u",count,font);write_ppm(out,"NIGHT",file);
+        ui.home_pg=HOME_CHORDS;cur_name="HOME CHORDS production";draw(-1);lint();
+    }
+    render_pixel=0;
+#endif
     {   /* Studio controls: export reviewable frames as well as the generic sweep. */
         static const char *const title[]={"NOTE LENGTH","FM AMP","FM TONE","FM AMP MODE"};
         static const char *const file[]={"studio_note_length","studio_fm_amp","studio_fm_tone","studio_fm_amp_mode"};

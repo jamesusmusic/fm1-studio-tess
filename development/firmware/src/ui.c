@@ -114,10 +114,21 @@ static uint8_t sync_reload;                  /* engine / preset / project / user
 #define BOX_X 2                       /* panels and rows: x 2 .. 237 */
 #define BOX_W 236
 
+/* HOME navigation — By: Inputsignwave. Retain historical two-view fixtures. */
+#if MELODEE_RETIRED_REFERENCE
+#define HOME_TRACKS 255u
+#define HOME_CHORDS 1u
+#define HOME_PAGES 2u
+#else
+#define HOME_TRACKS 1u
+#define HOME_CHORDS 2u
+#define HOME_PAGES 3u
+#endif
+
 static struct {
     uint8_t designer_mode;       /* the sound designer: START, the stages (ui_designer.c) */
     uint8_t home;
-    uint8_t home_pg;             /* HOME's page: 0 Stage, 1 the chord view (ui_view.c); HOME tapped on HOME turns it */
+    uint8_t home_pg;             /* HOME: instrument, tracks, chords; tap HOME to cycle */
     uint8_t drum_sound;
     uint8_t page;                /* index into PAGES */
     uint8_t fam_last[FAM_COUNT]; /* last page used per family */

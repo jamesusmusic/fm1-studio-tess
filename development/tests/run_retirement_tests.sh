@@ -21,6 +21,8 @@ mkdir -p build/cassette-ui
 UBSAN_OPTIONS=halt_on_error=1 ASAN_OPTIONS=detect_leaks=0 build/removal/cassette_ui build/cassette-ui
 $cc_task $flags -g -fsanitize=address,undefined tests/cassette_settings_test.c -lm -o build/removal/cassette_settings
 UBSAN_OPTIONS=halt_on_error=1 ASAN_OPTIONS=detect_leaks=0 build/removal/cassette_settings
+$cc_task $flags -g -fsanitize=address,undefined tests/home_tracks_test.c -lm -o build/removal/home_tracks
+UBSAN_OPTIONS=halt_on_error=1 ASAN_OPTIONS=detect_leaks=0 build/removal/home_tracks
 $cc_task $flags -g -fsanitize=address,undefined tests/retirement_test.c -lm -o build/removal/sanitize
 UBSAN_OPTIONS=halt_on_error=1 ASAN_OPTIONS=detect_leaks=0 build/removal/sanitize
 $cc_task $flags -pthread tests/audio_matrix_test.c -lm -o build/removal/audio_matrix

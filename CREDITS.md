@@ -104,3 +104,7 @@ Existing Melodee graphics, controls, fonts and all upstream notices are retained
 Performance 12 Dev2 cleanup and compatibility migration — By: Inputsignwave.
 Historical themes and HOME Stage rows are reference-only; the approved new UI
 is the sole on-device design. Shared controls, views and both fonts are retained.
+
+Performance 12 Dev3 navigation repair — By: Inputsignwave: restore the upstream
+track-row overview within the new UI; three HOME views, direct track picking,
+control hints and regression coverage. Original renderer authorship is retained.

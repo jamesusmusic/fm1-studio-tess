@@ -46,7 +46,8 @@ int main(int argc,char **argv)
             stage_knob_touch();ui.hot_col=0;ui.force=1;ui_draw();
             fm1_ms+=2000;ui.force=1;ui_draw();
             assert(!memcmp(params,TSEL->p,sizeof params));
-            press(B_HOME);assert(ui.home&&ui.home_pg);ui.force=1;ui_draw();
+            press(B_HOME);assert(ui.home&&ui.home_pg==HOME_TRACKS);ui.force=1;ui_draw();
+            press(B_HOME);assert(ui.home&&ui.home_pg==HOME_CHORDS);ui.force=1;ui_draw();
             press(B_HOME);assert(ui.home&&!ui.home_pg);ui.force=1;ui_draw();
             /* Retired theme choices always resolve to the new production UI. */
             assert(NPALETTES==1u);
