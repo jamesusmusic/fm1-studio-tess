@@ -1,5 +1,23 @@
 # Inputsignwave FM-1 roadmap
 
+## 23 November 2026 — Dev3 restores HOME track navigation
+
+By: Inputsignwave
+
+Dev2 was reported working on hardware, then feedback identified the missing
+multi-track overview. Dev3 restores that functional view in the new theme.
+HOME cycles **instrument → tracks → chords**; HOME from editing opens tracks.
+SELECT and ALGORITHM pick tracks on the overview, and ALGORITHM also selects
+tracks from the instrument landing view. The four sound controls, HOME hold/menu,
+preset browsing, chord view and status priorities remain. Retired themes stay
+excluded. The overview costs **5,204 B** flash versus Dev2, leaving **10,712 B**
+spare and a **50,752 B** main audio arena. Functional navigation takes priority
+over removing this useful page for space.
+
+See [controls/scope](docs/PERFORMANCE12_DEV3_HOME_TRACKS.md) and
+[validation](docs/PERFORMANCE12_DEV3_VALIDATION.md). Physical acceptance of the
+new navigation remains required; no further MPE/Bluetooth integration is added.
+
 ## 23 November 2026 — Dev2 removes the older UI styles
 
 By: Inputsignwave
