@@ -49,7 +49,7 @@ static void night_contract(void)
 {
  reset();memset(favorites.factory[13]+25,0,4);settings.palette=7;settings_save();settings_poll();
  persist_boot();assert(settings.palette==0);
- settings.palette=7;settings_save();settings_poll();persist_boot();assert(settings.palette==7);
- puts("NIGHT: first-upgrade migration preserves subsequent user palette choice");
+ settings.palette=7;settings_save();settings_poll();persist_boot();assert(settings.palette==0);
+ puts("NIGHT: production saves and restores only the approved new UI; retired runtime choices cannot re-enable old themes");
 }
 int main(void){state_contract();audio_contract();night_contract();return 0;}
