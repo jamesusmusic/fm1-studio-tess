@@ -1,5 +1,22 @@
 # Inputsignwave FM-1 roadmap
 
+## 23 November 2026 — cassette UI candidate
+
+By: Inputsignwave
+
+The approved instrument landing views are implemented in Performance 12 Cassette
+Dev1, on the existing Performance 11 USB-MPE development base. NIGHT now has
+instrument-specific colours, clipped vector panels and bounded master-output
+scope animation. Existing controls and menu bindings remain; the NIGHT landing
+view replaces its old Stage rows. Other palettes retain the original Stage view.
+
+See [UI scope and controls](docs/PERFORMANCE12_CASSETTE_UI.md) and
+[validation and resource measurements](docs/PERFORMANCE12_CASSETTE_VALIDATION.md).
+Hardware acceptance remains to be done. This adds no further MPE/Bluetooth work;
+finish the Seaboard testing/integration in the planned separate session. The
+larger navigation, SONG, phrase-sharing and performance-access items below remain
+future work.
+
 ## Current priorities — 1 November 2026
 
 By: Inputsignwave
