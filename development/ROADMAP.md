@@ -1,5 +1,18 @@
 # Inputsignwave FM-1 roadmap
 
+## 23 November 2026 — Dev2 removes the older UI styles
+
+By: Inputsignwave
+
+Performance 12 Cassette Dev2 ships only the approved new design. Retired palettes,
+the COLOR selector and legacy HOME rows are excluded from the target; shared
+controls, mixer/chord view, fonts and instrument colours remain. All eight older
+theme IDs migrate without resetting other settings. Measured recovery: **6,708 B**
+of flash, leaving **15,916 B** spare, with a **50,880 B** main audio arena.
+See [cleanup scope](docs/PERFORMANCE12_DEV2_UI_CLEANUP.md) and
+[validation](docs/PERFORMANCE12_DEV2_VALIDATION.md). Dev1 remains a rollback
+candidate; hardware acceptance is still required.
+
 ## 23 November 2026 — cassette UI candidate
 
 By: Inputsignwave
