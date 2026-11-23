@@ -1358,6 +1358,13 @@ static void ui_draw_frame(void)
     ui.frame++;
     if (palette_track(song.sel))                       /* THEME is the selected track's colour */
         ui.force = 1;
+    { /* Instrument identity, including switches on the same track. By: Inputsignwave. */
+        uint32_t e = TSEL->eng_req;
+        uint32_t family = e == ENGI_PROPHET ? 0u : e == ENGI_FM6 ? 1u :
+            (e == ENGI_WAVETABLE || e == ENGI_WAVE_LAYERS) ? 2u :
+            e == ENGI_DRUM ? 3u : e == ENGI_FMKIT ? 4u : 5u;
+        if (palette_instrument(family)) ui.force = 1;
+    }
     if(seq_counting()) { char text[24]="COUNT IN ";fmt_int(text+9,(int32_t)cin_left);
         ui_message(text); }
     else if(!memcmp(ui.msg,"COUNT IN ",9))ui.msg_t=0;

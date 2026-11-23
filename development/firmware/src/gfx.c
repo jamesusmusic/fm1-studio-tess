@@ -104,7 +104,7 @@ static struct {
     uint16_t mid, dim, line, sel, tint, ink, rec, raise, key, lane, grid;
     uint16_t panel, quiet, lift, sec;   /* the redesign's (docs/design): panel, a quiet lane, the selected lane, names */
     uint8_t light, mono;
-    uint8_t pal, trk;            /* the palette, the track whose colour is THEME (palette_track) */
+    uint8_t pal, trk, instrument; /* instrument 1..5 overrides NIGHT only. By: Inputsignwave. */
     uint32_t gen;                /* bumped by palette_set (the text ramps follow) */
 } ux;
 #define T_BG ux.bg               /* background */
@@ -136,7 +136,8 @@ static struct {
 #define T_TRK(k) UI_PALETTES[ux.pal].trk[(k) & 3u]   /* track k's colour (the mixer, lanes, track chips) */
 /* knob k's colour on the selected track's pages (its label, its curve segment, a row, a lane, a slot): a shade of the
  * track's colour (tools/gen_ui_palettes.py SHADES; knob 1 the track's own), so a page keeps its track's family */
-#define T_KNOB(k) UI_PALETTES[ux.pal].knob[ux.trk & 3u][(k) & 3u]
+#define T_KNOB(k) ((ux.pal == UI_CASSETTE_INDEX && ux.instrument) ? \
+    UI_INSTRUMENT_KNOBS[ux.instrument - 1u][(k) & 3u] : UI_PALETTES[ux.pal].knob[ux.trk & 3u][(k) & 3u])
 
 static inline uint16_t ux_gray(uint32_t x5) { return (uint16_t)((x5 << 11) | (x5 << 6) | x5); }
 /* a + (b - a) * pct / 100 per channel, rounded; MONO on the red channel, so it stays gray */
@@ -163,6 +164,8 @@ static void palette_theme(void)                    /* THEME and what is mixed fr
 {
     const ui_pal_t *p = &UI_PALETTES[ux.pal];
     ux.theme = p->trk[ux.trk & 3u];
+    if (ux.pal == UI_CASSETTE_INDEX && ux.instrument)
+        ux.theme = UI_INSTRUMENT_KNOBS[ux.instrument - 1u][0];
     ux.sel = ux_mix(p->bg, ux.theme, UI_SEL_PCT);
     ux.tint = ux_mix(p->bg, ux.theme, UI_TINT_PCT);
     ux.lane = ux_mix(p->surf, ux.theme, 10);
@@ -170,6 +173,7 @@ static void palette_theme(void)                    /* THEME and what is mixed fr
 }
 static void palette_set(uint32_t i)
 {
+    ux.instrument = 0;
     const ui_pal_t *p = &UI_PALETTES[ux.pal = (uint8_t)(i < UI_PAL_ENTRIES ? i : UI_DEFAULT_INDEX)];
 #ifdef UI_TEST_PALETTE
     ux.mono = ux.pal == UI_GRAY_INDEX;
@@ -198,6 +202,17 @@ static int palette_track(uint32_t t)
     if (ux.trk == (t & 3u))
         return 0;
     ux.trk = (uint8_t)(t & 3u);
+    palette_theme();
+    return 1;
+}
+
+/* Engine families supplied by UI (gfx is compiled before engine declarations).
+ * Track-number colours remain stable in the mixer and multi-track views. */
+static int palette_instrument(uint32_t family)
+{
+    uint8_t v = ux.pal == UI_CASSETTE_INDEX && family < 5u ? (uint8_t)(family + 1u) : 0;
+    if (v == ux.instrument) return 0;
+    ux.instrument = v;
     palette_theme();
     return 1;
 }
@@ -666,6 +681,14 @@ static void cv_rrect(int32_t x, int32_t y, int32_t w, int32_t h, int32_t r, uint
     GFX_HOOK_CELL(x, y + cv_oy, x + w, y + h + cv_oy);   /* (the lint: what is drawn on it stays inside it) */
     if (r > w / 2) r = w / 2;
     if (r > h / 2) r = h / 2;
+    /* Clipped vector corners, no new image bank. By: Inputsignwave. */
+    if (ux.pal == UI_CASSETTE_INDEX && w >= 36 && h >= 18 && r > 0) {
+        for (j = 0; j < h; j++) {
+            int32_t cut = j < r ? r - j : j >= h - r ? j - (h - r) + 1 : 0;
+            cv_rect(x + cut, y + j, w - 2 * cut, 1, c);
+        }
+        return;
+    }
     if (r < 1) {
         cv_rect(x, y, w, h, c);
         return;

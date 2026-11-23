@@ -16,6 +16,9 @@ printf 'production: retained preset/FX PCM comparisons passed: '
 wc -l < build/removal/production-pcm.txt
 $cc_task $flags tests/studio8_navigation_test.c -lm -o build/removal/navigation
 build/removal/navigation
+$cc_task $flags -g -fsanitize=address,undefined tests/cassette_ui_test.c -lm -o build/removal/cassette_ui
+mkdir -p build/cassette-ui
+UBSAN_OPTIONS=halt_on_error=1 ASAN_OPTIONS=detect_leaks=0 build/removal/cassette_ui build/cassette-ui
 $cc_task $flags -g -fsanitize=address,undefined tests/retirement_test.c -lm -o build/removal/sanitize
 UBSAN_OPTIONS=halt_on_error=1 ASAN_OPTIONS=detect_leaks=0 build/removal/sanitize
 $cc_task $flags -pthread tests/audio_matrix_test.c -lm -o build/removal/audio_matrix

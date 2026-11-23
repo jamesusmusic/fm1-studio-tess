@@ -1,5 +1,144 @@
 # Inputsignwave FM-1 roadmap
 
+## Current priorities — 1 November 2026
+
+By: Inputsignwave
+
+This section is the current forward plan. Older dated entries below remain the
+development history; where priorities or UI directions differ, use this section.
+Resume **MPE development first in the next session, 2 November 2026**. The
+following items are planned work, not additions already present in the firmware.
+
+### 1. Seaboard RISE 25: finish the MPE path, then Bluetooth
+
+- [ ] Audition and harden the existing USB/Mac bridge candidate on the actual
+  RISE 25 and FM-1: independent bend, pressure and slide; sustain, release tails,
+  channel reuse, voice stealing, reconnect and dense expression alongside FX.
+- [ ] Continue toward **MPE Bluetooth keyboard support with the RISE 25**.
+  Distinguish RISE Bluetooth → Mac → FM-1 USB routing from direct RISE → FM-1
+  BLE MIDI. The latter needs its own host/central transport, pairing/reconnect
+  implementation and measured flash, RAM and audio timing budget.
+- [ ] Use the working WAVE LAYERS USB implementation as the baseline; extend
+  per-note expression to FM6/Prophet and expressive capture as separate tested
+  milestones. Retain ordinary MIDI routing and saved-project compatibility.
+
+The current candidate has four WAVE LAYERS voices and live expression, not
+direct Bluetooth or full expression recording. See the
+[MPE plan](docs/SEABOARD_MPE_PLAN.md),
+[setup guide](docs/PERFORMANCE11_MPE_TESTING.md) and
+[measured validation](docs/PERFORMANCE11_MPE_VALIDATION.md).
+
+### 2. Reported bug: drum generator should work on the first PLAY
+
+- [ ] Reproduce the report that the drum pattern generator stays silent until
+  a related control on another page is turned to **1**. Identify the exact
+  parameter and initialization path before changing it.
+- [ ] Make the required control default to **1** for a newly selected/initialized
+  drum generator, so pressing PLAY produces its intended default pattern without
+  visiting another page. Preserve intentional zero/off values in saved projects.
+- [ ] Verify fresh boot, new track, generator selection, preset changes and
+  save/reload; confirm that enabling the generator does not require a knob edit.
+
+### 3. Navigation and sound design: fewer page visits
+
+- [ ] Review the older Melodee sound-design workflow the user preferred and use
+  it as a reference for faster access to the current engines' sound controls.
+- [ ] Reorder pages and menus around the functions used most often. Agree a
+  complete page tree before relocating controls; retain the familiar overall
+  layout and the existing Sound Designer/Global Output decisions unless the new
+  map explicitly changes them.
+- [ ] Make **EDIT contextual**: when rhythm/drum generation or another generator
+  is selected, EDIT should lead directly to its relevant parameter menus. Define
+  this shortcut alongside an easy route to the active sound engine's designer;
+  this is not a blanket instruction to move all sequencer pages into EDIT.
+- [ ] Show sound-edit pages only for their active sound engine, and generator
+  pages only when their mode is selected. Build an applicability map for every
+  page/control, including **PHASE** and **SEED**; hide functions that do not affect
+  the current engine/mode while retaining genuinely applicable track controls.
+- [ ] Produce a concise page/function guide explaining what each control does,
+  when it is active and how it relates to other pages. Clarify phase, seed,
+  division, meter, drift, freeze/alignment and generator dependencies with examples.
+
+Acceptance: common sound edits and the selected generator's controls are easy
+to reach, irrelevant pages are absent, and changing modes lands on a valid page
+without changing saved parameters or interrupting held notes.
+
+### 4. Cassette-futurism identity and instrument display
+
+- [ ] Develop a distinct **cassette-futurism** colour palette and visual identity,
+  inspired by the computer interfaces and industrial atmosphere of *Alien* and
+  *Blade Runner*, while keeping the layout recognizable.
+- [ ] Mock up the palette, typography, panels and performance screen together.
+  NIGHT remains the current build's baseline until the new theme is approved;
+  this new direction supersedes the earlier LO-FI experiment.
+- [ ] Add purposeful animations and waveform displays while playing, reflecting
+  the active instrument/performance. Keep labels, active states and values legible.
+- [ ] Measure display refresh work and memory alongside audio/MIDI load; bound
+  animation updates so the aesthetic does not compromise note timing or sound.
+
+### 5. More FM6 sounds and properly assembled drum kits
+
+- [ ] Audition a much larger selection of FM6 presets and percussion sounds.
+  Investigate the Brian Eno material saved by the user on Reddit; locate those
+  posts/patch references and distinguish documented patches from recreations.
+- [ ] Compare candidates with the already added FM6/Eno sounds to avoid duplicates.
+  Keep source, licence and attribution records for anything distributed.
+- [ ] Assemble approved FM6 percussion into coherent, playable **FM drum kits**,
+  including useful groupings of existing percussion and newly approved sounds.
+  Check mapping, tuning, velocity response and levels across the kit.
+- [ ] Treat new presets/kits as **additions**. Retain existing individual sounds,
+  FM6 banks and native 808/909 kits; preserve canonical preset and kit identities.
+
+### 6. Prophet favourites, browsing order and startup sound
+
+- [ ] Audition/review the existing Prophet bank and add more patches based on
+  the user's favourite sounds, building on the approved Radiohead/Thom Yorke,
+  Aphex-inspired and classic-inspired additions.
+- [ ] Agree a favourites-led browsing order and the preferred default Prophet
+  sound at launch. The current build already browses additions 201–212 first
+  and starts new Prophet selections at 201; review that choice rather than
+  assuming it is the final preferred startup preset.
+- [ ] Separate fresh-start defaults from saved-project restoration. Reordering
+  the browser must not renumber stored preset IDs or replace existing sounds.
+
+### 7. Sharing phrases between generators and tracks
+
+- [ ] Research easier phrase sharing: copy a phrase to another track, print a
+  generator result into editable steps, reuse it in another generator/mode and
+  exchange patterns through the existing library/import/export paths.
+- [ ] Evaluate what already works in our capture/copy tools and relevant upstream
+  projects before adding a new mechanism; adapt existing work where appropriate.
+- [ ] Define which operations share generated notes versus generator settings and
+  seeds. Preserve meaningful timing, meter/phase relationships, velocities and
+  note lengths; keep results editable, repeatable and safe to undo/save/reload.
+
+### 8. Performance access to FX Hold
+
+- [ ] Make the existing reverb **Hold/Infinite** function much easier to reach
+  during playing, alongside useful access to Swell and other performance FX.
+- [ ] Prototype a direct gesture or quick performance control before assigning
+  buttons. Decide momentary versus latched behaviour and show the held state
+  clearly in the header, with an obvious, reliable release action.
+
+### 9. SONG, progressions and tonal navigation
+
+- [ ] Rework and reposition SONG so arranging a progression is easy to discover.
+  Evaluate **long-press SEQ** as an access option; its final location/gesture is
+  still a design decision, not an approved button remap.
+- [ ] Make chord progressions, key/tonal centre, scale selection and modulation
+  between sections easy to set and understand together.
+- [ ] Prototype a **circle-of-fifths wheel** as one possible progression/key
+  selector. Simplify browsing of Western and other scale families while retaining
+  the existing scale catalogue and clear root/tonal-centre information.
+- [ ] Explain the relationships between SONG harmony, track/generator harmony,
+  scale quantization and key changes. Verify progression recall and transitions,
+  held-note ownership and MIDI/capture behaviour before integrating the redesign.
+
+Suggested order after the next MPE session: reproduce/fix the drum default,
+agree the navigation/page-applicability map and FX Hold access, then prototype
+the visual/SONG redesigns. Preset auditioning and phrase-sharing research remain
+separate work items and feed into later measured, tested builds.
+
 ## Firmware name and attribution — 21 October 2026
 
 By: Inputsignwave

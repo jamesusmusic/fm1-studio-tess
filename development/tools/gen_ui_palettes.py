@@ -14,7 +14,7 @@ takes the colour of the track ALGORITHM picks (src/gfx.c palette_track). The fir
 blends (src/gfx.c, the same integer maths as mix() here):
   MID  = mix(BG, TEXT, 70 %)    labels, units, secondary text
   DIM  = mix(BG, TEXT, 42 %)    inactive, empty steps, disabled
-  LINE = mix(BG, TEXT, 18 %)    1 px dividers, the faint gauge track (NIGHT: 10 %, the design's #2E2939; LINE_PCT)
+  LINE = mix(BG, TEXT, 18 %)    1 px dividers, the faint gauge track (NIGHT: 14 %; LINE_PCT)
   SEL  = mix(BG, THEME, 80 %)   selection fill and gauge fill
   TINT = mix(BG, THEME, 12 %)   a faint area (the selected drum lane)
   RAISE = mix(SURF, TEXT, 12 %) a raised area on a surface: stubs, guides, slots, chips, button wells
@@ -32,8 +32,9 @@ from pathlib import Path
 
 # name, bg, surf, text, accent, (track 1, 2, 3, 4) (8-bit RGB; stored as RGB565)
 PALETTES = [
-    ("NIGHT",    (23, 20, 31),    (36, 32, 46),    (243, 238, 248), (255, 255, 255),
-     ((255, 122, 92), (255, 193, 69), (70, 217, 176), (157, 140, 255))),
+    # Cassette-futurist NIGHT revision; stored IDs stay intact. By: Inputsignwave.
+    ("NIGHT",    (7, 15, 22),     (15, 25, 34),    (233, 229, 215), (233, 229, 215),
+     ((100, 168, 255), (108, 191, 192), (161, 181, 156), (224, 122, 106))),
     ("DAY",      (246, 242, 234), (231, 224, 212), (30, 26, 38),    (20, 16, 28),
      ((160, 42, 22), (116, 68, 0), (0, 92, 72), (78, 56, 184))),
     ("CONTRAST", (0, 0, 0),       (34, 34, 34),    (255, 255, 255), (255, 255, 255),
@@ -56,7 +57,7 @@ REC_DARK, REC_LIGHT = (255, 72, 72), (190, 24, 40)
 QR_LIGHT, QR_DARK, CRASH_BG, CRASH_INK = (255, 255, 255), (0, 0, 0), (160, 0, 0), (255, 255, 255)
 PCT = {"MID": 70, "DIM": 42, "LINE": 18, "SEL": 80, "TINT": 12, "KEY": 78}
 RAISE_PCT = 12                     # SURF -> TEXT
-LINE_PCT = {"NIGHT": 10}           # a palette's own LINE (else PCT["LINE"]): NIGHT's dividers as faint as the design's
+LINE_PCT = {"NIGHT": 14}           # a palette's own LINE (else PCT["LINE"]): NIGHT's dividers as faint as the design's
 
 
 # the knobs' colours (src/gfx.c T_KNOB): each track colour turned round the hue circle in OKLCH (degrees, and a lightness
@@ -198,6 +199,8 @@ def main():
     fails = []
     assert PALETTES[0][0] == "NIGHT" and len(PALETTES) <= 31
     rows = [derive(p, t) for p in PALETTES + [TEST_GRAY] for t in range(4)]
+    for c in PALETTES[0][5] + ((237, 182, 106),):
+        rows.append(derive(("INSTRUMENT", *PALETTES[0][1:5], (c,) * 4), 0))
     for name, d in rows:
         if name.startswith("GRAY"):
             for k, v in d.items():
@@ -238,6 +241,11 @@ def main():
                 "static const uint8_t UI_LINE_PCTS[] = {" +
                 ", ".join(str(LINE_PCT.get(p[0], PCT["LINE"])) for p in PALETTES) + ",",
                 "#ifdef UI_TEST_PALETTE", f"    {LINE_PCT.get(TEST_GRAY[0], PCT['LINE'])},", "#endif", "};"]
+        # Selected instrument colours, independent of track-number chips.
+        families = PALETTES[0][5] + ((237, 182, 106),)
+        out += ["#define UI_CASSETTE_INDEX 0u", "static const uint16_t UI_INSTRUMENT_KNOBS[5][4] = {"]
+        out += ["    {" + ", ".join(f"0x{to565(shade(c, dh, dl)):04x}" for dh, dl in SHADES) + "}," for c in families]
+        out += ["};"]
         out += [f"#define UI_REC_DARK 0x{to565(REC_DARK):04x}u", f"#define UI_REC_LIGHT 0x{to565(REC_LIGHT):04x}u",
                 f"#define UI_QR_LIGHT 0x{to565(QR_LIGHT):04x}u", f"#define UI_QR_DARK 0x{to565(QR_DARK):04x}u",
                 f"#define UI_CRASH_BG 0x{to565(CRASH_BG):04x}u", f"#define UI_CRASH_INK 0x{to565(CRASH_INK):04x}u", ""]

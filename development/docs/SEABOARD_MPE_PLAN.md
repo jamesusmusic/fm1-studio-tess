@@ -4,6 +4,14 @@ By: Inputsignwave
 
 ## Current checkpoint
 
+**1 November 2026 priority update — By: Inputsignwave:** resume MPE development
+in the next session, **2 November 2026**, with physical RISE 25/FM-1 validation
+of the USB/Mac bridge first, then continue toward Bluetooth MPE support. Keep
+Mac-hosted Bluetooth routing distinct from direct FM-1 BLE Central support;
+neither is established by the existing chip-emulator checks. See the
+[current roadmap priorities](../ROADMAP.md#current-priorities--1-november-2026)
+for the accompanying UI, sound, generator and performance-control backlog.
+
 The live USB candidate for WAVE LAYERS is built and validated on the native
 toolchain, macOS/Linux host suites and chip emulator, and is ready for hardware
 audition. See

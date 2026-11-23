@@ -94,3 +94,9 @@ copy. FM6 voice data attribution and individual source/rights records are in
 claim authorship of Yamaha/community voices or grant rights absent from those
 sources. 808 SUB retains Sven Trogus's GPL-3.0-only attribution. Pro-800 packs
 are separate and are not included.
+
+## Performance 12 cassette UI
+
+By: Inputsignwave — instrument colour identities, vector landing views, bounded
+master-scope animation, clipped panels and production UI regression coverage.
+Existing Melodee graphics, controls, fonts and all upstream notices are retained.

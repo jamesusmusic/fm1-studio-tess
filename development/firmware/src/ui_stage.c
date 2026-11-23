@@ -55,6 +55,7 @@ static struct {
     uint8_t hit_t[NLANE];                               /* frames a DRUM lane's name stays lit */
     uint8_t hit_trk;                                    /* .. of this track */
     uint32_t knob_ms;                                   /* the last knob turn on Stage (| 1), 0 none */
+    uint32_t cassette_ms;                               /* bounded landing-panel refresh. By: Inputsignwave. */
     uint8_t out, drop;                                  /* the knobs out; frames still dropping */
 } stage;
 
@@ -628,10 +629,73 @@ static void stage_knobs(void)
 
 /* every frame the knobs; every other frame (the scope's) the rows (or, the knobs out, their picture), then the band
  * last */
+/* Cassette landing view and bounded vector animation — By: Inputsignwave.
+ * Reuses the master scope snapshot and canvas. No allocation, ISR work, or DSP
+ * state changes. At most 8*24 mesh segments, updated at 12.5 Hz, plus the scope.
+ * During a knob gesture, the real parameter curve takes precedence. */
+static void stage_cassette(void)
+{
+    uint32_t tick = fm1_ms / 80u, r, i;
+    int32_t pv[4], pic = (int32_t)stage_picture(pv);
+    char name[24], number[3] = {'T', (char)('1' + song.sel), 0};
+    stage_columns();
+    if (!ui.force && fm1_ms - stage.cassette_ms < 80u) return;
+    stage.cassette_ms = fm1_ms;
+    cv_begin(240, H_GRAPH, T_BG);
+    cv_bg = T_BG;
+    cv_line(4, 8, 10, 2, T_THEME); cv_line(10, 2, 229, 2, T_LINE);
+    cv_line(229, 2, 235, 8, T_THEME); cv_line(4, 8, 4, 90, T_LINE);
+    cv_line(235, 8, 235, 90, T_LINE);
+    if (pic == SP_FILTER)
+        stage_filter(pv[0], pv[1], T_THEME, 14, 74);
+    else if (pic == SP_ENV)
+        graph_adsr_v(pv[0], pv[1], pv[2], pv[3], 14, 74, T_THEME);
+    else {
+        int32_t peak = 1500;
+        /* Snapshot master output for the mesh; refresh the bright trace last. */
+        uint32_t w = scope_w;
+        for (i = 0; i < SCOPE_N; i++) {
+            int32_t v = scope_snap[i] = scope_buf[(w + i) & (SCOPE_N - 1u)];
+            if (v < 0) v = -v;
+            if (v > peak) peak = v;
+        }
+        for (r = 0; r < 8u; r++) {
+            int32_t px = 0, py = 0;
+            uint16_t c = ux_mix(T_BG, T_THEME, 13 + (int32_t)r * 2);
+            for (i = 0; i < 25u; i++) {
+                uint32_t at = (i * 18u + r * 7u + (stage_knobs_out() ? 0u : tick)) & (SCOPE_N - 1u);
+                int32_t x = 22 + (int32_t)i * 8 + (int32_t)r * 2;
+                int32_t y = 20 + (int32_t)r * 8 - (int32_t)scope_snap[at] * (int32_t)(r + 3u) / peak;
+                if (i) cv_line(px, py, x, y, c);
+                px = x; py = y;
+            }
+        }
+        /* Bright trace last, so wireframe never obscures the signal. */
+        stage_wave(T_THEME, 20, 62);
+    }
+    cv_line(4, 90, 10, 96, T_THEME); cv_line(10, 96, 229, 96, T_LINE);
+    cv_line(229, 96, 235, 90, T_THEME);
+    if (drum_track(TSEL)) {
+        cv_oy = 94;
+        stage_hits();
+        cv_oy = 0;
+    } else stage_notes(232, 111);
+    cv_blit(0, Y_GRAPH);
+    cv_begin(240, H_FOOT, T_BG);
+    sound_name(TSEL, name);
+    cv_text(6, 4, TY_LB, number, T_THEME);
+    cv_text_fit(32, 2, TY_TX, name, T_TEXT, T_BG, 202);
+    cv_blit(0, Y_FOOT);
+}
+
 static void stage_draw(void)
 {
     uint32_t k;
     stage_panel_hits();
+    if (ux.pal == UI_CASSETTE_INDEX) {
+        stage_cassette();
+        return;
+    }
     stage_knobs();
     if (!ui.force && (ui.frame & 1u))
         return;
