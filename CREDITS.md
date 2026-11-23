@@ -100,3 +100,7 @@ are separate and are not included.
 By: Inputsignwave — instrument colour identities, vector landing views, bounded
 master-scope animation, clipped panels and production UI regression coverage.
 Existing Melodee graphics, controls, fonts and all upstream notices are retained.
+
+Performance 12 Dev2 cleanup and compatibility migration — By: Inputsignwave.
+Historical themes and HOME Stage rows are reference-only; the approved new UI
+is the sole on-device design. Shared controls, views and both fonts are retained.

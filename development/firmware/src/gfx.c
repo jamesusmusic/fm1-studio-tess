@@ -218,8 +218,10 @@ static int palette_instrument(uint32_t family)
 }
 
 /* settings store a tagged id (UI_PAL_TAG + index); any other id reads as the default */
-static int palette_stored_ok(uint32_t v) { return v >= UI_PAL_TAG && v - UI_PAL_TAG < NPALETTES; }
-static uint32_t palette_from_stored(uint32_t v) { return palette_stored_ok(v) ? v - UI_PAL_TAG : UI_DEFAULT_INDEX; }
+/* Accept retired theme IDs in PER5/backups, mapping only their theme to NIGHT.
+ * Rejecting them here would discard otherwise valid settings. By: Inputsignwave. */
+static int palette_stored_ok(uint32_t v) { return v >= UI_PAL_TAG && v - UI_PAL_TAG < UI_LEGACY_PALETTES; }
+static uint32_t palette_from_stored(uint32_t v) { return palette_stored_ok(v) && v - UI_PAL_TAG < NPALETTES ? v - UI_PAL_TAG : UI_DEFAULT_INDEX; }
 static uint32_t palette_to_stored(uint32_t i) { return UI_PAL_TAG + i % NPALETTES; }
 
 static inline uint16_t swap16(uint32_t c) { return (uint16_t)(((c >> 8) & 0xFFu) | ((c & 0xFFu) << 8)); }

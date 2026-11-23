@@ -7,7 +7,8 @@
 
   gen_ui_palettes.py OUT.h [--report]
 
-Inputsignwave palettes: NIGHT is the default; all existing palette IDs remain selectable. A palette is BG
+Inputsignwave UI: only the new NIGHT design ships. Other palettes are host-reference fixtures;
+their stored IDs remain valid and migrate to NIGHT without resetting settings. A palette is BG
 (background), SURF (surface: cards, dialogs, menu rows), TEXT, ACCENT (the one active thing: hot knob, cursor,
 playhead) and four track colours: the selected track's is THEME (values, curves, gauges, selection), so the screen
 takes the colour of the track ALGORITHM picks (src/gfx.c palette_track). The firmware derives the rest with fixed
@@ -231,15 +232,21 @@ def main():
                " * derived) */", "#pragma once", "#include <stdint.h>", "",
                "/* ui_pal_t {name, bg, surf, text, accent, trk[4], knob[4][4]} (src/gfx.c); GRAY: host tests only */",
                "static const ui_pal_t UI_PALETTES[] = {"]
-        out += [row(p) for p in PALETTES]
+        reference = "#if MELODEE_RETIRED_REFERENCE"
+        out += [row(PALETTES[0]), reference]
+        out += [row(p) for p in PALETTES[1:]]
+        out += ["#endif"]
         out += ["#ifdef UI_TEST_PALETTE", row(TEST_GRAY), "#endif", "};",
-                f"#define UI_NPALETTES {len(PALETTES)}u", f"#define UI_DEFAULT_INDEX {names.index('NIGHT')}u",
-                f"#define UI_GRAY_INDEX {len(PALETTES)}u      /* (UI_TEST_PALETTE only) */",
+                reference, f"#define UI_NPALETTES {len(PALETTES)}u", "#else", "#define UI_NPALETTES 1u", "#endif",
+                f"#define UI_LEGACY_PALETTES {len(PALETTES)}u /* stored IDs remain valid for migration */",
+                f"#define UI_DEFAULT_INDEX {names.index('NIGHT')}u",
+                "#define UI_GRAY_INDEX UI_NPALETTES      /* (UI_TEST_PALETTE only) */",
                 f"#define UI_PAL_TAG {PAL_TAG}u          /* stored id = UI_PAL_TAG + index */"]
         out += [f"#define UI_{k}_PCT {v}" for k, v in PCT.items()] + [f"#define UI_RAISE_PCT {RAISE_PCT}   /* SURF -> TEXT */"]
         out += ["/* each palette's LINE (BG -> TEXT %), in UI_PALETTES' order */",
                 "static const uint8_t UI_LINE_PCTS[] = {" +
-                ", ".join(str(LINE_PCT.get(p[0], PCT["LINE"])) for p in PALETTES) + ",",
+                str(LINE_PCT.get(PALETTES[0][0], PCT["LINE"])) + ",", reference,
+                ", ".join(str(LINE_PCT.get(p[0], PCT["LINE"])) for p in PALETTES[1:]) + ",", "#endif",
                 "#ifdef UI_TEST_PALETTE", f"    {LINE_PCT.get(TEST_GRAY[0], PCT['LINE'])},", "#endif", "};"]
         # Selected instrument colours, independent of track-number chips.
         families = PALETTES[0][5] + ((237, 182, 106),)

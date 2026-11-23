@@ -1,3 +1,4 @@
+/* Sole on-device cassette landing and reference-only legacy Stage — By: Inputsignwave. */
 /* SPDX-License-Identifier: GPL-3.0-only
  * Copyright (C) 2026 Kerem Kilic (Ellic Studio) */
 /* Melodee's Stage (HOME), in the large type (docs/design/README.md "Large type": C, rows).
@@ -39,6 +40,7 @@ static int32_t st_mid_x(int32_t cx, const aafont_t *f, const char *s, int32_t ma
 }
 static int pattern_empty(uint32_t k, uint32_t b);       /* ui_patterns.c */
 /* track k plays no pattern: all eight empty (no note, no motion), none waiting, not armed (the synth's Stage) */
+#if MELODEE_RETIRED_REFERENCE
 static int stage_seq_idle(uint32_t k)
 {
     uint32_t b;
@@ -49,9 +51,12 @@ static int stage_seq_idle(uint32_t k)
             return 0;
     return 1;
 }
+#endif
 
 static struct {
+#if MELODEE_RETIRED_REFERENCE
     uint32_t col[NTRK], grid[NTRK];                     /* each row's drawn state, its steps' */
+#endif
     uint8_t hit_t[NLANE];                               /* frames a DRUM lane's name stays lit */
     uint8_t hit_trk;                                    /* .. of this track */
     uint32_t knob_ms;                                   /* the last knob turn on Stage (| 1), 0 none */
@@ -264,6 +269,8 @@ static void stage_panel_hits(void)                      /* every frame: the DRUM
         stage.hit_t[l] = (f[sel] >> l) & 1u ? 10u : stage.hit_t[l] ? stage.hit_t[l] - 1u : 0u;
 }
 /* the band: the selected track's waveform, faint, the chord and notes in front (a DRUM track: its lanes) */
+#if MELODEE_RETIRED_REFERENCE
+/* Historical HOME rows, host-only. By: Inputsignwave. */
 static void stage_band(void)
 {
     uint32_t sel = song.sel % NTRK, drum = (uint32_t)drum_track(TSEL), i;
@@ -595,6 +602,7 @@ static void stage_row(uint32_t k)
 
 /* the knobs: out while one turns (and ST_KNOB_MS after), dropping in over ST_DROP frames (each its cells' bottom rows,
  * more each frame); their picture under them; gone at once, the rows whole again */
+#endif
 static void stage_knobs(void)
 {
     int out = stage_knobs_out();
@@ -604,7 +612,9 @@ static void stage_knobs(void)
         lcd_fill(0, Y_LABEL, 240, Y_GRAPH - Y_LABEL, T_BG);   /* (the rows under the strip go at once) */
     } else if (!out && stage.out) {
         stage.out = 0;
-        memset(stage.col, 0, sizeof stage.col);         /* (the rows back, HOME's second page whole) */
+#if MELODEE_RETIRED_REFERENCE
+        memset(stage.col, 0, sizeof stage.col);         /* historical Stage rows */
+#endif
         view_reset();
         memset(ui.col, 0, sizeof ui.col);
         lcd_fill(0, Y_LABEL, 240, ST_BAND_Y - Y_LABEL, T_BG);
@@ -690,8 +700,13 @@ static void stage_cassette(void)
 
 static void stage_draw(void)
 {
-    uint32_t k;
     stage_panel_hits();
+#if !MELODEE_RETIRED_REFERENCE
+    /* Only the approved landing view ships. Legacy Stage is archive-only.
+     * Shared chord-view knobs and mixer geometry stay live. By: Inputsignwave. */
+    stage_cassette();
+#else
+    uint32_t k;
     if (ux.pal == UI_CASSETTE_INDEX) {
         stage_cassette();
         return;
@@ -704,4 +719,5 @@ static void stage_draw(void)
     for (k = 0; k < trk_n(); k++)
         stage_row(k);
     stage_band();
+#endif
 }

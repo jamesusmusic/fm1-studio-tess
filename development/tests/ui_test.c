@@ -890,6 +890,7 @@ static int test_track_count(void)
     project_new_blank();
     go_home(); frame();
     bad += check("a new song: one track, T1 selected", trk_n() == 1u && song.sel == 0);
+#if MELODEE_RETIRED_REFERENCE
     bad += check("  no pattern at all: Stage's card shows no pattern pill, no steps (a synth)", stage_seq_idle(0));
     one_note(&trk[0], 3, 60);
     ok = !stage_seq_idle(0);
@@ -898,6 +899,7 @@ static int test_track_count(void)
     ok &= !stage_seq_idle(0);
     song.rec = 0;
     bad += check("  a note, or armed to record: they come back", ok && stage_seq_idle(0));
+#endif
     turn(EN_ALGO, 1);
     bad += check("  ALGORITHM: no other track to select", song.sel == 0);
     trk[2].engine = trk[2].eng_req;
@@ -1651,6 +1653,7 @@ static int test_display_preferences(void)
     ui_power_on();
     memcpy(sounds, trk, sizeof sounds);
     hold(B_HOME);
+#if UI_NPALETTES > 1
     ui.menu_sel = MI_COLOR;
     ui.force = 1; ui_draw();
     memcpy(before, host_screen, sizeof before);
@@ -1669,6 +1672,12 @@ static int test_display_preferences(void)
     press(B_OCTDN);
     bad += check("OCT- leaves display preferences without changing musical state",
                  !ui.menu && settings.palette == 0 && !memcmp(sounds, trk, sizeof sounds));
+#else
+    for(uint32_t i=0;i<MI_COUNT;i++)bad+=check("production menu has no retired COLOR selector", !str_eq(MI_NAME[i],"COLOR"));
+    ui.menu_sel=MI_FONT;press(B_OCTUP);
+    bad+=check("FONT remains selectable in the new-only UI", ty_pixel() && ui.menu);
+    press(B_OCTDN);
+#endif
     return bad;
 }
 

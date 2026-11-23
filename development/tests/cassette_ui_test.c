@@ -48,11 +48,16 @@ int main(int argc,char **argv)
             assert(!memcmp(params,TSEL->p,sizeof params));
             press(B_HOME);assert(ui.home&&ui.home_pg);ui.force=1;ui_draw();
             press(B_HOME);assert(ui.home&&!ui.home_pg);ui.force=1;ui_draw();
-            /* Other palettes retain the original Stage and track colours. */
-            palette_set(1);settings.palette=1;ui.force=1;ui_draw();assert(!ux.instrument);
-            palette_set(0);settings.palette=0;ui.force=1;ui_draw();assert(ux.instrument);
+            /* Retired theme choices always resolve to the new production UI. */
+            assert(NPALETTES==1u);
+            for(uint32_t old=0;old<UI_LEGACY_PALETTES;old++){
+                assert(palette_stored_ok(UI_PAL_TAG+old));
+                assert(palette_from_stored(UI_PAL_TAG+old)==UI_CASSETTE_INDEX);
+            }
+            palette_set(7);settings.palette=0;ui.force=1;ui_draw();assert(ux.instrument);
         }
     }
-    puts("cassette UI: six production engines, both fonts, live scope, stable controls, HOME navigation and palette round trips passed");
+    assert(!test_display_preferences());
+    puts("cassette UI: six production engines, both fonts, live scope, stable controls, HOME navigation and retired theme migration passed");
     return 0;
 }

@@ -96,7 +96,7 @@ static void settings_init(void)
 {
     if (settings.magic != SETTINGS_MAGIC || settings.palette >= NPALETTES) {
         settings.magic = SETTINGS_MAGIC;
-        settings.palette = UI_DEFAULT_INDEX;   /* provisional LO-FI default; saved palette IDs retain their choice */
+        settings.palette = UI_DEFAULT_INDEX;   /* new instrument-themed UI; retired colours migrate to NIGHT */
         settings.lowcut = 0;
         settings.zoom = 0;                     /* large readout of the touched value: off */
     }
